@@ -1,0 +1,6 @@
+schema_version: "1.0"
+
+suites:
+  - path: ../catalog/suites/core-vector.yaml
+  - path: ../catalog/suites/crs-edge-cases.yaml
+  - path: ../catalog/suites/raster-nodata.yaml

@@ -1,0 +1,1 @@
+"""Build case index script."""

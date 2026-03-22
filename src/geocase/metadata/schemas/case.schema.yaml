@@ -1,0 +1,194 @@
+type: object
+required:
+  - id
+  - title
+  - category
+  - format
+  - test_tier
+  - size_class
+  - storage_class
+  - redistributable
+  - tags
+  - risk_types
+  - files
+  - loader_hint
+  - expected_capabilities
+  - schema_version
+properties:
+  id:
+    type: string
+    description: Stable machine-readable case identifier.
+    pattern: "^[a-z0-9_]+$"
+
+  title:
+    type: string
+    description: Human-readable title.
+
+  description:
+    type: string
+
+  category:
+    type: string
+    enum:
+      - vector
+      - raster
+      - netcdf
+      - satellite
+
+  format:
+    type: string
+    enum:
+      - GeoJSON
+      - GPKG
+      - Shapefile
+      - GeoTIFF
+      - NetCDF
+      - Parquet
+      - Other
+
+  test_tier:
+    type: string
+    enum:
+      - unit
+      - integration
+      - slow
+      - remote
+      - private
+
+  size_class:
+    type: string
+    enum:
+      - tiny
+      - small
+      - medium
+      - large
+
+  storage_class:
+    type: string
+    enum:
+      - bundled
+      - remote
+      - private
+
+  redistributable:
+    type: boolean
+
+  schema_version:
+    type: string
+    description: Metadata schema version, e.g. '1.0'.
+
+  status:
+    type: string
+    enum:
+      - draft
+      - validated
+      - published
+      - deprecated
+      - archived
+
+  tags:
+    type: array
+    items:
+      type: string
+
+  risk_types:
+    type: array
+    items:
+      type: string
+
+  behavioral_goal:
+    type: string
+
+  expected_capabilities:
+    type: array
+    items:
+      type: string
+
+  loader_hint:
+    type: string
+    enum:
+      - geopandas
+      - rasterio
+      - xarray
+      - generic
+
+  geometry_type:
+    type: string
+    enum:
+      - Point
+      - MultiPoint
+      - LineString
+      - MultiLineString
+      - Polygon
+      - MultiPolygon
+      - Raster
+      - NetCDF
+      - Mixed
+
+  crs:
+    type: string
+    description: Declared CRS identifier, usually EPSG or OGC form.
+
+  files:
+    type: object
+    required:
+      - primary
+    properties:
+      primary:
+        type: string
+      preview:
+        type: string
+      notes:
+        type: string
+      sidecars:
+        type: array
+        items:
+          type: string
+
+  remote:
+    type: object
+    properties:
+      manifest_key:
+        type: string
+      uri:
+        type: string
+      checksum_sha256:
+        type: string
+      byte_size:
+        type: integer
+
+  source:
+    type: object
+    properties:
+      name:
+        type: string
+      url:
+        type: string
+      license:
+        type: string
+      derived_from:
+        type: string
+
+  assertions:
+    type: object
+    properties:
+      expect_loadable:
+        type: boolean
+      expect_valid_geometry:
+        type: boolean
+      expect_crs:
+        type: boolean
+      expected_epsg:
+        type: integer
+      expected_geometry_types:
+        type: array
+        items:
+          type: string
+      expect_nodata:
+        type: boolean
+
+  params:
+    type: object
+    additionalProperties: true
+
+additionalProperties: false

@@ -1,0 +1,75 @@
+type: object
+required:
+  - suite_key
+  - title
+  - description
+  - selection
+  - schema_version
+properties:
+  suite_key:
+    type: string
+    pattern: "^[a-z0-9_-]+$"
+
+  title:
+    type: string
+
+  description:
+    type: string
+
+  schema_version:
+    type: string
+
+  selection:
+    type: object
+    properties:
+      include_case_ids:
+        type: array
+        items:
+          type: string
+
+      exclude_case_ids:
+        type: array
+        items:
+          type: string
+
+      category:
+        type: string
+
+      test_tier:
+        type: string
+
+      storage_class:
+        type: string
+
+      format:
+        type: string
+
+      tags_any:
+        type: array
+        items:
+          type: string
+
+      tags_all:
+        type: array
+        items:
+          type: string
+
+      risk_types_any:
+        type: array
+        items:
+          type: string
+
+      size_class:
+        type: string
+
+    additionalProperties: false
+
+  case_order:
+    type: array
+    items:
+      type: string
+
+  notes:
+    type: string
+
+additionalProperties: false

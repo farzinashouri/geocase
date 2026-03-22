@@ -1,0 +1,60 @@
+id: dateline_crossing_polygon
+title: Dateline crossing polygon
+description: >
+  Polygon intended to expose longitude wrapping, bounds assumptions,
+  and antimeridian handling issues.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - dateline
+  - antimeridian
+  - vector
+  - polygon
+  - crs
+
+risk_types:
+  - coordinate_wrapping
+  - bbox_misinterpretation
+  - reprojection_error
+
+behavioral_goal: >
+  Detect code that assumes longitude continuity across the antimeridian
+  or produces incorrect bounds.
+
+expected_capabilities:
+  - load
+  - bounds-check
+  - reprojection
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  crosses_dateline: true
+  intended_failure_modes:
+    - naive_bounds_logic
+    - incorrect_longitude_normalization

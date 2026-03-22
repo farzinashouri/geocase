@@ -1,0 +1,25 @@
+manifest_key: public-extended
+title: Public extended GeoCase catalog
+description: Larger public datasets that are fetched on demand.
+schema_version: "1.0"
+
+storage:
+  storage_type: https
+  base_uri: https://example.org/geocase/public
+  requires_auth: false
+  is_public: true
+
+cases:
+  - case_id: coastal_scene_small
+    version: "1.0.0"
+    relative_path: coastal_scene_small.zip
+    sha256: "replace_me"
+    byte_size: 1280000
+    archive_format: zip
+
+  - case_id: utm_boundary_scene
+    version: "1.0.0"
+    relative_path: utm_boundary_scene.zip
+    sha256: "replace_me"
+    byte_size: 1540000
+    archive_format: zip

@@ -1,0 +1,65 @@
+type: object
+required:
+  - manifest_key
+  - title
+  - schema_version
+  - storage
+  - cases
+properties:
+  manifest_key:
+    type: string
+
+  title:
+    type: string
+
+  description:
+    type: string
+
+  schema_version:
+    type: string
+
+  storage:
+    type: object
+    required:
+      - storage_type
+      - base_uri
+    properties:
+      storage_type:
+        type: string
+        enum:
+          - s3
+          - gcs
+          - azure
+          - https
+          - filesystem
+      base_uri:
+        type: string
+      requires_auth:
+        type: boolean
+      is_public:
+        type: boolean
+
+  cases:
+    type: array
+    items:
+      type: object
+      required:
+        - case_id
+        - version
+        - relative_path
+        - sha256
+      properties:
+        case_id:
+          type: string
+        version:
+          type: string
+        relative_path:
+          type: string
+        sha256:
+          type: string
+        byte_size:
+          type: integer
+        archive_format:
+          type: string
+
+additionalProperties: false

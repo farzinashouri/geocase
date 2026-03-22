@@ -1,0 +1,11 @@
+schema_version: "1.0"
+
+cases:
+  - path: data/core/vector/simple_valid_polygon/case.yaml
+  - path: data/core/vector/polygon_with_hole/case.yaml
+  - path: data/core/vector/self_intersecting_polygon/case.yaml
+  - path: data/core/vector/dateline_crossing_polygon/case.yaml
+  - path: data/core/vector/mixed_encoding_attributes/case.yaml
+  - path: data/core/raster/geotiff_nodata_small/case.yaml
+  - path: data/core/raster/geotiff_utm_boundary/case.yaml
+  - path: data/core/netcdf/latlon_small/case.yaml
