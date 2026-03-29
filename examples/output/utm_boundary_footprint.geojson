@@ -1,0 +1,41 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "src/geocase/data/core/raster/geotiff_utm_boundary/utm_boundary.tif",
+        "width": 20,
+        "height": 20,
+        "epsg": 32633
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              490000.0,
+              5620000.0
+            ],
+            [
+              510000.0,
+              5620000.0
+            ],
+            [
+              510000.0,
+              5600000.0
+            ],
+            [
+              490000.0,
+              5600000.0
+            ],
+            [
+              490000.0,
+              5620000.0
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

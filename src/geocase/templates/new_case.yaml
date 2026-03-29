@@ -1,1 +1,61 @@
-# New Case Template
+# GeoCase – New Case Template
+# Copy this file into your case directory as case.yaml and fill in all fields.
+# See docs/adding-a-case.md for guidance.
+
+id: my_new_case                     # lowercase, underscores, no spaces
+title: My New Case
+description: >
+  A short paragraph explaining what this case tests and why it
+  matters.
+
+# ── Classification ──────────────────────────────────────────────
+category: vector                    # vector | raster | netcdf | satellite
+format: GeoJSON                     # GeoJSON | GPKG | Shapefile | GeoTIFF | NetCDF | Parquet | Other
+test_tier: unit                     # unit | integration | slow | remote | private
+size_class: tiny                    # tiny | small | medium | large
+storage_class: bundled              # bundled | remote | private
+redistributable: true
+schema_version: "1.0"
+status: draft                       # draft | validated | published | deprecated | archived
+
+# ── Discovery ───────────────────────────────────────────────────
+tags: []
+risk_types: []
+
+# ── Behaviour ───────────────────────────────────────────────────
+behavioral_goal: >
+  Describe the specific failure mode or edge case this data is
+  designed to expose.
+
+expected_capabilities:
+  - load
+
+loader_hint: geopandas              # geopandas | rasterio | xarray | generic
+geometry_type: null                  # Polygon | Point | LineString | etc. (vector only)
+crs: EPSG:4326
+
+# ── Files ───────────────────────────────────────────────────────
+files:
+  primary: data.geojson             # main data file
+  notes: notes.md                   # optional narrative
+  # preview: preview.png            # optional thumbnail
+  # sidecars: []                    # auxiliary files
+
+# ── Provenance (optional) ──────────────────────────────────────
+# source:
+#   name: ""
+#   url: ""
+#   license: ""
+
+# ── Assertions ──────────────────────────────────────────────────
+assertions:
+  expect_loadable: true
+  # expect_valid_geometry: true
+  # expect_crs: true
+  # expected_epsg: 4326
+  # expected_geometry_types: []
+  # expect_nodata: false
+
+# ── Free-form params (optional) ────────────────────────────────
+# params:
+#   custom_key: value

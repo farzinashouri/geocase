@@ -1,0 +1,21 @@
+suite_key: raster-nodata
+title: Raster NoData Suite
+description: >
+  Validates correct handling of NoData values and masking in raster
+  datasets, including GeoTIFF and NetCDF formats.
+schema_version: "1.0"
+
+selection:
+  tags_any:
+    - nodata
+    - masking
+    - raster
+  storage_class: bundled
+
+case_order:
+  - geotiff_nodata_small
+  - latlon_small
+
+notes: >
+  Covers the most common NoData pitfalls: sentinel values, NaN
+  propagation, and masked array handling.

@@ -1,0 +1,222 @@
+name: geocase
+channels:
+  - conda-forge
+
+dependencies:
+  # Python
+  - python=3.14.3
+
+  # Core
+  - pydantic=2.12.5
+  - pydantic-core=2.41.5
+  - pyyaml=6.0.3
+  - typing-extensions=4.15.0
+  - typing-inspection=0.4.2
+  - annotated-types=0.7.0
+
+  # Geospatial
+  - gdal=3.12.2
+  - geopandas=1.1.3
+  - geopandas-base=1.1.3
+  - shapely=2.1.2
+  - rasterio=1.5.0
+  - xarray=2026.2.0
+  - netcdf4=1.7.4
+  - pyproj=3.7.2
+  - pyogrio=0.12.1
+  - proj=9.7.1
+  - geos=3.14.1
+  - folium=0.20.0
+  - branca=0.8.2
+  - mapclassify=2.10.0
+
+  # Scientific / numeric
+  - numpy=2.4.3
+  - pandas=3.0.1
+  - scipy=1.17.1
+  - scikit-learn=1.8.0
+  - networkx=3.6.1
+  - matplotlib-base=3.10.8
+  - pillow=12.1.1
+  - contourpy=1.3.3
+  - fonttools=4.62.0
+  - kiwisolver=1.5.0
+  - cycler=0.12.1
+  - munkres=1.1.4
+
+  # HDF / NetCDF / compression
+  - hdf5=1.14.6
+  - hdf4=4.2.15
+  - libnetcdf=4.10.0
+  - libaec=1.1.5
+  - cftime=1.6.5
+  - blosc=1.21.6
+  - snappy=1.2.2
+  - lz4-c=1.10.0
+  - zstd=1.5.7
+  - zlib=1.3.2
+  - zlib-ng=2.3.3
+  - bzip2=1.0.8
+  - libdeflate=1.25
+  - minizip=4.0.10
+  - libzip=1.11.2
+  - libarchive=3.8.6
+  - liblzma=5.8.2
+  - lzo=2.10
+
+  # Image codecs
+  - libjpeg-turbo=3.1.2
+  - libtiff=4.7.1
+  - libpng=1.6.55
+  - openjpeg=2.5.4
+  - libwebp-base=1.6.0
+  - libjxl=0.11.2
+  - libhwy=1.3.0
+  - giflib=5.2.2
+  - lcms2=2.18
+  - lerc=4.1.0
+
+  # GDAL support libs
+  - libgdal-core=3.12.2
+  - libgeotiff=1.7.4
+  - libkml=1.3.0
+  - libspatialite=5.1.0
+  - librttopo=1.1.0
+  - freexl=2.0.0
+  - json-c=0.18
+  - xerces-c=3.3.0
+  - uriparser=0.9.8
+  - muparser=2.3.5
+  - pcre2=10.47
+  - snuggs=1.4.7
+
+  # Crypto / network
+  - openssl=3.6.1
+  - libcurl=8.19.0
+  - libssh2=1.11.1
+  - libnghttp2=1.68.1
+  - krb5=1.22.2
+  - c-ares=1.34.6
+  - ca-certificates=2026.2.25
+  - certifi=2026.2.25
+  - requests=2.32.5
+  - urllib3=2.6.3
+  - charset-normalizer=3.4.6
+  - idna=3.11
+  - pysocks=1.7.1
+  - h2=4.3.0
+  - hpack=4.1.0
+  - hyperframe=6.1.0
+  - brotli=1.2.0
+  - brotli-bin=1.2.0
+  - brotli-python=1.2.0
+  - libbrotlicommon=1.2.0
+  - libbrotlidec=1.2.0
+  - libbrotlienc=1.2.0
+
+  # Core C/C++ libs
+  - libcxx=22.1.1
+  - libffi=3.5.2
+  - libexpat=2.7.4
+  - libiconv=1.18
+  - libmpdec=4.0.0
+  - libsqlite=3.52.0
+  - sqlite=3.52.0
+  - libxml2=2.15.2
+  - libxml2-16=2.15.2
+  - libxml2-devel=2.15.2
+  - libzlib=1.3.2
+  - icu=78.3
+  - ncurses=6.5
+  - readline=8.3
+  - tk=8.6.13
+  - yaml=0.2.5
+
+  # BLAS / LAPACK
+  - libblas=3.11.0
+  - libcblas=3.11.0
+  - liblapack=3.11.0
+  - libopenblas=0.3.30
+  - libgcc=15.2.0
+  - libgfortran=15.2.0
+  - libgfortran5=15.2.0
+  - llvm-openmp=22.1.0
+  - _openmp_mutex=4.5
+
+  # X11 (runtime deps)
+  - libxcb=1.17.0
+  - xorg-libxau=1.0.12
+  - xorg-libxdmcp=1.1.5
+  - pthread-stubs=0.4
+
+  # Image / freetype
+  - freetype=2.14.2
+  - libfreetype=2.14.2
+  - libfreetype6=2.14.2
+  - qhull=2020.2
+
+  # Dev / testing
+  - pytest=9.0.2
+  - pytest-cov=7.1.0
+  - coverage=7.13.5
+  - mypy=1.19.1
+  - mypy_extensions=1.1.0
+  - python-librt=0.8.1
+  - ruff=0.15.7
+  - pathspec=1.0.4
+
+  # Docs
+  - mkdocs=1.6.1
+  - mkdocs-material=9.7.6
+  - mkdocs-material-extensions=1.3.1
+  - mkdocs-get-deps=0.2.2
+  - markdown=3.10.2
+  - pymdown-extensions=10.21
+  - pygments=2.19.2
+  - jinja2=3.1.6
+  - markupsafe=3.0.3
+  - mergedeep=1.3.4
+  - ghp-import=2.1.0
+  - pyyaml-env-tag=1.1
+  - paginate=0.5.7
+  - backrefs=6.2
+  - babel=2.18.0
+  - watchdog=6.0.0
+  - colorama=0.4.6
+
+  # Misc Python
+  - click=8.1.8
+  - click-plugins=1.1.1.2
+  - cligj=0.7.2
+  - attrs=26.1.0
+  - affine=2.4.0
+  - pyparsing=3.3.2
+  - six=1.17.0
+  - python-dateutil=2.9.0.post0
+  - packaging=26.0
+  - platformdirs=4.9.4
+  - pluggy=1.6.0
+  - iniconfig=2.3.0
+  - setuptools=82.0.1
+  - pip=26.0.1
+  - importlib-metadata=8.8.0
+  - zipp=3.23.0
+  - tomli=2.4.0
+  - exceptiongroup=1.3.1
+  - joblib=1.5.3
+  - threadpoolctl=3.6.0
+  - psutil=7.2.2
+  - unicodedata2=17.0.1
+  - xyzservices=2025.11.0
+  - tzdata=2025c
+  - _python_abi3_support=1.0
+  - python_abi=3.14
+  - python-gil=3.14.3
+  - cpython=3.14.3
+  - libedit=3.1.20250104
+  - libev=4.33
+  - backports.zstd=1.3.0
+
+  # Install geocase itself in editable mode via pip
+  - pip:
+      - -e ".[dev]"

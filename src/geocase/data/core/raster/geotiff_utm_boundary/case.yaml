@@ -1,1 +1,56 @@
-# GeoTIFF UTM Boundary
+id: geotiff_utm_boundary
+title: GeoTIFF UTM Boundary
+description: >
+  A GeoTIFF that straddles a UTM zone boundary.  Exercises
+  reprojection and mosaic logic where a single tile spans two
+  coordinate zones.
+category: raster
+format: GeoTIFF
+test_tier: unit
+size_class: small
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - utm
+  - crs
+  - reprojection
+  - boundary
+
+risk_types:
+  - zone_boundary_artifact
+  - reprojection_error
+  - pixel_shift
+
+behavioral_goal: >
+  Detect raster code that assumes the entire tile lives in a single
+  UTM zone, causing distortion or misalignment at zone edges.
+
+expected_capabilities:
+  - load
+  - reprojection
+  - bounds-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: utm_boundary.tif
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+
+params:
+  spans_utm_zones: true
+  band_count: 1

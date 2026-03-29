@@ -1,1 +1,52 @@
-# Simple Valid Polygon
+id: simple_valid_polygon
+title: Simple Valid Polygon
+description: >
+  A straightforward, well-formed polygon with no holes, no self-
+  intersections, and a standard CRS.  Serves as the baseline "happy
+  path" for geometry loading and validation.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - polygon
+  - valid
+  - baseline
+
+risk_types:
+  - none
+
+behavioral_goal: >
+  Confirm that a minimal valid polygon loads without error and passes
+  all standard geometry checks.
+
+expected_capabilities:
+  - load
+  - bounds-check
+  - geometry-validation
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon

@@ -1,1 +1,60 @@
-# LatLon Small
+id: latlon_small
+title: Lat/Lon Small NetCDF
+description: >
+  A minimal CF-compliant NetCDF file with latitude/longitude
+  dimensions and a single data variable.  Baseline for xarray-based
+  loading and coordinate inspection.
+category: netcdf
+format: NetCDF
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - netcdf
+  - cf-conventions
+  - latlon
+  - nodata
+  - masking
+
+risk_types:
+  - coordinate_order
+  - nodata_ignored
+  - dimension_mismatch
+
+behavioral_goal: >
+  Verify that latitude/longitude dimensions are correctly identified,
+  fill values are masked, and basic slicing works.
+
+expected_capabilities:
+  - load
+  - coordinate-inspection
+  - nodata-check
+
+loader_hint: xarray
+crs: EPSG:4326
+
+files:
+  primary: latlon_sample.nc
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 4326
+  expect_nodata: true
+
+params:
+  dimensions:
+    - latitude
+    - longitude
+  variables:
+    - temperature
+  fill_value: -9999.0

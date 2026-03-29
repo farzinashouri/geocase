@@ -1,1 +1,60 @@
-# Mixed Encoding Attributes
+id: mixed_encoding_attributes
+title: Mixed Encoding Attributes
+description: >
+  A vector dataset whose attribute table contains text in multiple
+  character encodings (UTF-8, Latin-1, Windows-1252).  Exposes
+  encoding-related failures in column parsing.
+category: vector
+format: GPKG
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - encoding
+  - attributes
+  - text
+  - i18n
+
+risk_types:
+  - encoding_error
+  - mojibake
+  - attribute_loss
+
+behavioral_goal: >
+  Detect loaders that assume a single encoding or silently corrupt
+  non-ASCII attribute values.
+
+expected_capabilities:
+  - load
+  - attribute-inspection
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: mixed_attrs.gpkg
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  encodings_present:
+    - utf-8
+    - latin-1
+    - windows-1252

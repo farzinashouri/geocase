@@ -1,1 +1,49 @@
+site_name: GeoCase
+site_description: A curated library of geospatial test cases
+site_url: https://farzinashouri.github.io/geocase
+repo_url: https://github.com/farzinashouri/geocase
+repo_name: farzinashouri/geocase
 
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Philosophy: philosophy.md
+  - Workflow: workflow.md
+  - Guides:
+      - Adding a Case: adding-a-case.md
+      - Parameterized Tests: using-parameterized-tests.md
+      - Remote Datasets: remote-datasets.md
+  - Reference:
+      - Database Design: database-design.md
+      - Structure & Planning: structure-and-planning.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true

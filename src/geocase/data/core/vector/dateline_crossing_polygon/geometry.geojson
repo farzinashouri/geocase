@@ -1,2 +1,24 @@
 {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "dateline_crossing",
+        "crosses_antimeridian": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [170.0, 40.0],
+            [190.0, 40.0],
+            [190.0, 50.0],
+            [170.0, 50.0],
+            [170.0, 40.0]
+          ]
+        ]
+      }
+    }
+  ]
 }

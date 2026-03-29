@@ -1,1 +1,56 @@
-# GeoTIFF NoData Small
+id: geotiff_nodata_small
+title: GeoTIFF NoData Small
+description: >
+  A small single-band GeoTIFF with an explicit NoData sentinel value.
+  Tests correct masking and propagation of NoData through raster
+  operations.
+category: raster
+format: GeoTIFF
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - nodata
+  - masking
+
+risk_types:
+  - nodata_ignored
+  - nan_propagation
+  - incorrect_statistics
+
+behavioral_goal: >
+  Confirm that NoData pixels are correctly masked and excluded from
+  statistical computations (min, max, mean).
+
+expected_capabilities:
+  - load
+  - nodata-check
+  - statistics
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: nodata_sample.tif
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expect_nodata: true
+
+params:
+  nodata_value: -9999
+  band_count: 1
+  dtype: float32

@@ -1,2 +1,31 @@
 {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "polygon_with_hole",
+        "has_interior_ring": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [0.0, 0.0],
+            [10.0, 0.0],
+            [10.0, 10.0],
+            [0.0, 10.0],
+            [0.0, 0.0]
+          ],
+          [
+            [2.0, 2.0],
+            [2.0, 8.0],
+            [8.0, 8.0],
+            [8.0, 2.0],
+            [2.0, 2.0]
+          ]
+        ]
+      }
+    }
+  ]
 }

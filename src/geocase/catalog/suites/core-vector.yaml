@@ -1,0 +1,24 @@
+suite_key: core-vector
+title: Core Vector Suite
+description: >
+  Exercises the fundamental vector operations: loading, geometry
+  validation, CRS checks, and basic topology assertions across all
+  bundled vector test cases.
+schema_version: "1.0"
+
+selection:
+  category: vector
+  storage_class: bundled
+  test_tier: unit
+
+case_order:
+  - simple_valid_polygon
+  - polygon_with_hole
+  - self_intersecting_polygon
+  - dateline_crossing_polygon
+  - mixed_encoding_attributes
+
+notes: >
+  This suite is intended as the default CI gate for vector-related
+  changes.  All cases are tiny/small and bundled, so no network
+  access is required.
