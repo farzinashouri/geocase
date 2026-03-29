@@ -1,1 +1,59 @@
-# Self Intersecting Polygon
+id: self_intersecting_polygon
+title: Self-Intersecting Polygon
+description: >
+  A polygon whose boundary crosses itself, producing an invalid
+  geometry by OGC standards.  Used to verify that validation and
+  repair routines detect the issue.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - polygon
+  - invalid
+  - self_intersection
+  - topology
+
+risk_types:
+  - silent_invalid_geometry
+  - incorrect_area
+  - topology_error
+
+behavioral_goal: >
+  Expose code that silently accepts invalid polygons or computes
+  incorrect area/centroid values from self-intersecting rings.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - topology-check
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: false
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  is_valid: false
+  self_intersections: 1

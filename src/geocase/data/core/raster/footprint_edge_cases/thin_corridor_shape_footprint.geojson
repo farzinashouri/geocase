@@ -1,0 +1,59 @@
+{
+  "type": "FeatureCollection",
+  "name": "footprint",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::32633"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "location": "src/geocase/data/core/raster/footprint_edge_cases/thin_corridor_shape.tif"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                700075.0,
+                5099700.0
+              ],
+              [
+                700075.0,
+                5099950.0
+              ],
+              [
+                700100.0,
+                5099950.0
+              ],
+              [
+                700225.0,
+                5099900.0
+              ],
+              [
+                700275.0,
+                5099750.0
+              ],
+              [
+                700275.0,
+                5099725.0
+              ],
+              [
+                700100.0,
+                5099700.0
+              ],
+              [
+                700075.0,
+                5099700.0
+              ]
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

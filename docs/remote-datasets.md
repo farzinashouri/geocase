@@ -53,4 +53,4 @@ GeoCase can use the manifest to:
 
 ## Private cases
 
-Organizations can later maintain their own private manifests and point GeoCase to them without publishing the underlying datasets.
+Organizations can later maintain their own private manifests and point GeoCase to them without publishing the underlying datasets.s

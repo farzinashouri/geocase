@@ -87,14 +87,14 @@ class CaseMetadata(BaseModel):
 class SuiteSelection(BaseModel):
     include_case_ids: list[str] = Field(default_factory=list)
     exclude_case_ids: list[str] = Field(default_factory=list)
-    category: str | None = None
-    test_tier: str | None = None
-    storage_class: str | None = None
-    format: str | None = None
+    category: Category | None = None
+    test_tier: TestTier | None = None
+    storage_class: StorageClass | None = None
+    format: FormatType | None = None
     tags_any: list[str] = Field(default_factory=list)
     tags_all: list[str] = Field(default_factory=list)
     risk_types_any: list[str] = Field(default_factory=list)
-    size_class: str | None = None
+    size_class: SizeClass | None = None
 
 
 class SuiteMetadata(BaseModel):

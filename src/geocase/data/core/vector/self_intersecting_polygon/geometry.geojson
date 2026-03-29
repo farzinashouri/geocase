@@ -1,2 +1,24 @@
 {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "self_intersecting",
+        "is_valid": false
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [0.0, 0.0],
+            [10.0, 10.0],
+            [10.0, 0.0],
+            [0.0, 10.0],
+            [0.0, 0.0]
+          ]
+        ]
+      }
+    }
+  ]
 }

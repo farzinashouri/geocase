@@ -1,0 +1,23 @@
+suite_key: crs-edge-cases
+title: CRS Edge Cases Suite
+description: >
+  Targets cases that stress coordinate reference system handling:
+  antimeridian wrapping, UTM zone boundaries, and reprojection
+  round-trips.
+schema_version: "1.0"
+
+selection:
+  tags_any:
+    - crs
+    - antimeridian
+    - utm
+    - reprojection
+  storage_class: bundled
+
+case_order:
+  - dateline_crossing_polygon
+  - geotiff_utm_boundary
+
+notes: >
+  Useful for validating CRS-aware code paths after changes to
+  projection or bounds logic.

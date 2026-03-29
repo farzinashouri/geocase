@@ -1,0 +1,55 @@
+{
+  "type": "FeatureCollection",
+  "name": "footprint",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::32633"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "location": "src/geocase/data/core/raster/footprint_edge_cases/nonsquare_diagonal_sparse.tif"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                250420.0,
+                4599760.0
+              ],
+              [
+                250000.0,
+                4599970.0
+              ],
+              [
+                250000.0,
+                4600000.0
+              ],
+              [
+                250060.0,
+                4600000.0
+              ],
+              [
+                250480.0,
+                4599790.0
+              ],
+              [
+                250480.0,
+                4599760.0
+              ],
+              [
+                250420.0,
+                4599760.0
+              ]
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
