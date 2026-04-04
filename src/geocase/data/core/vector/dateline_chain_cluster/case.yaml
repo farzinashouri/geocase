@@ -1,0 +1,62 @@
+id: dateline_chain_cluster
+title: Dateline Chain Cluster
+description: >
+  Three points arranged around the antimeridian so that each point is
+  within 50 km of at least one neighbor, forming a single transitive
+  cluster geodesically. Useful for exposing projection-based clustering
+  errors near the dateline.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - point
+  - dateline
+  - clustering
+  - transitive_connectivity
+
+risk_types:
+  - coordinate_wrapping
+  - local_projection_distortion
+  - transitive_cluster_split
+
+behavioral_goal: >
+  Expose clustering logic that fails to connect a transitive dateline-spanning
+  cluster when distances are measured in an unsuitable local projection.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - proximity-check
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  max_distance_m: 50000.0
+  expected_cluster_count: 1
+  expected_cluster_sizes:
+    - 3

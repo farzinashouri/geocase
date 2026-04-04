@@ -1,0 +1,45 @@
+{
+  "type": "FeatureCollection",
+  "name": "dateline_chain_cluster",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:4326"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "label": "west_edge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [179.8, 10.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2,
+        "label": "east_edge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-179.8, 10.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "label": "bridge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [179.8, 10.4]
+      }
+    }
+  ]
+}

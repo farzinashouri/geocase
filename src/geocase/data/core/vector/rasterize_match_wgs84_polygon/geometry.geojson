@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "rasterize_match_wgs84_polygon"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [14.9, 50.58],
+            [15.1, 50.58],
+            [15.1, 50.70],
+            [14.9, 50.70],
+            [14.9, 50.58]
+          ]
+        ]
+      }
+    }
+  ]
+}

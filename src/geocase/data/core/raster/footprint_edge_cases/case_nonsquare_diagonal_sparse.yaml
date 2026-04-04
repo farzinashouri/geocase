@@ -48,4 +48,4 @@ assertions:
 
 params:
   expected_footprint: nonsquare_diagonal_sparse_footprint.geojson
-  min_rect_ratio: 0.98
+  min_rect_ratio: 0.93

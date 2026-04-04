@@ -1,0 +1,41 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "west_polygon"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [20.0, 0.0],
+            [21.0, 0.0],
+            [21.0, 1.0],
+            [20.0, 1.0],
+            [20.0, 0.0]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "east_polygon"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [23.0, 0.0],
+            [24.0, 0.0],
+            [24.0, 1.0],
+            [23.0, 1.0],
+            [23.0, 0.0]
+          ]
+        ]
+      }
+    }
+  ]
+}

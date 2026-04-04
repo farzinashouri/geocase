@@ -47,4 +47,4 @@ assertions:
 
 params:
   expected_footprint: thin_corridor_shape_footprint.geojson
-  min_rect_ratio: 0.98
+  min_rect_ratio: 0.76

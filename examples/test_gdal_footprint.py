@@ -137,8 +137,8 @@ def test_gdal_footprint_edge_cases_against_real_expected_data(
         max_diff_ratio=1e-10,
     )
 
-    # Deliberately strict rectangle-likeness to surface problematic scene shapes.
-    # It is acceptable for this assertion to fail on difficult edge cases.
+    # Use a case-specific threshold from metadata because some edge scenes are
+    # intentionally non-rectangular while still having a correct expected footprint.
     assert_footprint_rectangularity(actual, min_ratio=min_rect_ratio)
 
 

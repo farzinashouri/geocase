@@ -27,6 +27,7 @@ theme:
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
+  - Development Plan: development-plan.md
   - Philosophy: philosophy.md
   - Workflow: workflow.md
   - Guides:

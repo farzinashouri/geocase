@@ -1,0 +1,59 @@
+id: geotiff_nodata_small_shifted
+title: GeoTIFF NoData Small Shifted
+description: >
+  A copy of the small NoData GeoTIFF shifted exactly one pixel east
+  while preserving CRS, resolution, band structure, and pixel values.
+  Useful for testing whether raster alignment logic recognizes grids
+  that are aligned on the same pixel lattice but have different extents.
+category: raster
+format: GeoTIFF
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - nodata
+  - alignment
+  - affine_transform
+
+risk_types:
+  - alignment_too_strict
+  - pixel_lattice_misclassification
+  - shifted_origin
+
+behavioral_goal: >
+  Expose alignment helpers that require identical extents instead of
+  recognizing rasters that share the same pixel lattice with an integer-pixel offset.
+
+expected_capabilities:
+  - load
+  - affine-check
+  - alignment-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: nodata_sample_shifted.tif
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expect_nodata: true
+
+params:
+  aligned_with_case: geotiff_nodata_small
+  x_shift_pixels: 1
+  band_count: 1
+  dtype: float32

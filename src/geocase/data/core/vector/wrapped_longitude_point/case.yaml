@@ -1,0 +1,59 @@
+id: wrapped_longitude_point
+title: Wrapped Longitude Point
+description: >
+  A point encoded with longitude 190 degrees instead of the normalized
+  equivalent -170. Useful for testing normalization logic during
+  geographic identity reprojection.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - point
+  - longitude_wrapping
+  - dateline
+  - reprojection
+
+risk_types:
+  - longitude_not_normalized
+  - wrapped_coordinate_retention
+
+behavioral_goal: >
+  Expose helpers that preserve wrapped geographic longitudes instead of
+  normalizing them back into the usual [-180, 180] interval.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - coordinate-normalization
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  source_lon: 190.0
+  source_lat: 45.0
+  normalized_lon: -170.0

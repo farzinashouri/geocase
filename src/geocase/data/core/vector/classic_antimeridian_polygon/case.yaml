@@ -1,9 +1,8 @@
-id: simple_valid_polygon
-title: Simple Valid Polygon
+id: classic_antimeridian_polygon
+title: Classic Antimeridian Polygon
 description: >
-  A straightforward, well-formed polygon with no holes, no self-
-  intersections, and a standard CRS.  Serves as the baseline "happy
-  path" for geometry loading and validation.
+  A polygon encoded with longitudes that jump from +179 to -179 degrees,
+  representing the classic wrapped-antimeridian case.
 category: vector
 format: GeoJSON
 test_tier: unit
@@ -16,15 +15,16 @@ status: validated
 tags:
   - vector
   - polygon
-  - valid
-  - baseline
+  - dateline
+  - antimeridian
 
 risk_types:
-  - none
+  - coordinate_wrapping
+  - bbox_misinterpretation
 
 behavioral_goal: >
-  Confirm that a minimal valid polygon loads without error and passes
-  all standard geometry checks.
+  Provide a canonical antimeridian polygon that heuristic crossing checks
+  are expected to detect.
 
 expected_capabilities:
   - load
@@ -52,8 +52,4 @@ assertions:
     - Polygon
 
 params:
-  expected_bounds:
-    - 10.0
-    - 50.0
-    - 11.0
-    - 51.0
+  crosses_dateline: true

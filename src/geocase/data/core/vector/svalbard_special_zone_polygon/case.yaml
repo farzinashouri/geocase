@@ -1,9 +1,9 @@
-id: simple_valid_polygon
-title: Simple Valid Polygon
+id: svalbard_special_zone_polygon
+title: Svalbard Special Zone Polygon
 description: >
-  A straightforward, well-formed polygon with no holes, no self-
-  intersections, and a standard CRS.  Serves as the baseline "happy
-  path" for geometry loading and validation.
+  A WGS84 polygon in Svalbard whose longitude falls in the special UTM 33X
+  band handling range. Used to show the difference between naive UTM zone
+  assignment and the Svalbard exception rules.
 category: vector
 format: GeoJSON
 test_tier: unit
@@ -16,20 +16,21 @@ status: validated
 tags:
   - vector
   - polygon
-  - valid
-  - baseline
+  - utm
+  - crs
+  - special-case
 
 risk_types:
-  - none
+  - zone_selection
+  - polar_projection_edge_case
 
 behavioral_goal: >
-  Confirm that a minimal valid polygon loads without error and passes
-  all standard geometry checks.
+  Confirm that robust UTM-zone logic applies the Svalbard special zone rules.
 
 expected_capabilities:
   - load
   - bounds-check
-  - geometry-validation
+  - reprojection
 
 loader_hint: geopandas
 geometry_type: Polygon
@@ -52,8 +53,5 @@ assertions:
     - Polygon
 
 params:
-  expected_bounds:
-    - 10.0
-    - 50.0
-    - 11.0
-    - 51.0
+  expected_utm_epsg: 32633
+  naive_utm_epsg: 32634
