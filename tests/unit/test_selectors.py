@@ -19,7 +19,7 @@ _CASE_INDEX = _SRC / "metadata" / "case-index.yaml"
 
 @pytest.fixture()
 def all_cases() -> list[CaseMetadata]:
-    """All 8 indexed cases from the bundled catalog."""
+    """All indexed cases from the bundled catalog."""
     reg = CaseRegistry.from_index(_CASE_INDEX)
     return reg.list_cases()
 
@@ -166,7 +166,7 @@ class TestSelectCases:
 
     def test_select_by_category_raster(self, all_cases: list[CaseMetadata]):
         result = select_cases(all_cases, category="raster")
-        assert len(result) == 2
+        assert len(result) == 7
         assert all(c.category == "raster" for c in result)
 
     def test_select_by_category_netcdf(self, all_cases: list[CaseMetadata]):
@@ -176,7 +176,7 @@ class TestSelectCases:
 
     def test_select_all_bundled(self, all_cases: list[CaseMetadata]):
         result = select_cases(all_cases, storage_class="bundled")
-        assert len(result) == 8  # all cases are bundled
+        assert len(result) == len(all_cases)
 
     def test_select_by_format_geojson(self, all_cases: list[CaseMetadata]):
         result = select_cases(all_cases, format="GeoJSON")

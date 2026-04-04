@@ -1,0 +1,52 @@
+id: hole_center_nodata
+title: Hole Center NoData Raster
+description: >
+  Raster where valid pixels form a ring around central NoData,
+  stressing footprint extraction near interior voids.
+category: raster
+format: GeoTIFF
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - footprint
+  - edge
+  - nodata
+
+risk_types:
+  - nodata_ignored
+  - footprint_generation_error
+
+behavioral_goal: >
+  Ensure footprint generation handles interior NoData correctly and
+  stays close to expected output geometry.
+
+expected_capabilities:
+  - load
+  - nodata-check
+  - footprint-generation
+
+loader_hint: rasterio
+
+files:
+  primary: hole_center_nodata.tif
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expect_nodata: true
+
+params:
+  expected_footprint: hole_center_nodata_footprint.geojson
+  min_rect_ratio: 0.98

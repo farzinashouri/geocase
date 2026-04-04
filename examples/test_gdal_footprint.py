@@ -10,7 +10,6 @@ import geopandas as gpd
 import numpy as np
 import pytest
 import rasterio
-import geocase
 from rasterio.features import shapes
 from shapely.geometry import shape
 from shapely.ops import unary_union
@@ -32,42 +31,6 @@ TypedMarkerDecorator = Callable[
 ]
 
 geocase_case = cast(TypedMarkerDecorator, pytest.mark.geocase_case)
-
-_GEOCASE_ROOT = Path(geocase.__file__).resolve().parent
-_EDGE_RASTER_DIR = _GEOCASE_ROOT / "data" / "core" / "raster" / "footprint_edge_cases"
-
-_EDGE_RASTER_CASES = [
-    (
-        "all_valid_rectangular",
-        _EDGE_RASTER_DIR / "all_valid_rectangular.tif",
-        _EDGE_RASTER_DIR / "all_valid_rectangular_footprint.geojson",
-        0.99,
-    ),
-    (
-        "hole_center_nodata",
-        _EDGE_RASTER_DIR / "hole_center_nodata.tif",
-        _EDGE_RASTER_DIR / "hole_center_nodata_footprint.geojson",
-        0.98,
-    ),
-    (
-        "rotated_two_islands",
-        _EDGE_RASTER_DIR / "rotated_two_islands.tif",
-        _EDGE_RASTER_DIR / "rotated_two_islands_footprint.geojson",
-        0.98,
-    ),
-    (
-        "nonsquare_diagonal_sparse",
-        _EDGE_RASTER_DIR / "nonsquare_diagonal_sparse.tif",
-        _EDGE_RASTER_DIR / "nonsquare_diagonal_sparse_footprint.geojson",
-        0.98,
-    ),
-    (
-        "thin_corridor_shape",
-        _EDGE_RASTER_DIR / "thin_corridor_shape.tif",
-        _EDGE_RASTER_DIR / "thin_corridor_shape_footprint.geojson",
-        0.98,
-    ),
-]
 
 def _expected_convex_hull_from_raster(path: Path):
     with rasterio.open(path) as src:
@@ -142,17 +105,22 @@ def test_gdal_footprint_core_cases_match_expected_convex_hull(
     assert bottom - tolerance <= maxy <= top + tolerance
 
 
-@pytest.mark.parametrize(
-    "case_id,tif_path,expected_path,min_rect_ratio",
-    _EDGE_RASTER_CASES,
+@geocase_case(
+    "all_valid_rectangular",
+    "hole_center_nodata",
+    "rotated_two_islands",
+    "nonsquare_diagonal_sparse",
+    "thin_corridor_shape",
 )
 def test_gdal_footprint_edge_cases_against_real_expected_data(
-    case_id: str,
-    tif_path: Path,
-    expected_path: Path,
-    min_rect_ratio: float,
+    geocase: Any,
     tmp_path: Path,
 ) -> None:
+    case_id = geocase.id
+    tif_path = geocase.primary_path
+    expected_name = str(geocase.params["expected_footprint"])
+    min_rect_ratio = float(geocase.params["min_rect_ratio"])
+    expected_path = geocase.root_dir / expected_name
     out_path = tmp_path / f"{case_id}_footprint.geojson"
     geotiff_footprint_to_geojson(tif_path, out_path)
 

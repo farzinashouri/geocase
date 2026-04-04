@@ -26,7 +26,7 @@ class TestCaseRegistryFromIndex:
 
     def test_loads_all_indexed_cases(self):
         reg = CaseRegistry.from_index(_CASE_INDEX)
-        assert len(reg) == 8
+        assert len(reg) == 13
 
     def test_all_entries_are_case_metadata(self):
         reg = CaseRegistry.from_index(_CASE_INDEX)
@@ -77,7 +77,7 @@ class TestCaseRegistryLookup:
         assert "nonexistent" not in registry
 
     def test_list_cases_length(self, registry: CaseRegistry):
-        assert len(registry.list_cases()) == 8
+        assert len(registry.list_cases()) == 13
 
     def test_list_ids_contains_known(self, registry: CaseRegistry):
         ids = registry.list_ids()
@@ -87,11 +87,11 @@ class TestCaseRegistryLookup:
 
     def test_iter(self, registry: CaseRegistry):
         cases = list(registry)
-        assert len(cases) == 8
+        assert len(cases) == 13
         assert all(isinstance(c, CaseMetadata) for c in cases)
 
     def test_repr(self, registry: CaseRegistry):
-        assert "8 cases" in repr(registry)
+        assert "13 cases" in repr(registry)
 
 
 # ===================================================================
@@ -110,7 +110,7 @@ class TestDefaultRegistry:
     def test_get_registry_returns_registry(self):
         reg = get_registry()
         assert isinstance(reg, CaseRegistry)
-        assert len(reg) == 8
+        assert len(reg) == 13
 
     def test_get_registry_is_cached(self):
         r1 = get_registry()
@@ -121,7 +121,7 @@ class TestDefaultRegistry:
         r1 = get_registry()
         r2 = get_registry(reload=True)
         assert r1 is not r2
-        assert len(r2) == 8
+        assert len(r2) == 13
 
     def test_reset_clears_cache(self):
         r1 = get_registry()

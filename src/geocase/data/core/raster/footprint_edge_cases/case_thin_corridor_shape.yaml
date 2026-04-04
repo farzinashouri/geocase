@@ -1,0 +1,50 @@
+id: thin_corridor_shape
+title: Thin Corridor Shape Raster
+description: >
+  Raster whose valid region forms a thin corridor geometry, sensitive
+  to simplification and footprint stability assumptions.
+category: raster
+format: GeoTIFF
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - footprint
+  - edge
+  - corridor
+
+risk_types:
+  - geometry_simplification_loss
+  - footprint_generation_error
+
+behavioral_goal: >
+  Verify footprint generation preserves narrow valid structures and
+  remains close to expected geometry.
+
+expected_capabilities:
+  - load
+  - footprint-generation
+
+loader_hint: rasterio
+
+files:
+  primary: thin_corridor_shape.tif
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+
+params:
+  expected_footprint: thin_corridor_shape_footprint.geojson
+  min_rect_ratio: 0.98

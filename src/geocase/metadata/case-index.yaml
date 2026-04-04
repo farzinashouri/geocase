@@ -8,4 +8,9 @@ cases:
   - path: data/core/vector/mixed_encoding_attributes/case.yaml
   - path: data/core/raster/geotiff_nodata_small/case.yaml
   - path: data/core/raster/geotiff_utm_boundary/case.yaml
+  - path: data/core/raster/footprint_edge_cases/case_all_valid_rectangular.yaml
+  - path: data/core/raster/footprint_edge_cases/case_hole_center_nodata.yaml
+  - path: data/core/raster/footprint_edge_cases/case_rotated_two_islands.yaml
+  - path: data/core/raster/footprint_edge_cases/case_nonsquare_diagonal_sparse.yaml
+  - path: data/core/raster/footprint_edge_cases/case_thin_corridor_shape.yaml
   - path: data/core/netcdf/latlon_small/case.yaml

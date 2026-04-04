@@ -75,7 +75,12 @@ class TestResolveSuite:
             title="Rasters",
             description="Raster cases.",
             schema_version="1.0",
-            selection=SuiteSelection(category="raster"),
+            selection=SuiteSelection(
+                include_case_ids=[
+                    "geotiff_nodata_small",
+                    "geotiff_utm_boundary",
+                ],
+            ),
         )
         resolved = resolve_suite(suite_meta, registry)
         assert set(resolved.case_ids) == {
@@ -89,7 +94,12 @@ class TestResolveSuite:
             title="Ordered",
             description="Explicit order.",
             schema_version="1.0",
-            selection=SuiteSelection(category="raster"),
+            selection=SuiteSelection(
+                include_case_ids=[
+                    "geotiff_nodata_small",
+                    "geotiff_utm_boundary",
+                ],
+            ),
             case_order=["geotiff_utm_boundary", "geotiff_nodata_small"],
         )
         resolved = resolve_suite(suite_meta, registry)
@@ -107,7 +117,7 @@ class TestResolveSuite:
             selection=SuiteSelection(),
         )
         resolved = resolve_suite(suite_meta, registry)
-        assert len(resolved) == 8
+        assert len(resolved) == len(registry)
 
     def test_repr(self, registry: CaseRegistry):
         suite_meta = SuiteMetadata(

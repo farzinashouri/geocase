@@ -1,0 +1,51 @@
+id: nonsquare_diagonal_sparse
+title: Nonsquare Diagonal Sparse Raster
+description: >
+  Raster with non-square cells and sparse diagonal valid pixels to
+  surface edge behavior in footprint generation.
+category: raster
+format: GeoTIFF
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - footprint
+  - edge
+  - sparse
+
+risk_types:
+  - pixel_shape_assumption
+  - footprint_generation_error
+
+behavioral_goal: >
+  Ensure footprint extraction remains robust for sparse and anisotropic
+  raster sampling patterns.
+
+expected_capabilities:
+  - load
+  - bounds-check
+  - footprint-generation
+
+loader_hint: rasterio
+
+files:
+  primary: nonsquare_diagonal_sparse.tif
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+
+params:
+  expected_footprint: nonsquare_diagonal_sparse_footprint.geojson
+  min_rect_ratio: 0.98

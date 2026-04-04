@@ -1,0 +1,50 @@
+id: all_valid_rectangular
+title: All Valid Rectangular Raster
+description: >
+  Raster with fully valid rectangular coverage used as a baseline
+  footprint edge-case fixture.
+category: raster
+format: GeoTIFF
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - footprint
+  - edge
+  - rectangular
+
+risk_types:
+  - footprint_generation_error
+
+behavioral_goal: >
+  Confirm footprint generation returns a clean geometry for a fully
+  valid rectangular raster.
+
+expected_capabilities:
+  - load
+  - bounds-check
+  - footprint-generation
+
+loader_hint: rasterio
+
+files:
+  primary: all_valid_rectangular.tif
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+
+params:
+  expected_footprint: all_valid_rectangular_footprint.geojson
+  min_rect_ratio: 0.99
