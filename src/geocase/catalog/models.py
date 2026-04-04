@@ -88,6 +88,7 @@ class SuiteSelection(BaseModel):
     include_case_ids: list[str] = Field(default_factory=list)
     exclude_case_ids: list[str] = Field(default_factory=list)
     category: Category | None = None
+    geometry_type: str | None = None
     test_tier: TestTier | None = None
     storage_class: StorageClass | None = None
     format: FormatType | None = None

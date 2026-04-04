@@ -1,51 +1,50 @@
-"""End-to-end real geospatial function test using GeoCase runtime."""
+"""Unit tests for real geospatial utility functions using GeoCase."""
 
-from pathlib import Path
+from __future__ import annotations
 
-import numpy as np
+from typing import Any, Callable, cast
 
-from geocase.catalog.loader import load_case_metadata
-from geocase.cases.factory import create_case
+import pytest
 
+from real_geospatial_function import (
+    compute_masked_raster_stats,
+    compute_projected_shape_metrics,
+)
 
-def test_vector_reproject_area_perimeter() -> None:
-    root = Path("src/geocase/data/core/vector/simple_valid_polygon")
-    meta = load_case_metadata(root / "case.yaml")
-    case = create_case(meta, root)
-    gdf = case.load()
+TypedMarkerDecorator = Callable[
+    ..., Callable[[Callable[..., object]], Callable[..., object]]
+]
 
-    projected = gdf.to_crs(3857)
-    area_m2 = float(projected.area.sum())
-    perimeter_m = float(projected.length.sum())
-
-    assert case.id == "simple_valid_polygon"
-    assert len(gdf) == 1
-    assert gdf.crs is not None
-    assert gdf.crs.to_epsg() == 4326
-    assert area_m2 > 0
-    assert perimeter_m > 0
+geocase_case = cast(TypedMarkerDecorator, pytest.mark.geocase_case)
 
 
-def test_raster_nodata_masked_summary_stats() -> None:
-    root = Path("src/geocase/data/core/raster/geotiff_nodata_small")
-    meta = load_case_metadata(root / "case.yaml")
-    case = create_case(meta, root)
+@geocase_case("simple_valid_polygon", "polygon_with_hole")
+def test_compute_projected_shape_metrics(geocase: Any) -> None:
+    gdf = geocase.load()
 
-    data, profile, nodata = case.read(1)
+    metrics = compute_projected_shape_metrics(gdf, target_epsg=3857)
 
-    assert case.id == "geotiff_nodata_small"
+    assert geocase.id in {"simple_valid_polygon", "polygon_with_hole"}
+    assert metrics["feature_count"] == float(len(gdf))
+    assert metrics["area_sum"] > 0.0
+    assert metrics["perimeter_sum"] > 0.0
+
+
+@geocase_case("geotiff_nodata_small", "geotiff_utm_boundary")
+def test_compute_masked_raster_stats(geocase: Any) -> None:
+    data, profile, nodata = geocase.read(1)
+
+    stats = compute_masked_raster_stats(data, nodata)
+
     assert profile["count"] == 1
-    assert profile["dtype"] == "float32"
-    assert nodata is not None
+    assert stats["valid_pixel_count"] > 0.0
+    assert 0.0 <= stats["nodata_ratio"] <= 1.0
+    assert stats["max"] >= stats["min"]
 
-    nodata_mask = data == nodata
-    valid = data[~nodata_mask]
+    if geocase.id == "geotiff_nodata_small":
+        assert nodata is not None
+        assert stats["nodata_ratio"] > 0.0
 
-    nodata_pixels = int(np.sum(nodata_mask))
-    valid_mean = float(valid.mean())
-    valid_std = float(valid.std())
-
-    assert nodata_pixels > 0
-    assert valid.size > 0
-    assert np.isfinite(valid_mean)
-    assert np.isfinite(valid_std)
+    if geocase.id == "geotiff_utm_boundary":
+        assert nodata is None
+        assert stats["nodata_ratio"] == 0.0

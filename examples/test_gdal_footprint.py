@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import Any, Callable, cast
 
 import geopandas as gpd
 import numpy as np
 import pytest
 import rasterio
+import geocase
 from rasterio.features import shapes
 from shapely.geometry import shape
 from shapely.ops import unary_union
@@ -25,73 +27,47 @@ if str(_EXAMPLES_DIR) not in sys.path:
 from gdal_footprint import geotiff_footprint_to_geojson
 
 
-_CORE_RASTER_CASES = [
-    (
-        "geotiff_nodata_small",
-        Path("src/geocase/data/core/raster/geotiff_nodata_small/nodata_sample.tif"),
-    ),
-    (
-        "geotiff_utm_boundary",
-        Path("src/geocase/data/core/raster/geotiff_utm_boundary/utm_boundary.tif"),
-    ),
+TypedMarkerDecorator = Callable[
+    ..., Callable[[Callable[..., object]], Callable[..., object]]
 ]
+
+geocase_case = cast(TypedMarkerDecorator, pytest.mark.geocase_case)
+
+_GEOCASE_ROOT = Path(geocase.__file__).resolve().parent
+_EDGE_RASTER_DIR = _GEOCASE_ROOT / "data" / "core" / "raster" / "footprint_edge_cases"
 
 _EDGE_RASTER_CASES = [
     (
         "all_valid_rectangular",
-        Path("src/geocase/data/core/raster/footprint_edge_cases/all_valid_rectangular.tif"),
-        Path("src/geocase/data/core/raster/footprint_edge_cases/all_valid_rectangular_footprint.geojson"),
+        _EDGE_RASTER_DIR / "all_valid_rectangular.tif",
+        _EDGE_RASTER_DIR / "all_valid_rectangular_footprint.geojson",
         0.99,
     ),
     (
         "hole_center_nodata",
-        Path("src/geocase/data/core/raster/footprint_edge_cases/hole_center_nodata.tif"),
-        Path("src/geocase/data/core/raster/footprint_edge_cases/hole_center_nodata_footprint.geojson"),
+        _EDGE_RASTER_DIR / "hole_center_nodata.tif",
+        _EDGE_RASTER_DIR / "hole_center_nodata_footprint.geojson",
         0.98,
     ),
     (
         "rotated_two_islands",
-        Path("src/geocase/data/core/raster/footprint_edge_cases/rotated_two_islands.tif"),
-        Path("src/geocase/data/core/raster/footprint_edge_cases/rotated_two_islands_footprint.geojson"),
+        _EDGE_RASTER_DIR / "rotated_two_islands.tif",
+        _EDGE_RASTER_DIR / "rotated_two_islands_footprint.geojson",
         0.98,
     ),
     (
         "nonsquare_diagonal_sparse",
-        Path("src/geocase/data/core/raster/footprint_edge_cases/nonsquare_diagonal_sparse.tif"),
-        Path("src/geocase/data/core/raster/footprint_edge_cases/nonsquare_diagonal_sparse_footprint.geojson"),
+        _EDGE_RASTER_DIR / "nonsquare_diagonal_sparse.tif",
+        _EDGE_RASTER_DIR / "nonsquare_diagonal_sparse_footprint.geojson",
         0.98,
     ),
     (
         "thin_corridor_shape",
-        Path("src/geocase/data/core/raster/footprint_edge_cases/thin_corridor_shape.tif"),
-        Path("src/geocase/data/core/raster/footprint_edge_cases/thin_corridor_shape_footprint.geojson"),
+        _EDGE_RASTER_DIR / "thin_corridor_shape.tif",
+        _EDGE_RASTER_DIR / "thin_corridor_shape_footprint.geojson",
         0.98,
     ),
 ]
-
-_VECTOR_CASES = [
-    (
-        "simple_valid_polygon",
-        Path("src/geocase/data/core/vector/simple_valid_polygon/geometry.geojson"),
-    ),
-    (
-        "polygon_with_hole",
-        Path("src/geocase/data/core/vector/polygon_with_hole/geometry.geojson"),
-    ),
-    (
-        "self_intersecting_polygon",
-        Path("src/geocase/data/core/vector/self_intersecting_polygon/geometry.geojson"),
-    ),
-    (
-        "dateline_crossing_polygon",
-        Path("src/geocase/data/core/vector/dateline_crossing_polygon/geometry.geojson"),
-    ),
-    (
-        "mixed_encoding_attributes",
-        Path("src/geocase/data/core/vector/mixed_encoding_attributes/mixed_attrs.gpkg"),
-    ),
-]
-
 
 def _expected_convex_hull_from_raster(path: Path):
     with rasterio.open(path) as src:
@@ -121,12 +97,13 @@ def _expected_convex_hull_from_raster(path: Path):
         return unary_union(polys).convex_hull
 
 
-@pytest.mark.parametrize("case_id,tif_path", _CORE_RASTER_CASES)
+@geocase_case("geotiff_nodata_small", "geotiff_utm_boundary")
 def test_gdal_footprint_core_cases_match_expected_convex_hull(
-    case_id: str,
-    tif_path: Path,
+    geocase: Any,
     tmp_path: Path,
 ) -> None:
+    case_id = geocase.id
+    tif_path = geocase.primary_path
     out_path = tmp_path / f"{case_id}_footprint.geojson"
     created = geotiff_footprint_to_geojson(tif_path, out_path)
 
@@ -197,12 +174,19 @@ def test_gdal_footprint_edge_cases_against_real_expected_data(
     assert_footprint_rectangularity(actual, min_ratio=min_rect_ratio)
 
 
-@pytest.mark.parametrize("case_id,vector_path", _VECTOR_CASES)
+@geocase_case(
+    "simple_valid_polygon",
+    "polygon_with_hole",
+    "self_intersecting_polygon",
+    "dateline_crossing_polygon",
+    "mixed_encoding_attributes",
+)
 def test_gdal_footprint_rejects_vector_inputs(
-    case_id: str,
-    vector_path: Path,
+    geocase: Any,
     tmp_path: Path,
 ) -> None:
+    case_id = geocase.id
+    vector_path = geocase.primary_path
     out_path = tmp_path / f"{case_id}_footprint.geojson"
 
     with pytest.raises(
