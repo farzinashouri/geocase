@@ -8,6 +8,17 @@ This document describes the current state of the GeoCase project and the workflo
 
 GeoCase has a complete folder structure, real test data, and four fully implemented layers with 216 passing unit tests.
 
+### Recent updates (April 2026)
+
+- Pytest plugin is now implemented (`pytest_plugin/__init__.py`, `pytest_plugin/fixtures.py`, `pytest_plugin/markers.py`).
+- Plugin-driven examples were added/updated in `examples/` (CRS, dateline, GDAL footprint, real geospatial function).
+- Selector model now supports first-class `geometry_type` filtering end-to-end.
+- Practical docs were added for usage and product direction:
+	- `docs/testing-your-function-with-geocase.md`
+	- `docs/case-recommendation-service.md`
+	- `docs/case-recommendation-api-spec.md`
+	- `docs/case-recommendation-user-flow.md`
+
 **Environment:** Python 3.14.3 · Conda (Miniforge) · All geospatial deps pinned in `environment.yml`.
 
 ### What is implemented
@@ -53,7 +64,6 @@ The following Python source files are single-line docstring stubs awaiting imple
 - `catalog/validators.py`, `catalog/manifests.py`
 - `loaders/generic.py`, `geopandas_loader.py`, `rasterio_loader.py`, `xarray_loader.py`
 - `storage/local.py`, `remote.py`, `cache.py`, `hashing.py`
-- `pytest_plugin/fixtures.py`, `markers.py`
 - `cli/main.py`, `list_cases.py`, `show_case.py`, `fetch_case.py`, `validate_catalog.py`
 - `api/public.py`, `api/types.py`
 
@@ -137,9 +147,11 @@ Work proceeds in waves. Each wave adds one coherent slice of functionality and i
 
 **Goal:** First-class pytest experience.
 
-- [ ] `pytest_plugin/fixtures.py` — `geocase_registry`, `geocase` fixtures
-- [ ] `pytest_plugin/markers.py` — custom markers
-- [ ] End-to-end example tests in `examples/`
+- [x] `pytest_plugin/fixtures.py` — `geocase_registry`, `geocase_case`, `geocase_cases` fixtures and marker resolution
+- [x] `pytest_plugin/markers.py` — custom marker registration (`geocase_case`, `geocase_suite`, `geocase_select`)
+- [x] Plugin entrypoint + auto-parametrize hook in `pytest_plugin/__init__.py`
+- [x] End-to-end plugin-driven examples in `examples/`
+- [ ] Add dedicated plugin unit/integration tests for error paths and edge behavior
 
 ### Wave 6 — Storage, CLI, polish
 

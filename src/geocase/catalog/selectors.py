@@ -23,8 +23,8 @@ def matches_selection(case: CaseMetadata, sel: SuiteSelection) -> bool:
     Filter logic:
       * ``include_case_ids`` — if non-empty, case.id must be listed.
       * ``exclude_case_ids`` — case.id must *not* be listed.
-      * ``category``, ``test_tier``, ``storage_class``, ``format``,
-        ``size_class`` — exact match when the field is set.
+            * ``category``, ``geometry_type``, ``test_tier``, ``storage_class``,
+                ``format``, ``size_class`` — exact match when the field is set.
       * ``tags_any`` — case must have **at least one** of the listed tags.
       * ``tags_all`` — case must have **all** of the listed tags.
       * ``risk_types_any`` — case must have at least one matching risk type.
@@ -39,6 +39,8 @@ def matches_selection(case: CaseMetadata, sel: SuiteSelection) -> bool:
 
     # Exact-match scalar fields
     if sel.category is not None and case.category != sel.category:
+        return False
+    if sel.geometry_type is not None and case.geometry_type != sel.geometry_type:
         return False
     if sel.test_tier is not None and case.test_tier != sel.test_tier:
         return False
@@ -67,6 +69,7 @@ def select_cases(
     selection: SuiteSelection | None = None,
     *,
     category: Category | None = None,
+    geometry_type: str | None = None,
     test_tier: TestTier | None = None,
     storage_class: StorageClass | None = None,
     format: FormatType | None = None,
@@ -96,6 +99,7 @@ def select_cases(
             include_case_ids=include_ids or [],
             exclude_case_ids=exclude_ids or [],
             category=category,
+            geometry_type=geometry_type,
             test_tier=test_tier,
             storage_class=storage_class,
             format=format,

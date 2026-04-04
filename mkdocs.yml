@@ -31,6 +31,10 @@ nav:
   - Workflow: workflow.md
   - Guides:
       - Adding a Case: adding-a-case.md
+      - Testing Your Function: testing-your-function-with-geocase.md
+      - Case Recommendation Service: case-recommendation-service.md
+      - Case Recommendation API Spec: case-recommendation-api-spec.md
+      - Case Recommendation User Flow: case-recommendation-user-flow.md
       - Parameterized Tests: using-parameterized-tests.md
       - Remote Datasets: remote-datasets.md
   - Reference:

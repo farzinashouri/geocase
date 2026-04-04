@@ -54,6 +54,14 @@ class TestMatchesSelection:
         assert matches_selection(vector_case, sel) is False
 
     # -- test_tier filter --
+    def test_geometry_type_match(self, vector_case: CaseMetadata):
+        sel = SuiteSelection(geometry_type="Polygon")
+        assert matches_selection(vector_case, sel) is True
+
+    def test_geometry_type_mismatch(self, vector_case: CaseMetadata):
+        sel = SuiteSelection(geometry_type="Point")
+        assert matches_selection(vector_case, sel) is False
+
     def test_tier_match(self, vector_case: CaseMetadata):
         sel = SuiteSelection(test_tier="unit")
         assert matches_selection(vector_case, sel) is True
@@ -173,6 +181,24 @@ class TestSelectCases:
     def test_select_by_format_geojson(self, all_cases: list[CaseMetadata]):
         result = select_cases(all_cases, format="GeoJSON")
         assert all(c.format == "GeoJSON" for c in result)
+
+    def test_select_by_geometry_type_polygon(self, all_cases: list[CaseMetadata]):
+        result = select_cases(
+            all_cases,
+            category="vector",
+            geometry_type="Polygon",
+        )
+        assert len(result) == 4
+        assert all(c.geometry_type == "Polygon" for c in result)
+
+    def test_select_by_geometry_type_point(self, all_cases: list[CaseMetadata]):
+        result = select_cases(
+            all_cases,
+            category="vector",
+            geometry_type="Point",
+        )
+        assert len(result) == 1
+        assert result[0].id == "mixed_encoding_attributes"
 
     def test_select_by_tags_any(self, all_cases: list[CaseMetadata]):
         result = select_cases(all_cases, tags_any=["nodata", "masking"])
