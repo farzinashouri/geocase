@@ -148,6 +148,56 @@ def test_your_function_on_selected_cases(geocase) -> None:
 
 ---
 
+## Example edge-case fixtures for interview-style helpers
+
+The bundled catalog now includes several tiny cases that are useful when you
+want realistic inputs for "simple but imperfect" geospatial helpers.
+
+These cases are especially handy for side-by-side tests where:
+
+- the original helper is expected to fail or behave naively, and
+- a `*_perfect` variant is expected to handle the case correctly.
+
+### Vector fixtures
+
+| Case ID | What it is for | Typical helper gap it exposes |
+|---|---|---|
+| `wrapped_longitude_point` | Point stored as `190°` longitude in EPSG:4326 | Geographic reprojection that fails to normalize longitude back into `[-180, 180]` |
+| `dateline_chain_cluster` | Three-point transitive cluster around the antimeridian | Projection-based clustering that splits a geodesically connected chain |
+| `spike_invalid_polygon` | Invalid polygon that repairs to mixed polygon + line output | Geometry repair helpers that return `GeometryCollection` instead of polygon-only output |
+| `svalbard_special_zone_polygon` | Polygon representative point in a Svalbard special UTM zone | Naive UTM zone lookup that ignores Svalbard exceptions |
+| `classic_antimeridian_polygon` | Polygon encoded across the classic `-180/180` seam | Bounding-box or antimeridian logic that uses raw bounds instead of minimal wrapped span |
+| `dateline_points_pair` | Two points on opposite sides of the antimeridian but close in reality | Distance, clustering, or UTM logic that treats wrapped longitudes as far apart |
+
+### Raster fixtures
+
+| Case ID | What it is for | Typical helper gap it exposes |
+|---|---|---|
+| `geotiff_nodata_small` | Small single-band raster with explicit NoData | Sampling helpers that return the sentinel instead of masking NoData |
+| `geotiff_nodata_small_shifted` | Same raster shifted exactly one pixel east | Alignment logic that is too strict about matching extents |
+| `geotiff_utm_boundary` | Projected raster with UTM coordinates | Raster clipping or rasterization helpers that assume WGS84 bounds already match raster CRS |
+
+### How to use them quickly
+
+For explicit case IDs:
+
+```python
+@pytest.mark.geocase_case("wrapped_longitude_point", "spike_invalid_polygon")
+def test_specific_edge_cases(geocase) -> None:
+    data = geocase.load()
+    assert data is not None
+```
+
+For metadata-driven selection:
+
+```python
+@pytest.mark.geocase_select(risk_types_any=["coordinate_wrapping"])
+def test_coordinate_wrapping_cases(geocase) -> None:
+    assert geocase is not None
+```
+
+---
+
 ## What is `geocase.id`?
 
 `geocase.id` is the unique case identifier from the case metadata (`case.yaml`).

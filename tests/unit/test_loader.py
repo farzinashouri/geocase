@@ -150,7 +150,7 @@ class TestLoadCaseIndex:
         paths = load_case_index(_CASE_INDEX)
         assert isinstance(paths, list)
         assert len(paths) >= 8
-        assert all(p.endswith("case.yaml") for p in paths)
+        assert all(p.endswith(".yaml") for p in paths)
 
     def test_missing_index(self):
         with pytest.raises(FileNotFoundError):

@@ -1,9 +1,8 @@
-id: simple_valid_polygon
-title: Simple Valid Polygon
+id: utm_zone_33_polygon
+title: UTM Zone 33 Polygon
 description: >
-  A straightforward, well-formed polygon with no holes, no self-
-  intersections, and a standard CRS.  Serves as the baseline "happy
-  path" for geometry loading and validation.
+  A valid polygon in WGS84 whose centroid falls inside UTM zone 33N.
+  Useful for baseline CRS and EPSG zone tests.
 category: vector
 format: GeoJSON
 test_tier: unit
@@ -17,19 +16,19 @@ tags:
   - vector
   - polygon
   - valid
-  - baseline
+  - crs
+  - utm
 
 risk_types:
-  - none
+  - zone_selection
 
 behavioral_goal: >
-  Confirm that a minimal valid polygon loads without error and passes
-  all standard geometry checks.
+  Provide a stable WGS84 polygon whose representative point maps to EPSG:32633.
 
 expected_capabilities:
   - load
   - bounds-check
-  - geometry-validation
+  - reprojection
 
 loader_hint: geopandas
 geometry_type: Polygon
@@ -52,8 +51,4 @@ assertions:
     - Polygon
 
 params:
-  expected_bounds:
-    - 10.0
-    - 50.0
-    - 11.0
-    - 51.0
+  expected_utm_epsg: 32633

@@ -1,9 +1,8 @@
-id: simple_valid_polygon
-title: Simple Valid Polygon
+id: nearby_points_cluster
+title: Nearby Points Cluster
 description: >
-  A straightforward, well-formed polygon with no holes, no self-
-  intersections, and a standard CRS.  Serves as the baseline "happy
-  path" for geometry loading and validation.
+  Three nearby WGS84 points that should cluster together under a modest
+  metric distance threshold.
 category: vector
 format: GeoJSON
 test_tier: unit
@@ -15,24 +14,23 @@ status: validated
 
 tags:
   - vector
-  - polygon
-  - valid
+  - point
+  - clustering
   - baseline
 
 risk_types:
-  - none
+  - distance_threshold_error
 
 behavioral_goal: >
-  Confirm that a minimal valid polygon loads without error and passes
-  all standard geometry checks.
+  Confirm that nearby local points are grouped into a single cluster.
 
 expected_capabilities:
   - load
-  - bounds-check
   - geometry-validation
+  - proximity-check
 
 loader_hint: geopandas
-geometry_type: Polygon
+geometry_type: Point
 crs: EPSG:4326
 
 files:
@@ -49,11 +47,7 @@ assertions:
   expect_crs: true
   expected_epsg: 4326
   expected_geometry_types:
-    - Polygon
+    - Point
 
 params:
-  expected_bounds:
-    - 10.0
-    - 50.0
-    - 11.0
-    - 51.0
+  expected_cluster_count: 1

@@ -1,9 +1,9 @@
-id: simple_valid_polygon
-title: Simple Valid Polygon
+id: dateline_points_pair
+title: Dateline Points Pair
 description: >
-  A straightforward, well-formed polygon with no holes, no self-
-  intersections, and a standard CRS.  Serves as the baseline "happy
-  path" for geometry loading and validation.
+  Two points positioned on opposite sides of the antimeridian but very
+  close in real-world distance. Useful for exposing longitude-wrapping
+  clustering and UTM-zone edge logic.
 category: vector
 format: GeoJSON
 test_tier: unit
@@ -15,24 +15,26 @@ status: validated
 
 tags:
   - vector
-  - polygon
-  - valid
-  - baseline
+  - point
+  - dateline
+  - antimeridian
+  - clustering
 
 risk_types:
-  - none
+  - coordinate_wrapping
+  - distance_threshold_error
+  - zone_selection
 
 behavioral_goal: >
-  Confirm that a minimal valid polygon loads without error and passes
-  all standard geometry checks.
+  Expose logic that treats antimeridian-adjacent points as far apart.
 
 expected_capabilities:
   - load
-  - bounds-check
   - geometry-validation
+  - proximity-check
 
 loader_hint: geopandas
-geometry_type: Polygon
+geometry_type: Point
 crs: EPSG:4326
 
 files:
@@ -49,11 +51,8 @@ assertions:
   expect_crs: true
   expected_epsg: 4326
   expected_geometry_types:
-    - Polygon
+    - Point
 
 params:
-  expected_bounds:
-    - 10.0
-    - 50.0
-    - 11.0
-    - 51.0
+  expected_west_utm_epsg: 32601
+  expected_east_utm_epsg: 32660

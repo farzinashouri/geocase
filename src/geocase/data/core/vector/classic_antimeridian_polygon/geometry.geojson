@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "classic_antimeridian_polygon"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [179.0, 0.0],
+            [-179.0, 0.0],
+            [-179.0, 1.0],
+            [179.0, 1.0],
+            [179.0, 0.0]
+          ]
+        ]
+      }
+    }
+  ]
+}

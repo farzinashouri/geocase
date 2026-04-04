@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:32633"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "rasterize_match_utm33_polygon"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [490500.0, 5600500.0],
+            [509500.0, 5600500.0],
+            [509500.0, 5619500.0],
+            [490500.0, 5619500.0],
+            [490500.0, 5600500.0]
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,9 +1,9 @@
-id: simple_valid_polygon
-title: Simple Valid Polygon
+id: rasterize_match_wgs84_polygon
+title: Rasterize Match WGS84 Polygon
 description: >
-  A straightforward, well-formed polygon with no holes, no self-
-  intersections, and a standard CRS.  Serves as the baseline "happy
-  path" for geometry loading and validation.
+  A WGS84 polygon chosen to overlap the bundled UTM boundary raster once
+  reprojected to EPSG:32633. Used to verify that robust rasterization can
+  reproject vector input correctly.
 category: vector
 format: GeoJSON
 test_tier: unit
@@ -16,20 +16,22 @@ status: validated
 tags:
   - vector
   - polygon
-  - valid
-  - baseline
+  - rasterization
+  - crs
+  - reprojection
 
 risk_types:
-  - none
+  - rasterization_alignment
+  - reprojection_error
 
 behavioral_goal: >
-  Confirm that a minimal valid polygon loads without error and passes
-  all standard geometry checks.
+  Confirm that vector geometries in WGS84 can be reprojected to the raster
+  grid CRS and successfully rasterized.
 
 expected_capabilities:
   - load
-  - bounds-check
-  - geometry-validation
+  - reprojection
+  - rasterization
 
 loader_hint: geopandas
 geometry_type: Polygon
@@ -50,10 +52,3 @@ assertions:
   expected_epsg: 4326
   expected_geometry_types:
     - Polygon
-
-params:
-  expected_bounds:
-    - 10.0
-    - 50.0
-    - 11.0
-    - 51.0

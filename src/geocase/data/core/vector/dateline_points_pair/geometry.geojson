@@ -1,0 +1,25 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "east_dateline_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [179.9, 45.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "west_dateline_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-179.9, 45.0]
+      }
+    }
+  ]
+}

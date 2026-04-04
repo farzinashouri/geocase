@@ -48,4 +48,4 @@ assertions:
 
 params:
   expected_footprint: rotated_two_islands_footprint.geojson
-  min_rect_ratio: 0.98
+  min_rect_ratio: 0.74

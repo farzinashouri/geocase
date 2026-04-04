@@ -1,9 +1,9 @@
-id: simple_valid_polygon
-title: Simple Valid Polygon
+id: rasterize_match_utm33_polygon
+title: Rasterize Match UTM33 Polygon
 description: >
-  A straightforward, well-formed polygon with no holes, no self-
-  intersections, and a standard CRS.  Serves as the baseline "happy
-  path" for geometry loading and validation.
+  A projected polygon in EPSG:32633 that sits fully inside the bundled
+  UTM raster extent. Used for rasterization tests that should succeed
+  without reprojection.
 category: vector
 format: GeoJSON
 test_tier: unit
@@ -16,24 +16,24 @@ status: validated
 tags:
   - vector
   - polygon
-  - valid
-  - baseline
+  - rasterization
+  - crs
+  - utm
 
 risk_types:
-  - none
+  - rasterization_alignment
 
 behavioral_goal: >
-  Confirm that a minimal valid polygon loads without error and passes
-  all standard geometry checks.
+  Confirm that rasterization works when vector and raster coordinates already match.
 
 expected_capabilities:
   - load
   - bounds-check
-  - geometry-validation
+  - rasterization
 
 loader_hint: geopandas
 geometry_type: Polygon
-crs: EPSG:4326
+crs: EPSG:32633
 
 files:
   primary: geometry.geojson
@@ -47,13 +47,6 @@ assertions:
   expect_loadable: true
   expect_valid_geometry: true
   expect_crs: true
-  expected_epsg: 4326
+  expected_epsg: 32633
   expected_geometry_types:
     - Polygon
-
-params:
-  expected_bounds:
-    - 10.0
-    - 50.0
-    - 11.0
-    - 51.0

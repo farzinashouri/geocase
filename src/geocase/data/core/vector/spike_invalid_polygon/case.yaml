@@ -1,0 +1,59 @@
+id: spike_invalid_polygon
+title: Spike Invalid Polygon
+description: >
+  A polygon with a self-touching spike that repairs to a mixed
+  GeometryCollection containing both polygonal and linear parts.
+  Useful for testing geometry-fixing helpers that should preserve only
+  polygonal output.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - polygon
+  - invalid
+  - spike
+  - repair
+
+risk_types:
+  - repair_returns_geometrycollection
+  - linear_artifacts_after_repair
+  - mixed_geometry_output
+
+behavioral_goal: >
+  Expose geometry repair helpers that return mixed geometry collections
+  instead of polygon-only repaired output.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - repair
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: false
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  repaired_geom_type: GeometryCollection

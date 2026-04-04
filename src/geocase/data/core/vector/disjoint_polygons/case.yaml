@@ -1,9 +1,8 @@
-id: simple_valid_polygon
-title: Simple Valid Polygon
+id: disjoint_polygons
+title: Disjoint Polygons
 description: >
-  A straightforward, well-formed polygon with no holes, no self-
-  intersections, and a standard CRS.  Serves as the baseline "happy
-  path" for geometry loading and validation.
+  Two separated polygon features in the same vector dataset. Useful for
+  dissolve and intersection tests that should preserve non-overlapping parts.
 category: vector
 format: GeoJSON
 test_tier: unit
@@ -16,20 +15,20 @@ status: validated
 tags:
   - vector
   - polygon
-  - valid
-  - baseline
+  - multipart
+  - topology
 
 risk_types:
-  - none
+  - false_positive_intersection
+  - overaggressive_dissolve
 
 behavioral_goal: >
-  Confirm that a minimal valid polygon loads without error and passes
-  all standard geometry checks.
+  Confirm that disjoint features remain separate and do not intersect.
 
 expected_capabilities:
   - load
-  - bounds-check
   - geometry-validation
+  - topology-check
 
 loader_hint: geopandas
 geometry_type: Polygon
@@ -50,10 +49,3 @@ assertions:
   expected_epsg: 4326
   expected_geometry_types:
     - Polygon
-
-params:
-  expected_bounds:
-    - 10.0
-    - 50.0
-    - 11.0
-    - 51.0

@@ -1,9 +1,8 @@
-id: simple_valid_polygon
-title: Simple Valid Polygon
+id: empty_polygon
+title: Empty Polygon
 description: >
-  A straightforward, well-formed polygon with no holes, no self-
-  intersections, and a standard CRS.  Serves as the baseline "happy
-  path" for geometry loading and validation.
+  An explicitly empty polygon geometry used to verify that code handles
+  empty-but-typed polygon inputs without crashing.
 category: vector
 format: GeoJSON
 test_tier: unit
@@ -16,19 +15,17 @@ status: validated
 tags:
   - vector
   - polygon
-  - valid
+  - empty
   - baseline
 
 risk_types:
-  - none
+  - empty_geometry
 
 behavioral_goal: >
-  Confirm that a minimal valid polygon loads without error and passes
-  all standard geometry checks.
+  Confirm that geometry utilities gracefully handle Polygon EMPTY inputs.
 
 expected_capabilities:
   - load
-  - bounds-check
   - geometry-validation
 
 loader_hint: geopandas
@@ -50,10 +47,3 @@ assertions:
   expected_epsg: 4326
   expected_geometry_types:
     - Polygon
-
-params:
-  expected_bounds:
-    - 10.0
-    - 50.0
-    - 11.0
-    - 51.0

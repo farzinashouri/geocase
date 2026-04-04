@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "utm_zone_33_polygon"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.0, 55.0],
+            [14.0, 55.0],
+            [14.0, 56.0],
+            [13.0, 56.0],
+            [13.0, 55.0]
+          ]
+        ]
+      }
+    }
+  ]
+}

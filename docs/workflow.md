@@ -64,7 +64,7 @@ The following Python source files are single-line docstring stubs awaiting imple
 - `catalog/validators.py`, `catalog/manifests.py`
 - `loaders/generic.py`, `geopandas_loader.py`, `rasterio_loader.py`, `xarray_loader.py`
 - `storage/local.py`, `remote.py`, `cache.py`, `hashing.py`
-- `cli/main.py`, `list_cases.py`, `show_case.py`, `fetch_case.py`, `validate_catalog.py`
+- `cli/main.py`, `list_cases.py`, `show_case.py`, `fetch_case.py`, `validate_catalog.py` *(optional maintainer tooling for later)*
 - `api/public.py`, `api/types.py`
 
 Two docs are also stubs: `docs/getting-started.md` and `docs/adding-a-case.md`.
@@ -143,7 +143,7 @@ Work proceeds in waves. Each wave adds one coherent slice of functionality and i
 - [x] `assertions/__init__.py` — exports all 18 public assertion functions
 - [x] Unit tests: `test_assertions.py` (55)
 
-### Wave 5 — Plugin & integration (next)
+### Wave 5 — Plugin & integration ✅ / polishing continues
 
 **Goal:** First-class pytest experience.
 
@@ -153,15 +153,21 @@ Work proceeds in waves. Each wave adds one coherent slice of functionality and i
 - [x] End-to-end plugin-driven examples in `examples/`
 - [ ] Add dedicated plugin unit/integration tests for error paths and edge behavior
 
-### Wave 6 — Storage, CLI, polish
+### Wave 6 — Validation, storage, docs, release polish
 
-**Goal:** Remote cases, developer tooling, docs.
+**Goal:** Make the pytest-first package reliable, documented, and releasable.
 
-- [ ] `storage/local.py`, `remote.py`, `cache.py`, `hashing.py`
-- [ ] `cli/main.py`, `list_cases.py`, `show_case.py`, `fetch_case.py`, `validate_catalog.py`
 - [ ] `catalog/validators.py`, `catalog/manifests.py`
+- [ ] `storage/local.py`, `remote.py`, `cache.py`, `hashing.py`
 - [ ] `docs/getting-started.md`, `docs/adding-a-case.md`
+- [ ] Add release workflow for packaging and PyPI publishing
 - [ ] `api/public.py`, `api/types.py`
+
+### Wave 7 — Optional maintainer tooling
+
+**Goal:** Add non-essential tooling for catalog inspection and maintenance outside `pytest`.
+
+- [ ] `cli/main.py`, `list_cases.py`, `show_case.py`, `fetch_case.py`, `validate_catalog.py`
 
 ---
 
@@ -175,7 +181,11 @@ The minimum working product is when all of these succeed:
 4. ~~`select_cases(category="vector", test_tier="unit")` returns matching cases~~ ✅
 5. ~~`suite("core-vector")` resolves to its case list~~ ✅
 6. ~~`VectorCase.load()` returns a GeoDataFrame~~ ✅
-7. One parameterized pytest example works end-to-end ← **Wave 5**
+7. ~~One parameterized pytest example works end-to-end~~ ✅
+8. Dedicated plugin tests cover key error paths and edge behavior
+9. Starter docs explain install, selection, and authoring workflows
+
+CLI support is optional for this milestone.
 
 ---
 
@@ -183,11 +193,11 @@ The minimum working product is when all of these succeed:
 
 ### Branch strategy
 
-Work happens on feature branches off `main`. The current branch is `analyse_structure`.
+Work happens on feature branches off `main`. The current branch changes over time; use a focused branch per milestone or stabilization task.
 
 ### How to add code
 
-Follow the wave order. For each module:
+Follow the pytest-first priority order. For each module or doc area:
 
 1. Implement the module
 2. Add tests for that module
@@ -195,6 +205,16 @@ Follow the wave order. For each module:
 4. Move to the next module
 
 Keep prompts small and focused — one module at a time produces better results than asking for everything at once.
+
+Recommended order from the current state:
+
+1. Harden the plugin and case-driven examples
+2. Add validation and manifest support
+3. Complete storage/remote support needed by packaged or remote cases
+4. Finish onboarding docs
+5. Add release automation and publishing workflow
+6. Add a public API layer if users need a smaller supported surface
+7. Add CLI tooling only if maintainer workflows need it
 
 ### Running tests
 
