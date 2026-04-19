@@ -10,6 +10,18 @@ from shapely.geometry import GeometryCollection, MultiPolygon, Point, Polygon
 from shapely.ops import transform, unary_union
 
 
+def _looks_geographic(geom: Any) -> bool:
+    if geom is None or geom.is_empty:
+        return True
+
+    minx, miny, maxx, maxy = geom.bounds
+    if not all(math.isfinite(value) for value in (minx, miny, maxx, maxy)):
+        return False
+
+    return (-540.0 <= minx <= 540.0 and -540.0 <= maxx <= 540.0
+            and -90.0 <= miny <= 90.0 and -90.0 <= maxy <= 90.0)
+
+
 # =========================================================
 # 1. Reproject a point
 # =========================================================
@@ -73,26 +85,40 @@ def get_bbox(geom) -> tuple[float, float, float, float]:
 
 
 def get_bbox_perfect(geom) -> tuple[float, float, float, float]:
+    if geom is None:
+        raise TypeError("geom must not be None.")
+    if geom.is_empty:
+        return 0.0, 0.0, 0.0, 0.0
+    if not geom.is_valid:
+        raise ValueError("geom must be valid geometry.")
+
     minx, miny, maxx, maxy = geom.bounds
-    if (maxx - minx) <= 180.0:
+    if not _looks_geographic(geom) or (maxx - minx) <= 180.0:
         return minx, miny, maxx, maxy
 
     shifted_lons = []
-    for x, _ in geom.exterior.coords:
-        shifted_lons.append(x if x >= 0.0 else x + 360.0)
+    polygons: list[Polygon] = []
 
-    for ring in getattr(geom, "interiors", []):
-        for x, _ in ring.coords:
+    if isinstance(geom, Polygon):
+        polygons = [geom]
+    elif isinstance(geom, MultiPolygon):
+        polygons = list(geom.geoms)
+    elif isinstance(geom, GeometryCollection):
+        for part in geom.geoms:
+            if isinstance(part, Polygon):
+                polygons.append(part)
+            elif isinstance(part, MultiPolygon):
+                polygons.extend(list(part.geoms))
+
+    if not polygons:
+        return minx, miny, maxx, maxy
+
+    for polygon in polygons:
+        for x, _ in polygon.exterior.coords:
             shifted_lons.append(x if x >= 0.0 else x + 360.0)
-
-    if isinstance(geom, MultiPolygon):
-        shifted_lons = []
-        for polygon in geom.geoms:
-            for x, _ in polygon.exterior.coords:
+        for ring in polygon.interiors:
+            for x, _ in ring.coords:
                 shifted_lons.append(x if x >= 0.0 else x + 360.0)
-            for ring in polygon.interiors:
-                for x, _ in ring.coords:
-                    shifted_lons.append(x if x >= 0.0 else x + 360.0)
 
     return min(shifted_lons), miny, max(shifted_lons), maxy
 
@@ -122,8 +148,16 @@ def buffer_in_meters_perfect(geom: Any, distance_m: float) -> Any:
         raise TypeError("geom must not be None.")
     if geom.is_empty:
         return geom
+    if not geom.is_valid:
+        raise ValueError("geom must be valid geometry.")
     if distance_m < 0:
         raise ValueError("distance_m must be non-negative.")
+
+    if not _looks_geographic(geom):
+        buffered = geom.buffer(distance_m)
+        if buffered.is_empty or not buffered.is_valid:
+            raise ValueError("Buffered geometry is invalid after buffering.")
+        return buffered
 
     sample_points = []
     if isinstance(geom, Polygon):
@@ -144,7 +178,7 @@ def buffer_in_meters_perfect(geom: Any, distance_m: float) -> Any:
     def unwrap_lon(lon: float) -> float:
         return float(center_lon + (((lon - center_lon) + 180.0) % 360.0) - 180.0)
 
-    unwrapped_points = [(unwrap_lon(x), y) for x, y in sample_points]
+    unwrapped_points = [(unwrap_lon(x), y) for x, y, *_ in sample_points]
     unwrapped_centroid_x = sum(x for x, _ in unwrapped_points) / len(unwrapped_points)
     unwrapped_centroid_y = sum(y for _, y in unwrapped_points) / len(unwrapped_points)
 
@@ -256,6 +290,9 @@ def area_m2_perfect(geom) -> float:
         raise TypeError("geom must be a Polygon or MultiPolygon.")
     if not geom.is_valid:
         raise ValueError("geom must be a valid Polygon or MultiPolygon.")
+
+    if not _looks_geographic(geom):
+        return float(geom.area)
 
     centroid = geom.centroid
     area_crs = CRS.from_proj4(
@@ -527,7 +564,12 @@ def rasters_aligned_perfect(ds1: Any, ds2: Any, tol: float = 1e-9) -> bool:
 # 11. Reproject a geometry
 # =========================================================
 
-def reproject_geometry(geom, src_epsg: int, dst_epsg: int):
+def reproject_geometry(geom: Any, src_epsg: int, dst_epsg: int) -> Any:
+    if geom is None:
+        raise TypeError("geom must not be None.")
+    if geom.is_empty:
+        return geom
+
     transformer = Transformer.from_crs(
         f"EPSG:{src_epsg}",
         f"EPSG:{dst_epsg}",
@@ -541,6 +583,8 @@ def reproject_geometry_perfect(geom: Any, src_epsg: int, dst_epsg: int) -> Any:
         raise TypeError("geom must not be None.")
     if geom.is_empty:
         return geom
+    if not geom.is_valid:
+        raise ValueError("geom must be valid geometry.")
 
     src_crs = CRS.from_epsg(src_epsg)
     dst_crs = CRS.from_epsg(dst_epsg)
@@ -895,7 +939,7 @@ def cluster_points_perfect(points: list, max_distance_m: float) -> list[list]:
 # 16. Repair invalid polygons where possible
 # =========================================================
 
-def fix_geometry(geom):
+def fix_geometry(geom: Any) -> Any:
     if geom is None or geom.is_empty:
         return geom
     if geom.is_valid:
@@ -1102,11 +1146,18 @@ def crosses_antimeridian(geom) -> bool:
 
 
 def crosses_antimeridian_perfect(geom) -> bool:
+    if geom is None:
+        raise TypeError("geom must not be None.")
+    if geom.is_empty:
+        return False
+    if not _looks_geographic(geom):
+        return False
+
     def normalize_lon(lon: float) -> float:
         return ((lon + 180.0) % 360.0) - 180.0
 
     def ring_crosses(coords) -> bool:
-        raw_lons = [x for x, _ in coords]
+        raw_lons = [x for x, *_ in coords]
         normalized_lons = [normalize_lon(lon) for lon in raw_lons]
 
         for i in range(1, len(raw_lons)):
@@ -1131,3 +1182,84 @@ def crosses_antimeridian_perfect(geom) -> bool:
         return any(crosses_antimeridian_perfect(part) for part in geom.geoms)
 
     return False
+
+
+# =========================================================
+# 19. Detect Null Island (geocoding failure indicator)
+# =========================================================
+
+def detect_null_island(point: Any, tolerance: float = 0.0) -> bool:
+    """Return True if point is at or near (0, 0), indicating possible geocoding failure.
+
+    Simple version: exact match only (default tolerance=0).
+    """
+    if point is None or point.is_empty:
+        return False
+    return bool(point.x == 0.0 and point.y == 0.0)
+
+
+def detect_null_island_perfect(point: Any, tolerance: float = 1e-6) -> bool:
+    """Return True if point is at or near (0, 0), indicating possible geocoding failure.
+
+    Perfect version: uses tolerance for floating-point robustness.
+    """
+    if point is None:
+        raise TypeError("point must not be None.")
+    if point.is_empty:
+        return False
+    if not isinstance(point, Point):
+        raise TypeError("point must be a Point geometry.")
+    return bool(abs(point.x) <= tolerance and abs(point.y) <= tolerance)
+
+
+# =========================================================
+# 20. Validate coordinate bounds
+# =========================================================
+
+def validate_coordinate_bounds(geom: Any) -> tuple[bool, list[str]]:
+    """Validate that coordinates are within valid geographic ranges.
+
+    Simple version: basic bounds check.
+    """
+    if geom is None or geom.is_empty:
+        return True, []
+
+    errors: list[str] = []
+    minx, miny, maxx, maxy = geom.bounds
+
+    if minx < -180 or maxx > 180:
+        errors.append(f"Longitude out of bounds: [{minx}, {maxx}]")
+
+    if miny < -90 or maxy > 90:
+        errors.append(f"Latitude out of bounds: [{miny}, {maxy}]")
+
+    return len(errors) == 0, errors
+
+
+def validate_coordinate_bounds_perfect(geom: Any) -> tuple[bool, list[str]]:
+    """Validate that coordinates are within valid geographic ranges.
+
+    Perfect version: includes lat/lon swap detection heuristic.
+    """
+    if geom is None:
+        raise TypeError("geom must not be None.")
+    if geom.is_empty:
+        return True, []
+
+    errors: list[str] = []
+    minx, miny, maxx, maxy = geom.bounds
+
+    # Check longitude bounds
+    if minx < -180 or maxx > 180:
+        errors.append(f"Longitude out of bounds: [{minx}, {maxx}]")
+
+    # Check latitude bounds
+    if miny < -90 or maxy > 90:
+        errors.append(f"Latitude out of bounds: [{miny}, {maxy}]")
+
+    # Heuristic: if latitude exceeds ±90 but would be valid as longitude,
+    # this is likely a lat/lon swap
+    if (abs(miny) > 90 or abs(maxy) > 90) and (-180 <= miny <= 180) and (-180 <= maxy <= 180):
+        errors.append("Possible lat/lon swap detected: latitude values exceed ±90 but are valid as longitude")
+
+    return len(errors) == 0, errors

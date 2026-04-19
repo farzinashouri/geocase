@@ -1,0 +1,56 @@
+id: multipoint_geopackage_baseline
+title: MultiPoint GeoPackage Baseline
+description: >
+  Canonical baseline multipoint stored as a GeoPackage for cross-format
+  comparison and format-specific loader behavior testing.
+category: vector
+format: GPKG
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - multipoint
+  - valid
+  - baseline
+  - geopackage
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+
+behavioral_goal: >
+  Provide a canonical multipoint encoded as a GeoPackage so format-specific
+  loader behavior can be compared directly against the GeoJSON baseline.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: MultiPoint
+crs: EPSG:4326
+
+files:
+  primary: data.gpkg
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - MultiPoint
+
+params:
+  canonical_source_case_id: simple_valid_multipoint

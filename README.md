@@ -2,6 +2,8 @@
 
 GeoCase is a geospatial testing toolkit and case catalog for realistic, reproducible `pytest` tests.
 
+> Status: alpha. The core `pytest` workflow is usable today; current work focuses on expanding case coverage, polishing docs, and release readiness.
+
 The main goal is simple: use plain `pytest` with a few GeoCase fixtures and markers to run your geospatial code against curated edge cases.
 
 Instead of hand-picking random sample files, you select packaged cases (vector, raster, NetCDF) and run your function against scenarios such as CRS issues, dateline crossing, topology problems, and NoData behavior.
@@ -53,6 +55,30 @@ Run only GeoCase-marked tests:
 pytest -m "geocase_case or geocase_suite or geocase_select" -v
 ```
 
+## CI Jobs
+
+This repository uses GitLab CI with job definitions in `ci/` and includes from
+`.gitlab-ci.yml`.
+
+- `catalog_validation` (`ci/catalog-validation.yml`)
+    - runs catalog integrity checks (`build_case_index.py` generation smoke check and `validate_catalog.py`)
+- `core_tests` (`ci/core-tests.yml`)
+    - runs on push and merge request pipelines
+    - executes metadata/catalog/plugin-focused unit tests
+- `extended_tests` (`ci/extended-tests.yml`)
+    - runs on merge request pipelines and on the default branch
+    - executes runtime/loaders/assertions-focused unit tests
+
+Local equivalents:
+
+```bash
+python scripts/build_case_index.py --check
+python scripts/validate_catalog.py
+
+python -m pytest tests/unit/test_case_models.py tests/unit/test_loader.py tests/unit/test_registry.py tests/unit/test_selectors.py tests/unit/test_suites.py tests/unit/test_pytest_plugin.py -q
+python -m pytest tests/unit/test_cases.py tests/unit/test_assertions.py tests/unit/test_vector_loaders.py tests/unit/test_raster_loaders.py -q
+```
+
 ## Core Concepts
 
 - `@pytest.mark.geocase_case(...)`: select explicit case IDs.
@@ -62,10 +88,15 @@ pytest -m "geocase_case or geocase_suite or geocase_select" -v
 - `geocase_case`: convenience fixture for exactly one resolved case.
 - CLI tooling is optional; the primary workflow is plain `pytest`.
 
+If a GeoCase marker is missing, resolves no cases, refers to an unknown suite, or `geocase_case` resolves more than one case, the plugin now raises a focused `pytest.UsageError` that explains what to fix.
+
 ## Learn More
 
-- `docs/development-plan.md`
-- `docs/workflow.md`
-- `docs/testing-your-function-with-geocase.md`
-- `docs/using-parameterized-tests.md`
-- `docs/case-recommendation-service.md`
+- [`docs/getting-started.md`](docs/getting-started.md)
+- [`docs/testing-your-function-with-geocase.md`](docs/testing-your-function-with-geocase.md)
+- [`docs/case-discovery.md`](docs/case-discovery.md)
+- [`docs/assertions-reference.md`](docs/assertions-reference.md)
+- [`docs/examples-index.md`](docs/examples-index.md)
+- [`docs/contributing/development-plan.md`](docs/contributing/development-plan.md)
+- [`docs/contributing/workflow.md`](docs/contributing/workflow.md)
+- [`docs/design/case-recommendation-service.md`](docs/design/case-recommendation-service.md)

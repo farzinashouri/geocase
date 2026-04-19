@@ -27,20 +27,29 @@ theme:
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
-  - Development Plan: development-plan.md
   - Philosophy: philosophy.md
-  - Workflow: workflow.md
-  - Guides:
-      - Adding a Case: adding-a-case.md
+  - User Guides:
+      - Case Discovery: case-discovery.md
+      - Assertions Reference: assertions-reference.md
+      - Examples Index: examples-index.md
       - Testing Your Function: testing-your-function-with-geocase.md
-      - Case Recommendation Service: case-recommendation-service.md
-      - Case Recommendation API Spec: case-recommendation-api-spec.md
-      - Case Recommendation User Flow: case-recommendation-user-flow.md
       - Parameterized Tests: using-parameterized-tests.md
+      - Adding a Case: adding-a-case.md
       - Remote Datasets: remote-datasets.md
+  - Contributing:
+      - Workflow: contributing/workflow.md
+      - Development Plan: contributing/development-plan.md
+      - Structure & Planning: contributing/structure-and-planning.md
+      - Testing Edge Cases: contributing/testing-edge-cases.md
+      - Raster Dtypes & Radiometric Resolution: contributing/raster-dtypes-and-radiometric-resolution.md
+      - Vector Dataset Generation: contributing/vector-dataset-generation.md
+  - Design:
+      - Case Recommendation Service: design/case-recommendation-service.md
+      - Case Recommendation API Spec: design/case-recommendation-api-spec.md
+      - Case Recommendation User Flow: design/case-recommendation-user-flow.md
+      - Database Design: design/database-design.md
   - Reference:
-      - Database Design: database-design.md
-      - Structure & Planning: structure-and-planning.md
+      - Vector Coverage Matrix: _generated/vector-coverage-matrix.md
 
 markdown_extensions:
   - admonition

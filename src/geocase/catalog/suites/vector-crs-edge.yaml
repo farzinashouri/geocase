@@ -1,0 +1,44 @@
+suite_key: vector-crs-edge
+title: Vector CRS Edge Cases Suite
+description: >
+  Comprehensive CRS and geographic edge case coverage: poles, equator,
+  antimeridian/dateline crossing, UTM zone boundaries, Web Mercator
+  limits, and reprojection stress tests.
+schema_version: "1.0"
+
+selection:
+  tags_any:
+    - crs
+    - antimeridian
+    - dateline
+    - utm
+    - reprojection
+    - pole
+    - equator
+    - web_mercator
+  category: vector
+  storage_class: bundled
+
+case_order:
+  - north_pole_point
+  - north_pole_polygon
+  - south_pole_point
+  - south_pole_polygon
+  - equator_crossing_line
+  - equator_polygon
+  - web_mercator_baseline
+  - utm_zone_33_polygon
+  - svalbard_special_zone_polygon
+  - dateline_crossing_polygon
+  - classic_antimeridian_polygon
+  - dateline_chain_cluster
+  - dateline_points_pair
+  - wrapped_longitude_point
+  - rasterize_match_wgs84_polygon
+  - rasterize_match_utm33_polygon
+
+notes: >
+  This suite exercises all CRS-related edge cases including polar
+  regions, the antimeridian, equator crossings, and projection
+  boundary behavior. Essential for validating global-scale geospatial
+  workflows and reprojection code paths.

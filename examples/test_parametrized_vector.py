@@ -9,10 +9,10 @@ from geocase.cases.factory import create_case
 
 
 _VECTOR_CASE_DIRS = {
-	"simple_valid_polygon": Path("src/geocase/data/core/vector/simple_valid_polygon"),
-	"polygon_with_hole": Path("src/geocase/data/core/vector/polygon_with_hole"),
-	"self_intersecting_polygon": Path("src/geocase/data/core/vector/self_intersecting_polygon"),
-	"dateline_crossing_polygon": Path("src/geocase/data/core/vector/dateline_crossing_polygon"),
+	"simple_valid_polygon": Path("src/geocase/data/core/vector/polygon/geojson/simple_valid_polygon"),
+	"polygon_with_hole": Path("src/geocase/data/core/vector/special/holes/polygon_with_hole"),
+	"self_intersecting_polygon": Path("src/geocase/data/core/vector/special/invalid/self_intersecting_polygon"),
+	"dateline_crossing_polygon": Path("src/geocase/data/core/vector/special/dateline/dateline_crossing_polygon"),
 }
 
 

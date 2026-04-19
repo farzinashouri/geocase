@@ -1,1 +1,11 @@
-# Catalog Validation CI
+catalog_validation:
+  stage: test
+  image: python:3.11
+  before_script:
+    - python -m pip install --upgrade pip
+    - python -m pip install -e .
+  script:
+    - python scripts/build_case_index.py --check
+    - python scripts/validate_catalog.py
+    - python scripts/generate_vector_coverage_matrix.py --output docs/_generated/vector-coverage-matrix.md
+    - git diff --exit-code -- docs/_generated/vector-coverage-matrix.md

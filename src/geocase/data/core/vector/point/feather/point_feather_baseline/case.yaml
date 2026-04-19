@@ -1,0 +1,55 @@
+id: point_feather_baseline
+title: Point Feather Baseline
+description: >
+  Canonical baseline point stored as Feather for Arrow-backed point coverage.
+category: vector
+format: Feather
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - point
+  - valid
+  - baseline
+  - feather
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+  - columnar_storage_behavior
+
+behavioral_goal: >
+  Provide a canonical point encoded as Feather so Arrow-backed point loading can be compared against GeoJSON and driver-backed baselines.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - reprojection
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: geometry.feather
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  canonical_source_case_id: simple_valid_point

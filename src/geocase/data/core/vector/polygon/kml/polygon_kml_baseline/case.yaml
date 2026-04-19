@@ -1,0 +1,55 @@
+id: polygon_kml_baseline
+title: Polygon KML Baseline
+description: >
+  Canonical baseline polygon stored as KML to exercise polygonal XML-driver loading.
+category: vector
+format: KML
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - polygon
+  - valid
+  - baseline
+  - kml
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+  - xml_driver_behavior
+
+behavioral_goal: >
+  Provide a canonical polygon encoded as KML so polygon driver-backed loading can be compared against the GeoJSON baseline.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: polygon.kml
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  canonical_source_case_id: simple_valid_polygon

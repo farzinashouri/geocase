@@ -1,0 +1,56 @@
+id: geotiff_float64_small
+title: GeoTIFF Float64 Small
+description: >
+  A small single-band GeoTIFF stored as 64-bit floating-point values. Tests
+  that raster loaders and downstream code preserve high-precision floating
+  dtype semantics rather than narrowing to `float32` implicitly.
+category: raster
+format: GeoTIFF
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - dtype
+  - float64
+
+risk_types:
+  - dtype_coercion
+  - precision_loss
+  - nodata_ignored
+
+behavioral_goal: >
+  Confirm that 64-bit floating-point rasters open with the correct dtype and
+  preserve their declared numeric storage type through simple reads.
+
+expected_capabilities:
+  - load
+  - dtype-check
+  - nodata-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: float64_sample.tif
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expect_nodata: true
+
+params:
+  nodata_value: -9999.0
+  band_count: 1
+  dtype: float64

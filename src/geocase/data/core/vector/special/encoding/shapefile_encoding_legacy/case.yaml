@@ -1,0 +1,77 @@
+id: shapefile_encoding_legacy
+title: Shapefile Legacy DBF Encoding
+description: >
+  A Shapefile dataset with attribute text encoded using a legacy code page
+  (Windows-1252/CP1252) instead of UTF-8. Many older Shapefiles and GIS
+  tools use code page-based encoding, which can cause mojibake when read
+  with UTF-8 assumptions. This case exposes encoding detection failures
+  and character corruption in attribute parsing.
+category: vector
+format: Shapefile
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - encoding
+  - shapefile
+  - attributes
+  - text
+  - i18n
+  - format_specific
+  - legacy
+
+risk_types:
+  - encoding_error
+  - mojibake
+  - attribute_corruption
+  - format_specific
+
+behavioral_goal: >
+  Expose loaders that assume UTF-8 encoding for Shapefile attributes.
+  Detect mojibake or character corruption when reading legacy code page
+  encoded text. Test encoding detection and .cpg file handling.
+
+expected_capabilities:
+  - load
+  - attribute-inspection
+  - encoding-detection
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: legacy_encoding.shp
+  sidecars:
+    - legacy_encoding.dbf
+    - legacy_encoding.shx
+    - legacy_encoding.prj
+    - legacy_encoding.cpg
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  encoding: windows-1252
+  special_characters:
+    - "Zürich"
+    - "Köln"
+    - "Malmö"
+    - "São Paulo"
+  expected_correct_reading: true
+  cpg_file_present: true

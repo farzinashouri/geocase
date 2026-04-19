@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document id="root_doc">
+<Schema name="zones" id="zones">
+	<SimpleField name="population" type="string"></SimpleField>
+	<SimpleField name="area_km2" type="string"></SimpleField>
+	<SimpleField name="is_urban" type="string"></SimpleField>
+	<SimpleField name="category" type="string"></SimpleField>
+</Schema>
+<Folder><name>zones</name>
+  <Placemark id="zones.1">
+	<name>Zone A</name>
+	<description>Downtown area</description>
+	<ExtendedData><SchemaData schemaUrl="#zones">
+		<SimpleData name="population">15000</SimpleData>
+		<SimpleData name="area_km2">12.5</SimpleData>
+		<SimpleData name="is_urban">true</SimpleData>
+		<SimpleData name="category">residential</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>10.0,52.0,0 10.1,52.0,0 10.1,52.1,0 10.0,52.1,0 10.0,52.0,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark id="zones.2">
+	<name>Zone B</name>
+	<description>Rural region</description>
+	<ExtendedData><SchemaData schemaUrl="#zones">
+		<SimpleData name="population">28000</SimpleData>
+		<SimpleData name="area_km2">45.7</SimpleData>
+		<SimpleData name="is_urban">false</SimpleData>
+		<SimpleData name="category">agricultural</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>11.0,53.0,0 11.2,53.0,0 11.2,53.2,0 11.0,53.2,0 11.0,53.0,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark id="zones.3">
+	<name>Zone C</name>
+	<description>Suburban zone</description>
+	<ExtendedData><SchemaData schemaUrl="#zones">
+		<SimpleData name="population">42000</SimpleData>
+		<SimpleData name="area_km2">89.123456789</SimpleData>
+		<SimpleData name="is_urban">true</SimpleData>
+		<SimpleData name="category">mixed-use</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>12.0,54.0,0 12.3,54.0,0 12.3,54.3,0 12.0,54.3,0 12.0,54.0,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+</Folder>
+</Document>
+</kml>

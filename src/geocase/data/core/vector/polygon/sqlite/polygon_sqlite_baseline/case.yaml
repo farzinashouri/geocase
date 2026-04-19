@@ -1,0 +1,57 @@
+id: polygon_sqlite_baseline
+title: Polygon SQLite Baseline
+description: >
+  Canonical baseline polygon stored as a SQLite spatial dataset using
+  the same coordinates as the GeoJSON happy-path polygon.
+category: vector
+format: SQLite
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - polygon
+  - valid
+  - baseline
+  - sqlite
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+  - sqlite_driver_behavior
+
+behavioral_goal: >
+  Provide a canonical polygon encoded in SQLite so database-backed
+  vector loading can be compared against flat-file formats.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: geometry.sqlite
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  canonical_source_case_id: simple_valid_polygon

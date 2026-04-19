@@ -1,0 +1,69 @@
+id: precision_loss_geojson_roundtrip
+title: GeoJSON Precision Loss Roundtrip
+description: >
+  A GeoJSON dataset containing coordinates with very high precision that may
+  lose accuracy during text serialization roundtrips. GeoJSON uses decimal
+  text representation, and different serializers use different precision
+  settings. This case exposes precision loss that can accumulate across
+  multiple read/write cycles or cause coordinate drift.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - precision
+  - geojson
+  - roundtrip
+  - format_specific
+  - coordinate_drift
+
+risk_types:
+  - precision_loss
+  - coordinate_drift
+  - roundtrip_degradation
+  - format_specific
+
+behavioral_goal: >
+  Expose precision loss during GeoJSON text serialization. Detect workflows
+  where coordinates drift after multiple read/write cycles due to decimal
+  precision limits. Compare against binary formats that preserve full
+  IEEE 754 double precision.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - coordinate-precision-check
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: high_precision_points.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  precision_digits: 15
+  coordinate_tolerance: 1e-14
+  test_coordinates:
+    - [10.123456789012345, 50.987654321098765]
+    - [-122.41941550000001, 37.77492950000001]
+    - [0.00000000000001, 0.00000000000001]

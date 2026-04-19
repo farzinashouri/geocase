@@ -1,0 +1,2 @@
+id,name,value,geometry
+1,sample_polygon,1.0,"POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"

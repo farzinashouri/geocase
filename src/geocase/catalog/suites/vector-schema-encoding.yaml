@@ -1,0 +1,37 @@
+suite_key: vector-schema-encoding
+title: Vector Schema and Encoding Suite
+description: >
+  Exercises format-specific schema and encoding edge cases: field name
+  truncation, legacy character encodings, precision loss, NULL vs EMPTY
+  geometry handling, and attribute type coercion across formats.
+schema_version: "1.0"
+
+selection:
+  tags_any:
+    - encoding
+    - schema
+    - attributes
+    - precision
+    - format_specific
+    - field_truncation
+    - i18n
+  category: vector
+  storage_class: bundled
+
+case_order:
+  - mixed_encoding_attributes
+  - shapefile_encoding_legacy
+  - shapefile_field_truncation
+  - precision_loss_geojson_roundtrip
+  - format_limited_precision_polygon
+  - nearby_points_cluster
+  - empty_geometry_gpkg
+  - parquet_mixed_schema_attributes
+  - format_limited_kml_case
+
+notes: >
+  This suite validates format-specific behaviors that can cause data
+  loss or corruption: Shapefile's 10-character field name limit, DBF
+  code page encoding, GeoJSON text precision, and NULL/EMPTY geometry
+  distinctions in GeoPackage. Essential for testing cross-format
+  conversion and data integrity workflows.

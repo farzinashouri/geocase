@@ -1,0 +1,58 @@
+id: linestring_csv_wkt_baseline
+title: LineString CSV_WKT Baseline
+description: >
+  Canonical baseline LineString stored in a CSV with a WKT column to
+  exercise text-based geometry parsing and CSV_WKT loader behavior.
+category: vector
+format: CSV_WKT
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - linestring
+  - valid
+  - baseline
+  - csv_wkt
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+  - text_geometry_parsing
+
+behavioral_goal: >
+  Provide a canonical line encoded as CSV_WKT so text-based vector
+  serialization can be compared against file-driver-backed formats.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: LineString
+crs: EPSG:4326
+
+files:
+  primary: geometry.csv
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - LineString
+
+params:
+  wkt_column: wkt
+  canonical_source_case_id: simple_valid_linestring

@@ -7,6 +7,12 @@ description: >
 schema_version: "1.0"
 
 selection:
+  include_case_ids:
+    - simple_valid_polygon
+    - polygon_with_hole
+    - self_intersecting_polygon
+    - dateline_crossing_polygon
+    - mixed_encoding_attributes
   category: vector
   storage_class: bundled
   test_tier: unit

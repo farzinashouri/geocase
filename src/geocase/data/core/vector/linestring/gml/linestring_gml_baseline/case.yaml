@@ -1,0 +1,56 @@
+id: linestring_gml_baseline
+title: LineString GML Baseline
+description: >
+  Canonical baseline linestring stored as GML for
+  cross-format comparison and format-specific loader behavior testing.
+category: vector
+format: GML
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - linestring
+  - valid
+  - baseline
+  - gml
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+
+behavioral_goal: >
+  Provide a canonical linestring encoded as GML so format-specific
+  loader behavior can be compared directly against the GeoJSON baseline.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: LineString
+crs: EPSG:4326
+
+files:
+  primary: data.gml
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - LineString
+
+params:
+  canonical_source_case_id: simple_valid_linestring

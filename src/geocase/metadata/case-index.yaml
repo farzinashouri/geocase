@@ -1,16 +1,119 @@
-schema_version: "1.0"
-
+schema_version: '1.0'
 cases:
-  - path: data/core/vector/simple_valid_polygon/case.yaml
-  - path: data/core/vector/polygon_with_hole/case.yaml
-  - path: data/core/vector/self_intersecting_polygon/case.yaml
-  - path: data/core/vector/dateline_crossing_polygon/case.yaml
-  - path: data/core/vector/mixed_encoding_attributes/case.yaml
-  - path: data/core/raster/geotiff_nodata_small/case.yaml
-  - path: data/core/raster/geotiff_utm_boundary/case.yaml
-  - path: data/core/raster/footprint_edge_cases/case_all_valid_rectangular.yaml
-  - path: data/core/raster/footprint_edge_cases/case_hole_center_nodata.yaml
-  - path: data/core/raster/footprint_edge_cases/case_rotated_two_islands.yaml
-  - path: data/core/raster/footprint_edge_cases/case_nonsquare_diagonal_sparse.yaml
-  - path: data/core/raster/footprint_edge_cases/case_thin_corridor_shape.yaml
-  - path: data/core/netcdf/latlon_small/case.yaml
+- path: data/core/netcdf/latlon_small/case.yaml
+- path: data/core/raster/footprint_edge_cases/case_all_valid_rectangular.yaml
+- path: data/core/raster/footprint_edge_cases/case_hole_center_nodata.yaml
+- path: data/core/raster/footprint_edge_cases/case_nonsquare_diagonal_sparse.yaml
+- path: data/core/raster/footprint_edge_cases/case_rotated_two_islands.yaml
+- path: data/core/raster/footprint_edge_cases/case_thin_corridor_shape.yaml
+- path: data/core/raster/geotiff_float64_small/case.yaml
+- path: data/core/raster/geotiff_int16_small/case.yaml
+- path: data/core/raster/geotiff_int32_small/case.yaml
+- path: data/core/raster/geotiff_int8_small/case.yaml
+- path: data/core/raster/geotiff_multiband_small/case.yaml
+- path: data/core/raster/geotiff_nodata_small/case.yaml
+- path: data/core/raster/geotiff_nodata_small_shifted/case.yaml
+- path: data/core/raster/geotiff_utm_boundary/case.yaml
+- path: data/core/vector/geometrycollection/geojson/case.yaml
+- path: data/core/vector/linestring/csv_wkt/linestring_csv_wkt_baseline/case.yaml
+- path: data/core/vector/linestring/flatgeobuf/linestring_flatgeobuf_baseline/case.yaml
+- path: data/core/vector/linestring/geoarrow/linestring_geoarrow_baseline/case.yaml
+- path: data/core/vector/linestring/geojson/simple_valid_linestring/case.yaml
+- path: data/core/vector/linestring/geopackage/linestring_geopackage_baseline/case.yaml
+- path: data/core/vector/linestring/gml/linestring_gml_baseline/case.yaml
+- path: data/core/vector/linestring/kml/linestring_kml_baseline/case.yaml
+- path: data/core/vector/linestring/shapefile/linestring_shapefile_baseline/case.yaml
+- path: data/core/vector/linestring/sqlite/linestring_sqlite_baseline/case.yaml
+- path: data/core/vector/linestring/wkb/linestring_wkb_baseline/case.yaml
+- path: data/core/vector/linestring/wkt/linestring_wkt_baseline/case.yaml
+- path: data/core/vector/multilinestring/csv_wkt/multilinestring_csv_wkt_baseline/case.yaml
+- path: data/core/vector/multilinestring/flatgeobuf/multilinestring_flatgeobuf_baseline/case.yaml
+- path: data/core/vector/multilinestring/geojson/simple_valid_multilinestring/case.yaml
+- path: data/core/vector/multilinestring/geopackage/multilinestring_geopackage_baseline/case.yaml
+- path: data/core/vector/multilinestring/gml/multilinestring_gml_baseline/case.yaml
+- path: data/core/vector/multilinestring/kml/multilinestring_kml_baseline/case.yaml
+- path: data/core/vector/multilinestring/parquet/multilinestring_parquet_baseline/case.yaml
+- path: data/core/vector/multilinestring/shapefile/multilinestring_shapefile_baseline/case.yaml
+- path: data/core/vector/multilinestring/sqlite/multilinestring_sqlite_baseline/case.yaml
+- path: data/core/vector/multilinestring/wkb/multilinestring_wkb_baseline/case.yaml
+- path: data/core/vector/multilinestring/wkt/multilinestring_wkt_baseline/case.yaml
+- path: data/core/vector/multipoint/csv_wkt/multipoint_csv_wkt_baseline/case.yaml
+- path: data/core/vector/multipoint/feather/multipoint_feather_baseline/case.yaml
+- path: data/core/vector/multipoint/flatgeobuf/multipoint_flatgeobuf_baseline/case.yaml
+- path: data/core/vector/multipoint/geojson/simple_valid_multipoint/case.yaml
+- path: data/core/vector/multipoint/geopackage/multipoint_geopackage_baseline/case.yaml
+- path: data/core/vector/multipoint/gml/multipoint_gml_baseline/case.yaml
+- path: data/core/vector/multipoint/kml/multipoint_kml_baseline/case.yaml
+- path: data/core/vector/multipoint/shapefile/multipoint_shapefile_baseline/case.yaml
+- path: data/core/vector/multipoint/sqlite/multipoint_sqlite_baseline/case.yaml
+- path: data/core/vector/multipoint/wkb/multipoint_wkb_baseline/case.yaml
+- path: data/core/vector/multipoint/wkt/multipoint_wkt_baseline/case.yaml
+- path: data/core/vector/multipolygon/csv_wkt/multipolygon_csv_wkt_baseline/case.yaml
+- path: data/core/vector/multipolygon/flatgeobuf/multipolygon_flatgeobuf_baseline/case.yaml
+- path: data/core/vector/multipolygon/geojson/simple_valid_multipolygon/case.yaml
+- path: data/core/vector/multipolygon/geopackage/multipolygon_geopackage_baseline/case.yaml
+- path: data/core/vector/multipolygon/gml/multipolygon_gml_baseline/case.yaml
+- path: data/core/vector/multipolygon/kml/multipolygon_kml_baseline/case.yaml
+- path: data/core/vector/multipolygon/shapefile/multipolygon_shapefile_baseline/case.yaml
+- path: data/core/vector/multipolygon/sqlite/multipolygon_sqlite_baseline/case.yaml
+- path: data/core/vector/multipolygon/wkb/multipolygon_wkb_baseline/case.yaml
+- path: data/core/vector/multipolygon/wkt/multipolygon_wkt_baseline/case.yaml
+- path: data/core/vector/point/arrow/point_arrow_baseline/case.yaml
+- path: data/core/vector/point/csv_wkt/point_csv_wkt_baseline/case.yaml
+- path: data/core/vector/point/feather/point_feather_baseline/case.yaml
+- path: data/core/vector/point/flatgeobuf/point_flatgeobuf_baseline/case.yaml
+- path: data/core/vector/point/geojson/simple_valid_point/case.yaml
+- path: data/core/vector/point/geopackage/point_geopackage_baseline/case.yaml
+- path: data/core/vector/point/gml/point_gml_baseline/case.yaml
+- path: data/core/vector/point/kml/point_kml_baseline/case.yaml
+- path: data/core/vector/point/shapefile/point_shapefile_baseline/case.yaml
+- path: data/core/vector/point/sqlite/point_sqlite_baseline/case.yaml
+- path: data/core/vector/point/wkb/point_wkb_baseline/case.yaml
+- path: data/core/vector/point/wkt/point_wkt_baseline/case.yaml
+- path: data/core/vector/polygon/csv_wkt/polygon_csv_wkt_baseline/case.yaml
+- path: data/core/vector/polygon/flatgeobuf/polygon_flatgeobuf_baseline/case.yaml
+- path: data/core/vector/polygon/geojson/simple_valid_polygon/case.yaml
+- path: data/core/vector/polygon/geopackage/polygon_geopackage_baseline/case.yaml
+- path: data/core/vector/polygon/gml/polygon_gml_baseline/case.yaml
+- path: data/core/vector/polygon/kml/polygon_kml_baseline/case.yaml
+- path: data/core/vector/polygon/parquet/polygon_parquet_baseline/case.yaml
+- path: data/core/vector/polygon/shapefile/polygon_shapefile_baseline/case.yaml
+- path: data/core/vector/polygon/sqlite/polygon_sqlite_baseline/case.yaml
+- path: data/core/vector/polygon/wkb/polygon_wkb_baseline/case.yaml
+- path: data/core/vector/polygon/wkt/polygon_wkt_baseline/case.yaml
+- path: data/core/vector/special/crs/equator_crossing_line/case.yaml
+- path: data/core/vector/special/crs/equator_polygon/case.yaml
+- path: data/core/vector/special/crs/north_pole_point/case.yaml
+- path: data/core/vector/special/crs/north_pole_polygon/case.yaml
+- path: data/core/vector/special/crs/rasterize_match_utm33_polygon/case.yaml
+- path: data/core/vector/special/crs/rasterize_match_wgs84_polygon/case.yaml
+- path: data/core/vector/special/crs/south_pole_point/case.yaml
+- path: data/core/vector/special/crs/south_pole_polygon/case.yaml
+- path: data/core/vector/special/crs/svalbard_special_zone_polygon/case.yaml
+- path: data/core/vector/special/crs/utm_zone_33_polygon/case.yaml
+- path: data/core/vector/special/crs/web_mercator_baseline/case.yaml
+- path: data/core/vector/special/dateline/antimeridian_crossing_line/case.yaml
+- path: data/core/vector/special/dateline/classic_antimeridian_polygon/case.yaml
+- path: data/core/vector/special/dateline/dateline_chain_cluster/case.yaml
+- path: data/core/vector/special/dateline/dateline_crossing_polygon/case.yaml
+- path: data/core/vector/special/dateline/dateline_points_pair/case.yaml
+- path: data/core/vector/special/dateline/wrapped_longitude_point/case.yaml
+- path: data/core/vector/special/degenerate/degenerate_but_parseable_line/case.yaml
+- path: data/core/vector/special/degenerate/disjoint_polygons/case.yaml
+- path: data/core/vector/special/empty/empty_geometry_gpkg/case.yaml
+- path: data/core/vector/special/empty/empty_polygon/case.yaml
+- path: data/core/vector/special/encoding/format_limited_kml_case/case.yaml
+- path: data/core/vector/special/encoding/mixed_encoding_attributes/case.yaml
+- path: data/core/vector/special/encoding/parquet_mixed_schema_attributes/case.yaml
+- path: data/core/vector/special/encoding/shapefile_encoding_legacy/case.yaml
+- path: data/core/vector/special/encoding/shapefile_field_truncation/case.yaml
+- path: data/core/vector/special/holes/polygon_with_hole/case.yaml
+- path: data/core/vector/special/invalid/ambiguous_engine_dependent_polygon/case.yaml
+- path: data/core/vector/special/invalid/null_island_point/case.yaml
+- path: data/core/vector/special/invalid/out_of_bounds_coordinates/case.yaml
+- path: data/core/vector/special/invalid/self_intersecting_polygon/case.yaml
+- path: data/core/vector/special/invalid/spike_invalid_polygon/case.yaml
+- path: data/core/vector/special/invalid/unclosed_ring_polygon/case.yaml
+- path: data/core/vector/special/precision/format_limited_precision_polygon/case.yaml
+- path: data/core/vector/special/precision/nearby_points_cluster/case.yaml
+- path: data/core/vector/special/precision/precision_loss_geojson_roundtrip/case.yaml

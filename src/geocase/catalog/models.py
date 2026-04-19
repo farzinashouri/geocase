@@ -6,7 +6,25 @@ from pydantic import BaseModel, Field, field_validator
 
 
 Category = Literal["vector", "raster", "netcdf", "satellite"]
-FormatType = Literal["GeoJSON", "GPKG", "Shapefile", "GeoTIFF", "NetCDF", "Parquet", "Other"]
+FormatType = Literal[
+    "GeoJSON",
+    "GPKG",
+    "Shapefile",
+    "GeoTIFF",
+    "NetCDF",
+    "Parquet",
+    "GML",
+    "KML",
+    "CSV_WKT",
+    "Feather",
+    "Arrow",
+    "GeoArrow",
+    "WKB",
+    "WKT",
+    "SQLite",
+    "FlatGeobuf",
+    "Other",
+]
 TestTier = Literal["unit", "integration", "slow", "remote", "private"]
 SizeClass = Literal["tiny", "small", "medium", "large"]
 StorageClass = Literal["bundled", "remote", "private"]

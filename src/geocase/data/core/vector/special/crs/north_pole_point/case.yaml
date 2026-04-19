@@ -1,0 +1,56 @@
+id: north_pole_point
+title: North Pole Point
+description: >
+  A WGS84 point located at the geographic north pole for validating
+  polar edge cases, coordinate handling, and projection assumptions.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - point
+  - north_pole
+  - polar
+  - crs
+
+risk_types:
+  - polar_projection_singularity
+  - coordinate_edge_case
+
+behavioral_goal: >
+  Ensure point-based utilities handle the north pole without crashing
+  or making incorrect longitude assumptions.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - reprojection
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  location_label: North Pole

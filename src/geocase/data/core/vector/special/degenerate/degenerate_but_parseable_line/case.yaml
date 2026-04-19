@@ -1,0 +1,60 @@
+id: degenerate_but_parseable_line
+title: Degenerate but Parseable Line
+description: >
+  A zero-length LineString whose two vertices are identical. The geometry
+  is parseable and loadable, but it is degenerate and invalid for many
+  downstream geometric operations.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - linestring
+  - degenerate
+  - parseable
+  - invalid
+  - collapsed
+
+risk_types:
+  - degenerate_but_parseable
+  - zero_length_geometry
+  - invalid_measurement
+
+behavioral_goal: >
+  Ensure loading succeeds for a degenerate but parseable line while
+  making its zero-length invalidity explicit to validation logic.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: LineString
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: false
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - LineString
+
+params:
+  validity_class: degenerate_but_parseable
+  expected_length: 0.0

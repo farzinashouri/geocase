@@ -19,6 +19,11 @@ from geocase.assertions.metadata import (
     assert_matches_raster_hints,
     assert_matches_vector_hints,
 )
+from geocase.assertions.format_compliance import (
+    assert_format_compliance,
+    assert_geoparquet_metadata,
+    registered_format_validators,
+)
 from geocase.assertions.raster import (
     assert_band_count,
     assert_dtype,
@@ -63,4 +68,8 @@ __all__ = [
     "assert_case_loadable",
     "assert_matches_vector_hints",
     "assert_matches_raster_hints",
+    # Format compliance
+    "assert_format_compliance",
+    "assert_geoparquet_metadata",
+    "registered_format_validators",
 ]

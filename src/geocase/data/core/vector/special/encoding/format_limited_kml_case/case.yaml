@@ -1,0 +1,79 @@
+id: format_limited_kml_case
+title: Format-Limited KML Case
+description: >
+  A KML file demonstrating inherent format limitations: all extended-data
+  attributes are stored as strings regardless of their original type,
+  coordinates are always WGS 84, and Z coordinates are included even when
+  not meaningful. Exposes loaders or converters that assume numeric
+  attribute types survive a KML round-trip.
+category: vector
+format: KML
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - polygon
+  - valid
+  - kml
+  - schema
+  - attributes
+  - format_specific
+  - type_coercion
+  - format_limitation
+
+risk_types:
+  - type_coercion
+  - attribute_loss
+  - format_limitation
+  - schema_mismatch
+
+behavioral_goal: >
+  Detect loaders or cross-format converters that assume attribute types
+  (integer, float, boolean) survive a KML round-trip. In KML all
+  ExtendedData SimpleField values are strings, so population "15000" is
+  a string, not an int. Naive downstream code that does arithmetic on
+  these columns without casting will fail silently.
+
+expected_capabilities:
+  - load
+  - attribute-inspection
+  - format-comparison
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: zones.kml
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  row_count: 3
+  all_attributes_are_strings: true
+  original_types_before_kml:
+    population: int
+    area_km2: float
+    is_urban: bool
+    category: string
+  format_limitations:
+    - all_attributes_become_strings
+    - coordinates_always_wgs84
+    - z_coordinates_added
+    - no_native_null_support

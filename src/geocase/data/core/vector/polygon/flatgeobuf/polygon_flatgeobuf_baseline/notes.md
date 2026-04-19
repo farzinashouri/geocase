@@ -1,0 +1,1 @@
+Canonical baseline polygon stored in FlatGeobuf for cross-format driver coverage.

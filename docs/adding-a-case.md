@@ -197,7 +197,18 @@ cases:
   - path: data/core/vector/my_new_case/case.yaml
 ```
 
-At the moment, `scripts/build_case_index.py` is still a stub, so this index update is currently a manual step.
+You can regenerate the index automatically with:
+
+```bash
+python scripts/build_case_index.py
+```
+
+Recommended follow-up checks:
+
+```bash
+python scripts/build_case_index.py --check
+python scripts/validate_catalog.py
+```
 
 ---
 
@@ -338,6 +349,7 @@ At minimum, verify the following:
 3. the case loads through GeoCase,
 4. the case can be selected by ID,
 5. the case supports the intended assertions.
+6. related suites include (or intentionally exclude) the new case.
 
 Practical checks today:
 
@@ -352,6 +364,12 @@ def test_my_new_case_loads(geocase_case) -> None:
 ```
 
 If the case is raster-based, use `.read(1)` or `.open()` instead of `.load()`.
+
+Suite and catalog checks:
+
+```bash
+python scripts/validate_catalog.py
+```
 
 ---
 
@@ -407,6 +425,7 @@ Before considering a case complete, check all of the following:
 - `files.primary` points to the right artifact,
 - tags and risk types are useful for selection,
 - `case-index.yaml` contains the new path,
+- suite membership is reviewed (`src/geocase/catalog/suites/*.yaml`),
 - at least one test exercises the case,
 - notes or provenance are included when helpful,
 - case size is kept as small as practical.
@@ -415,20 +434,20 @@ Before considering a case complete, check all of the following:
 
 ## Current limitations
 
-Some authoring helpers are not fully implemented yet:
+Catalog validation is handled by maintainer scripts:
 
-- `catalog/validators.py` is still a stub,
-- `catalog/manifests.py` is still a stub,
-- `scripts/build_case_index.py` is still a stub.
-
-That means the current authoring process is partly manual. The metadata-and-index workflow is still stable, but automation around validation and indexing is a good next step.
+```bash
+python scripts/build_case_index.py --check
+python scripts/validate_catalog.py
+```
 
 ---
 
 ## Related docs
 
 - `docs/getting-started.md`
+- `docs/contributing/vector-dataset-generation.md`
 - `docs/testing-your-function-with-geocase.md`
-- `docs/workflow.md`
-- `docs/development-plan.md`
+- `docs/contributing/workflow.md`
+- `docs/contributing/development-plan.md`
 

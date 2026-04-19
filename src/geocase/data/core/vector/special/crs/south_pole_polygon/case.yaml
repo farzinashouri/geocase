@@ -1,0 +1,64 @@
+id: south_pole_polygon
+title: South Pole Polygon
+description: >
+  A diamond-shaped polygon encircling the south pole in EPSG:4326.  The
+  ring has vertices at latitudes -84 to -89.5 spanning longitudes -90
+  to 90.  Mirrors the north_pole_polygon case and exercises the same
+  projection and area-distortion challenges in the southern hemisphere.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - geojson
+  - crs
+  - polar
+  - south_pole
+  - pole
+  - polygon
+  - edge_case
+
+risk_types:
+  - polar_projection_singularity
+  - area_distortion
+
+behavioral_goal: >
+  Ensure polygon-based utilities handle geometries near the south pole
+  without crashing or producing wildly incorrect area calculations.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - reprojection
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  encircles_south_pole: true
+  min_latitude: -89.5
+  max_latitude: -84.0
+  vertex_count: 5

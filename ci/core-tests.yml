@@ -1,1 +1,20 @@
-# Core Tests CI
+core_tests:
+  stage: test
+  image: python:3.11
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - when: never
+  before_script:
+    - python -m pip install --upgrade pip
+    - python -m pip install -e .[dev]
+  script:
+    - >-
+      python -m pytest
+      tests/unit/test_case_models.py
+      tests/unit/test_loader.py
+      tests/unit/test_registry.py
+      tests/unit/test_selectors.py
+      tests/unit/test_suites.py
+      tests/unit/test_pytest_plugin.py
+      -q

@@ -1,0 +1,55 @@
+id: multilinestring_parquet_baseline
+title: MultiLineString Parquet Baseline
+description: >
+  Canonical baseline MultiLineString stored as GeoParquet for multipart columnar line coverage.
+category: vector
+format: Parquet
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - multilinestring
+  - valid
+  - baseline
+  - parquet
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+  - columnar_storage_behavior
+
+behavioral_goal: >
+  Provide a canonical multiline encoded as GeoParquet so multipart columnar line loading can be compared against GeoJSON and Arrow-backed baselines.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: MultiLineString
+crs: EPSG:4326
+
+files:
+  primary: geometry.parquet
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - MultiLineString
+
+params:
+  canonical_source_case_id: simple_valid_multilinestring

@@ -1,0 +1,55 @@
+id: linestring_geoarrow_baseline
+title: LineString GeoArrow Baseline
+description: >
+  Canonical baseline line stored as a GeoArrow IPC file to exercise file-backed Arrow geometry loading.
+category: vector
+format: GeoArrow
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - linestring
+  - valid
+  - baseline
+  - geoarrow
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+  - arrow_ipc_behavior
+
+behavioral_goal: >
+  Provide a canonical line encoded as GeoArrow IPC so Arrow-native geometry loading can be compared against Parquet, Feather, and text baselines.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: LineString
+crs: EPSG:4326
+
+files:
+  primary: geometry.arrow
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - LineString
+
+params:
+  canonical_source_case_id: simple_valid_linestring

@@ -1,0 +1,59 @@
+id: ambiguous_engine_dependent_polygon
+title: Ambiguous Engine-dependent Polygon
+description: >
+  A polygon with a shell and interior ring touching at a single point.
+  This is parseable, but validity interpretation and repair behavior can
+  be engine-dependent across geometry libraries.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - polygon
+  - invalid
+  - ambiguous
+  - engine_dependent
+  - topology
+
+risk_types:
+  - ambiguous_engine_dependent
+  - topology_error
+  - repair_variability
+
+behavioral_goal: >
+  Expose workflows that assume all geometry engines agree on polygon
+  validity and repair output for touching-ring topologies.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - repair
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: false
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  validity_class: ambiguous_engine_dependent

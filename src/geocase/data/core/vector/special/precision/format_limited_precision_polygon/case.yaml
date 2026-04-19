@@ -1,0 +1,61 @@
+id: format_limited_precision_polygon
+title: Format-limited Precision Polygon
+description: >
+  A very thin, valid polygon that relies on high coordinate precision to
+  remain non-collapsed. It is valid in GeoJSON, but it is format-limited:
+  precision rounding or driver-specific export constraints can collapse it
+  into an invalid or zero-area geometry.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - polygon
+  - valid
+  - format_limited
+  - precision
+  - rounding
+
+risk_types:
+  - format_limited
+  - precision_rounding
+  - driver_specific_precision_loss
+
+behavioral_goal: >
+  Expose workflows that silently reduce coordinate precision and thereby
+  invalidate geometries that are only safe in high-precision formats.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  validity_class: format_limited
+  minimum_safe_precision_decimals: 9

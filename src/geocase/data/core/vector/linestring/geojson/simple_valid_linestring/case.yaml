@@ -1,0 +1,54 @@
+id: simple_valid_linestring
+title: Simple Valid LineString
+description: >
+  A straightforward LineString in EPSG:4326 used as a baseline for
+  line-loading and geometry-type selection behavior.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - linestring
+  - valid
+  - baseline
+
+risk_types:
+  - none
+
+behavioral_goal: >
+  Confirm that a basic LineString fixture is discoverable and loadable
+  through the catalog and vector loader.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - selector-filtering
+
+loader_hint: geopandas
+geometry_type: LineString
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - LineString
+
+params:
+  expected_feature_count: 1

@@ -1,0 +1,65 @@
+id: empty_geometry_gpkg
+title: Empty Geometry in GeoPackage
+description: >
+  A GeoPackage containing rows with empty geometries (WKB EMPTY representation)
+  to test how loaders handle the distinction between NULL geometry and EMPTY
+  geometry. In GeoPackage/SQLite, NULL means "no geometry value" while EMPTY
+  means "a geometry that contains no coordinates". This case exposes loaders
+  that conflate NULL and EMPTY or fail to handle EMPTY geometries correctly.
+category: vector
+format: GPKG
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - empty
+  - geopackage
+  - format_specific
+  - null_handling
+  - geometry_special
+
+risk_types:
+  - null_empty_conflation
+  - empty_geometry_handling
+  - format_specific
+
+behavioral_goal: >
+  Expose loaders that incorrectly handle EMPTY geometries in GeoPackage format.
+  Detect confusion between SQL NULL and WKB EMPTY geometry representations.
+  Test filtering and query behavior with empty geometries.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - null-handling
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: empty_geom.gpkg
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: false
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  row_count: 4
+  null_geometry_rows: 1
+  empty_geometry_rows: 1
+  valid_geometry_rows: 2

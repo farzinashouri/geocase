@@ -1,0 +1,57 @@
+id: polygon_wkt_baseline
+title: Polygon WKT Baseline
+description: >
+  Canonical baseline polygon stored as raw WKT to exercise the custom
+  single-geometry text loader path.
+category: vector
+format: WKT
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - polygon
+  - valid
+  - baseline
+  - wkt
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+  - text_geometry_parsing
+
+behavioral_goal: >
+  Provide a canonical polygon encoded as WKT so plain-text geometry
+  loading can be compared against container-based vector formats.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: polygon.wkt
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  canonical_source_case_id: simple_valid_polygon

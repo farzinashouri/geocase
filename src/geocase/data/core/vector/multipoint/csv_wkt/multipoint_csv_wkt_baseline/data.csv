@@ -1,0 +1,2 @@
+id,name,value,geometry
+1,sample_multipoint,3,"MULTIPOINT ((0 0), (1 1), (2 2))"

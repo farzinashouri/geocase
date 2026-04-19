@@ -1,0 +1,1 @@
+Baseline Point case for selector, loader, and cross-format coverage.

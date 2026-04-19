@@ -1,0 +1,47 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "description": "Full 15+ digit precision"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          10.123456789012344,
+          50.987654321098766
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2,
+        "description": "Trailing binary representation digits"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.41941550000001,
+          37.77492950000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "description": "Very small values near zero"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1e-14,
+          1e-14
+        ]
+      }
+    }
+  ]
+}

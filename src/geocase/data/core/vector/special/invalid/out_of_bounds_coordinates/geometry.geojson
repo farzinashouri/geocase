@@ -1,0 +1,17 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Invalid Latitude Extent",
+        "description": "Latitude is 100, which exceeds the 90 degree maximum",
+        "intended_location": "London (51.5°N, 0.1°W) with lat/lon likely swapped"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-0.1, 100.0]
+      }
+    }
+  ]
+}

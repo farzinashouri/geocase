@@ -1,0 +1,35 @@
+suite_key: vector-topology
+title: Vector Topology Suite
+description: >
+  Exercises topology validation and edge cases: self-intersections,
+  holes, degenerate geometries, empty geometries, and ambiguous
+  validity states that may differ between geometry engines.
+schema_version: "1.0"
+
+selection:
+  tags_any:
+    - topology
+    - invalid
+    - holes
+    - empty
+    - degenerate
+    - self_intersection
+  category: vector
+  storage_class: bundled
+
+case_order:
+  - simple_valid_polygon
+  - polygon_with_hole
+  - self_intersecting_polygon
+  - spike_invalid_polygon
+  - ambiguous_engine_dependent_polygon
+  - degenerate_but_parseable_line
+  - disjoint_polygons
+  - empty_polygon
+  - empty_geometry_gpkg
+
+notes: >
+  This suite validates geometry validity checking across different
+  engines (Shapely, GEOS, JTS). Cases include both clearly invalid
+  geometries and ambiguous ones where engine behavior may differ.
+  Useful for testing validity repair and topology cleaning code.

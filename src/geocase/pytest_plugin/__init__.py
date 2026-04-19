@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 from geocase.pytest_plugin.fixtures import (
+	geocase,
 	geocase_case,
 	geocase_cases,
 	geocase_registry,
@@ -35,6 +36,7 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
 
 
 __all__ = [
+	"geocase",
 	"geocase_registry",
 	"geocase_cases",
 	"geocase_case",

@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "baseline_line"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [10.0, 50.0],
+          [10.5, 50.3],
+          [11.0, 50.1]
+        ]
+      }
+    }
+  ]
+}

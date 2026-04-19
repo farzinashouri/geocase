@@ -1,0 +1,1 @@
+Canonical baseline point stored in KML for cross-format driver coverage.
