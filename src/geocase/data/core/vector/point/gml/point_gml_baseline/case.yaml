@@ -1,0 +1,59 @@
+id: point_gml_baseline
+title: Point GML Baseline
+description: >
+  Canonical baseline point stored as GML to exercise XML-based vector
+  loading with explicit CRS metadata.
+category: vector
+format: GML
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - point
+  - valid
+  - baseline
+  - gml
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+  - xml_driver_behavior
+
+behavioral_goal: >
+  Provide a canonical point encoded as GML so XML-driver loading can be
+  compared against simpler baseline vector formats.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - reprojection
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: geometry.gml
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  canonical_location:
+    lon: 10.5
+    lat: 50.5

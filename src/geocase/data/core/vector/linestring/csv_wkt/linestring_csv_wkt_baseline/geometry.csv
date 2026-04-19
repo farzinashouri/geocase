@@ -1,0 +1,2 @@
+name,wkt
+baseline_line,"LINESTRING (10 50, 10.5 50.3, 11 50.1)"

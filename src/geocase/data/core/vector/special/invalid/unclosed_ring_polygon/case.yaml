@@ -1,0 +1,62 @@
+id: unclosed_ring_polygon
+title: Unclosed Ring Polygon
+description: >
+  A polygon where the exterior ring isn't properly closed (first coordinate ≠ last coordinate).
+  Per GeoJSON spec (RFC 7946), a LinearRing must have four or more positions with the first
+  and last positions being equivalent. Strict parsers will reject this entirely.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - polygon
+  - invalid
+  - unclosed_ring
+  - topology
+  - parse_error
+
+risk_types:
+  - silent_invalid_geometry
+  - ring_closure_error
+  - topology_error
+  - parse_exception
+
+behavioral_goal: >
+  Expose loaders or validators that silently accept unclosed polygon rings,
+  which can cause downstream geometry operations to fail unpredictably.
+  Note: Many parsers (Shapely, GeoPandas) auto-close rings on load, so this
+  primarily tests raw JSON validation or strict-mode parsers.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: false
+  expect_valid_geometry: false
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  is_valid: false
+  ring_closed: false

@@ -1,0 +1,54 @@
+id: multipoint_wkb_baseline
+title: MultiPoint WKB Baseline
+description: >
+  Canonical baseline multipoint stored as binary WKB file for
+  cross-format comparison and format-specific loader behavior testing.
+category: vector
+format: WKB
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - multipoint
+  - valid
+  - baseline
+  - wkb
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+
+behavioral_goal: >
+  Provide a canonical multipoint encoded as WKB so format-specific
+  loader behavior can be compared directly against the GeoJSON baseline.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+
+loader_hint: geopandas
+geometry_type: MultiPoint
+crs: EPSG:4326
+
+files:
+  primary: geometry.wkb
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: false
+  expected_geometry_types:
+    - MultiPoint
+
+params:
+  canonical_source_case_id: simple_valid_multipoint

@@ -1,0 +1,54 @@
+id: point_wkt_baseline
+title: Point WKT Baseline
+description: >
+  Canonical baseline point stored as plain WKT file for
+  cross-format comparison and format-specific loader behavior testing.
+category: vector
+format: WKT
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - point
+  - valid
+  - baseline
+  - wkt
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+
+behavioral_goal: >
+  Provide a canonical point encoded as WKT so format-specific
+  loader behavior can be compared directly against the GeoJSON baseline.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: geometry.wkt
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: false
+  expected_geometry_types:
+    - Point
+
+params:
+  canonical_source_case_id: simple_valid_point

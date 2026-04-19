@@ -1,0 +1,59 @@
+id: antimeridian_crossing_line
+title: Antimeridian Crossing LineString
+description: >
+  A simple line crossing the 180° longitude line (antimeridian/dateline).
+  Naive renderers will draw a line all the way around the globe instead of
+  the short path across the Pacific.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - linestring
+  - dateline
+  - antimeridian
+  - edge_case
+
+risk_types:
+  - antimeridian_wrapping
+  - incorrect_rendering
+  - distance_calculation_error
+
+behavioral_goal: >
+  Expose code that naively interpolates across the Prime Meridian (0°)
+  instead of correctly crossing the Antimeridian (±180°).
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - antimeridian-handling
+
+loader_hint: geopandas
+geometry_type: LineString
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - LineString
+  crosses_antimeridian: true
+
+params:
+  crosses_antimeridian: true

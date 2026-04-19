@@ -1,0 +1,55 @@
+id: linestring_flatgeobuf_baseline
+title: LineString FlatGeobuf Baseline
+description: >
+  Canonical baseline LineString stored as FlatGeobuf to exercise compact binary line transport.
+category: vector
+format: FlatGeobuf
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - linestring
+  - valid
+  - baseline
+  - flatgeobuf
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+  - driver_behavior
+
+behavioral_goal: >
+  Provide a canonical line encoded as FlatGeobuf so binary driver-backed line loading can be compared against text and container baselines.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: LineString
+crs: EPSG:4326
+
+files:
+  primary: line.fgb
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - LineString
+
+params:
+  canonical_source_case_id: simple_valid_linestring

@@ -1,0 +1,65 @@
+id: null_island_point
+title: Null Island Point
+description: >
+  A point at (0, 0) — the intersection of the Prime Meridian and the Equator.
+  While technically a valid location in the Atlantic Ocean, its presence in
+  datasets almost always indicates a failed geocoding operation where null or
+  missing values were silently cast to 0.0.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - point
+  - invalid
+  - null_island
+  - geocoding_failure
+  - data_quality
+
+risk_types:
+  - geocoding_failure
+  - silent_bad_data
+  - data_quality
+  - default_value_sink
+
+behavioral_goal: >
+  Expose pipelines that fail to flag or filter (0, 0) coordinates,
+  which usually indicate failed geocoding rather than a real location.
+  Data quality checks should treat Null Island as suspicious.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - data-quality-check
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: false
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  is_null_island: true
+  likely_geocoding_failure: true
+  lon: 0.0
+  lat: 0.0

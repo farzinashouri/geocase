@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "baseline_multipoint"
+      },
+      "geometry": {
+        "type": "MultiPoint",
+        "coordinates": [
+          [10.0, 50.0],
+          [10.2, 50.1],
+          [10.4, 50.2]
+        ]
+      }
+    }
+  ]
+}

@@ -1,1 +1,18 @@
-# Extended Tests CI
+extended_tests:
+  stage: test
+  image: python:3.11
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - when: never
+  before_script:
+    - python -m pip install --upgrade pip
+    - python -m pip install -e .[dev]
+  script:
+    - >-
+      python -m pytest
+      tests/unit/test_cases.py
+      tests/unit/test_assertions.py
+      tests/unit/test_vector_loaders.py
+      tests/unit/test_raster_loaders.py
+      -q

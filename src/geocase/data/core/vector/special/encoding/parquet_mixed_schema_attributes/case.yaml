@@ -1,0 +1,80 @@
+id: parquet_mixed_schema_attributes
+title: Parquet Mixed Schema Attributes
+description: >
+  A GeoParquet file with deliberately mixed attribute types and nullable
+  columns: nullable integers (Int64), nullable booleans, nullable strings,
+  and NaN floats. Exercises Parquet's native nullable type support and
+  exposes loaders that silently downcast nullable types, lose null
+  distinctions, or fail on mixed-type attribute schemas.
+category: vector
+format: Parquet
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - point
+  - valid
+  - parquet
+  - schema
+  - attributes
+  - format_specific
+  - nullable
+  - mixed_types
+
+risk_types:
+  - nullable_type_coercion
+  - attribute_loss
+  - schema_mismatch
+  - columnar_storage_behavior
+
+behavioral_goal: >
+  Detect loaders that silently downcast Parquet nullable integer columns
+  to float64 (losing the int/null distinction), drop nullable boolean
+  columns, or fail to round-trip mixed-type attribute schemas through
+  GeoParquet.
+
+expected_capabilities:
+  - load
+  - attribute-inspection
+  - schema-preservation
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: mixed_attrs.parquet
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  row_count: 4
+  nullable_columns:
+    - name
+    - value_int
+    - value_float
+    - is_active
+    - tags
+  attribute_types:
+    id: int64
+    name: string
+    value_int: Int64
+    value_float: float64
+    is_active: boolean
+    tags: string

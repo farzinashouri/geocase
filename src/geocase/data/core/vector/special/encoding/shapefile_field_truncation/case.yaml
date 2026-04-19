@@ -1,0 +1,78 @@
+id: shapefile_field_truncation
+title: Shapefile Field Name Truncation
+description: >
+  A Shapefile dataset with attribute field names that exceed the DBF
+  10-character limit. When written to Shapefile format, field names are
+  truncated or renamed, potentially causing data loss or field name
+  collisions. This case exposes workflows that don't handle Shapefile
+  field name limitations.
+category: vector
+format: Shapefile
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - encoding
+  - shapefile
+  - attributes
+  - schema
+  - format_specific
+  - field_truncation
+
+risk_types:
+  - field_name_truncation
+  - attribute_loss
+  - schema_mismatch
+  - format_specific
+
+behavioral_goal: >
+  Expose workflows that assume arbitrary field name lengths or fail to
+  detect/handle Shapefile's 10-character field name limit. Detect cases
+  where truncation causes field name collisions.
+
+expected_capabilities:
+  - load
+  - attribute-inspection
+  - schema-validation
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: truncated_fields.shp
+  sidecars:
+    - truncated_fields.dbf
+    - truncated_fields.shx
+    - truncated_fields.prj
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  original_field_names:
+    - temperature_celsius
+    - temperature_fahrenheit
+    - precipitation_mm
+    - wind_speed_knots
+  truncated_field_names:
+    - temperatur
+    - temperat_1
+    - precipitat
+    - wind_speed
+  truncation_limit: 10

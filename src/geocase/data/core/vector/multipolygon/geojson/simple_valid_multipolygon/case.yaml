@@ -1,0 +1,54 @@
+id: simple_valid_multipolygon
+title: Simple Valid MultiPolygon
+description: >
+  A compact MultiPolygon fixture with two disjoint polygons in
+  EPSG:4326.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - multipolygon
+  - valid
+  - multipart
+
+risk_types:
+  - none
+
+behavioral_goal: >
+  Provide baseline multipolygon coverage for loading and geometry-type
+  selector behavior.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - selector-filtering
+
+loader_hint: geopandas
+geometry_type: MultiPolygon
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - MultiPolygon
+
+params:
+  expected_feature_count: 1

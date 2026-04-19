@@ -1,0 +1,56 @@
+id: equator_crossing_line
+title: Equator Crossing Line
+description: >
+  A WGS84 LineString crossing latitude 0 to expose equatorial edge
+  cases and sign-change assumptions in coordinate handling.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - linestring
+  - equator
+  - crs
+  - valid
+
+risk_types:
+  - coordinate_sign_assumption
+  - equatorial_boundary_case
+
+behavioral_goal: >
+  Ensure line-based workflows can process geometries that cross the
+  equator without coordinate sign mistakes.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: LineString
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - LineString
+
+params:
+  crosses_equator: true

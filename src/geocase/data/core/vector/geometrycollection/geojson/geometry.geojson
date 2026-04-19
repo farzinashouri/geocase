@@ -1,0 +1,40 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "mixed_collection"
+      },
+      "geometry": {
+        "type": "GeometryCollection",
+        "geometries": [
+          {
+            "type": "Point",
+            "coordinates": [10.0, 50.0]
+          },
+          {
+            "type": "LineString",
+            "coordinates": [
+              [10.0, 50.0],
+              [10.5, 50.2],
+              [11.0, 50.1]
+            ]
+          },
+          {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [10.2, 50.2],
+                [10.6, 50.2],
+                [10.6, 50.6],
+                [10.2, 50.6],
+                [10.2, 50.2]
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

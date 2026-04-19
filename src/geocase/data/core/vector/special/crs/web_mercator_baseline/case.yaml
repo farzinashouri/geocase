@@ -1,0 +1,57 @@
+id: web_mercator_baseline
+title: Web Mercator Baseline Point
+description: >
+  A valid point encoded in EPSG:3857 for baseline Web Mercator loader
+  and CRS-path handling.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - point
+  - crs
+  - epsg3857
+  - web_mercator
+  - valid
+
+risk_types:
+  - reprojection_error
+  - projected_coordinate_assumption
+
+behavioral_goal: >
+  Ensure vector loading and downstream utilities handle a baseline
+  Web Mercator point with explicit projected CRS metadata.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - reprojection
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:3857
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 3857
+  expected_geometry_types:
+    - Point
+
+params:
+  location_label: Web Mercator Origin Offset

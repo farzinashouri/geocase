@@ -1,0 +1,56 @@
+id: multipolygon_csv_wkt_baseline
+title: MultiPolygon CSV WKT Baseline
+description: >
+  Canonical baseline multipolygon stored as CSV with WKT geometry column for
+  cross-format comparison and format-specific loader behavior testing.
+category: vector
+format: CSV_WKT
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - multipolygon
+  - valid
+  - baseline
+  - csv
+  - wkt
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+
+behavioral_goal: >
+  Provide a canonical multipolygon encoded as CSV with WKT so format-specific
+  loader behavior can be compared directly against the GeoJSON baseline.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+
+loader_hint: geopandas
+geometry_type: MultiPolygon
+crs: EPSG:4326
+
+files:
+  primary: data.csv
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: false
+  expected_geometry_types:
+    - MultiPolygon
+
+params:
+  canonical_source_case_id: simple_valid_multipolygon
+  geometry_column: geometry

@@ -9,7 +9,7 @@ GeoCase is built around a simple workflow:
 3. write a normal `pytest` test,
 4. let GeoCase provide realistic geospatial inputs.
 
-If you want to understand the broader roadmap, see `docs/development-plan.md`.
+If you want to understand the broader roadmap, see [`docs/contributing/development-plan.md`](contributing/development-plan.md).
 
 ---
 
@@ -181,21 +181,24 @@ Start simple with explicit case IDs. Move to selectors when your test intent is 
 
 ## Helpful next reads
 
-- `docs/testing-your-function-with-geocase.md`
-- `docs/using-parameterized-tests.md`
-- `docs/adding-a-case.md`
-- `docs/workflow.md`
+- [`docs/testing-your-function-with-geocase.md`](testing-your-function-with-geocase.md)
+- [`docs/using-parameterized-tests.md`](using-parameterized-tests.md)
+- [`docs/case-discovery.md`](case-discovery.md)
+- [`docs/assertions-reference.md`](assertions-reference.md)
+- [`docs/examples-index.md`](examples-index.md)
+- [`docs/adding-a-case.md`](adding-a-case.md)
+- [`docs/contributing/workflow.md`](contributing/workflow.md)
 
 ---
 
-## Current project status note
+## Current project status
 
-GeoCase already supports the core `pytest` workflow, but some supporting layers are still being finished:
+GeoCase v0.1.0 (alpha) is fully functional for the core `pytest` workflow with 216+ passing tests. The metadata, catalog, runtime, assertions, and pytest plugin layers are complete.
 
-- plugin hardening tests,
-- validation/manifests,
-- storage/remote support,
-- release automation.
+Remaining work focuses on:
+- Adding more vector and raster edge cases
+- Documentation improvements
+- Release automation
 
-That does not block the core usage model of writing `pytest` tests with GeoCase fixtures and markers.
+See [`docs/plans/`](plans/) for the current roadmap.
 

@@ -1,0 +1,63 @@
+id: equator_polygon
+title: Equator-Crossing Polygon
+description: >
+  A simple rectangle straddling the equator in EPSG:4326, spanning
+  latitudes -5 to 5 and longitudes -10 to 10.  This exercises
+  hemisphere-boundary logic in spatial operations -- sign changes in
+  latitude, UTM zone selection, and area calculations that cross from
+  the southern to northern hemisphere.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - geojson
+  - crs
+  - equator
+  - polygon
+  - edge_case
+
+risk_types:
+  - hemisphere_boundary
+  - utm_zone_ambiguity
+
+behavioral_goal: >
+  Ensure polygon-based utilities handle geometries that straddle the
+  equator without sign errors or incorrect hemisphere assignment.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - reprojection
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  crosses_equator: true
+  min_latitude: -5.0
+  max_latitude: 5.0
+  vertex_count: 5

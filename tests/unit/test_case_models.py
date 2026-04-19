@@ -58,12 +58,14 @@ class TestCaseMetadataValid:
     """Valid CaseMetadata construction."""
 
     def test_minimal(self):
+        """Constructs minimal valid case metadata with the default status."""
         case = CaseMetadata(**_minimal_case())
         assert case.id == "test_case"
         assert case.category == "vector"
         assert case.status == "draft"  # default
 
     def test_all_fields(self):
+        """Preserves fully populated case metadata, nested source information, and custom params."""
         case = CaseMetadata(**_minimal_case(
             description="Full description.",
             status="validated",
@@ -91,6 +93,7 @@ class TestCaseMetadataValid:
         assert case.remote.uri == "https://example.com/data.zip"
 
     def test_defaults_are_sane(self):
+        """Applies empty-list defaults and default assertion hints to omitted fields."""
         case = CaseMetadata(**_minimal_case())
         assert case.tags == []
         assert case.risk_types == []
@@ -110,52 +113,64 @@ class TestCaseMetadataInvalid:
     """CaseMetadata should reject bad data."""
 
     def test_empty_id(self):
+        """Rejects empty case ids."""
         with pytest.raises(ValidationError, match="empty"):
             CaseMetadata(**_minimal_case(id=""))
 
     def test_uppercase_id(self):
+        """Rejects ids that are not lowercase."""
         with pytest.raises(ValidationError, match="lowercase"):
             CaseMetadata(**_minimal_case(id="Bad_Case"))
 
     def test_id_with_spaces(self):
+        """Rejects ids containing spaces."""
         with pytest.raises(ValidationError, match="spaces"):
             CaseMetadata(**_minimal_case(id="bad case"))
 
     def test_invalid_category(self):
+        """Rejects unsupported case categories."""
         with pytest.raises(ValidationError):
             CaseMetadata(**_minimal_case(category="audio"))
 
     def test_invalid_format(self):
+        """Rejects unsupported format values."""
         with pytest.raises(ValidationError):
             CaseMetadata(**_minimal_case(format="BMP"))
 
     def test_invalid_test_tier(self):
+        """Rejects unsupported test-tier values."""
         with pytest.raises(ValidationError):
             CaseMetadata(**_minimal_case(test_tier="nightly"))
 
     def test_invalid_size_class(self):
+        """Rejects unsupported size classes."""
         with pytest.raises(ValidationError):
             CaseMetadata(**_minimal_case(size_class="huge"))
 
     def test_invalid_storage_class(self):
+        """Rejects unsupported storage classes."""
         with pytest.raises(ValidationError):
             CaseMetadata(**_minimal_case(storage_class="s3"))
 
     def test_invalid_loader_hint(self):
+        """Rejects unsupported loader hints."""
         with pytest.raises(ValidationError):
             CaseMetadata(**_minimal_case(loader_hint="pandas"))
 
     def test_invalid_status(self):
+        """Rejects unsupported case status values."""
         with pytest.raises(ValidationError):
             CaseMetadata(**_minimal_case(status="deleted"))
 
     def test_missing_required_field(self):
+        """Requires the `files` field on case metadata."""
         data = _minimal_case()
         del data["files"]
         with pytest.raises(ValidationError):
             CaseMetadata(**data)
 
     def test_missing_primary_in_files(self):
+        """Requires `files.primary` to be present."""
         with pytest.raises(ValidationError):
             CaseMetadata(**_minimal_case(files={"notes": "notes.md"}))
 
@@ -166,11 +181,13 @@ class TestCaseMetadataInvalid:
 
 class TestFileMap:
     def test_minimal(self):
+        """Builds a file map with an empty sidecar list by default."""
         fm = FileMap(primary="data.geojson")
         assert fm.primary == "data.geojson"
         assert fm.sidecars == []
 
     def test_full(self):
+        """Preserves optional preview and sidecar file paths."""
         fm = FileMap(
             primary="data.geojson",
             preview="thumb.png",
@@ -187,15 +204,18 @@ class TestFileMap:
 
 class TestSupportingModels:
     def test_remote_info_defaults(self):
+        """Defaults remote metadata fields to `None`."""
         ri = RemoteInfo()
         assert ri.uri is None
         assert ri.byte_size is None
 
     def test_source_info(self):
+        """Stores source name and license metadata."""
         si = SourceInfo(name="test", license="MIT")
         assert si.name == "test"
 
     def test_assertion_hints_defaults(self):
+        """Defaults assertion hints to loadable with no explicit NoData expectation."""
         ah = AssertionHints()
         assert ah.expect_loadable is True
         assert ah.expect_nodata is None
@@ -207,11 +227,13 @@ class TestSupportingModels:
 
 class TestSuiteSelection:
     def test_empty_selection(self):
+        """Creates an empty suite selection with no active filters."""
         sel = SuiteSelection()
         assert sel.category is None
         assert sel.tags_any == []
 
     def test_typed_fields(self):
+        """Parses typed suite selection filters into the model."""
         sel = SuiteSelection(
             category="vector",
             test_tier="unit",
@@ -223,10 +245,12 @@ class TestSuiteSelection:
         assert sel.format == "GeoJSON"
 
     def test_invalid_category_rejected(self):
+        """Rejects unsupported suite selection categories."""
         with pytest.raises(ValidationError):
             SuiteSelection(category="audio")
 
     def test_invalid_test_tier_rejected(self):
+        """Rejects unsupported suite selection tiers."""
         with pytest.raises(ValidationError):
             SuiteSelection(test_tier="nightly")
 
@@ -237,12 +261,14 @@ class TestSuiteSelection:
 
 class TestSuiteMetadata:
     def test_minimal(self):
+        """Constructs minimal suite metadata with no notes or case order."""
         suite = SuiteMetadata(**_minimal_suite())
         assert suite.suite_key == "my-suite"
         assert suite.case_order == []
         assert suite.notes is None
 
     def test_with_selection(self):
+        """Preserves embedded selection filters and explicit case order."""
         suite = SuiteMetadata(**_minimal_suite(
             selection={"category": "vector", "tags_any": ["crs"]},
             case_order=["case_a", "case_b"],
@@ -253,5 +279,6 @@ class TestSuiteMetadata:
         assert suite.case_order == ["case_a", "case_b"]
 
     def test_missing_required(self):
+        """Requires the mandatory suite metadata fields."""
         with pytest.raises(ValidationError):
             SuiteMetadata(suite_key="x")  # type: ignore[call-arg]

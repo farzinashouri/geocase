@@ -1,0 +1,1 @@
+Canonical baseline polygon stored in raw WKB for custom loader coverage.

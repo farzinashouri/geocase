@@ -4,3 +4,6 @@ suites:
   - path: ../catalog/suites/core-vector.yaml
   - path: ../catalog/suites/crs-edge-cases.yaml
   - path: ../catalog/suites/raster-nodata.yaml
+  - path: ../catalog/suites/vector-topology.yaml
+  - path: ../catalog/suites/vector-crs-edge.yaml
+  - path: ../catalog/suites/vector-schema-encoding.yaml

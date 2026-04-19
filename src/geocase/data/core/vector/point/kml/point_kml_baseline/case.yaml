@@ -1,0 +1,57 @@
+id: point_kml_baseline
+title: Point KML Baseline
+description: >
+  Canonical baseline point stored as KML to exercise XML-like
+  vector loading through the KML driver.
+category: vector
+format: KML
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - point
+  - valid
+  - baseline
+  - kml
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+  - xml_driver_behavior
+
+behavioral_goal: >
+  Provide a canonical point encoded as KML so driver-backed loading can
+  be compared against the GeoJSON baseline and other flat-file formats.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - reprojection
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: point.kml
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  canonical_source_case_id: simple_valid_point

@@ -1,0 +1,55 @@
+id: polygon_parquet_baseline
+title: Polygon Parquet Baseline
+description: >
+  Canonical baseline polygon stored as GeoParquet for columnar vector coverage.
+category: vector
+format: Parquet
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - polygon
+  - valid
+  - baseline
+  - parquet
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+  - columnar_storage_behavior
+
+behavioral_goal: >
+  Provide a canonical polygon encoded as GeoParquet so columnar vector loading can be compared against driver-backed and text-backed baselines.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: geometry.parquet
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+params:
+  canonical_source_case_id: simple_valid_polygon

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document id="root_doc">
+<Folder><name>data</name>
+  <Placemark id="data.1">
+	<name>sample_linestring</name>
+	<description>A sample linestring geometry</description>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <LineString><coordinates>0,0 1,1 2,0</coordinates></LineString>
+  </Placemark>
+</Folder>
+</Document></kml>

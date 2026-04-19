@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Antimeridian Crossing",
+        "description": "Line crossing the 180th meridian"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [179.5, 20.0],
+          [-179.5, 20.0]
+        ]
+      }
+    }
+  ]
+}

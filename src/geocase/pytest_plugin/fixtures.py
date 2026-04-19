@@ -129,3 +129,31 @@ def geocase_case(geocase_cases: list[BaseCase]) -> BaseCase:
 			"Use @pytest.mark.geocase_case('case_id')."
 		)
 	return geocase_cases[0]
+
+
+@pytest.fixture
+def geocase(request: pytest.FixtureRequest) -> BaseCase:
+	"""Parametrized convenience fixture populated by ``pytest_generate_tests``.
+
+	When used without any GeoCase marker, or when markers resolve to zero
+	cases, raise a helpful UsageError instead of surfacing a generic
+	``fixture 'geocase' not found`` failure.
+	"""
+	if hasattr(request, "param"):
+		return request.param
+
+	has_geocase_markers = any(
+		any(request.node.iter_markers(marker_name))
+		for marker_name in ("geocase_case", "geocase_suite", "geocase_select")
+	)
+	if has_geocase_markers:
+		raise pytest.UsageError(
+			"Fixture 'geocase' resolved zero cases. Check your case ids, "
+			"suite keys, or selector filters."
+		)
+
+	raise pytest.UsageError(
+		"Fixture 'geocase' requires at least one GeoCase marker such as "
+		"@pytest.mark.geocase_case(...), @pytest.mark.geocase_suite(...), "
+		"or @pytest.mark.geocase_select(...)."
+	)

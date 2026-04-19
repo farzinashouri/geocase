@@ -1,0 +1,56 @@
+id: geotiff_int8_small
+title: GeoTIFF Int8 Small
+description: >
+  A small single-band GeoTIFF stored as signed 8-bit integers. Tests that
+  raster loaders and downstream code preserve narrow integer dtype semantics
+  rather than coercing values to floating point implicitly.
+category: raster
+format: GeoTIFF
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - dtype
+  - int8
+
+risk_types:
+  - dtype_coercion
+  - overflow_assumption
+  - nodata_ignored
+
+behavioral_goal: >
+  Confirm that signed 8-bit integer rasters open with the correct dtype and
+  preserve their declared numeric storage type through simple reads.
+
+expected_capabilities:
+  - load
+  - dtype-check
+  - nodata-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: int8_sample.tif
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expect_nodata: true
+
+params:
+  nodata_value: -99
+  band_count: 1
+  dtype: int8

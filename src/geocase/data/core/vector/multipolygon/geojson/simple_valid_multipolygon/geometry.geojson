@@ -1,0 +1,34 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "baseline_multipolygon"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [10.0, 50.0],
+              [10.5, 50.0],
+              [10.5, 50.5],
+              [10.0, 50.5],
+              [10.0, 50.0]
+            ]
+          ],
+          [
+            [
+              [11.0, 50.0],
+              [11.5, 50.0],
+              [11.5, 50.5],
+              [11.0, 50.5],
+              [11.0, 50.0]
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

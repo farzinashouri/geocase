@@ -1,0 +1,54 @@
+id: geometrycollection_mixed_valid
+title: GeometryCollection Mixed Valid
+description: >
+  A valid GeometryCollection fixture containing a point, line, and
+  polygon to support mixed-geometry loader behavior checks.
+category: vector
+format: GeoJSON
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - geometrycollection
+  - mixed_geometry
+  - valid
+
+risk_types:
+  - mixed_geometry_output
+
+behavioral_goal: >
+  Ensure GeometryCollection features can be indexed and loaded without
+  being coerced into a single geometry family.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - selector-filtering
+
+loader_hint: geopandas
+geometry_type: GeometryCollection
+crs: EPSG:4326
+
+files:
+  primary: geometry.geojson
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - GeometryCollection
+
+params:
+  expected_feature_count: 1

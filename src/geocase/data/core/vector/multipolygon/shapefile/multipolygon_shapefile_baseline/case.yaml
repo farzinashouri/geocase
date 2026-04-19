@@ -1,0 +1,56 @@
+id: multipolygon_shapefile_baseline
+title: MultiPolygon Shapefile Baseline
+description: >
+  Canonical baseline multipolygon stored as an ESRI Shapefile for cross-format
+  comparison and format-specific loader behavior testing.
+category: vector
+format: Shapefile
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - multipolygon
+  - valid
+  - baseline
+  - shapefile
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+
+behavioral_goal: >
+  Provide a canonical multipolygon encoded as a Shapefile so format-specific
+  loader behavior can be compared directly against the GeoJSON baseline.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: MultiPolygon
+crs: EPSG:4326
+
+files:
+  primary: data.shp
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - MultiPolygon
+
+params:
+  canonical_source_case_id: simple_valid_multipolygon

@@ -1,0 +1,56 @@
+id: multilinestring_flatgeobuf_baseline
+title: MultiLineString FlatGeobuf Baseline
+description: >
+  Canonical baseline multilinestring stored as FlatGeobuf for
+  cross-format comparison and format-specific loader behavior testing.
+category: vector
+format: FlatGeobuf
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - multilinestring
+  - valid
+  - baseline
+  - flatgeobuf
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+
+behavioral_goal: >
+  Provide a canonical multilinestring encoded as FlatGeobuf so format-specific
+  loader behavior can be compared directly against the GeoJSON baseline.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - bounds-check
+
+loader_hint: geopandas
+geometry_type: MultiLineString
+crs: EPSG:4326
+
+files:
+  primary: data.fgb
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - MultiLineString
+
+params:
+  canonical_source_case_id: simple_valid_multilinestring

@@ -1,0 +1,55 @@
+id: point_arrow_baseline
+title: Point Arrow Baseline
+description: >
+  Canonical baseline point stored as an Arrow IPC file to exercise the explicit Arrow loader path.
+category: vector
+format: Arrow
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - point
+  - valid
+  - baseline
+  - arrow
+  - cross_format_canonical
+
+risk_types:
+  - format_comparison
+  - arrow_ipc_behavior
+
+behavioral_goal: >
+  Provide a canonical point encoded as Arrow IPC so the explicit Arrow loader path can be compared against GeoArrow, Feather, and GeoJSON baselines.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - reprojection
+
+loader_hint: geopandas
+geometry_type: Point
+crs: EPSG:4326
+
+files:
+  primary: geometry.arrow
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Point
+
+params:
+  canonical_source_case_id: simple_valid_point
