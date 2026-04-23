@@ -210,6 +210,10 @@ Handles remote manifest files for downloadable extended datasets.
 
 Why it exists: keeps remote logic separate from core bundled metadata.
 
+See also: [`manifests-and-storage.md`](manifests-and-storage.md) for the
+distinction between manifest support, storage support, checksums, and why both
+layers are needed.
+
 ---
 
 ## `src/geocase/cases/`

@@ -109,6 +109,9 @@ Decide fate of each stub module:
 - Prioritize `catalog/manifests.py` if external catalogs are needed for v1.0
 - Defer `storage/`, `api/`, and `cli/` unless Phase 3 or release work proves they are necessary
 
+See `06-manifest-support.md` for the detailed implementation plan if manifest
+support is pulled into the active v1.0 work.
+
 **Estimated effort:** 1 session for decisions, variable for implementation
 
 ---
