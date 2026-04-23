@@ -10,7 +10,8 @@ from pathlib import Path
 from typing import Iterator
 
 from geocase.catalog.loader import load_case_index, load_case_metadata
-from geocase.catalog.models import CaseMetadata
+from geocase.catalog.manifests import load_manifest
+from geocase.catalog.models import CaseMetadata, ManifestMetadata
 
 
 class CaseRegistry:
@@ -24,8 +25,15 @@ class CaseRegistry:
             ...
     """
 
-    def __init__(self, cases: dict[str, CaseMetadata]) -> None:
+    def __init__(
+        self,
+        cases: dict[str, CaseMetadata],
+        manifest_cases: dict[str, ManifestMetadata] | None = None,
+    ) -> None:
         self._cases: dict[str, CaseMetadata] = dict(cases)
+        self._manifest_cases: dict[str, ManifestMetadata] = dict(
+            manifest_cases or {}
+        )
 
     # ------------------------------------------------------------------
     # Construction
@@ -66,6 +74,32 @@ class CaseRegistry:
 
         return cls(cases)
 
+    @classmethod
+    def from_sources(
+        cls,
+        case_index_path: Path,
+        *,
+        manifest_paths: list[Path] | None = None,
+    ) -> CaseRegistry:
+        """Build a registry from bundled cases plus optional manifest sources."""
+        registry = cls.from_index(case_index_path)
+        manifest_case_map: dict[str, ManifestMetadata] = {}
+
+        for manifest_path in manifest_paths or []:
+            manifest = load_manifest(manifest_path)
+            for entry in manifest.cases:
+                if entry.case_id in registry._cases:
+                    raise ValueError(
+                        f"Manifest case id '{entry.case_id}' collides with bundled registry"
+                    )
+                if entry.case_id in manifest_case_map:
+                    raise ValueError(
+                        f"Manifest case id '{entry.case_id}' appears in more than one manifest"
+                    )
+                manifest_case_map[entry.case_id] = manifest
+
+        return cls(registry._cases, manifest_cases=manifest_case_map)
+
     # ------------------------------------------------------------------
     # Lookup
     # ------------------------------------------------------------------
@@ -86,17 +120,17 @@ class CaseRegistry:
 
     def list_ids(self) -> list[str]:
         """Return a sorted list of all registered case ids."""
-        return sorted(self._cases)
+        return sorted([*self._cases, *self._manifest_cases])
 
     def list_cases(self) -> list[CaseMetadata]:
         """Return all registered cases sorted by id."""
         return [self._cases[k] for k in sorted(self._cases)]
 
     def __contains__(self, case_id: str) -> bool:
-        return case_id in self._cases
+        return case_id in self._cases or case_id in self._manifest_cases
 
     def __len__(self) -> int:
-        return len(self._cases)
+        return len(self._cases) + len(self._manifest_cases)
 
     def __iter__(self) -> Iterator[CaseMetadata]:
         return iter(self.list_cases())

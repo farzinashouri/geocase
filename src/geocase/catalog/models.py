@@ -46,6 +46,59 @@ class RemoteInfo(BaseModel):
     byte_size: int | None = None
 
 
+ManifestStorageType = Literal["s3", "gcs", "azure", "https", "filesystem"]
+
+
+class ManifestStorage(BaseModel):
+    storage_type: ManifestStorageType
+    base_uri: str
+    requires_auth: bool = False
+    is_public: bool = False
+
+
+class ManifestCaseEntry(BaseModel):
+    case_id: str
+    version: str
+    relative_path: str
+    sha256: str
+    byte_size: int | None = None
+    archive_format: str | None = None
+
+    @field_validator("case_id")
+    @classmethod
+    def validate_case_id(cls, value: str) -> str:
+        if not value:
+            raise ValueError("Manifest case id cannot be empty")
+        if value != value.lower():
+            raise ValueError("Manifest case id must be lowercase")
+        if " " in value:
+            raise ValueError("Manifest case id must not contain spaces")
+        return value
+
+    @field_validator("relative_path")
+    @classmethod
+    def validate_relative_path(cls, value: str) -> str:
+        if not value or not value.strip():
+            raise ValueError("Manifest relative_path cannot be empty")
+        return value
+
+
+class ManifestMetadata(BaseModel):
+    manifest_key: str
+    title: str
+    description: str | None = None
+    schema_version: str
+    storage: ManifestStorage
+    cases: list[ManifestCaseEntry] = Field(default_factory=list)
+
+    @field_validator("manifest_key")
+    @classmethod
+    def validate_manifest_key(cls, value: str) -> str:
+        if not value:
+            raise ValueError("Manifest key cannot be empty")
+        return value
+
+
 class SourceInfo(BaseModel):
     name: str | None = None
     url: str | None = None
