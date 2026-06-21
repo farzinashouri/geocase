@@ -4,7 +4,6 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-
 Category = Literal["vector", "raster", "netcdf", "satellite"]
 FormatType = Literal[
     "GeoJSON",
@@ -106,6 +105,9 @@ class SourceInfo(BaseModel):
     derived_from: str | None = None
 
 
+NodataConvention = Literal["sentinel", "nan", "mask", "none"]
+
+
 class AssertionHints(BaseModel):
     expect_loadable: bool = True
     expect_valid_geometry: bool | None = None
@@ -113,6 +115,19 @@ class AssertionHints(BaseModel):
     expected_epsg: int | None = None
     expected_geometry_types: list[str] = Field(default_factory=list)
     expect_nodata: bool | None = None
+
+    # Typed raster expectations (see docs/plans/08-raster-action-plan.md, Step 2)
+    expected_band_count: int | None = None
+    expected_dtype: str | None = None
+    expected_shape: list[int] | None = None
+    expected_nodata_value: float | int | None = None
+    nodata_convention: NodataConvention | None = None
+    expected_compression: str | None = None
+    expected_overviews: bool | None = None
+    expected_band_names: list[str] = Field(default_factory=list)
+    expected_scale_factor: float | None = None
+    expected_colormap_present: bool | None = None
+    is_cog: bool | None = None
 
 
 class CaseMetadata(BaseModel):

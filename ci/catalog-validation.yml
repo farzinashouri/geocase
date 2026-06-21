@@ -3,9 +3,13 @@ catalog_validation:
   image: python:3.11
   before_script:
     - python -m pip install --upgrade pip
-    - python -m pip install -e .
+    - python -m pip install -e .[raster]
   script:
     - python scripts/build_case_index.py --check
     - python scripts/validate_catalog.py
+    - python scripts/generate_raster_fixtures.py --check
+    - python scripts/generate_checksums.py --check --data-root src/geocase/data/core/raster
     - python scripts/generate_vector_coverage_matrix.py --output docs/_generated/vector-coverage-matrix.md
     - git diff --exit-code -- docs/_generated/vector-coverage-matrix.md
+    - python scripts/generate_raster_coverage_matrix.py --output docs/_generated/raster-coverage-matrix.md
+    - git diff --exit-code -- docs/_generated/raster-coverage-matrix.md

@@ -140,3 +140,121 @@ def assert_no_nodata_pixels(
         raise AssertionError(
             msg or f"Found {count} pixel(s) equal to NoData value {nodata}"
         )
+
+
+def assert_compression(
+    src: Any,
+    expected: str,
+    *,
+    msg: str | None = None,
+) -> None:
+    """Assert the raster uses *expected* compression.
+
+    Comparison is case-insensitive (``"DEFLATE"`` == ``"deflate"``).
+
+    Raises:
+        AssertionError: If compression is absent or does not match.
+    """
+    compression = src.profile.get("compress")
+    actual = str(compression).lower() if compression is not None else None
+    if actual != expected.lower():
+        raise AssertionError(
+            msg or f"Expected compression '{expected}', got '{compression}'"
+        )
+
+
+def assert_has_overviews(
+    src: Any,
+    *,
+    band: int = 1,
+    msg: str | None = None,
+) -> None:
+    """Assert the raster has overviews (pyramids) for *band*.
+
+    Raises:
+        AssertionError: If the band has no overviews.
+    """
+    overviews = src.overviews(band)
+    if not overviews:
+        raise AssertionError(
+            msg or f"Raster band {band} has no overviews"
+        )
+
+
+def assert_nan_nodata(
+    src: Any,
+    *,
+    msg: str | None = None,
+) -> None:
+    """Assert the raster encodes NoData using the NaN convention.
+
+    Raises:
+        AssertionError: If the nodata value is not NaN.
+    """
+    actual = src.nodata
+    if actual is None or not np.isnan(actual):
+        raise AssertionError(
+            msg or f"Expected NaN NoData value, got {actual}"
+        )
+
+
+def assert_is_cog(
+    src: Any,
+    *,
+    msg: str | None = None,
+) -> None:
+    """Assert the raster is structured as a Cloud-Optimized GeoTIFF.
+
+    Applies a lightweight structural check: the dataset must be tiled and
+    expose overviews. This is intentionally shallow (see open question 3 in
+    the raster action plan) and not a full COG validator.
+
+    Raises:
+        AssertionError: If the raster is not tiled or lacks overviews.
+    """
+    is_tiled = bool(src.profile.get("tiled", False))
+    if not is_tiled:
+        raise AssertionError(
+            msg or "Raster is not internally tiled (not COG-structured)"
+        )
+    if not src.overviews(1):
+        raise AssertionError(
+            msg or "Raster has no overviews (not COG-structured)"
+        )
+
+
+def assert_band_names(
+    src: Any,
+    expected: list[str],
+    *,
+    msg: str | None = None,
+) -> None:
+    """Assert the raster band descriptions match *expected* names in order.
+
+    Raises:
+        AssertionError: If band descriptions do not match.
+    """
+    actual = list(src.descriptions)
+    if actual != list(expected):
+        raise AssertionError(
+            msg or f"Expected band names {expected}, got {actual}"
+        )
+
+
+def assert_colormap_present(
+    src: Any,
+    *,
+    band: int = 1,
+    msg: str | None = None,
+) -> None:
+    """Assert the raster band has a colormap.
+
+    Raises:
+        AssertionError: If the band has no colormap.
+    """
+    try:
+        src.colormap(band)
+    except (ValueError, KeyError):
+        raise AssertionError(
+            msg or f"Raster band {band} has no colormap"
+        ) from None

@@ -1,0 +1,63 @@
+id: dem_small
+title: DEM Small
+description: >
+  A tiny single-band float32 digital elevation model with a NaN NoData pixel.
+  Exercises continuous-surface raster handling and the NaN NoData convention.
+category: raster
+format: GeoTIFF
+test_tier: integration
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - eo
+  - dem
+  - terrain
+  - product:dem
+  - geography:utm
+  - delivery:single-file
+
+risk_types:
+  - nodata_ignored
+  - nan_mishandled
+  - dtype_drift
+
+behavioral_goal: >
+  Confirm GeoCase can open a float32 DEM, preserve its single band, and treat
+  the NaN NoData value correctly during terrain logic.
+
+expected_capabilities:
+  - load
+  - nodata-check
+  - nan-nodata-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: dem_small.tif
+  notes: notes.md
+
+source:
+  name: geocase-synthetic
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expect_nodata: true
+  nodata_convention: nan
+  expected_band_count: 1
+  expected_dtype: float32
+  expected_shape: [16, 16]
+  expected_band_names: [elevation]
+  expected_compression: deflate
+
+params:
+  generator: scripts/generate_raster_fixtures.py

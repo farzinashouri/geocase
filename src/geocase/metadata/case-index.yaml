@@ -1,6 +1,7 @@
 schema_version: '1.0'
 cases:
 - path: data/core/netcdf/latlon_small/case.yaml
+- path: data/core/raster/dem_small/case.yaml
 - path: data/core/raster/footprint_edge_cases/case_all_valid_rectangular.yaml
 - path: data/core/raster/footprint_edge_cases/case_hole_center_nodata.yaml
 - path: data/core/raster/footprint_edge_cases/case_nonsquare_diagonal_sparse.yaml
@@ -14,6 +15,10 @@ cases:
 - path: data/core/raster/geotiff_nodata_small/case.yaml
 - path: data/core/raster/geotiff_nodata_small_shifted/case.yaml
 - path: data/core/raster/geotiff_utm_boundary/case.yaml
+- path: data/core/raster/multispectral_s2_like_small/case.yaml
+- path: data/core/raster/ndvi_small/case.yaml
+- path: data/core/raster/optical_rgb_small/case.yaml
+- path: data/core/raster/water_mask_small/case.yaml
 - path: data/core/vector/geometrycollection/geojson/case.yaml
 - path: data/core/vector/linestring/csv_wkt/linestring_csv_wkt_baseline/case.yaml
 - path: data/core/vector/linestring/flatgeobuf/linestring_flatgeobuf_baseline/case.yaml
