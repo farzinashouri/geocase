@@ -422,15 +422,32 @@ def clip_raster_perfect(
         minx, maxx = min(xs), max(xs)
         miny, maxy = min(ys), max(ys)
 
-    result = gdal.Translate(
-        output_path,
-        ds,
-        projWin=[minx, maxy, maxx, miny],
-    )
+    # gdal.Translate's -projWin requires an axis-aligned (north-up)
+    # geotransform; it raises on rasters with rotation/skew terms
+    # (gt[2] or gt[4] non-zero). For those, fall back to gdal.Warp, which
+    # resamples onto an axis-aligned grid clipped to the requested bounds.
+    gt = ds.GetGeoTransform(can_return_null=True)
+    if gt is None:
+        ds = None
+        raise ValueError("Raster has no geotransform.")
+
+    is_rotated = gt[2] != 0.0 or gt[4] != 0.0
+    if is_rotated:
+        result = gdal.Warp(
+            output_path,
+            ds,
+            outputBounds=[minx, miny, maxx, maxy],
+        )
+    else:
+        result = gdal.Translate(
+            output_path,
+            ds,
+            projWin=[minx, maxy, maxx, miny],
+        )
     ds = None
 
     if result is None:
-        raise RuntimeError("GDAL Translate failed.")
+        raise RuntimeError("GDAL clip failed.")
     result = None
 
 

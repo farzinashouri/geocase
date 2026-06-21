@@ -300,6 +300,25 @@ The raster expansion phase is successful when it delivers all of the following:
 - clearer docs/examples for contributors,
 - and stronger justification for the new fixture families.
 
+**Limitations surfaced by the new fixtures**
+
+- **Rotated geotransforms break `-projWin` clipping.** The
+  `rotated_two_islands` fixture (`footprint_edge_cases/`) carries non-zero
+  rotation/skew terms (`gt[2]`/`gt[4]`). The naive Question 8 helper
+  `clip_raster` calls `gdal.Translate(..., projWin=...)`, which GDAL
+  explicitly rejects on rotated grids, so it raises `RuntimeError`. This is
+  the intended teaching contrast: `clip_raster_perfect` now detects the
+  rotated geotransform and falls back to `gdal.Warp(..., outputBounds=...)`,
+  resampling onto an axis-aligned grid clipped to the requested bounds.
+  Regression tests:
+  `test_clip_raster_fails_on_rotated_geotransform` (asserts the simple helper
+  raises) and `test_clip_raster_perfect_handles_rotated_geotransform`
+  (asserts the warp fallback succeeds and yields a north-up output). The
+  parametrized all-cases clip tests continue to `skip` rotated rasters, since
+  axis-aligned `projWin` clipping is their documented contract. The other
+  raster Question helpers (9 pixel→world, 10 alignment, 14 sampling, 17
+  rasterize) pass unchanged across every bundled raster fixture.
+
 ### Step 9 — Add Priority 2 through Priority 4 raster families
 
 **Goal:** broaden coverage after the first vertical slice is stable.
