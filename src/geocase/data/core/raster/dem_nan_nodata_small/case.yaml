@@ -1,0 +1,59 @@
+id: dem_nan_nodata_small
+title: DEM NaN NoData Small
+description: >
+  A tiny single-band float32 DEM that encodes NoData using the NaN convention
+  rather than a sentinel value. Exercises NaN-NoData handling in terrain logic.
+category: raster
+format: GeoTIFF
+test_tier: integration
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - dem
+  - product:dem
+  - geography:utm
+  - delivery:single-file
+
+risk_types:
+  - nodata_ignored
+  - nan_mishandled
+
+behavioral_goal: >
+  Confirm GeoCase detects NaN-encoded NoData in a float DEM rather than
+  treating NaN as valid elevation.
+
+expected_capabilities:
+  - load
+  - nodata-check
+  - nan-nodata-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: dem_nan_nodata_small.tif
+
+source:
+  name: geocase-synthetic
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expect_nodata: true
+  nodata_convention: nan
+  expected_band_count: 1
+  expected_dtype: float32
+  expected_shape: [16, 16]
+  expected_band_names: [elevation]
+  expected_compression: deflate
+
+params:
+  generator: scripts/generate_raster_fixtures.py

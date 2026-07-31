@@ -21,9 +21,11 @@ import argparse
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import rasterio
+from rasterio.enums import Resampling
 from rasterio.transform import from_origin
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -46,9 +48,24 @@ class RasterSpec:
     nodata: float | int | None = None
     band_names: list[str] = field(default_factory=list)
     compression: str | None = None
+    # CRS / transform overrides for geography-specific scenes.
+    crs: str = _CRS
+    transform: Any | None = None
+    # COG-style / overview controls.
+    tiled: bool = False
+    block_size: int = 16
+    overviews: list[int] = field(default_factory=list)
+    external_overviews: bool = False
+    # Per-dataset band scale factor (e.g. scaled int16 reflectance).
+    scale_factor: float | None = None
+    # Single-band categorical colormap: {value: (r, g, b, a)}.
+    colormap: dict[int, tuple[int, int, int, int]] | None = None
 
     def array(self) -> np.ndarray:
         return np.stack(self.bands).astype(self.dtype)
+
+    def resolved_transform(self) -> Any:
+        return self.transform if self.transform is not None else _TRANSFORM
 
 
 def _ramp(seed: int) -> np.ndarray:
@@ -126,25 +143,213 @@ def _specs() -> list[RasterSpec]:
             band_names=["ndvi"],
             compression="deflate",
         ),
+        *_priority_2_4_specs(),
+    ]
+
+
+def _priority_2_4_specs() -> list[RasterSpec]:
+    """Build the Priority 2–4 raster families (Step 9 of the action plan)."""
+    from rasterio.transform import from_origin as _origin
+
+    # -- Priority 2: COG / overviews / compression ------------------------
+    # COG scenes are 64x64 so a 16px internal tiling actually registers
+    # (a 16x16 scene fits in a single block and GDAL stores it untiled).
+    def _ramp64(seed: int) -> np.ndarray:
+        rows = np.arange(64).reshape(-1, 1)
+        cols = np.arange(64).reshape(1, -1)
+        return (rows + cols + seed) % 256
+
+    cog_single = [(_ramp64(5) * 20).astype("uint16")]
+    cog_ms = [(_ramp64(s) * 30).astype("uint16") for s in (10, 20, 30, 40)]
+    ovr_band = [(_ramp64(7)).astype("uint8")]
+
+    # -- Priority 3: SAR + geography --------------------------------------
+    # SAR amplitude-like float32 scenes.
+    sar_vv = [(_ramp(3).astype("float32") / 255.0)]
+    sar_dual = [
+        (_ramp(3).astype("float32") / 255.0),
+        (_ramp(9).astype("float32") / 255.0),
+    ]
+    optical = [
+        _ramp(0).astype("uint8"),
+        _ramp(64).astype("uint8"),
+        _ramp(128).astype("uint8"),
+    ]
+    # Geographic (lon/lat) transforms with ~0.01 deg pixels.
+    polar_tx = _origin(-2_000_000.0, 2_000_000.0, 10.0, 10.0)  # EPSG:3995 metres
+    dateline_tx = _origin(179.9, 1.0, 0.02, 0.02)  # straddles +180 lon
+    equator_tx = _origin(10.0, 0.16, 0.01, 0.01)  # centred on the equator
+
+    # -- Priority 4: mixed resolution / NaN DEM / scaled NDVI / landcover --
+    mixed = [
+        (_ramp(10) * 30).astype("uint16"),
+        (_ramp(20) * 30).astype("uint16"),
+        (_ramp(30) * 30).astype("uint16"),
+    ]
+    dem_nan = (_ramp(0).astype("float32") * 4.0) + 50.0
+    dem_nan[0, 0] = np.nan
+    dem_nan[15, 15] = np.nan
+    # Scaled int16 NDVI: physical NDVI in [-1, 1] stored as int16 * 1e-4.
+    ndvi_phys = ((_ramp(0).astype("float32") / 255.0) * 2.0) - 1.0
+    ndvi_int16 = np.round(ndvi_phys / 1e-4).astype("int16")
+    # Categorical land cover: 0=nodata, 1=water, 2=veg, 3=urban.
+    landcover = np.zeros((_SIZE, _SIZE), dtype="uint8")
+    landcover[:8, :8] = 1
+    landcover[:8, 8:] = 2
+    landcover[8:, :8] = 3
+    landcover[8:, 8:] = 2
+    landcover_cmap = {
+        0: (0, 0, 0, 0),
+        1: (0, 0, 255, 255),
+        2: (0, 200, 0, 255),
+        3: (128, 128, 128, 255),
+    }
+
+    return [
+        RasterSpec(
+            case_id="cog_singleband_small",
+            primary="cog_singleband_small.tif",
+            bands=cog_single,
+            dtype="uint16",
+            band_names=["intensity"],
+            compression="deflate",
+            tiled=True,
+            overviews=[2],
+        ),
+        RasterSpec(
+            case_id="cog_multispectral_small",
+            primary="cog_multispectral_small.tif",
+            bands=cog_ms,
+            dtype="uint16",
+            nodata=0,
+            band_names=["blue", "green", "red", "nir"],
+            compression="deflate",
+            tiled=True,
+            overviews=[2],
+        ),
+        RasterSpec(
+            case_id="geotiff_external_overviews_small",
+            primary="geotiff_external_overviews_small.tif",
+            bands=ovr_band,
+            dtype="uint8",
+            band_names=["gray"],
+            compression="deflate",
+            overviews=[2],
+            external_overviews=True,
+        ),
+        RasterSpec(
+            case_id="sar_vv_small",
+            primary="sar_vv_small.tif",
+            bands=sar_vv,
+            dtype="float32",
+            band_names=["VV"],
+            compression="deflate",
+        ),
+        RasterSpec(
+            case_id="sar_dualpol_small",
+            primary="sar_dualpol_small.tif",
+            bands=sar_dual,
+            dtype="float32",
+            band_names=["VV", "VH"],
+            compression="deflate",
+        ),
+        RasterSpec(
+            case_id="optical_polar_small",
+            primary="optical_polar_small.tif",
+            bands=optical,
+            dtype="uint8",
+            band_names=["red", "green", "blue"],
+            compression="deflate",
+            crs="EPSG:3995",
+            transform=polar_tx,
+        ),
+        RasterSpec(
+            case_id="optical_dateline_small",
+            primary="optical_dateline_small.tif",
+            bands=optical,
+            dtype="uint8",
+            band_names=["red", "green", "blue"],
+            compression="deflate",
+            crs="EPSG:4326",
+            transform=dateline_tx,
+        ),
+        RasterSpec(
+            case_id="optical_equator_small",
+            primary="optical_equator_small.tif",
+            bands=optical,
+            dtype="uint8",
+            band_names=["red", "green", "blue"],
+            compression="deflate",
+            crs="EPSG:4326",
+            transform=equator_tx,
+        ),
+        RasterSpec(
+            case_id="multispectral_mixed_resolution_small",
+            primary="multispectral_mixed_resolution_small.tif",
+            bands=mixed,
+            dtype="uint16",
+            nodata=0,
+            band_names=["red_10m", "nir_10m", "swir_20m"],
+            compression="deflate",
+        ),
+        RasterSpec(
+            case_id="dem_nan_nodata_small",
+            primary="dem_nan_nodata_small.tif",
+            bands=[dem_nan],
+            dtype="float32",
+            nodata=float("nan"),
+            band_names=["elevation"],
+            compression="deflate",
+        ),
+        RasterSpec(
+            case_id="ndvi_scaled_int16_small",
+            primary="ndvi_scaled_int16_small.tif",
+            bands=[ndvi_int16],
+            dtype="int16",
+            nodata=-32768,
+            band_names=["ndvi"],
+            compression="deflate",
+            scale_factor=1e-4,
+        ),
+        RasterSpec(
+            case_id="landcover_small",
+            primary="landcover_small.tif",
+            bands=[landcover],
+            dtype="uint8",
+            nodata=0,
+            band_names=["landcover"],
+            compression="deflate",
+            colormap=landcover_cmap,
+        ),
     ]
 
 
 def _write_raster(spec: RasterSpec, dest: Path) -> None:
     """Write *spec* to *dest* with explicit, deterministic profile."""
     array = spec.array()
+    height, width = array.shape[1], array.shape[2]
     profile = {
         "driver": "GTiff",
-        "height": _SIZE,
-        "width": _SIZE,
+        "height": height,
+        "width": width,
         "count": array.shape[0],
         "dtype": spec.dtype,
-        "crs": _CRS,
-        "transform": _TRANSFORM,
+        "crs": spec.crs,
+        "transform": spec.resolved_transform(),
     }
     if spec.nodata is not None:
         profile["nodata"] = spec.nodata
     if spec.compression is not None:
         profile["compress"] = spec.compression
+    if spec.tiled:
+        profile["tiled"] = True
+        profile["blockxsize"] = spec.block_size
+        profile["blockysize"] = spec.block_size
+
+    # Stale external overviews would otherwise be read back transparently.
+    sidecar = dest.with_suffix(dest.suffix + ".ovr")
+    if sidecar.exists():
+        sidecar.unlink()
 
     dest.parent.mkdir(parents=True, exist_ok=True)
     with rasterio.open(dest, "w", **profile) as dst:
@@ -152,6 +357,26 @@ def _write_raster(spec: RasterSpec, dest: Path) -> None:
         if spec.band_names:
             for idx, name in enumerate(spec.band_names, start=1):
                 dst.set_band_description(idx, name)
+        if spec.scale_factor is not None:
+            dst.scales = (spec.scale_factor,) * array.shape[0]
+        if spec.colormap is not None:
+            dst.write_colormap(1, spec.colormap)
+        # Internal overviews (COG-style) are written inside the same file.
+        if spec.overviews and not spec.external_overviews:
+            dst.build_overviews(spec.overviews, Resampling.nearest)
+            dst.update_tags(ns="rio_overview", resampling="nearest")
+
+    # External overviews are built in a second pass on the read-only dataset,
+    # which makes GDAL emit a sibling ``.ovr`` sidecar instead of embedding.
+    if spec.overviews and spec.external_overviews:
+        from osgeo import gdal
+
+        gdal.UseExceptions()
+        ds = gdal.Open(str(dest), gdal.GA_ReadOnly)
+        try:
+            ds.BuildOverviews("NEAREST", spec.overviews)
+        finally:
+            ds = None
 
 
 def parse_args() -> argparse.Namespace:

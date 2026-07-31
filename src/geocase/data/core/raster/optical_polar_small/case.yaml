@@ -1,0 +1,56 @@
+id: optical_polar_small
+title: Optical Polar Small
+description: >
+  A tiny three-band uint8 RGB scene in a polar stereographic CRS (EPSG:3995).
+  Exercises high-latitude / polar projection handling.
+category: raster
+format: GeoTIFF
+test_tier: integration
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - eo
+  - optical
+  - product:optical
+  - geography:polar
+  - delivery:single-file
+
+risk_types:
+  - crs_mishandled
+  - projection_assumptions
+
+behavioral_goal: >
+  Confirm GeoCase handles an RGB optical scene in a polar stereographic CRS.
+
+expected_capabilities:
+  - load
+  - crs-check
+
+loader_hint: rasterio
+crs: EPSG:3995
+
+files:
+  primary: optical_polar_small.tif
+
+source:
+  name: geocase-synthetic
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 3995
+  expected_band_count: 3
+  expected_dtype: uint8
+  expected_shape: [16, 16]
+  expected_band_names: [red, green, blue]
+  expected_compression: deflate
+
+params:
+  generator: scripts/generate_raster_fixtures.py

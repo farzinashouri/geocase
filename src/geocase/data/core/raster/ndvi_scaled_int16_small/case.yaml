@@ -1,0 +1,64 @@
+id: ndvi_scaled_int16_small
+title: NDVI Scaled Int16 Small
+description: >
+  A tiny single-band int16 NDVI product where physical NDVI in [-1, 1] is
+  stored as integers with a 0.0001 scale factor. Exercises scaled-integer
+  decoding and scale-factor metadata.
+category: raster
+format: GeoTIFF
+test_tier: integration
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - ndvi
+  - derived
+  - product:ndvi
+  - geography:utm
+  - delivery:single-file
+
+risk_types:
+  - scale_factor_ignored
+  - dtype_drift
+  - nodata_ignored
+
+behavioral_goal: >
+  Confirm GeoCase preserves a scaled int16 NDVI product, its scale factor, and
+  its NoData sentinel.
+
+expected_capabilities:
+  - load
+  - scale-factor-check
+  - nodata-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: ndvi_scaled_int16_small.tif
+
+source:
+  name: geocase-synthetic
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expect_nodata: true
+  expected_nodata_value: -32768
+  nodata_convention: sentinel
+  expected_band_count: 1
+  expected_dtype: int16
+  expected_shape: [16, 16]
+  expected_band_names: [ndvi]
+  expected_compression: deflate
+  expected_scale_factor: 0.0001
+
+params:
+  generator: scripts/generate_raster_fixtures.py

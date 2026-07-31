@@ -1,0 +1,66 @@
+id: multispectral_mixed_resolution_small
+title: Multispectral Mixed Resolution Small
+description: >
+  A tiny three-band uint16 multispectral stack combining native 10 m and 20 m
+  bands resampled onto a common 10 m grid. Documents the mixed-resolution
+  delivery pattern in a single GeoTIFF.
+category: raster
+format: GeoTIFF
+test_tier: integration
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - multispectral
+  - mixed-resolution
+  - product:multispectral
+  - geography:utm
+  - delivery:resampled-stack
+
+risk_types:
+  - resolution_mismatch
+  - resampling_assumptions
+  - band_loss
+
+behavioral_goal: >
+  Confirm GeoCase preserves a multispectral stack assembled from bands of
+  differing native resolutions resampled to a common grid.
+
+expected_capabilities:
+  - load
+  - multiband-read
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: multispectral_mixed_resolution_small.tif
+
+source:
+  name: geocase-synthetic
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expect_nodata: true
+  expected_nodata_value: 0
+  nodata_convention: sentinel
+  expected_band_count: 3
+  expected_dtype: uint16
+  expected_shape: [16, 16]
+  expected_band_names: [red_10m, nir_10m, swir_20m]
+  expected_compression: deflate
+
+params:
+  generator: scripts/generate_raster_fixtures.py
+  resolutions:
+    red_10m: 10
+    nir_10m: 10
+    swir_20m: 20

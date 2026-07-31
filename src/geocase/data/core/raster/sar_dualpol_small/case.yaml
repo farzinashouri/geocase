@@ -1,0 +1,58 @@
+id: sar_dualpol_small
+title: SAR Dual-Pol Small
+description: >
+  A tiny two-band float32 SAR amplitude scene with VV and VH polarisations.
+  Exercises dual-polarisation radar band handling and ordering.
+category: raster
+format: GeoTIFF
+test_tier: integration
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - sar
+  - product:sar
+  - geography:utm
+  - delivery:single-file
+
+risk_types:
+  - band_loss
+  - incorrect_band_order
+  - dtype_drift
+
+behavioral_goal: >
+  Confirm GeoCase preserves a dual-pol VV/VH SAR scene, its band ordering, and
+  band naming.
+
+expected_capabilities:
+  - load
+  - multiband-read
+  - band-name-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: sar_dualpol_small.tif
+
+source:
+  name: geocase-synthetic
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expected_band_count: 2
+  expected_dtype: float32
+  expected_shape: [16, 16]
+  expected_band_names: [VV, VH]
+  expected_compression: deflate
+
+params:
+  generator: scripts/generate_raster_fixtures.py
