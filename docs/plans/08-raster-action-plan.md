@@ -380,6 +380,22 @@ The raster expansion phase is successful when it delivers all of the following:
 - less package bloat,
 - and a path toward realistic larger-scene testing later.
 
+**Outcome (implemented)**
+
+- `extended-manifests/satellite-scenes.yaml` is now a real manifest declaring
+  five remote-only scenes: `optical_rgb_scene`, `multispectral_s2_scene`,
+  `sar_vv_scene`, `dem_scene`, `landcover_scene`.
+- `ManifestCaseEntry` grew an optional `bundled_analog` field (mirrored in
+  `src/geocase/metadata/schemas/manifest.schema.yaml`) pairing each remote scene
+  with its small bundled counterpart.
+- The boundary is documented in
+  `docs/contributing/manifests-and-storage.md` (§"The bundled/remote raster
+  boundary").
+- Covered by `tests/unit/test_raster_manifest_followon.py`.
+- Transport/cache/fetch remain deferred: the scene archives are unpublished, so
+  their `sha256` values are placeholders and materializing them is storage-layer
+  work (`docs/plans/09-storage-api-cli-and-v1-release-plan.md`, WS1).
+
 ---
 
 ## Recommended ordering for active implementation

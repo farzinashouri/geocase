@@ -1,1 +1,72 @@
 # Satellite Scenes Manifest
+#
+# The remote-only half of GeoCase raster coverage (see
+# docs/plans/08-raster-action-plan.md, Step 10). Bundled raster fixtures stay
+# tiny/small and cover *structure*; the scenes below are larger, realistic EO
+# products that would bloat the package, so they are declared here and fetched
+# on demand instead.
+#
+# Every scene names the small bundled fixture it is the realistic analog of via
+# `bundled_analog`, so a contributor can always answer "what is the big version
+# of this fixture?".
+#
+# This manifest only *declares*. Transport, cache, and checksum verification are
+# the storage layer's job (docs/contributing/manifests-and-storage.md).
+#
+# NOTE: the `sha256` values are placeholders until the archives are actually
+# published; the same convention is used in `public-extended.yaml`. Fetching
+# these scenes will fail checksum verification by design until then.
+
+manifest_key: satellite-scenes
+title: Realistic satellite scenes (remote-only)
+description: >-
+  Larger realistic EO scenes fetched on demand. Each scene is the full-size
+  analog of a small bundled raster fixture.
+schema_version: "1.0"
+
+storage:
+  storage_type: https
+  base_uri: https://example.org/geocase/satellite-scenes
+  requires_auth: false
+  is_public: true
+
+cases:
+  - case_id: optical_rgb_scene
+    version: "1.0.0"
+    relative_path: optical_rgb_scene.zip
+    sha256: "replace_me"
+    byte_size: 48000000
+    archive_format: zip
+    bundled_analog: optical_rgb_small
+
+  - case_id: multispectral_s2_scene
+    version: "1.0.0"
+    relative_path: multispectral_s2_scene.zip
+    sha256: "replace_me"
+    byte_size: 260000000
+    archive_format: zip
+    bundled_analog: multispectral_s2_like_small
+
+  - case_id: sar_vv_scene
+    version: "1.0.0"
+    relative_path: sar_vv_scene.zip
+    sha256: "replace_me"
+    byte_size: 180000000
+    archive_format: zip
+    bundled_analog: sar_vv_small
+
+  - case_id: dem_scene
+    version: "1.0.0"
+    relative_path: dem_scene.zip
+    sha256: "replace_me"
+    byte_size: 62000000
+    archive_format: zip
+    bundled_analog: dem_small
+
+  - case_id: landcover_scene
+    version: "1.0.0"
+    relative_path: landcover_scene.zip
+    sha256: "replace_me"
+    byte_size: 34000000
+    archive_format: zip
+    bundled_analog: landcover_small

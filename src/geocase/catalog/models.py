@@ -63,6 +63,11 @@ class ManifestCaseEntry(BaseModel):
     byte_size: int | None = None
     archive_format: str | None = None
 
+    # Pairs a remote scene with the small bundled fixture it is the realistic
+    # analog of, so contributors can reason about "the big version of this
+    # fixture" (see docs/plans/08-raster-action-plan.md, Step 10).
+    bundled_analog: str | None = None
+
     @field_validator("case_id")
     @classmethod
     def validate_case_id(cls, value: str) -> str:

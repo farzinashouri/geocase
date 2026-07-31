@@ -227,6 +227,37 @@ Manifests provide a clean way to say:
 - the **extended catalog** stays external,
 - but both are still part of the same logical GeoCase universe.
 
+#### The bundled/remote raster boundary
+
+Raster is where this separation bites first, so the boundary is written down
+explicitly in `extended-manifests/satellite-scenes.yaml`:
+
+- **Bundled** raster fixtures (`src/geocase/data/core/raster/`) stay `tiny` or
+  `small` and exist to cover *structure* — dtypes, nodata conventions, band
+  counts, CRS/tiling edge cases, COG layout.
+- **Remote** raster scenes stay in the `satellite-scenes` manifest and exist to
+  cover *realism* — full-size optical, multispectral, SAR, DEM, and land-cover
+  products that would bloat the package.
+
+Each remote scene names the bundled fixture it is the realistic analog of via
+`bundled_analog`:
+
+| Remote scene | `bundled_analog` |
+| --- | --- |
+| `optical_rgb_scene` | `optical_rgb_small` |
+| `multispectral_s2_scene` | `multispectral_s2_like_small` |
+| `sar_vv_scene` | `sar_vv_small` |
+| `dem_scene` | `dem_small` |
+| `landcover_scene` | `landcover_small` |
+
+That pairing means a contributor can always answer "what is the big version of
+this fixture?" — and the reverse: a new realistic scene is expected to arrive
+with a small bundled counterpart rather than on its own.
+
+The manifest only *declares* these scenes. Their archives are not published yet,
+so the `sha256` values are placeholders and fetching them will fail checksum
+verification by design until real artifacts exist.
+
 ---
 
 ## What manifest support does **not** provide on its own

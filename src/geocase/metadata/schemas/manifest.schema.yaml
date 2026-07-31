@@ -61,5 +61,7 @@ properties:
           type: integer
         archive_format:
           type: string
+        bundled_analog:
+          type: string
 
 additionalProperties: false
