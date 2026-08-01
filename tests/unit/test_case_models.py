@@ -1,8 +1,13 @@
 """Tests for geocase.catalog.models — Pydantic metadata models."""
 
+from pathlib import Path
+from typing import get_args
+
 import pytest
+import yaml
 from pydantic import ValidationError
 
+from geocase.catalog import models
 from geocase.catalog.models import (
     AssertionHints,
     CaseMetadata,
@@ -292,3 +297,65 @@ class TestSuiteMetadata:
         """Requires the mandatory suite metadata fields."""
         with pytest.raises(ValidationError):
             SuiteMetadata(suite_key="x")  # type: ignore[call-arg]
+
+
+# ---------------------------------------------------------------------------
+# Schema / model agreement
+# ---------------------------------------------------------------------------
+
+
+class TestCaseSchemaMatchesModels:
+    """`case.schema.yaml` documents the same contract `models.py` enforces.
+
+    Nothing at runtime reads the schema file — it is documentation for case
+    authors — which is exactly why it drifted: its `format` enum listed 7 of
+    the 17 values `FormatType` accepts, so it could not have validated 10 of
+    the formats already in the catalog, `SQLite` among them.
+    """
+
+    @staticmethod
+    def _schema() -> dict:
+        schema_path = (
+            Path(models.__file__).resolve().parents[1]
+            / "metadata"
+            / "schemas"
+            / "case.schema.yaml"
+        )
+        with schema_path.open() as handle:
+            return yaml.safe_load(handle)
+
+    @pytest.mark.parametrize(
+        ("property_name", "literal"),
+        [
+            ("category", models.Category),
+            ("format", models.FormatType),
+            ("test_tier", models.TestTier),
+            ("size_class", models.SizeClass),
+            ("storage_class", models.StorageClass),
+            ("loader_hint", models.LoaderHint),
+            ("status", models.Status),
+        ],
+    )
+    def test_enum_matches_literal(self, property_name: str, literal: object) -> None:
+        """Keeps each schema enum identical to the Literal that enforces it."""
+        schema_values = self._schema()["properties"][property_name]["enum"]
+        assert schema_values == list(get_args(literal))
+
+    def test_top_level_properties_match_case_metadata_fields(self) -> None:
+        """Documents every CaseMetadata field, and no field that does not exist."""
+        schema_properties = set(self._schema()["properties"])
+        assert schema_properties == set(CaseMetadata.model_fields)
+
+    def test_assertion_properties_match_assertion_hints_fields(self) -> None:
+        """Documents every AssertionHints field, including the raster ones."""
+        schema_properties = set(
+            self._schema()["properties"]["assertions"]["properties"]
+        )
+        assert schema_properties == set(AssertionHints.model_fields)
+
+    def test_nodata_convention_enum_matches_literal(self) -> None:
+        """Keeps the nested nodata_convention enum in step as well."""
+        prop = self._schema()["properties"]["assertions"]["properties"]
+        assert prop["nodata_convention"]["enum"] == list(
+            get_args(models.NodataConvention)
+        )
