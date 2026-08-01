@@ -42,7 +42,9 @@ dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
     "mypy>=1.0",
-    "ruff>=0.1",
+    # Pinned to one minor: the CI lint gate runs `ruff format --check`, and
+    # formatter output can change between minors.
+    "ruff>=0.15.7,<0.16",
 ]
 docs = [
     "mkdocs>=1.5",

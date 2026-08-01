@@ -1,0 +1,22 @@
+lint:
+  stage: test
+  image: python:3.11
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - when: never
+  before_script:
+    # Ruff needs no project dependencies, so this job skips the ~200 MB
+    # geopandas/rasterio install the test jobs need. The version is pinned
+    # exactly: formatter output can change between releases, and an
+    # unpinned gate would turn red on a ruff upgrade rather than on a code
+    # change.
+    - python -m pip install --upgrade pip
+    - python -m pip install "ruff==0.15.7"
+  script:
+    # ``src`` and ``tests`` only — see the July 2026 decision log entry in
+    # docs/contributing/development-plan.md: ``examples/`` is a 5,350-line
+    # demo corpus that would dominate every number and make the gate
+    # meaningless.
+    - ruff format --check src tests
+    - ruff check src tests

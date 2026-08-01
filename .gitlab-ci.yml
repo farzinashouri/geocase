@@ -18,6 +18,7 @@ include:
 - local: ci/catalog-validation.yml
 - local: ci/core-tests.yml
 - local: ci/extended-tests.yml
+- local: ci/lint.yml
 
 variables:
   SECRET_DETECTION_ENABLED: 'true'
