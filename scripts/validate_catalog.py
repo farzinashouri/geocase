@@ -8,6 +8,7 @@ Checks:
 - ``suite-index.yaml`` can be loaded and suites parse as ``SuiteMetadata``.
 - ``case_order`` entries reference known case ids.
 - Declared ``size_class`` matches the actual on-disk payload size.
+- No ``*.yaml`` under ``data/core`` is missing from ``case-index.yaml``.
 """
 
 from __future__ import annotations
@@ -160,6 +161,40 @@ def _validate_cases(case_index_path: Path) -> tuple[CaseRegistry, list[str]]:
 	return registry, entries
 
 
+def _validate_no_orphan_case_metadata(
+	case_index_path: Path,
+	entries: list[str],
+) -> None:
+	"""Fail if a ``*.yaml`` under ``data/core`` is in no index.
+
+	``build_case_index.py`` skips anything that does not parse as
+	``CaseMetadata``, which is the right behaviour for discovery but means an
+	empty stub is silently omitted from the index while still shipping in the
+	wheel. ``raster/affine_transform_quirk/case.yaml`` did exactly that for
+	months -- a single comment line, in no index, packaged anyway. This turns
+	the next one into a build failure.
+	"""
+	package_root = case_index_path.parent.parent
+	data_root = package_root / "data" / "core"
+	if not data_root.exists():
+		return
+
+	indexed = {(package_root / rel).resolve() for rel in entries}
+	orphans = sorted(
+		path for path in data_root.rglob("*.yaml") if path.resolve() not in indexed
+	)
+	if not orphans:
+		return
+
+	listed = "\n".join(f"  {path.relative_to(package_root).as_posix()}" for path in orphans)
+	raise CatalogValidationError(
+		"Case metadata files present on disk but absent from case-index.yaml:\n"
+		f"{listed}\n"
+		"Either complete them (then run scripts/build_case_index.py) or delete "
+		"them. An unindexed case still ships in the wheel."
+	)
+
+
 def _validate_suite_index_structure(suite_index_path: Path) -> list[str]:
 	if not suite_index_path.exists():
 		raise CatalogValidationError(f"Missing suite index: {suite_index_path}")
@@ -257,6 +292,7 @@ def main() -> int:
 
 	try:
 		registry, case_entries = _validate_cases(args.case_index)
+		_validate_no_orphan_case_metadata(args.case_index, case_entries)
 		suite_entries: list[str] = []
 
 		if not args.cases_only:
