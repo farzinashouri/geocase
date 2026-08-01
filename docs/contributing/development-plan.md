@@ -181,7 +181,11 @@ Goal: catch metadata drift at the catalog layer instead of deep inside a pytest 
 
 Done:
 
-- `src/geocase/catalog/validators.py` — case, suite, and index validation rules
+- `scripts/validate_catalog.py` — case, suite, and index validation rules. **Corrected
+  Aug 2026:** this line used to credit `src/geocase/catalog/validators.py`, which was a
+  one-line docstring that nothing imported — a fourth instance of the empty-stub pattern
+  after `cli/`, the storage modules, and `affine_transform_quirk`. Plan 03 had decided to
+  keep validation in `scripts/`; the stub was deleted in Batch 3.
 - `src/geocase/catalog/manifests.py` — manifest models and `load_manifest` / `from_sources`
 - `scripts/validate_catalog.py`, CI-gated via `ci/catalog-validation.yml`
 - `tests/unit/test_manifests.py`

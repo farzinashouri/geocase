@@ -193,16 +193,21 @@ Loads suite definitions and resolves them into case lists.
 
 Why it exists: named suites are more convenient than repeating selectors everywhere.
 
-### `catalog/validators.py`
+### `scripts/validate_catalog.py`
 
-Optional extra validation logic beyond Pydantic, such as:
+Extra validation logic beyond Pydantic, such as:
 
 * referenced files exist
 * remote info is present for remote cases
 * duplicate case IDs do not exist
 * suite references are valid
+* declared `size_class` matches the payload's actual size
 
 Why it exists: schema validation alone is not enough.
+
+This lives in `scripts/`, not in the package. `catalog/validators.py` was reserved for it
+and stayed a one-line docstring that nothing imported, so it was deleted in Batch 3;
+plan 03 had already decided validation stays in `scripts/`.
 
 ### `catalog/manifests.py`
 
