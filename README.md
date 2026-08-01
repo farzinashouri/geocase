@@ -62,12 +62,12 @@ This repository uses GitLab CI with job definitions in `ci/` and includes from
 
 - `catalog_validation` (`ci/catalog-validation.yml`)
     - runs catalog integrity checks (`build_case_index.py` generation smoke check and `validate_catalog.py`)
-- `core_tests` (`ci/core-tests.yml`)
+- `tests` (`ci/tests.yml`)
+    - runs on push and merge request pipelines, on Python 3.11 and 3.14
+    - executes the whole `tests/` directory and reports coverage (not gated)
+- `lint` (`ci/lint.yml`)
     - runs on push and merge request pipelines
-    - executes metadata/catalog/plugin-focused unit tests
-- `extended_tests` (`ci/extended-tests.yml`)
-    - runs on merge request pipelines and on the default branch
-    - executes runtime/loaders/assertions-focused unit tests
+    - `ruff format --check` and `ruff check` over `src` and `tests`
 
 Local equivalents:
 
@@ -75,8 +75,8 @@ Local equivalents:
 python scripts/build_case_index.py --check
 python scripts/validate_catalog.py
 
-python -m pytest tests/unit/test_case_models.py tests/unit/test_loader.py tests/unit/test_registry.py tests/unit/test_selectors.py tests/unit/test_suites.py tests/unit/test_pytest_plugin.py -q
-python -m pytest tests/unit/test_cases.py tests/unit/test_assertions.py tests/unit/test_vector_loaders.py tests/unit/test_raster_loaders.py -q
+python -m pytest tests -q
+ruff format --check src tests && ruff check src tests
 ```
 
 ## Core Concepts
