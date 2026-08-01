@@ -20,8 +20,10 @@ from pathlib import Path
 
 from geocase.cases.base import BaseCase
 from geocase.cases.factory import create_case
+from geocase.catalog.errors import remote_case_unavailable
 from geocase.catalog.loader import load_case_index, load_case_metadata
 from geocase.catalog.models import CaseMetadata
+from geocase.catalog.registry import get_registry
 
 
 def package_root() -> Path:
@@ -55,8 +57,17 @@ def materialize_case(meta: CaseMetadata) -> BaseCase:
     """Turn case metadata into a loadable case object.
 
     Raises:
+        RemoteCaseUnavailableError: If the case is manifest-backed.
         KeyError: If the case id has no bundled directory.
     """
+    # Checked before the cache lookup, not after: the cache is built from
+    # case-index.yaml alone, so a manifest id would miss it and raise the
+    # internal-sounding "No case root found" below — defeating the actionable
+    # error the registry raises for exactly this situation.
+    registry = get_registry()
+    if registry.is_remote(meta.id):
+        raise remote_case_unavailable(meta.id, registry.get_manifest(meta.id))
+
     roots = case_roots_by_id()
     try:
         root_dir = roots[meta.id]

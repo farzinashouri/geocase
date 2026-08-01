@@ -1,5 +1,6 @@
 """Catalog module — registry, selectors, and suite resolution."""
 
+from geocase.catalog.errors import RemoteCaseUnavailableError
 from geocase.catalog.loader import (
     load_case_index,
     load_case_metadata,
@@ -21,6 +22,8 @@ from geocase.catalog.suites import (
 )
 
 __all__ = [
+    # Errors
+    "RemoteCaseUnavailableError",
     # Models
     "CaseMetadata",
     "SuiteMetadata",

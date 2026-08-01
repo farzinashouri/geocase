@@ -49,6 +49,7 @@ from geocase.api.types import (
     TestTier,
     VectorCase,
 )
+from geocase.catalog.errors import RemoteCaseUnavailableError
 
 try:
     # Read from the installed distribution metadata rather than a literal, so
@@ -66,6 +67,8 @@ __all__ = [
     "show_case",
     "list_suites",
     "get_suite",
+    # Errors
+    "RemoteCaseUnavailableError",
     # Types
     "BaseCase",
     "VectorCase",

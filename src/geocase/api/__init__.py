@@ -33,6 +33,7 @@ from geocase.api.types import (
     TestTier,
     VectorCase,
 )
+from geocase.catalog.errors import RemoteCaseUnavailableError
 
 __all__ = [
     # Functions
@@ -42,6 +43,8 @@ __all__ = [
     "show_case",
     "list_suites",
     "get_suite",
+    # Errors
+    "RemoteCaseUnavailableError",
     # Types
     "BaseCase",
     "VectorCase",

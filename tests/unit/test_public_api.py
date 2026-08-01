@@ -22,6 +22,8 @@ _PUBLIC_SURFACE = sorted(
         "show_case",
         "list_suites",
         "get_suite",
+        # Errors
+        "RemoteCaseUnavailableError",
         # Types
         "BaseCase",
         "VectorCase",

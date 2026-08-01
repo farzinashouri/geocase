@@ -13,6 +13,7 @@ while :func:`load_case` and the ``geocase`` pytest fixture yield a
 from __future__ import annotations
 
 from geocase.cases.base import BaseCase
+from geocase.catalog.manifests import build_manifest_uri
 from geocase.catalog.models import (
     CaseMetadata,
     Category,
@@ -104,12 +105,18 @@ def load_case(case_id: str) -> BaseCase:
 def show_case(case_id: str) -> str:
     """Return a human-readable multi-line summary of a case.
 
-    Includes where the data lives, so a case that is catalogued but not
-    present on disk reports that rather than failing later at load time.
+    Includes where the data lives, so a case that is catalogued but not present
+    on disk — a manifest-backed one, or a bundled one whose file is missing —
+    says so here instead of failing later at load time. This is the one public
+    function that *describes* a remote case rather than refusing it.
 
     Raises:
         KeyError: If no such case is registered.
     """
+    registry = get_registry()
+    if registry.is_remote(case_id):
+        return _show_remote_case(case_id)
+
     meta = get_case(case_id)
     lines = [
         f"{meta.id} — {meta.title}",
@@ -129,6 +136,32 @@ def show_case(case_id: str) -> str:
     lines.append(f"  storage:       {_describe_storage(meta)}")
     if meta.description:
         lines.append(f"  description:   {meta.description}")
+    return "\n".join(lines)
+
+
+def _show_remote_case(case_id: str) -> str:
+    """Summarize a manifest-backed case, which has no CaseMetadata to show."""
+    registry = get_registry()
+    manifest = registry.get_manifest(case_id)
+    entry = registry.get_manifest_entry(case_id)
+
+    lines = [
+        f"{case_id} — remote case from manifest '{manifest.manifest_key}'",
+        f"  storage:       {manifest.storage.storage_type}, not fetched",
+        f"  uri:           {build_manifest_uri(manifest, entry)}",
+        f"  version:       {entry.version}",
+        f"  sha256:        {entry.sha256}",
+    ]
+    if entry.byte_size is not None:
+        lines.append(f"  byte_size:     {entry.byte_size}")
+    if entry.archive_format:
+        lines.append(f"  archive:       {entry.archive_format}")
+    if entry.bundled_analog:
+        lines.append(f"  analog:        {entry.bundled_analog} (bundled)")
+    lines.append(
+        "  note:          this release does not fetch remote data; "
+        "load_case() will refuse it"
+    )
     return "\n".join(lines)
 
 
