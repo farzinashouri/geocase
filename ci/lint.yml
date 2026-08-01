@@ -20,3 +20,24 @@ lint:
     # meaningless.
     - ruff format --check src tests
     - ruff check src tests
+
+typecheck:
+  stage: test
+  image: python:3.11
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - when: never
+  before_script:
+    - python -m pip install --upgrade pip
+    # The real dependencies are needed, not just mypy: the point of the
+    # `ignore_missing_imports` overrides in pyproject.toml is to silence the
+    # untyped geospatial libraries specifically, and an environment without
+    # them would report `import-not-found` instead and hide that.
+    - python -m pip install -e .[dev]
+  script:
+    # `src` only. `tests/` is 429 errors of missing annotations on test
+    # functions; annotating them is a v1.1 ratchet, not a v1.0 gate.
+    # Strict flags apply to `geocase.catalog.*` (and `geocase.api.*` once it
+    # exists) via [[tool.mypy.overrides]].
+    - mypy src

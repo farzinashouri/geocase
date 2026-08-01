@@ -142,7 +142,10 @@ def geocase(request: pytest.FixtureRequest) -> BaseCase:
     ``fixture 'geocase' not found`` failure.
     """
     if hasattr(request, "param"):
-        return request.param
+        # `request.param` is typed `Any`; `pytest_generate_tests` only ever
+        # parametrizes this fixture with materialized cases.
+        case: BaseCase = request.param
+        return case
 
     has_geocase_markers = any(
         any(request.node.iter_markers(marker_name))

@@ -42,6 +42,8 @@ dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
     "mypy>=1.0",
+    "types-PyYAML",
+    "types-shapely",
     # Pinned to one minor: the CI lint gate runs `ruff format --check`, and
     # formatter output can change between minors.
     "ruff>=0.15.7,<0.16",
@@ -74,9 +76,45 @@ markers = [
 
 [tool.mypy]
 python_version = "3.11"
-strict = true
-warn_return_any = true
 warn_unused_configs = true
+warn_redundant_casts = true
+warn_return_any = true
+# `strict = true` used to be set repo-wide, but every error it produced was a
+# missing stub, so it never actually checked a function body. The strict flags
+# now apply per-module (below) to the packages that are part of the v1.0
+# compatibility promise; the rest ratchets in v1.1.
+
+# Geospatial dependencies ship no type information. `follow_imports` is left
+# alone deliberately: this silences the "no stubs" error without silencing
+# anything about our own code.
+[[tool.mypy.overrides]]
+module = [
+    "geopandas.*",
+    "netCDF4.*",
+    "osgeo.*",
+    "pyarrow.*",
+    "pyproj.*",
+    "rasterio.*",
+    "xarray.*",
+]
+ignore_missing_imports = true
+
+# The gated surface: the catalog layer, and `geocase.api.*` once Step 15
+# creates it. Listing `api` before it exists is harmless — mypy ignores
+# overrides for modules it never sees — and means the gate is already in place
+# when the module lands.
+[[tool.mypy.overrides]]
+module = ["geocase.catalog.*", "geocase.api.*"]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+check_untyped_defs = true
+no_implicit_reexport = true
+strict_equality = true
+warn_unused_ignores = true
 
 [tool.ruff]
 target-version = "py311"
