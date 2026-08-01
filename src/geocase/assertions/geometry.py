@@ -72,10 +72,8 @@ def assert_geometry_type(
 
     if unexpected:
         raise AssertionError(
-            msg or (
-                f"Unexpected geometry type(s): {unexpected}. "
-                f"Expected: {expected_set}"
-            )
+            msg
+            or (f"Unexpected geometry type(s): {unexpected}. Expected: {expected_set}")
         )
 
 
@@ -92,9 +90,7 @@ def assert_has_holes(
     for geom in gdf.geometry:
         if hasattr(geom, "interiors") and len(list(geom.interiors)) > 0:
             return
-    raise AssertionError(
-        msg or "Expected at least one polygon with a hole, found none"
-    )
+    raise AssertionError(msg or "Expected at least one polygon with a hole, found none")
 
 
 def assert_no_holes(
@@ -109,9 +105,7 @@ def assert_no_holes(
     """
     for idx, geom in enumerate(gdf.geometry):
         if hasattr(geom, "interiors") and len(list(geom.interiors)) > 0:
-            raise AssertionError(
-                msg or f"Polygon at index {idx} has interior rings"
-            )
+            raise AssertionError(msg or f"Polygon at index {idx} has interior rings")
 
 
 def assert_feature_count(
@@ -127,6 +121,4 @@ def assert_feature_count(
     """
     actual = len(gdf)
     if actual != expected:
-        raise AssertionError(
-            msg or f"Expected {expected} features, got {actual}"
-        )
+        raise AssertionError(msg or f"Expected {expected} features, got {actual}")

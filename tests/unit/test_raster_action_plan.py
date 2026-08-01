@@ -43,6 +43,7 @@ def _load_script_module(name: str):
 # Step 2 — Typed raster metadata expectations on AssertionHints
 # ===================================================================
 
+
 class TestStep2TypedRasterHints:
     """``AssertionHints`` should carry typed raster expectation fields."""
 
@@ -92,6 +93,7 @@ class TestStep2TypedRasterHints:
 # Step 3 — Reproducible raster fixture-generation tooling
 # ===================================================================
 
+
 class TestStep3GenerationTooling:
     """Checksum + raster generator scripts should be real, not stubs."""
 
@@ -105,9 +107,7 @@ class TestStep3GenerationTooling:
     def test_a_raster_generator_script_exists(self):
         """At least one reproducible raster generator script exists."""
         candidates = list(_SCRIPTS.glob("generate_*raster*.py"))
-        assert candidates, (
-            "Expected a scripts/generate_*raster*.py fixture generator"
-        )
+        assert candidates, "Expected a scripts/generate_*raster*.py fixture generator"
 
 
 # ===================================================================
@@ -138,9 +138,7 @@ class TestStep4Priority1Fixtures:
     @pytest.mark.parametrize("case_id", _PRIORITY_1_CASES)
     def test_case_fixture_dir_exists(self, case_id):
         """Each Priority 1 case has a bundled fixture directory."""
-        assert (_RASTER_DATA / case_id).is_dir(), (
-            f"Missing fixture dir for '{case_id}'"
-        )
+        assert (_RASTER_DATA / case_id).is_dir(), f"Missing fixture dir for '{case_id}'"
 
     @pytest.mark.parametrize("case_id", _PRIORITY_1_CASES)
     def test_case_is_raster_geotiff(self, registry, case_id):
@@ -165,6 +163,7 @@ class TestStep4Priority1Fixtures:
 # ===================================================================
 # Step 5 — Expanded, metadata-driven raster assertions
 # ===================================================================
+
 
 class TestStep5RasterAssertions:
     """New raster assertion helpers should exist in assertions.raster."""
@@ -208,6 +207,7 @@ class TestStep5RasterAssertions:
 # Step 6 — Canonical raster integration suite (smoke import)
 # ===================================================================
 
+
 class TestStep6IntegrationSuite:
     """The integration suite stub should become a real, populated module."""
 
@@ -225,6 +225,7 @@ class TestStep6IntegrationSuite:
 # ===================================================================
 # Loaders — rasterio loader should be implemented, not a docstring stub
 # ===================================================================
+
 
 class TestRasterioLoaderImplemented:
     """``geocase.loaders.rasterio_loader`` should expose a load callable."""

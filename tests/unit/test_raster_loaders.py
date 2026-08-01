@@ -19,12 +19,7 @@ from geocase.assertions.raster import (
 from geocase.loaders import rasterio_loader
 
 _RASTER_ROOT = (
-    Path(__file__).resolve().parents[2]
-    / "src"
-    / "geocase"
-    / "data"
-    / "core"
-    / "raster"
+    Path(__file__).resolve().parents[2] / "src" / "geocase" / "data" / "core" / "raster"
 )
 
 
@@ -56,9 +51,7 @@ def test_load_all_bands_returns_3d_array():
 
 
 def test_load_single_band():
-    data, _profile, _nodata = rasterio_loader.load(
-        _primary("ndvi_small"), band=1
-    )
+    data, _profile, _nodata = rasterio_loader.load(_primary("ndvi_small"), band=1)
     assert data.shape == (16, 16)
     assert float(data.min()) >= -1.0001
     assert float(data.max()) <= 1.0001

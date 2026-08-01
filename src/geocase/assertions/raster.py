@@ -24,9 +24,7 @@ def assert_band_count(
     """
     actual = src.count
     if actual != expected:
-        raise AssertionError(
-            msg or f"Expected {expected} band(s), got {actual}"
-        )
+        raise AssertionError(msg or f"Expected {expected} band(s), got {actual}")
 
 
 def assert_nodata_value(
@@ -44,13 +42,9 @@ def assert_nodata_value(
     """
     actual = src.nodata
     if actual is None:
-        raise AssertionError(
-            msg or "Raster has no NoData value set (nodata is None)"
-        )
+        raise AssertionError(msg or "Raster has no NoData value set (nodata is None)")
     if expected_nodata is not None and actual != expected_nodata:
-        raise AssertionError(
-            msg or f"Expected NoData={expected_nodata}, got {actual}"
-        )
+        raise AssertionError(msg or f"Expected NoData={expected_nodata}, got {actual}")
 
 
 def assert_dtype(
@@ -91,7 +85,8 @@ def assert_shape(
     """
     if src.height != expected_height or src.width != expected_width:
         raise AssertionError(
-            msg or (
+            msg
+            or (
                 f"Expected shape ({expected_height}, {expected_width}), "
                 f"got ({src.height}, {src.width})"
             )
@@ -176,9 +171,7 @@ def assert_has_overviews(
     """
     overviews = src.overviews(band)
     if not overviews:
-        raise AssertionError(
-            msg or f"Raster band {band} has no overviews"
-        )
+        raise AssertionError(msg or f"Raster band {band} has no overviews")
 
 
 def assert_nan_nodata(
@@ -193,9 +186,7 @@ def assert_nan_nodata(
     """
     actual = src.nodata
     if actual is None or not np.isnan(actual):
-        raise AssertionError(
-            msg or f"Expected NaN NoData value, got {actual}"
-        )
+        raise AssertionError(msg or f"Expected NaN NoData value, got {actual}")
 
 
 def assert_is_cog(
@@ -218,9 +209,7 @@ def assert_is_cog(
             msg or "Raster is not internally tiled (not COG-structured)"
         )
     if not src.overviews(1):
-        raise AssertionError(
-            msg or "Raster has no overviews (not COG-structured)"
-        )
+        raise AssertionError(msg or "Raster has no overviews (not COG-structured)")
 
 
 def assert_band_names(
@@ -236,9 +225,7 @@ def assert_band_names(
     """
     actual = list(src.descriptions)
     if actual != list(expected):
-        raise AssertionError(
-            msg or f"Expected band names {expected}, got {actual}"
-        )
+        raise AssertionError(msg or f"Expected band names {expected}, got {actual}")
 
 
 def assert_colormap_present(
@@ -255,6 +242,4 @@ def assert_colormap_present(
     try:
         src.colormap(band)
     except (ValueError, KeyError):
-        raise AssertionError(
-            msg or f"Raster band {band} has no colormap"
-        ) from None
+        raise AssertionError(msg or f"Raster band {band} has no colormap") from None

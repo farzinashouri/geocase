@@ -18,6 +18,7 @@ from geocase.catalog.models import (
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _minimal_case(**overrides) -> dict:
     """Return a minimal valid CaseMetadata dict, with optional overrides."""
     base = {
@@ -54,6 +55,7 @@ def _minimal_suite(**overrides) -> dict:
 # CaseMetadata — happy paths
 # ===================================================================
 
+
 class TestCaseMetadataValid:
     """Valid CaseMetadata construction."""
 
@@ -66,25 +68,27 @@ class TestCaseMetadataValid:
 
     def test_all_fields(self):
         """Preserves fully populated case metadata, nested source information, and custom params."""
-        case = CaseMetadata(**_minimal_case(
-            description="Full description.",
-            status="validated",
-            tags=["tag1", "tag2"],
-            risk_types=["risk_a"],
-            behavioral_goal="Find bugs.",
-            expected_capabilities=["load"],
-            geometry_type="Polygon",
-            crs="EPSG:4326",
-            remote={"uri": "https://example.com/data.zip"},
-            source={"name": "test", "license": "MIT"},
-            assertions={
-                "expect_loadable": True,
-                "expect_valid_geometry": True,
-                "expected_epsg": 4326,
-                "expected_geometry_types": ["Polygon"],
-            },
-            params={"custom_key": 42},
-        ))
+        case = CaseMetadata(
+            **_minimal_case(
+                description="Full description.",
+                status="validated",
+                tags=["tag1", "tag2"],
+                risk_types=["risk_a"],
+                behavioral_goal="Find bugs.",
+                expected_capabilities=["load"],
+                geometry_type="Polygon",
+                crs="EPSG:4326",
+                remote={"uri": "https://example.com/data.zip"},
+                source={"name": "test", "license": "MIT"},
+                assertions={
+                    "expect_loadable": True,
+                    "expect_valid_geometry": True,
+                    "expected_epsg": 4326,
+                    "expected_geometry_types": ["Polygon"],
+                },
+                params={"custom_key": 42},
+            )
+        )
         assert case.status == "validated"
         assert case.tags == ["tag1", "tag2"]
         assert case.assertions.expected_epsg == 4326
@@ -108,6 +112,7 @@ class TestCaseMetadataValid:
 # ===================================================================
 # CaseMetadata — validation errors
 # ===================================================================
+
 
 class TestCaseMetadataInvalid:
     """CaseMetadata should reject bad data."""
@@ -179,6 +184,7 @@ class TestCaseMetadataInvalid:
 # FileMap
 # ===================================================================
 
+
 class TestFileMap:
     def test_minimal(self):
         """Builds a file map with an empty sidecar list by default."""
@@ -202,6 +208,7 @@ class TestFileMap:
 # RemoteInfo / SourceInfo / AssertionHints
 # ===================================================================
 
+
 class TestSupportingModels:
     def test_remote_info_defaults(self):
         """Defaults remote metadata fields to `None`."""
@@ -224,6 +231,7 @@ class TestSupportingModels:
 # ===================================================================
 # SuiteSelection
 # ===================================================================
+
 
 class TestSuiteSelection:
     def test_empty_selection(self):
@@ -259,6 +267,7 @@ class TestSuiteSelection:
 # SuiteMetadata
 # ===================================================================
 
+
 class TestSuiteMetadata:
     def test_minimal(self):
         """Constructs minimal suite metadata with no notes or case order."""
@@ -269,11 +278,13 @@ class TestSuiteMetadata:
 
     def test_with_selection(self):
         """Preserves embedded selection filters and explicit case order."""
-        suite = SuiteMetadata(**_minimal_suite(
-            selection={"category": "vector", "tags_any": ["crs"]},
-            case_order=["case_a", "case_b"],
-            notes="Some notes.",
-        ))
+        suite = SuiteMetadata(
+            **_minimal_suite(
+                selection={"category": "vector", "tags_any": ["crs"]},
+                case_order=["case_a", "case_b"],
+                notes="Some notes.",
+            )
+        )
         assert suite.selection.category == "vector"
         assert suite.selection.tags_any == ["crs"]
         assert suite.case_order == ["case_a", "case_b"]

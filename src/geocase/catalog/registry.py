@@ -31,9 +31,7 @@ class CaseRegistry:
         manifest_cases: dict[str, ManifestMetadata] | None = None,
     ) -> None:
         self._cases: dict[str, CaseMetadata] = dict(cases)
-        self._manifest_cases: dict[str, ManifestMetadata] = dict(
-            manifest_cases or {}
-        )
+        self._manifest_cases: dict[str, ManifestMetadata] = dict(manifest_cases or {})
 
     # ------------------------------------------------------------------
     # Construction
@@ -67,8 +65,7 @@ class CaseRegistry:
             meta = load_case_metadata(case_path)
             if meta.id in cases:
                 raise ValueError(
-                    f"Duplicate case id '{meta.id}' found in registry "
-                    f"({case_path})"
+                    f"Duplicate case id '{meta.id}' found in registry ({case_path})"
                 )
             cases[meta.id] = meta
 
@@ -161,9 +158,7 @@ def get_registry(*, reload: bool = False) -> CaseRegistry:
     global _DEFAULT_REGISTRY
     if _DEFAULT_REGISTRY is None or reload:
         metadata_dir = Path(__file__).resolve().parent.parent / "metadata"
-        _DEFAULT_REGISTRY = CaseRegistry.from_index(
-            metadata_dir / "case-index.yaml"
-        )
+        _DEFAULT_REGISTRY = CaseRegistry.from_index(metadata_dir / "case-index.yaml")
     return _DEFAULT_REGISTRY
 
 

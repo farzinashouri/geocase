@@ -36,6 +36,7 @@ _VECTOR_SCHEMA_SUITE = _SUITES / "vector-schema-encoding.yaml"
 # Shared fixture
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture()
 def registry() -> CaseRegistry:
     return CaseRegistry.from_index(_CASE_INDEX)
@@ -44,6 +45,7 @@ def registry() -> CaseRegistry:
 # ===================================================================
 # resolve_suite — from a SuiteMetadata object
 # ===================================================================
+
 
 class TestResolveSuite:
     """Exercises `resolve_suite()` with programmatically constructed suite metadata."""
@@ -146,6 +148,7 @@ class TestResolveSuite:
 # load_and_resolve_suite — from YAML files
 # ===================================================================
 
+
 class TestLoadAndResolveSuite:
     """Exercises loading and resolving real suite YAML files."""
 
@@ -207,9 +210,7 @@ class TestLoadAndResolveSuite:
     def test_missing_suite_file_raises(self, registry: CaseRegistry):
         """Raises `FileNotFoundError` when resolving a missing suite file."""
         with pytest.raises(FileNotFoundError):
-            load_and_resolve_suite(
-                Path("/nonexistent/suite.yaml"), registry
-            )
+            load_and_resolve_suite(Path("/nonexistent/suite.yaml"), registry)
 
     def test_vector_schema_encoding_suite_includes_step2_format_cases(
         self, registry: CaseRegistry
@@ -224,9 +225,7 @@ class TestLoadAndResolveSuite:
         self, registry: CaseRegistry
     ):
         """Resolves the CRS edge suite with the step 3 polar and equatorial polygons."""
-        resolved = load_and_resolve_suite(
-            _SUITES / "vector-crs-edge.yaml", registry
-        )
+        resolved = load_and_resolve_suite(_SUITES / "vector-crs-edge.yaml", registry)
         ids = set(resolved.case_ids)
         assert "north_pole_polygon" in ids
         assert "south_pole_polygon" in ids
@@ -236,6 +235,7 @@ class TestLoadAndResolveSuite:
 # ===================================================================
 # load_all_suites — bulk resolution from suite-index.yaml
 # ===================================================================
+
 
 class TestLoadAllSuites:
     """Exercises loading every bundled suite from the suite index."""

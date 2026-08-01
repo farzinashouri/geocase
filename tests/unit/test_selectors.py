@@ -28,6 +28,7 @@ def all_cases() -> list[CaseMetadata]:
 # matches_selection — individual case vs. selection
 # ===================================================================
 
+
 class TestMatchesSelection:
     """Test the low-level single-case matcher."""
 
@@ -180,6 +181,7 @@ class TestMatchesSelection:
 # select_cases — bulk selection
 # ===================================================================
 
+
 class TestSelectCases:
     """Test the top-level select_cases function."""
 
@@ -221,7 +223,8 @@ class TestSelectCases:
             geometry_type="Polygon",
         )
         expected = [
-            case for case in all_cases
+            case
+            for case in all_cases
             if case.category == "vector" and case.geometry_type == "Polygon"
         ]
         assert len(result) == len(expected)
@@ -245,9 +248,7 @@ class TestSelectCases:
         assert "geotiff_nodata_small" in ids
         assert "latlon_small" in ids
 
-    def test_select_with_suite_selection_object(
-        self, all_cases: list[CaseMetadata]
-    ):
+    def test_select_with_suite_selection_object(self, all_cases: list[CaseMetadata]):
         """Test select with suite selection object."""
         sel = SuiteSelection(
             category="vector",
@@ -256,16 +257,15 @@ class TestSelectCases:
         )
         result = select_cases(all_cases, sel)
         expected = [
-            case for case in all_cases
+            case
+            for case in all_cases
             if case.category == "vector"
             and case.storage_class == "bundled"
             and case.test_tier == "unit"
         ]
         assert len(result) == len(expected)
 
-    def test_select_empty_when_nothing_matches(
-        self, all_cases: list[CaseMetadata]
-    ):
+    def test_select_empty_when_nothing_matches(self, all_cases: list[CaseMetadata]):
         """Test select empty when nothing matches."""
         result = select_cases(all_cases, category="satellite")
         assert result == []
@@ -281,7 +281,8 @@ class TestSelectCases:
         assert "simple_valid_polygon" not in ids
         assert "polygon_with_hole" not in ids
         expected = [
-            case for case in all_cases
+            case
+            for case in all_cases
             if case.category == "vector"
             and case.id not in {"simple_valid_polygon", "polygon_with_hole"}
         ]

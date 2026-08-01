@@ -47,8 +47,6 @@ class NetCDFCase(BaseCase):
 
         path = self.primary_path
         if not path.is_file():
-            raise FileNotFoundError(
-                f"Primary data file not found: {path}"
-            )
+            raise FileNotFoundError(f"Primary data file not found: {path}")
 
         return xarray.open_dataset(path, **kwargs)

@@ -61,9 +61,7 @@ PRIORITY_4_CASE_IDS = [
     "landcover_small",
 ]
 
-ALL_STEP9_CASE_IDS = (
-    PRIORITY_2_CASE_IDS + PRIORITY_3_CASE_IDS + PRIORITY_4_CASE_IDS
-)
+ALL_STEP9_CASE_IDS = PRIORITY_2_CASE_IDS + PRIORITY_3_CASE_IDS + PRIORITY_4_CASE_IDS
 
 
 # ---------------------------------------------------------------------------
@@ -138,9 +136,7 @@ def test_step9_case_primary_loads_and_matches_typed_hints(case_id, case_roots):
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize(
-    "case_id", ["cog_singleband_small", "cog_multispectral_small"]
-)
+@pytest.mark.parametrize("case_id", ["cog_singleband_small", "cog_multispectral_small"])
 def test_cog_cases_declare_cog_structure(case_id):
     meta = _require_case(case_id)
     hints = meta.assertions
@@ -164,14 +160,12 @@ def test_external_overviews_case_expects_overviews_and_sidecar():
     meta = _require_case("geotiff_external_overviews_small")
     assert meta.assertions.expected_overviews is True
     # External overviews ship as a .ovr sidecar alongside the primary GeoTIFF.
-    assert any(
-        s.endswith(".ovr") for s in meta.files.sidecars
-    ), "Expected a .ovr sidecar for external overviews"
+    assert any(s.endswith(".ovr") for s in meta.files.sidecars), (
+        "Expected a .ovr sidecar for external overviews"
+    )
 
 
-@pytest.mark.parametrize(
-    "case_id", ["cog_singleband_small", "cog_multispectral_small"]
-)
+@pytest.mark.parametrize("case_id", ["cog_singleband_small", "cog_multispectral_small"])
 def test_cog_cases_satisfy_cog_assertion_at_runtime(case_id, case_roots):
     from geocase.assertions.raster import assert_is_cog
 

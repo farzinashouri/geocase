@@ -21,8 +21,7 @@ def assert_case_loadable(case: BaseCase) -> None:
     """
     if not case.primary_exists():
         raise AssertionError(
-            f"Case '{case.id}': primary file not found at "
-            f"{case.primary_path}"
+            f"Case '{case.id}': primary file not found at {case.primary_path}"
         )
 
 

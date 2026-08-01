@@ -48,9 +48,7 @@ class RasterCase(BaseCase):
 
         path = self.primary_path
         if not path.is_file():
-            raise FileNotFoundError(
-                f"Primary data file not found: {path}"
-            )
+            raise FileNotFoundError(f"Primary data file not found: {path}")
 
         with _rio.open(path, **kwargs) as src:
             yield src
@@ -68,9 +66,7 @@ class RasterCase(BaseCase):
 
         path = self.primary_path
         if not path.is_file():
-            raise FileNotFoundError(
-                f"Primary data file not found: {path}"
-            )
+            raise FileNotFoundError(f"Primary data file not found: {path}")
 
         with _rio.open(path, **kwargs) as src:
             data = src.read(band)

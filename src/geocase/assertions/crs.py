@@ -50,9 +50,7 @@ def assert_epsg(
 
     actual = crs.to_epsg()
     if actual != expected_epsg:
-        raise AssertionError(
-            msg or f"Expected EPSG:{expected_epsg}, got EPSG:{actual}"
-        )
+        raise AssertionError(msg or f"Expected EPSG:{expected_epsg}, got EPSG:{actual}")
 
 
 def assert_crs_units(
@@ -97,8 +95,5 @@ def assert_crs_units(
     expected_lower = expected_unit.lower()
     if not any(expected_lower in u for u in unit_names):
         raise AssertionError(
-            msg or (
-                f"Expected CRS unit containing '{expected_unit}', "
-                f"got {unit_names}"
-            )
+            msg or (f"Expected CRS unit containing '{expected_unit}', got {unit_names}")
         )

@@ -11,9 +11,7 @@ from geocase.catalog.registry import CaseRegistry
 
 
 _EXTENDED_MANIFEST = (
-    Path(__file__).resolve().parents[2]
-    / "extended-manifests"
-    / "public-extended.yaml"
+    Path(__file__).resolve().parents[2] / "extended-manifests" / "public-extended.yaml"
 )
 _CASE_INDEX = (
     Path(__file__).resolve().parents[2]
@@ -26,7 +24,9 @@ _CASE_INDEX = (
 
 def _require_attr(obj: object, name: str):
     value = getattr(obj, name, None)
-    assert value is not None, f"Expected {obj!r} to define `{name}` for manifest support"
+    assert value is not None, (
+        f"Expected {obj!r} to define `{name}` for manifest support"
+    )
     return value
 
 

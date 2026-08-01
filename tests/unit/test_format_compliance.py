@@ -36,6 +36,7 @@ _CASE_INDEX = _METADATA / "case-index.yaml"
 # Auto-discover every bundled vector case
 # ---------------------------------------------------------------------------
 
+
 def _discover_vector_cases() -> list[str]:
     """Return (case_id, relative_path) for every vector case in the index."""
     relative_paths = load_case_index(_CASE_INDEX)
@@ -192,8 +193,6 @@ class TestGeometryTypeTruthfulness:
         # whose geom_type is NaN, not a real type mismatch.
         gdf_valid = gdf.dropna(subset=[gdf.geometry.name])
         if gdf_valid.empty:
-            pytest.skip(
-                f"Case '{meta.id}' has no non-null geometries to type-check"
-            )
+            pytest.skip(f"Case '{meta.id}' has no non-null geometries to type-check")
 
         assert_geometry_type(gdf_valid, expected)

@@ -45,8 +45,7 @@ def verify_checksum(path: Path, expected_sha256: str) -> None:
     actual = sha256_file(path)
     if actual != expected_sha256:
         raise ChecksumMismatchError(
-            f"Checksum mismatch for {path}: "
-            f"expected {expected_sha256}, got {actual}"
+            f"Checksum mismatch for {path}: expected {expected_sha256}, got {actual}"
         )
 
 
@@ -59,6 +58,5 @@ def verify_size(path: Path, expected_bytes: int) -> None:
     actual = Path(path).stat().st_size
     if actual != expected_bytes:
         raise SizeMismatchError(
-            f"Size mismatch for {path}: "
-            f"expected {expected_bytes} bytes, got {actual}"
+            f"Size mismatch for {path}: expected {expected_bytes} bytes, got {actual}"
         )

@@ -172,18 +172,14 @@ class TestGeoJSONPrecisionLoss:
     ) -> None:
         """Keeps coordinate precision within tolerance across a GeoJSON write-read roundtrip."""
         gdf_original = gpd.read_file(geojson_path)
-        original_coords = [
-            (g.x, g.y) for g in gdf_original.geometry
-        ]
+        original_coords = [(g.x, g.y) for g in gdf_original.geometry]
 
         # Write and read back
         output_path = tmp_path / "roundtrip.geojson"
         gdf_original.to_file(output_path, driver="GeoJSON")
         gdf_roundtrip = gpd.read_file(output_path)
 
-        roundtrip_coords = [
-            (g.x, g.y) for g in gdf_roundtrip.geometry
-        ]
+        roundtrip_coords = [(g.x, g.y) for g in gdf_roundtrip.geometry]
 
         # Check precision is maintained within tolerance
         for orig, rt in zip(original_coords, roundtrip_coords):
@@ -255,18 +251,18 @@ class TestGeoPackageNullEmptyGeometry:
         assert is_null, "NULL row should have NaN/None geometry"
         assert is_empty, "EMPTY row should have empty geometry object"
 
-    def test_spatial_filtering_excludes_null_and_empty(
-        self, gpkg_path: Path
-    ) -> None:
+    def test_spatial_filtering_excludes_null_and_empty(self, gpkg_path: Path) -> None:
         """Filters out NULL and EMPTY geometries while retaining valid rows."""
         gdf = gpd.read_file(gpkg_path)
 
         # Filter to only valid (non-null, non-empty) geometries
         valid_gdf = gdf[
             gdf.geometry.apply(
-                lambda geometry: geometry is not None
-                and not pd.isna(geometry)
-                and not geometry.is_empty
+                lambda geometry: (
+                    geometry is not None
+                    and not pd.isna(geometry)
+                    and not geometry.is_empty
+                )
             )
         ]
 
