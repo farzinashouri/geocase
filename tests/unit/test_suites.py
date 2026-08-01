@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from geocase.catalog.loader import load_suite_index
-from geocase.catalog.models import CaseMetadata, SuiteMetadata, SuiteSelection
+from geocase.catalog.models import SuiteMetadata, SuiteSelection
 from geocase.catalog.registry import CaseRegistry
 from geocase.catalog.suites import (
     ResolvedSuite,
@@ -13,7 +13,6 @@ from geocase.catalog.suites import (
     load_and_resolve_suite,
     resolve_suite,
 )
-
 
 # ---------------------------------------------------------------------------
 # Path constants
@@ -131,7 +130,7 @@ class TestResolveSuite:
         assert len(resolved) == len(registry)
 
     def test_repr(self, registry: CaseRegistry):
-        """Includes the suite key and case count in the resolved suite representation."""
+        """Includes the suite key and case count in the resolved representation."""
         suite_meta = SuiteMetadata(
             suite_key="repr-test",
             title="T",
@@ -215,7 +214,7 @@ class TestLoadAndResolveSuite:
     def test_vector_schema_encoding_suite_includes_step2_format_cases(
         self, registry: CaseRegistry
     ):
-        """Resolves the schema-and-encoding suite with the step 2 format-specific cases."""
+        """Resolves the schema-and-encoding suite with the format-specific cases."""
         resolved = load_and_resolve_suite(_VECTOR_SCHEMA_SUITE, registry)
         ids = set(resolved.case_ids)
         assert "parquet_mixed_schema_attributes" in ids

@@ -85,9 +85,9 @@ def assert_crs_units(
         axis_info = crs.axis_info
     except AttributeError:
         # rasterio.crs.CRS — convert to pyproj first
-        from pyproj import CRS as PyprojCRS
+        import pyproj
 
-        crs = PyprojCRS(crs)
+        crs = pyproj.CRS(crs)
         axis_info = crs.axis_info
 
     unit_names = [ax.unit_name.lower() for ax in axis_info if ax.unit_name]

@@ -4,12 +4,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from geocase.catalog.models import CaseMetadata
 from geocase.cases.base import BaseCase
 from geocase.cases.netcdf import NetCDFCase
 from geocase.cases.raster import RasterCase
 from geocase.cases.vector import VectorCase
-
+from geocase.catalog.models import CaseMetadata
 
 _DISPATCH: dict[str, type[BaseCase]] = {
     "vector": VectorCase,

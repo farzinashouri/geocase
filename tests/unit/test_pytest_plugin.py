@@ -145,6 +145,7 @@ def test_selection_with_no_matches(geocase):
     result.assert_outcomes(errors=1)
     result.stdout.fnmatch_lines(
         [
-            "*UsageError: Fixture 'geocase' resolved zero cases. Check your case ids, suite keys, or selector filters.*",
+            "*UsageError: Fixture 'geocase' resolved zero cases. Check your "
+            "case ids, suite keys, or selector filters.*",
         ]
     )

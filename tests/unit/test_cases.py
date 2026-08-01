@@ -8,14 +8,13 @@ from pathlib import Path
 
 import pytest
 
-from geocase.catalog.loader import load_case_metadata
-from geocase.catalog.models import CaseMetadata
 from geocase.cases.base import BaseCase
 from geocase.cases.factory import create_case
 from geocase.cases.netcdf import NetCDFCase
 from geocase.cases.raster import RasterCase
 from geocase.cases.vector import VectorCase
-
+from geocase.catalog.loader import load_case_metadata
+from geocase.catalog.models import CaseMetadata
 
 # ---------------------------------------------------------------------------
 # Path constants
@@ -1020,7 +1019,6 @@ class TestRasterCase:
 
     def test_nodata_pixels_present(self):
         """Test nodata pixels present."""
-        import numpy as np
 
         meta = _load_meta(_NODATA)
         case = RasterCase(meta, _NODATA)

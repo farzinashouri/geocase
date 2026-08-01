@@ -8,7 +8,6 @@ from geocase.catalog.loader import load_case_index
 from geocase.catalog.models import CaseMetadata
 from geocase.catalog.registry import CaseRegistry, get_registry, reset_registry
 
-
 # ---------------------------------------------------------------------------
 # Path constants
 # ---------------------------------------------------------------------------

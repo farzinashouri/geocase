@@ -6,8 +6,8 @@ CaseMetadata model, and provides fast lookup by case id.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Iterator
 
 from geocase.catalog.loader import load_case_index, load_case_metadata
 from geocase.catalog.manifests import load_manifest
@@ -87,11 +87,13 @@ class CaseRegistry:
             for entry in manifest.cases:
                 if entry.case_id in registry._cases:
                     raise ValueError(
-                        f"Manifest case id '{entry.case_id}' collides with bundled registry"
+                        f"Manifest case id '{entry.case_id}' collides with "
+                        f"the bundled registry"
                     )
                 if entry.case_id in manifest_case_map:
                     raise ValueError(
-                        f"Manifest case id '{entry.case_id}' appears in more than one manifest"
+                        f"Manifest case id '{entry.case_id}' appears in more "
+                        f"than one manifest"
                     )
                 manifest_case_map[entry.case_id] = manifest
 

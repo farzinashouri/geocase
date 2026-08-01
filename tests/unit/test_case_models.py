@@ -13,7 +13,6 @@ from geocase.catalog.models import (
     SuiteSelection,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -67,7 +66,7 @@ class TestCaseMetadataValid:
         assert case.status == "draft"  # default
 
     def test_all_fields(self):
-        """Preserves fully populated case metadata, nested source information, and custom params."""
+        """Preserves fully populated metadata, nested source info, and custom params."""
         case = CaseMetadata(
             **_minimal_case(
                 description="Full description.",

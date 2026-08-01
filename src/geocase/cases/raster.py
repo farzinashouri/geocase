@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Generator
+from typing import TYPE_CHECKING, Any
 
 from geocase.cases.base import BaseCase
 from geocase.catalog.models import CaseMetadata

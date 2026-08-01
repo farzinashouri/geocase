@@ -18,7 +18,6 @@ import xml.etree.ElementTree as ET
 from collections.abc import Callable
 from pathlib import Path
 
-
 # ===================================================================
 # Public entry points
 # ===================================================================
@@ -93,10 +92,8 @@ def assert_geoparquet_metadata(path: Path) -> None:
 # Per-format validators (private)
 # ===================================================================
 
-
-def _validate_geojson(path: Path) -> None:
-    """GeoJSON: must parse as JSON with a recognized GeoJSON ``type``."""
-    _GEOJSON_TYPES = {
+_GEOJSON_TYPES = frozenset(
+    {
         "Feature",
         "FeatureCollection",
         "GeometryCollection",
@@ -107,6 +104,13 @@ def _validate_geojson(path: Path) -> None:
         "Polygon",
         "MultiPolygon",
     }
+)
+
+_WKT_COLUMN_NAMES = frozenset({"wkt", "geometry_wkt", "geometry"})
+
+
+def _validate_geojson(path: Path) -> None:
+    """GeoJSON: must parse as JSON with a recognized GeoJSON ``type``."""
     try:
         with path.open() as f:
             data = json.load(f)
@@ -257,7 +261,6 @@ def _validate_arrow_ipc(path: Path) -> None:
 
 def _validate_csv_wkt(path: Path) -> None:
     """CSV_WKT: parseable CSV with a WKT-like column in the header."""
-    _WKT_COLUMN_NAMES = {"wkt", "geometry_wkt", "geometry"}
     try:
         with path.open(newline="") as f:
             reader = csv.reader(f)

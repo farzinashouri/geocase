@@ -10,6 +10,11 @@ import numpy as np
 import pytest
 
 from geocase.assertions.crs import assert_crs_units, assert_epsg, assert_has_crs
+from geocase.assertions.footprint import (
+    assert_footprint_no_holes,
+    assert_footprint_rectangularity,
+    assert_footprint_similar_to_expected,
+)
 from geocase.assertions.geometry import (
     assert_feature_count,
     assert_geometry_type,
@@ -17,11 +22,6 @@ from geocase.assertions.geometry import (
     assert_invalid_geometry,
     assert_no_holes,
     assert_valid_geometry,
-)
-from geocase.assertions.footprint import (
-    assert_footprint_no_holes,
-    assert_footprint_rectangularity,
-    assert_footprint_similar_to_expected,
 )
 from geocase.assertions.metadata import (
     assert_case_loadable,
@@ -41,11 +41,10 @@ from geocase.assertions.topology import (
     assert_no_null_geometries,
     assert_no_self_intersections,
 )
-from geocase.catalog.loader import load_case_metadata
 from geocase.cases.factory import create_case
 from geocase.cases.raster import RasterCase
 from geocase.cases.vector import VectorCase
-
+from geocase.catalog.loader import load_case_metadata
 
 # ---------------------------------------------------------------------------
 # Path constants
@@ -95,7 +94,7 @@ class TestAssertValidGeometry:
 
 class TestAssertInvalidGeometry:
     def test_self_intersecting_passes(self):
-        """Does not raise when invalid-geometry assertion sees a self-intersecting polygon."""
+        """Does not raise when invalid-geometry sees a self-intersecting polygon."""
         gdf = gpd.read_file(_SELF_INTER / "geometry.geojson")
         assert_invalid_geometry(gdf)  # should not raise
 
@@ -108,7 +107,7 @@ class TestAssertInvalidGeometry:
 
 class TestAssertGeometryType:
     def test_polygon_type_passes(self):
-        """Accepts a GeoDataFrame whose geometry type matches the expected polygon type."""
+        """Accepts a GeoDataFrame whose geometry type matches the expected type."""
         gdf = gpd.read_file(_SIMPLE / "geometry.geojson")
         assert_geometry_type(gdf, "Polygon")
 

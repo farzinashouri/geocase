@@ -8,13 +8,13 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from geocase.cases.base import BaseCase
+from geocase.cases.factory import create_case
 from geocase.catalog.loader import load_case_index, load_case_metadata
 from geocase.catalog.models import CaseMetadata
 from geocase.catalog.registry import CaseRegistry, get_registry
 from geocase.catalog.selectors import select_cases
 from geocase.catalog.suites import load_all_suites
-from geocase.cases.base import BaseCase
-from geocase.cases.factory import create_case
 
 if TYPE_CHECKING:
     from _pytest.nodes import Node

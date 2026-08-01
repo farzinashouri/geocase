@@ -8,7 +8,6 @@ from geocase.catalog.models import CaseMetadata, SuiteSelection
 from geocase.catalog.registry import CaseRegistry
 from geocase.catalog.selectors import matches_selection, select_cases
 
-
 # ---------------------------------------------------------------------------
 # Fixtures — registry & full case list
 # ---------------------------------------------------------------------------

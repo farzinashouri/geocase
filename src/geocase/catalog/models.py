@@ -121,7 +121,8 @@ class AssertionHints(BaseModel):
     expected_geometry_types: list[str] = Field(default_factory=list)
     expect_nodata: bool | None = None
 
-    # Typed raster expectations (see docs/plans/archive/08-raster-action-plan.md, Step 2)
+    # Typed raster expectations
+    # (see docs/plans/archive/08-raster-action-plan.md, Step 2)
     expected_band_count: int | None = None
     expected_dtype: str | None = None
     expected_shape: list[int] | None = None

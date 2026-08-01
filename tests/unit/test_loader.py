@@ -13,7 +13,6 @@ from geocase.catalog.loader import (
 )
 from geocase.catalog.models import CaseMetadata, SuiteMetadata
 
-
 # ---------------------------------------------------------------------------
 # Resolve paths relative to the package source tree
 # ---------------------------------------------------------------------------

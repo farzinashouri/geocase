@@ -14,14 +14,13 @@ from pathlib import Path
 
 import pytest
 
-from geocase.catalog.loader import load_case_index, load_case_metadata
-from geocase.catalog.models import CaseMetadata
 from geocase.assertions.format_compliance import (
     assert_format_compliance,
     assert_geoparquet_metadata,
     registered_format_validators,
 )
-from geocase.catalog.models import FormatType
+from geocase.catalog.loader import load_case_index, load_case_metadata
+from geocase.catalog.models import CaseMetadata, FormatType
 
 # ---------------------------------------------------------------------------
 # Path constants
@@ -181,8 +180,8 @@ class TestGeometryTypeTruthfulness:
                 f"Case '{meta.id}' declares no geometry type — nothing to check"
             )
 
-        from geocase.cases.vector import VectorCase
         from geocase.assertions.geometry import assert_geometry_type
+        from geocase.cases.vector import VectorCase
 
         case_dir = (_METADATA.parent / case_path).parent
         case = VectorCase(meta, case_dir)
