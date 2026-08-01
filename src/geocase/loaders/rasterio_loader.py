@@ -39,7 +39,9 @@ def open_raster(
         yield src
 
 
-def load(path: str | Path, band: int | None = None, **kwargs: Any) -> tuple:
+def load(
+    path: str | Path, band: int | None = None, **kwargs: Any
+) -> tuple[Any, dict[str, Any], Any]:
     """Read a raster into memory and return ``(data, profile, nodata)``.
 
     Args:

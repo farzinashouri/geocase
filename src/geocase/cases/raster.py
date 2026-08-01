@@ -9,6 +9,8 @@ from typing import TYPE_CHECKING, Any
 
 from geocase.cases.base import BaseCase
 from geocase.catalog.models import CaseMetadata
+from geocase.loaders.rasterio_loader import load as _load_raster
+from geocase.loaders.rasterio_loader import open_raster
 
 if TYPE_CHECKING:
     import rasterio
@@ -45,16 +47,18 @@ class RasterCase(BaseCase):
             FileNotFoundError: If the primary file does not exist.
             ImportError: If rasterio is not installed.
         """
-        import rasterio as _rio  # lazy import
-
+        # Opening is delegated to loaders/rasterio_loader.py so there is one
+        # rasterio entry point rather than two parallel ones (Step 9). The
+        # existence check stays here because the loader's message names a
+        # file, while this one names the case's *primary* file.
         path = self.primary_path
         if not path.is_file():
             raise FileNotFoundError(f"Primary data file not found: {path}")
 
-        with _rio.open(path, **kwargs) as src:
+        with open_raster(path, **kwargs) as src:
             yield src
 
-    def read(self, band: int = 1, **kwargs: Any) -> tuple:
+    def read(self, band: int = 1, **kwargs: Any) -> tuple[Any, dict[str, Any], Any]:
         """Convenience: read a single band and return (array, profile).
 
         Args:
@@ -63,14 +67,8 @@ class RasterCase(BaseCase):
         Returns:
             Tuple of ``(numpy_array, profile_dict, nodata)``.
         """
-        import rasterio as _rio  # lazy import
-
         path = self.primary_path
         if not path.is_file():
             raise FileNotFoundError(f"Primary data file not found: {path}")
 
-        with _rio.open(path, **kwargs) as src:
-            data = src.read(band)
-            profile = dict(src.profile)
-            nodata = src.nodata
-        return data, profile, nodata
+        return _load_raster(path, band=band, **kwargs)
