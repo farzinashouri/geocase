@@ -21,7 +21,8 @@ what is in progress, and what still needs to land before v1.0.
 
 - Core metadata, catalog, runtime case loading, and assertion layers are implemented.
 - The pytest plugin is implemented and working for normal `pytest` usage.
-- The catalog holds **134 cases** (103 vector / 30 raster / 1 netcdf) and **715 tests**.
+- The catalog holds **134 cases** (103 vector / 30 raster / 1 netcdf) and **727 tests**
+  (715 before Batch 3, which added 13 and removed the three empty stub modules).
   Measured from `case-index.yaml`, not from a file count: the five
   `raster/footprint_edge_cases/case_*.yaml` entries share one directory, so counting
   files named `case.yaml` undercounts. Plan 10's "130 cases / 26 raster" was wrong on
@@ -181,13 +182,13 @@ Goal: catch metadata drift at the catalog layer instead of deep inside a pytest 
 
 Done:
 
-- `scripts/validate_catalog.py` — case, suite, and index validation rules. **Corrected
-  Aug 2026:** this line used to credit `src/geocase/catalog/validators.py`, which was a
-  one-line docstring that nothing imported — a fourth instance of the empty-stub pattern
-  after `cli/`, the storage modules, and `affine_transform_quirk`. Plan 03 had decided to
-  keep validation in `scripts/`; the stub was deleted in Batch 3.
 - `src/geocase/catalog/manifests.py` — manifest models and `load_manifest` / `from_sources`
-- `scripts/validate_catalog.py`, CI-gated via `ci/catalog-validation.yml`
+- `scripts/validate_catalog.py` — case, suite, and index validation rules, CI-gated via
+  `ci/catalog-validation.yml`. **Corrected Aug 2026:** this entry used to credit
+  `src/geocase/catalog/validators.py`, which was a one-line docstring that nothing
+  imported — a fourth instance of the empty-stub pattern after `cli/`, the storage
+  modules, and `affine_transform_quirk`. Plan 03 had decided to keep validation in
+  `scripts/`; the stub was deleted in Batch 3.
 - `tests/unit/test_manifests.py`
 
 Not done, and tracked separately as **Step 14**: nothing at runtime *calls*
@@ -204,9 +205,11 @@ Done:
 - `src/geocase/loaders/rasterio_loader.py`
 - `src/geocase/loaders/xarray_loader.py`
 
-Note: `cases/vector.py`, `raster.py`, and `netcdf.py` still import geopandas/rasterio/
-xarray directly, so there are currently two parallel load paths. Resolved in the
-Decision log below — the loaders become the single path as part of Step 13.
+Note: `cases/raster.py` now goes through `loaders/rasterio_loader.py` (Batch 3), closing
+the duplication recorded in the Decision log. `cases/vector.py` and `cases/netcdf.py`
+still import geopandas/xarray directly; routing them through their loaders is a v1.1
+ratchet, since no test imports those loader modules the way four modules import
+`rasterio_loader.open_raster`.
 
 ### Step 10 — Raster coverage ✅
 
@@ -302,38 +305,49 @@ largest honest `tiny` case is a 240 KB SpatiaLite database, leaving only 6% head
 libspatialite. This could not be verified locally. If the job fails, the generator exits
 **2** (cannot verify) rather than 1 (drift), with a message naming the fix.
 
-### Step 13 — Quality gates you can trust
+### Step 13 — Quality gates you can trust ✅
 
-715 tests overstates the real coverage: CI runs a hand-kept allowlist that has drifted,
-and ~300 tests never run.
+715 tests overstated the real coverage: CI ran a hand-kept allowlist that had drifted,
+and ~300 tests never ran.
 
-- **13.1** Replace the allowlist with `pytest tests/ -q` (the whole suite is ~23s).
-  Delete the three empty stub test files (`tests/unit/test_vector_loaders.py`,
+Done (Aug 2026). Measured, not inherited: **223** ruff errors in `src` + `tests` (the
+plan's 1043 was repo-wide, including `examples/`), 160 of them W191; **24** mypy errors
+in `src` (not 18), all config artifacts.
+
+- **13.1** ✅ Allowlist replaced with `pytest tests -q`. `core_tests` and
+  `extended_tests` collapsed into one `tests` job. Deleted the three empty stub test
+  files (`tests/unit/test_vector_loaders.py`,
   `tests/integration/test_core_vector_suite.py`, `tests/integration/test_remote_fetch.py`)
-  — CI names the first and runs nothing. Update README's "Local equivalents".
-- **13.2** Ruff: 1043 errors, 722 of them W191 tab-indentation. Sequence as three
-  commits — (1) `ruff format`, whitespace only, verifying identical test output before
-  and after so it never pollutes `git blame`; (2) `ruff check --fix` plus hand-fixes;
-  (3) *then* add the CI job. Adding the gate first makes `ignore = ["W191","E501"]`
-  tempting, which would entrench the mixed indentation permanently.
-- **13.3** Mypy: fix the config before tightening it. The 18 current errors are all
-  missing stubs, so `strict = true` has never checked a function body. Add
-  `types-PyYAML` / `types-shapely`, add `ignore_missing_imports` overrides for
-  rasterio/pyarrow/osgeo/netCDF4/geopandas, and fix `python_version`. Then gate
-  `catalog/` + `api/` only under strict; ratchet outward in v1.1.
-- **13.4** Python support matrix. **Partly done (Aug 2026):** `requires-python` is now
-  `>=3.11` with classifiers 3.11–3.14, and `[tool.mypy] python_version` / `[tool.ruff]
-  target-version` were moved off 3.9 to match. See the Decision log. Remaining: add a CI
-  matrix over floor (3.11) and ceiling (3.14) — CI currently runs 3.11 only, so the
-  ceiling is verified locally but not in the pipeline.
-- **13.5** Markers. `slow` is declared and used zero times — drop it. Keep `remote` and
-  wire it: attach `pytest.mark.remote` in `pytest_generate_tests` to cases whose
-  `storage_class == "remote"`, giving users `pytest -m "not remote"`.
-- **13.6** Measure coverage, don't gate it. ~300 tests are entering CI for the first
-  time, so any floor picked now is arbitrary. Report it non-blocking, record it in the
-  CHANGELOG, set the floor in v1.1.
-- Also resolve the loaders duplication from Step 9: have `cases/raster.py` call
-  `loaders/rasterio_loader.py` so there is one load path.
+  — CI named the first and ran nothing. README's "Local equivalents" updated.
+- **13.2** ✅ Ruff, in the prescribed three commits: `ruff format` (whitespace only,
+  test results verified identical before and after), `ruff check --fix` plus hand-fixes,
+  *then* the CI job. Scope is `src` + `tests` per the decision log; `scripts/` is
+  **not** gated and still holds 549 errors, 517 of them W191 — a deliberate omission, not
+  an oversight. Ruff is pinned exactly in CI because `format --check` would otherwise
+  fail on an upgrade rather than on code.
+- **13.3** ✅ Config fixed before tightening: `types-PyYAML` / `types-shapely` added
+  (24 → 18 errors on their own), `ignore_missing_imports` overrides for the untyped
+  geospatial libraries, and the strict flags moved off the global section onto
+  `geocase.catalog.*` + `geocase.api.*`. The three real errors that surfaced once the
+  stub noise cleared are fixed. `mypy src` is gated; `tests/` (429 missing annotations)
+  is a v1.1 ratchet.
+- **13.4** ✅ CI now runs a `parallel:matrix` over 3.11 (floor) and 3.14 (ceiling), so
+  the ceiling `requires-python` advertises is verified in the pipeline and not only on
+  the dev machine. `requires-python`/classifiers had already moved in Batch 1.
+- **13.5** ✅ `slow` dropped. `remote` wired: `pytest_generate_tests` attaches
+  `pytest.mark.remote` to cases whose `storage_class == "remote"`, and the plugin
+  registers the marker itself so `pytest -m "not remote"` works in a fresh install. The
+  decision lives in `marks_for_case()` so it is testable before Step 14 makes any case
+  actually remote.
+- **13.6** ✅ Coverage reported, not gated: **54%** (1140 statements, 527 missed).
+  Understated — the plugin modules are imported before coverage starts, and
+  `test_pytest_plugin.py` runs pytest in subprocesses. Record it in the CHANGELOG; set
+  the floor in v1.1.
+- ✅ Step 9's loaders duplication resolved: `cases/raster.py` now calls
+  `loaders/rasterio_loader.py`, so there is one load path.
+- ✅ Also, not in the original scope: `src/geocase/catalog/validators.py` was a fourth
+  empty stub (found via coverage reporting zero statements) and was deleted; Step 8's
+  "Done" list above is corrected.
 
 ### Step 14 — Make manifests reachable and honest (no transport)
 
@@ -377,17 +391,18 @@ Mostly a facade; `src/geocase/catalog/__init__.py` already exports a clean `__al
 
 ### Step 16 — Docs truth pass and release
 
-- **Stale facts to correct:** `contributing/workflow.md` says "216 unit tests" (715) and
+- **Stale facts to correct:** `contributing/workflow.md` says "216 unit tests" (727) and
   lists manifests and `loaders/` as stubs (both implemented);
   `structure-and-planning.md` and `codebase-summary.md` say raster has "2 cases + 1 stub"
   (30); `manifests-and-storage.md` says manifest parsing is stubbed — rewrite it rather
   than flip it, since storage is now *deliberately* deferred. Use **134 cases (103
-  vector / 30 raster / 1 netcdf)** and **715 tests** as the canonical figures.
-- **Orphaned case directory:** `data/core/raster/affine_transform_quirk/case.yaml` is an
-  empty stub (a single comment line, no YAML), so `build_case_index.py` silently skips it
-  and it appears in no index — yet the directory still ships in the wheel. Either author
-  the case or delete the directory; a third empty-stub-implies-a-commitment instance
-  after `cli/` and the storage modules.
+  vector / 30 raster / 1 netcdf)** and **727 tests** as the canonical figures — and
+  re-measure both before writing, rather than copying them from here.
+- ~~**Orphaned case directory:** `data/core/raster/affine_transform_quirk/`~~ **Done in
+  Batch 3.** Deleted, and `validate_catalog.py` now fails if any `*.yaml` under
+  `data/core` is missing from `case-index.yaml`. The coverage it described (non-square
+  pixels, rotated/skewed transforms) is genuinely absent from the catalog and is on the
+  v1.1 list — as a gap, not as a placeholder that looks like a commitment.
 - **mkdocs nav** omits `docs/_generated/raster-coverage-matrix.md` and
   `codebase-summary.md`. Both coverage matrices are CI-gated, so publishing only one is odd.
 - **Release:** add `CHANGELOG.md`, noting the CLI entry-point removal as a **breaking
@@ -431,6 +446,8 @@ silently re-litigated.
 | July 2026 | **Keep `src/geocase/loaders/` and make it the single load path** (have `cases/raster.py` call it). Closes the last open item from plan 03's Phase 4. | Plan 03 recommended deleting it, but four test modules import `rasterio_loader.open_raster`. Routing through it is a smaller diff than rewriting those tests, and it removes the duplication. |
 | Aug 2026 | **Two dev environments, deliberately.** conda/3.14 (`environment.yml`) is primary; `.venv`/3.11 is the CI mirror. Documented in [`workflow.md`](workflow.md). | Only conda has the GDAL bindings, which are source-only on PyPI. Without them `pytest examples` collects 37 tests instead of 1238, because two support modules `importorskip("osgeo")`. Both interpreters pass `pytest tests` identically, so 3.14 is a supported ceiling, not a risk. |
 | Aug 2026 | **`requires-python = ">=3.11"`**, not the `>=3.10` plan 10 proposed. Classifiers 3.11–3.14. | Promise only what is tested. CI runs 3.11 and development happens on 3.14, so both ends are real; 3.10 is installed nowhere and would have been the same untested claim as `>=3.9`, one version up. Also removes the `eval-type-backport` question entirely — `catalog/models.py` has 40 PEP 604 unions in pydantic model bodies under `from __future__ import annotations`, which needs ≥3.10 natively. Widen later once a matrix exists. |
+| Aug 2026 | **Lint and type gates cover `src` + `tests`, and `scripts/` stays out.** `scripts/` keeps 549 ruff errors (517 W191) and is not formatted. | The July decision scoped the gates around `examples/`; `scripts/` was never argued either way. Formatting it is a 517-line diff across the generators whose byte-for-byte `--check` gates are the catalog's safety net, and it buys nothing a reviewer would notice. Revisit in v1.1, as one commit, with the fixture gates re-run. |
+| Aug 2026 | **`affine_transform_quirk` deleted, not authored.** The rotated/skewed-transform coverage it described moves to the v1.1 list. | Authoring it means a new fixture, checksums, and an index entry, and moves the canonical counts to 135/31 — figures four documents quote and Batch 5 re-verifies. The empty directory was the defect; the missing coverage is a gap, and a gap on a list is honest in a way a placeholder in the wheel is not. |
 | July 2026 | **One roadmap.** This document; `docs/plans/01..10` archived. | Four competing "what's next" documents using five sequencing vocabularies produced commit `6391e04 "stage 3 of plan 9 is done"`, which actually contained plan 08 Step 9 work. |
 
 ---
@@ -440,10 +457,13 @@ silently re-litigated.
 - Storage transport (`remote`/`cache`/`local`/resolver) and end-to-end remote loading
 - `tests/integration/test_remote_fetch.py`
 - `scripts/package_extended_cases.py`
-- Repo-wide mypy strict
-- A coverage floor
+- Repo-wide mypy strict, plus annotations for `tests/` (429 errors) and ruff over
+  `scripts/` (549 errors, 517 W191)
+- A coverage floor (Batch 3 measured 54%; see Step 13.6 for why it is understated)
 - A CLI
 - The `examples/` corpus cleanup
+- A raster case for non-square pixels and rotated/skewed affine transforms — the
+  coverage `affine_transform_quirk` promised and never delivered
 
 **The v1.1 storage gate is one real published archive with a real checksum.**
 

@@ -79,15 +79,16 @@ All figures come from the inventory already gathered — `src/geocase/metadata/c
 
 Originally recorded as "flag, don't fix". All four were verified by measurement, and two
 turned out to be defects **inside CI gates**, which makes them worse than ungated bugs:
-they manufacture false confidence. They are therefore **not** deferred — they move to
-Batch 3 (Step 13, "quality gates you can trust"), where they belong thematically.
+they manufacture false confidence. They were therefore **not** deferred — they moved to
+Batch 3 (Step 13, "quality gates you can trust"), where they belong thematically. Three
+are fixed; the fourth is a nav entry that belongs with Batch 5's docs pass.
 
-| Finding | Verified | Severity |
-|---|---|---|
-| `scripts/generate_raster_coverage_matrix.py:49` globs `rglob("case.yaml")`, missing the five `footprint_edge_cases/case_*.yaml`. The published matrix says *"Total bundled raster cases scanned: **25**"* against an actual 30. | ✅ confirmed | **High** — the artifact is gated by `git diff --exit-code`, so CI actively enforces the wrong number. |
-| `metadata/schemas/case.schema.yaml`'s `format` enum has **7** values; `FormatType` in `catalog/models.py` has **17**. Missing: `SQLite`, `WKB`, `WKT`, `GML`, `KML`, `CSV_WKT`, `Feather`, `Arrow`, `GeoArrow`, `FlatGeobuf`. | ✅ confirmed (the plan said 16; it is 17) | **High** — the schema cannot validate 10 of the formats actually in the catalog, including `SQLite`. |
-| `raster/affine_transform_quirk/case.yaml` is an empty stub, silently skipped by `build_case_index.py`, in no index — yet the directory ships in the wheel. | ✅ confirmed | Medium — third instance of the empty-stub pattern after `cli/` and the storage modules. |
-| `docs/_generated/raster-coverage-matrix.md` is CI-gated but absent from `mkdocs.yml` nav. | ✅ confirmed | Low — already tracked as part of Step 16. |
+| Finding | Verified | Severity | Status |
+|---|---|---|---|
+| `scripts/generate_raster_coverage_matrix.py:49` globs `rglob("case.yaml")`, missing the five `footprint_edge_cases/case_*.yaml`. The published matrix says *"Total bundled raster cases scanned: **25**"* against an actual 30. | ✅ confirmed | **High** — the artifact is gated by `git diff --exit-code`, so CI actively enforces the wrong number. | ✅ Fixed in Batch 3. Glob is now `*.yaml` filtered to `category == "raster"`; matrix regenerated at 30. The generator also fails if its discovery disagrees with `case-index.yaml`. |
+| `metadata/schemas/case.schema.yaml`'s `format` enum has **7** values; `FormatType` in `catalog/models.py` has **17**. Missing: `SQLite`, `WKB`, `WKT`, `GML`, `KML`, `CSV_WKT`, `Feather`, `Arrow`, `GeoArrow`, `FlatGeobuf`. | ✅ confirmed (the plan said 16; it is 17) | **High** — the schema cannot validate 10 of the formats actually in the catalog, including `SQLite`. | ✅ Fixed in Batch 3, along with the `assertions` block (6 of 16 `AssertionHints` fields). `TestCaseSchemaMatchesModels` now pins all 7 enums and both property sets to the models. |
+| `raster/affine_transform_quirk/case.yaml` is an empty stub, silently skipped by `build_case_index.py`, in no index — yet the directory ships in the wheel. | ✅ confirmed | Medium — third instance of the empty-stub pattern after `cli/` and the storage modules. | ✅ Deleted in Batch 3; `validate_catalog.py` now fails on any `*.yaml` under `data/core` that is missing from the index. |
+| `docs/_generated/raster-coverage-matrix.md` is CI-gated but absent from `mkdocs.yml` nav. | ✅ confirmed | Low — already tracked as part of Step 16. | ⬜ Batch 5, with the rest of the docs pass. |
 
 ## Drift control (required)
 

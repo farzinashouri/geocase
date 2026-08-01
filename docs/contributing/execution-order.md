@@ -13,43 +13,66 @@ dataset-catalog work.
 
 ## Status
 
-**Batches 1–2 complete.** Bundled data 36 MB → 4.2 MB; wheel 458 KB; `pytest tests -q`
-green on both Python 3.11 and 3.14.
+**Batches 1–3 complete.** Bundled data 36 MB → 4.2 MB; wheel 458 KB; `pytest tests -q`
+green on both Python 3.11 and 3.14; ruff and mypy clean and gated; coverage measured at
+**54%** (non-blocking).
 
 | Batch | Contents | Checkpoint | Status |
 |---|---|---|---|
 | **1** | Roadmap collapse + Steps 11.1–11.5 | `pytest tests -q` green, no collection error, no console script | ✅ Done |
 | **2** | Step 12 — catalog shrink, alone | checksums regenerate; SQLite tests pass; wheel size | ✅ Done |
-| **3** | Step 13 — quality gates **+ the 4 catalog defects** | CI green on directory runs; coverage number recorded | ⬜ **Next** |
-| **4** | Step 15 (public API) → Step 14 (manifests) | `__all__` pinned; remote-id error asserted both paths | ⬜ |
+| **3** | Step 13 — quality gates **+ the 4 catalog defects** | CI green on directory runs; coverage number recorded | ✅ Done |
+| **4** | Step 15 (public API) → Step 14 (manifests) | `__all__` pinned; remote-id error asserted both paths | ⬜ **Next** |
 | **5** | Step 16 — docs truth pass, **dataset catalog**, release | `mkdocs build`; wheel holds all 134 cases; TestPyPI dry run | ⬜ |
 
 ## The batches
 
-### Batch 3 — Quality gates you can trust ⬜ Next
+### Batch 3 — Quality gates you can trust ✅ Done
 
 Step 13, plus the four catalog defects surfaced by the dataset-catalog work. They belong
 here rather than in Batch 5 because two of them are bugs *inside CI gates*, which is
 precisely this batch's theme.
 
-Order within the batch matters:
+**Outcome (Aug 2026).** Ten commits, in the order below. Measured figures, none of them
+inherited: ruff 223 errors in `src` + `tests` (not the 1043 the plan quoted — that was
+repo-wide, including `examples/`), of which 160 W191 and 41 E501; mypy 24 errors in `src`
+(not 18), every one a config artifact; coverage 54%. Three gates added — `lint`,
+`typecheck`, and the orphan-case check in `validate_catalog.py` — and one job removed
+(`core_tests` + `extended_tests` collapsed into `tests`). Test count 715 → 727: the
+directory run picked up nothing new to *run*, but the batch added 13 tests (10 schema/model
+agreement, 3 marker wiring) and deleted three empty stub modules.
 
-1. **`ruff format`** — whitespace only. Verify identical test output before and after, so
-   it never pollutes `git blame`.
-2. **`ruff check --fix`** plus hand-fixes for the residual N806/N811/E402/E501.
-3. **Then** add the ruff CI job. Adding the gate first turns CI red on 1043 errors and
-   makes `ignore = ["W191","E501"]` tempting, which would entrench the mixed indentation
-   permanently.
-4. Directory-based test runs replacing the allowlist; delete the three empty stub test
-   files; mypy config fix; markers; non-blocking coverage.
+Two things surfaced that the plan did not list. `catalog/validators.py` was a fourth empty
+stub — a one-line docstring nothing imported, found because coverage reported it as zero
+statements — deleted, and Step 8's "Done" list corrected. And `case.schema.yaml`'s
+`assertions` block documented 6 of `AssertionHints`' 16 fields, missing every typed raster
+expectation from plan 08; fixed alongside the `format` enum and covered by the same test.
+
+Order within the batch mattered:
+
+1. **`ruff format`** — whitespace only. Verified identical test output before and after
+   (the only difference in the `-rA` node list was a skip's line number moving after
+   reflow), so it never polluted `git blame`.
+2. **`ruff check --fix`** plus hand-fixes for the residual N806/N811/E501. No E402
+   appeared once the scope was `src` + `tests`; the E402s live in `scripts/`.
+3. **Then** the ruff CI job. Adding the gate first would have turned CI red on 223 errors
+   and made `ignore = ["W191","E501"]` tempting, which would have entrenched the mixed
+   indentation permanently. Ruff is pinned exactly in the job, since `format --check`
+   would otherwise fail on an upgrade rather than on code.
+4. Directory-based test runs replacing the allowlist; deleted the three empty stub test
+   files; mypy config fix; markers; non-blocking coverage; the 3.11/3.14 matrix from 13.4;
+   and Step 9's leftover — `cases/raster.py` now goes through `loaders/rasterio_loader.py`.
 5. **Catalog defects** (from [`dataset-catalog-plan.md`](dataset-catalog-plan.md)):
-   fix the raster-matrix glob (reports 25, should be 30) and regenerate the gated
-   artifact; extend the schema `format` enum from 7 to 17 values; resolve
-   `affine_transform_quirk`.
+   the raster-matrix glob (reported 25, actual 30) and its regenerated artifact; the
+   schema `format` enum, 7 → 17 values; `affine_transform_quirk` deleted. The fourth,
+   the mkdocs nav omission, stays in Batch 5 with the rest of the docs pass.
 
-**Re-measure first.** Do not trust the "18 mypy errors" baseline — `python_version` moved
-from `3.9` to `3.11` in Batch 1, which should remove the bogus pattern-matching parse
-error, so the real number is unknown.
+**Re-measuring paid off again.** The "18 mypy errors" baseline was wrong (24), the ruff
+baseline was wrong (223, not 1043), and neither error was in the direction the plan
+assumed. Each of the three defects fixed here also got a gate, per the rule below: the
+matrix generator now fails if its own discovery disagrees with `case-index.yaml`, a test
+pins every schema enum to the Literal that enforces it, and `validate_catalog.py` fails on
+any case file missing from the index.
 
 ### Batch 4 — Public API, then manifests ⬜
 
@@ -87,7 +110,7 @@ These are non-negotiable regardless of how the work is grouped.
 | Batch 4 before the dataset-catalog page | §7 describes the surface Batch 4 changes. |
 | Generated tables before the catalog narrative | The prose must rest on gated facts. |
 
-## Two rules learned from Batches 1–2
+## Two rules learned from Batches 1–3
 
 **Verify the plan's empirical claims before acting on them.** Step 12's headline numbers
 reproduced exactly (6844 KB → 240 KB), but its supporting argument did not survive
