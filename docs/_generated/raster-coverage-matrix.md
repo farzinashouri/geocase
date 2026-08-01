@@ -1,7 +1,7 @@
 ### Raster coverage matrix (current vs target)
 
-Total bundled raster cases scanned: **25**.
-Cases declaring typed band-count expectations: **17/25**.
+Total bundled raster cases scanned: **30**.
+Cases declaring typed band-count expectations: **17/30**.
 
 #### A) Product families
 

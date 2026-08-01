@@ -17,11 +17,12 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
 PACKAGE_ROOT = SRC_ROOT / "geocase"
 RASTER_ROOT = PACKAGE_ROOT / "data" / "core" / "raster"
+CASE_INDEX_PATH = PACKAGE_ROOT / "metadata" / "case-index.yaml"
 
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from geocase.catalog.loader import load_case_metadata  # noqa: E402
+from geocase.catalog.loader import load_case_index, load_case_metadata  # noqa: E402
 
 PRODUCT_FAMILIES: list[tuple[str, list[str]]] = [
     ("Optical / RGB", ["optical", "rgb"]),
@@ -44,15 +45,72 @@ DELIVERY_STYLES: list[tuple[str, list[str]]] = [
 
 
 def _load_raster_metadata(raster_root: Path) -> list[object]:
-    """Load all valid raster case metadata, skipping placeholder/stub files."""
+    """Load all valid raster case metadata, skipping placeholder/stub files.
+
+    Globs ``*.yaml``, not ``case.yaml``: the five
+    ``footprint_edge_cases/case_*.yaml`` entries share one directory, so
+    matching only ``case.yaml`` silently reported 25 cases against an actual
+    30 — and the generated artifact is gated by ``git diff --exit-code``, so
+    CI enforced the wrong number.
+    """
     entries: list[object] = []
-    for case_yaml in sorted(raster_root.rglob("case.yaml")):
+    for case_yaml in sorted(raster_root.rglob("*.yaml")):
         try:
-            entries.append(load_case_metadata(case_yaml))
+            meta = load_case_metadata(case_yaml)
         except Exception:
-            # Placeholder/deferred stubs (e.g. affine_transform_quirk) are skipped.
+            # Placeholder/deferred stubs are skipped, as are any non-case
+            # YAML files that happen to live under the raster tree.
             continue
+        if getattr(meta, "category", None) != "raster":
+            continue
+        entries.append(meta)
     return entries
+
+
+def _raster_ids_from_case_index() -> set[str] | None:
+    """Return the raster case ids recorded in ``case-index.yaml``.
+
+    Returns ``None`` when the index cannot be read, so a caller working from
+    a custom ``--raster-root`` is not blocked by a missing index.
+    """
+    if not CASE_INDEX_PATH.exists():
+        return None
+    ids: set[str] = set()
+    for rel in load_case_index(CASE_INDEX_PATH):
+        meta = load_case_metadata(PACKAGE_ROOT / rel)
+        if meta.category == "raster":
+            ids.add(meta.id)
+    return ids
+
+
+def _check_against_case_index(entries: list[object]) -> str | None:
+    """Return an error message if discovery disagrees with the case index.
+
+    The discovery glob and the registry's index are two independent walks of
+    the same tree. Nothing was comparing them, which is exactly how the
+    undercount survived: the matrix said 25, the index said 30, and both were
+    gated. This makes the disagreement itself a failure.
+    """
+    indexed = _raster_ids_from_case_index()
+    if indexed is None:
+        return None
+
+    scanned = {str(getattr(meta, "id", "")) for meta in entries}
+    if scanned == indexed:
+        return None
+
+    missing = sorted(indexed - scanned)
+    extra = sorted(scanned - indexed)
+    parts = [
+        f"Raster discovery disagrees with {CASE_INDEX_PATH.name}: "
+        f"scanned {len(scanned)}, indexed {len(indexed)}."
+    ]
+    if missing:
+        parts.append(f"In the index but not scanned: {missing}")
+    if extra:
+        parts.append(f"Scanned but not in the index: {extra}")
+    parts.append("Run: python scripts/build_case_index.py")
+    return " ".join(parts)
 
 
 def _case_text(meta: object) -> str:
@@ -166,6 +224,12 @@ def main() -> int:
     if not entries:
         print("No raster case metadata found.")
         return 1
+
+    if args.raster_root == RASTER_ROOT:
+        mismatch = _check_against_case_index(entries)
+        if mismatch is not None:
+            print(mismatch)
+            return 1
 
     markdown = _build_markdown(entries)
 
