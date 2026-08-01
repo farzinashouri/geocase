@@ -2,49 +2,19 @@
 
 from __future__ import annotations
 
-from functools import lru_cache
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
 
 from geocase.cases.base import BaseCase
-from geocase.cases.factory import create_case
-from geocase.catalog.loader import load_case_index, load_case_metadata
 from geocase.catalog.models import CaseMetadata
 from geocase.catalog.registry import CaseRegistry, get_registry
+from geocase.catalog.roots import materialize_case
 from geocase.catalog.selectors import select_cases
 from geocase.catalog.suites import load_all_suites
 
 if TYPE_CHECKING:
     from _pytest.nodes import Node
-
-
-def _package_root() -> Path:
-    return Path(__file__).resolve().parent.parent
-
-
-@lru_cache(maxsize=1)
-def _case_roots_by_id() -> dict[str, Path]:
-    root = _package_root()
-    case_index_path = root / "metadata" / "case-index.yaml"
-    rel_case_yaml_paths = load_case_index(case_index_path)
-
-    out: dict[str, Path] = {}
-    for rel in rel_case_yaml_paths:
-        case_yaml = root / rel
-        meta = load_case_metadata(case_yaml)
-        out[meta.id] = case_yaml.parent
-    return out
-
-
-def _materialize_case(meta: CaseMetadata) -> BaseCase:
-    roots = _case_roots_by_id()
-    try:
-        root_dir = roots[meta.id]
-    except KeyError as exc:
-        raise KeyError(f"No case root found for case id '{meta.id}'") from exc
-    return create_case(meta, root_dir)
 
 
 def _dedupe_case_metadata(cases: list[CaseMetadata]) -> list[CaseMetadata]:
@@ -104,7 +74,7 @@ def resolve_case_metadata_from_node(
 def resolve_cases_from_node(node: Node) -> list[BaseCase]:
     """Resolve GeoCase markers on a node into materialized case objects."""
     metadata = resolve_case_metadata_from_node(node)
-    return [_materialize_case(meta) for meta in metadata]
+    return [materialize_case(meta) for meta in metadata]
 
 
 @pytest.fixture(scope="session")
