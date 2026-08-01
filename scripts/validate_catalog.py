@@ -7,6 +7,7 @@ Checks:
 - Referenced case data files (primary/notes/preview/sidecars) exist.
 - ``suite-index.yaml`` can be loaded and suites parse as ``SuiteMetadata``.
 - ``case_order`` entries reference known case ids.
+- Declared ``size_class`` matches the actual on-disk payload size.
 """
 
 from __future__ import annotations
@@ -35,8 +36,46 @@ from geocase.catalog.registry import CaseRegistry  # noqa: E402
 from geocase.catalog.suites import load_and_resolve_suite  # noqa: E402
 
 
+#: Upper bound on a case's on-disk payload for each ``size_class``.
+#:
+#: ``SizeClass`` was a bare ``Literal`` with no byte meaning, and nothing checked
+#: file sizes, so five ``tiny`` SpatiaLite fixtures sat at 6.7 MB each -- 93% of
+#: the entire bundled catalog -- without anything noticing. These thresholds turn
+#: "the metadata is lying" into a build failure.
+#:
+#: ``tiny`` is 512 KB rather than a snugger 256 KB deliberately: the largest
+#: honest ``tiny`` case is a 240 KB SpatiaLite database, and SpatiaLite's
+#: initialization footprint shifts between library versions. 512 KB keeps ~2x
+#: headroom while staying 13x below the regression this guard exists to catch.
+_SIZE_CLASS_MAX_BYTES: dict[str, int] = {
+	"tiny": 512 * 1024,
+	"small": 5 * 1024 * 1024,
+	"medium": 50 * 1024 * 1024,
+	# ``large`` is intentionally unbounded -- such cases belong in a remote
+	# manifest rather than the wheel, which is enforced elsewhere.
+}
+
+
 class CatalogValidationError(Exception):
 	"""Raised when catalog validation fails."""
+
+
+def _case_payload_bytes(case_dir: Path, metadata: object) -> int:
+	"""Return the total on-disk size of a case's data payload.
+
+	Counts the primary file plus any sidecars (a Shapefile is several files),
+	and ignores descriptive files such as ``case.yaml`` and ``notes.md``.
+	"""
+	files = metadata.files  # type: ignore[attr-defined]
+	names = [files.primary, *files.sidecars]
+	total = 0
+	for name in names:
+		if not name:
+			continue
+		resolved = case_dir / name
+		if resolved.exists():
+			total += resolved.stat().st_size
+	return total
 
 
 def _validate_case_index_structure(case_index_path: Path) -> list[str]:
@@ -86,6 +125,7 @@ def _validate_cases(case_index_path: Path) -> tuple[CaseRegistry, list[str]]:
 			metadata.files.preview,
 			*metadata.files.sidecars,
 		]
+		missing_file = False
 		for file_name in file_candidates:
 			if not file_name:
 				continue
@@ -94,6 +134,20 @@ def _validate_cases(case_index_path: Path) -> tuple[CaseRegistry, list[str]]:
 				errors.append(
 					f"Case '{metadata.id}' references missing file: {resolved}"
 				)
+				missing_file = True
+
+		# Only meaningful once every payload file is present.
+		if not missing_file:
+			limit = _SIZE_CLASS_MAX_BYTES.get(metadata.size_class)
+			if limit is not None:
+				payload = _case_payload_bytes(case_dir, metadata)
+				if payload > limit:
+					errors.append(
+						f"Case '{metadata.id}' declares size_class "
+						f"'{metadata.size_class}' but its payload is "
+						f"{payload / 1024:.0f} KB, over the "
+						f"{limit / 1024:.0f} KB limit"
+					)
 
 	if errors:
 		raise CatalogValidationError("\n".join(errors))

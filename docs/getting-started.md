@@ -200,5 +200,6 @@ Remaining work focuses on:
 - Documentation improvements
 - Release automation
 
-See [`docs/plans/`](plans/) for the current roadmap.
+See [`docs/contributing/development-plan.md`](contributing/development-plan.md) for the
+current roadmap.
 

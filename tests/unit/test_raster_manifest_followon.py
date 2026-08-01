@@ -1,7 +1,7 @@
 """Failing-first unit tests for Step 10 of the raster action plan.
 
 These cover the *manifest-backed raster follow-on* described in
-``docs/plans/08-raster-action-plan.md`` (Step 10). The goal of that step is to
+``docs/plans/archive/08-raster-action-plan.md`` (Step 10). The goal of that step is to
 draw a clean boundary between the **small bundled structural fixtures** and the
 **larger realistic EO scenes**, where the realistic scenes stay remote-only and
 are described by a manifest instead of being shipped inside the package.
@@ -71,7 +71,7 @@ def _require_attr(obj: object, name: str):
     value = getattr(obj, name, None)
     assert value is not None, (
         f"Expected {obj!r} to define `{name}` for the Step 10 raster "
-        f"manifest follow-on (see docs/plans/08-raster-action-plan.md, Step 10)"
+        f"manifest follow-on (see docs/plans/archive/08-raster-action-plan.md, Step 10)"
     )
     return value
 

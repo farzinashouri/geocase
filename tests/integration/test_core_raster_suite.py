@@ -8,7 +8,7 @@ loader, and dispatches typed expectations from the case metadata through
 Edge-case behaviours (NaN nodata, masking, derived indices) are covered by
 targeted unit tests; this suite enforces catalog-wide consistency.
 
-See: docs/plans/08-raster-action-plan.md
+See: docs/plans/archive/08-raster-action-plan.md
 """
 
 from __future__ import annotations

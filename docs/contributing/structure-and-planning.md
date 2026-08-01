@@ -15,7 +15,7 @@ The core implementation is complete:
 8. ~~wire the **pytest plugin**~~ ✅
 
 Remaining work focuses on documentation cleanup, additional test cases, and polish.
-See `docs/plans/` for the current roadmap.
+See [`development-plan.md`](development-plan.md) for the current roadmap.
 
 ---
 
@@ -312,27 +312,20 @@ Why this folder exists: GeoCase should provide not only data, but also reusable 
 
 ## `src/geocase/storage/`
 
-Storage resolution and caching.
+### `storage/hashing.py` ✅
 
-### `storage/local.py`
-
-Resolve bundled package paths.
-
-### `storage/remote.py`
-
-Download remote cases.
-
-### `storage/cache.py`
-
-Manage local cache directory and file reuse.
-
-### `storage/hashing.py`
-
-Checksum logic for verifying downloads.
+SHA-256 and byte-size verification. `scripts/generate_checksums.py` imports
+`sha256_file` from here, so bundled fixtures and remote artifacts are hashed by the
+same code.
 
 Why it exists: local and remote cases should still feel like one catalog.
 
-For v0.1, you can keep this very light.
+**Transport is deferred to v1.1.** `local.py`, `remote.py`, and `cache.py` previously
+existed here as one-line docstring stubs and were deleted — an empty module implies a
+commitment the project has not made, and both extended manifests are still 100%
+placeholder (`sha256: "replace_me"`, `base_uri: example.org`). They return in v1.1,
+gated on at least one real published archive with a real checksum. See
+[`development-plan.md`](development-plan.md).
 
 ---
 
@@ -358,33 +351,14 @@ Why it exists: GeoCase is designed for pytest, so first-class integration matter
 
 ---
 
-## `src/geocase/cli/`
+## `src/geocase/cli/` — removed
 
-Command-line tools, optional for first release.
-
-### `cli/main.py`
-
-CLI entry point.
-
-### `cli/list_cases.py`
-
-List available cases.
-
-### `cli/show_case.py`
-
-Show metadata for one case.
-
-### `cli/fetch_case.py`
-
-Download remote case.
-
-### `cli/validate_catalog.py`
-
-Validate all metadata and files.
-
-Why it exists: makes the toolkit easier to inspect and maintain.
-
-For v0.1, CLI is optional.
+There is no CLI. The directory held five one-line docstring stubs while
+`pyproject.toml` declared `geocase = "geocase.cli.main:app"`, so every install got a
+console script that died with `ImportError`. Both the entry point and the stubs were
+removed for v1.0; a CLI is deferred to v1.1 and would be re-added only if maintainer
+workflows need one. Catalog inspection and validation run through
+`scripts/validate_catalog.py` in the meantime.
 
 ---
 

@@ -23,6 +23,13 @@ _EXAMPLES_DIR = Path(__file__).resolve().parent
 if str(_EXAMPLES_DIR) not in sys.path:
     sys.path.insert(0, str(_EXAMPLES_DIR))
 
+# ``gdal_footprint`` imports ``osgeo`` at module scope, and the GDAL Python
+# bindings are source-only on PyPI. Skip here rather than inside
+# ``gdal_footprint.py`` — that module is not a test module, so pytest would not
+# honor the skip and collection would fail outright. The ``sys.path`` insert
+# above must stay above this guard so the import below can resolve.
+pytest.importorskip("osgeo")
+
 from gdal_footprint import geotiff_footprint_to_geojson
 
 

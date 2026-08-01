@@ -65,7 +65,7 @@ class ManifestCaseEntry(BaseModel):
 
     # Pairs a remote scene with the small bundled fixture it is the realistic
     # analog of, so contributors can reason about "the big version of this
-    # fixture" (see docs/plans/08-raster-action-plan.md, Step 10).
+    # fixture" (see docs/plans/archive/08-raster-action-plan.md, Step 10).
     bundled_analog: str | None = None
 
     @field_validator("case_id")
@@ -121,7 +121,7 @@ class AssertionHints(BaseModel):
     expected_geometry_types: list[str] = Field(default_factory=list)
     expect_nodata: bool | None = None
 
-    # Typed raster expectations (see docs/plans/08-raster-action-plan.md, Step 2)
+    # Typed raster expectations (see docs/plans/archive/08-raster-action-plan.md, Step 2)
     expected_band_count: int | None = None
     expected_dtype: str | None = None
     expected_shape: list[int] | None = None

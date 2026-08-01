@@ -1,7 +1,11 @@
 # Consolidation Roadmap
 
+> **Archived — superseded. Retained as an implementation log.** Its v1.0 scoping survives in the Decision log; its Phase 4 open item is resolved there.
+>
+> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+
 > Created: April 2026
-> Status: Active planning document (refreshed April 2026)
+> Status: Superseded (July 2026)
 
 This document captures the consolidated plan for bringing GeoCase to a stable v1.0 release.
 
@@ -70,7 +74,7 @@ This is now the next highest-value implementation track.
 - Large nodata regions
 
 > **Good to know:** see
-> [`docs/contributing/raster-dtypes-and-radiometric-resolution.md`](../contributing/raster-dtypes-and-radiometric-resolution.md)
+> [`docs/contributing/raster-dtypes-and-radiometric-resolution.md`](../../contributing/raster-dtypes-and-radiometric-resolution.md)
 > for the full explanation of how dtype coverage relates to — but is broader
 > than — radiometric resolution.
 

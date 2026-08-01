@@ -1,6 +1,6 @@
 """Generate and verify SHA-256 checksums for bundled case data files.
 
-Implements Step 3 of ``docs/plans/08-raster-action-plan.md``: a consistent
+Implements Step 3 of ``docs/plans/archive/08-raster-action-plan.md``: a consistent
 maintainer workflow for refreshing fixture checksums so that committed binary
 fixtures (rasters in particular) do not silently drift.
 
@@ -17,8 +17,11 @@ Usage::
 from __future__ import annotations
 
 import argparse
-import hashlib
 from pathlib import Path
+
+# Bundled fixtures and remote artifacts must hash identically, so both go
+# through the same implementation rather than a copy of it.
+from geocase.storage.hashing import sha256_file
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DATA_ROOT = REPO_ROOT / "src" / "geocase" / "data" / "core"
@@ -26,15 +29,6 @@ DATA_ROOT = REPO_ROOT / "src" / "geocase" / "data" / "core"
 CHECKSUM_FILE = "checksums.sha256"
 # Files that describe rather than constitute the fixture payload.
 _SKIP_NAMES = {CHECKSUM_FILE, "case.yaml", "notes.md", ".DS_Store"}
-
-
-def sha256_file(path: Path) -> str:
-    """Return the hex SHA-256 digest of *path*."""
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(65536), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def _data_files(case_dir: Path) -> list[Path]:

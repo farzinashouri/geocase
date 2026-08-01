@@ -21,7 +21,41 @@ GeoCase has a complete folder structure, real test data, and four fully implemen
 	- [`docs/design/case-recommendation-api-spec.md`](../design/case-recommendation-api-spec.md)
 	- [`docs/design/case-recommendation-user-flow.md`](../design/case-recommendation-user-flow.md)
 
-**Environment:** Python 3.14.3 · Conda (Miniforge) · All geospatial deps pinned in `environment.yml`.
+### Development environments
+
+Two environments are maintained deliberately, and they are not interchangeable.
+
+| | Primary — conda `geocase` | CI mirror — `.venv` |
+|---|---|---|
+| Python | 3.14.3 (Miniforge) | 3.11.14 (pyenv) |
+| Defined by | `environment.yml` | `pip install -e ".[dev]"` |
+| GDAL / `osgeo` | ✅ 3.12.2 | ❌ not available |
+| `pytest tests` | 714 passed, 1 skipped | 714 passed, 1 skipped |
+| `pytest examples` | 1238 collected | **37 collected** |
+
+**Use conda for day-to-day work**, and for anything touching `examples/` or fixture
+generation. It is the only environment with the GDAL Python bindings, which are
+source-only on PyPI.
+
+**Use `.venv` to reproduce a CI failure** — CI runs `python:3.11`, and this is the
+supported floor. Note that without `osgeo` the three interview-question example modules
+skip at import (`pytest.importorskip("osgeo")` in
+`examples/_easy_geospatial_interview_test_support.py` and
+`_easy_raster_interview_test_support.py`), silently dropping 1193 tests. That is why
+`.venv` is a floor check, not a substitute for the primary environment.
+
+Both interpreters pass `pytest tests -q` identically, so 3.14 is a supported ceiling
+rather than a risk. `testpaths` is `["tests"]`, so `examples/` only runs when named
+explicitly.
+
+```bash
+# Primary
+conda env create -f environment.yml    # first time
+conda activate geocase
+
+# CI mirror
+python3.11 -m venv .venv && .venv/bin/python -m pip install -e ".[dev]"
+```
 
 ### What is implemented
 

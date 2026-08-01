@@ -1,7 +1,11 @@
 # Manifest Support Plan
 
+> **Archived — superseded. Retained as an implementation log.** Manifest parsing and models shipped; wiring them into the registry is Step 14 of the roadmap.
+>
+> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+
 > Created: April 2026
-> Status: Active planning document
+> Status: Complete (June 2026)
 
 This document captures the proposed implementation plan for adding **manifest support** to GeoCase.
 
@@ -13,7 +17,7 @@ supposed to live, while storage support later makes those artifacts
 
 For the conceptual background and the rationale for separating manifest support
 from storage support, see
-[`docs/contributing/manifests-and-storage.md`](../contributing/manifests-and-storage.md).
+[`docs/contributing/manifests-and-storage.md`](../../contributing/manifests-and-storage.md).
 
 ---
 

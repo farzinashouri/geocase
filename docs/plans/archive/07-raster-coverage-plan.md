@@ -1,7 +1,11 @@
 # Raster Coverage Plan
 
+> **Archived — superseded. Retained as an implementation log.** Executed by plan 08; the coverage strategy it defines is reflected in the raster catalog.
+>
+> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+
 > Created: April 2026
-> Status: Active planning document
+> Status: Superseded (July 2026)
 
 This document captures the proposed implementation plan for expanding
 **raster coverage** in GeoCase toward a practical v1.0 baseline.
@@ -32,7 +36,7 @@ For the high-level roadmap context, see
 [`docs/plans/03-consolidation-roadmap.md`](03-consolidation-roadmap.md).
 For how remote scenes eventually connect to manifests and storage, see
 [`docs/plans/06-manifest-support.md`](06-manifest-support.md) and
-[`docs/contributing/manifests-and-storage.md`](../contributing/manifests-and-storage.md).
+[`docs/contributing/manifests-and-storage.md`](../../contributing/manifests-and-storage.md).
 
 ---
 

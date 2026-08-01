@@ -22,8 +22,10 @@ You can have a useful catalog before delivery exists. But delivery without a
 catalog is much less useful, because you do not know what is available or what
 you are supposed to ask for.
 
-For the concrete implementation sequence, scope boundaries, and proposed phase
-breakdown, see [`docs/plans/06-manifest-support.md`](../plans/06-manifest-support.md).
+For the current implementation sequence and scope boundaries, see
+[`development-plan.md`](development-plan.md). The original manifest plan is retained as
+an implementation log in
+[`../plans/archive/06-manifest-support.md`](../plans/archive/06-manifest-support.md).
 
 ---
 

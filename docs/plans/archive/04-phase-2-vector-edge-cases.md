@@ -1,7 +1,11 @@
 # Phase 2: Vector Edge Cases Plan
 
+> **Archived — superseded. Retained as an implementation log.** Phase 2 vector edge cases shipped.
+>
+> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+
 > Created: April 2026
-> Status: **Complete** (April 2026)
+> Status: Complete (April 2026)
 
 This document breaks out Phase 2 from `docs/plans/03-consolidation-roadmap.md` into a dedicated implementation plan.
 
@@ -336,5 +340,5 @@ Phase 2 is complete when:
 ## Related Docs
 
 - [`docs/plans/03-consolidation-roadmap.md`](03-consolidation-roadmap.md)
-- [`docs/contributing/vector-dataset-generation.md`](../contributing/vector-dataset-generation.md)
-- [`docs/_generated/vector-coverage-matrix.md`](../_generated/vector-coverage-matrix.md)
+- [`docs/contributing/vector-dataset-generation.md`](../../contributing/vector-dataset-generation.md)
+- [`docs/_generated/vector-coverage-matrix.md`](../../_generated/vector-coverage-matrix.md)

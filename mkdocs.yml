@@ -38,7 +38,9 @@ nav:
       - Remote Datasets: remote-datasets.md
   - Contributing:
       - Workflow: contributing/workflow.md
-      - Development Plan: contributing/development-plan.md
+      - Roadmap: contributing/development-plan.md
+      - Execution Order: contributing/execution-order.md
+      - Dataset Catalog Plan: contributing/dataset-catalog-plan.md
       - Structure & Planning: contributing/structure-and-planning.md
       - Manifests & Storage: contributing/manifests-and-storage.md
       - Testing Edge Cases: contributing/testing-edge-cases.md
@@ -49,15 +51,13 @@ nav:
       - Case Recommendation API Spec: design/case-recommendation-api-spec.md
       - Case Recommendation User Flow: design/case-recommendation-user-flow.md
       - Database Design: design/database-design.md
-  - Plans:
-      - Actionable Next Steps: plans/01-actionable-next-steps.md
-      - Documentation Consolidation: plans/02-documentation-consolidation.md
-      - Consolidation Roadmap: plans/03-consolidation-roadmap.md
-      - Phase 2 Vector Edge Cases: plans/04-phase-2-vector-edge-cases.md
-      - Format Geometry Compliance Gate: plans/05-format-geometry-compliance-gate.md
-      - Manifest Support: plans/06-manifest-support.md
   - Reference:
       - Vector Coverage Matrix: _generated/vector-coverage-matrix.md
+
+# Superseded planning documents, retained as an implementation log rather than
+# published. The single roadmap is contributing/development-plan.md.
+not_in_nav: |
+  /plans/archive/*.md
 
 markdown_extensions:
   - admonition

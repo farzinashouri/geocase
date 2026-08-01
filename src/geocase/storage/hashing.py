@@ -26,8 +26,8 @@ class SizeMismatchError(Exception):
 def sha256_file(path: Path) -> str:
     """Return the hex SHA-256 digest of *path*.
 
-    Mirrors ``scripts/generate_checksums.py:sha256_file`` so bundled fixtures
-    and remote artifacts are hashed identically.
+    This is the single implementation: ``scripts/generate_checksums.py`` imports
+    it, so bundled fixtures and remote artifacts are hashed identically.
     """
     digest = hashlib.sha256()
     with Path(path).open("rb") as handle:

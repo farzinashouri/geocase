@@ -7,9 +7,9 @@ This document is a concise map of the current GeoCase codebase.
 It focuses on how the package is organized today, which parts are already
 working, and which areas are still intentionally stubbed or incomplete.
 
-For roadmap-level sequencing, see [`../plans/03-consolidation-roadmap.md`](../plans/03-consolidation-roadmap.md),
-[`../plans/07-raster-coverage-plan.md`](../plans/07-raster-coverage-plan.md),
-and [`../plans/08-raster-action-plan.md`](../plans/08-raster-action-plan.md).
+For roadmap-level sequencing, see [`development-plan.md`](development-plan.md) — the
+single roadmap. The superseded planning documents it replaced are retained as an
+implementation log in [`../plans/archive/`](../plans/archive/index.md).
 
 ---
 
@@ -165,22 +165,25 @@ Current status:
 
 ### `src/geocase/storage/`
 
-This package is for local/remote artifact handling.
+This package is for artifact integrity checking.
 
 Current status:
 
-- it exists as planned architecture,
-- but remote fetch, cache, and checksum workflows are not yet fully realized.
+- `hashing.py` is implemented and is the single SHA-256 implementation —
+  `scripts/generate_checksums.py` imports it,
+- transport (`local.py`, `remote.py`, `cache.py`) is **deferred to v1.1** and the
+  former stub files were deleted rather than left implying a commitment.
 
-### `src/geocase/api/` and `src/geocase/cli/`
+### `src/geocase/api/`
 
-These are future-facing surfaces.
+The intended stable import surface for v1.0, currently still stubs. Filling it in is
+Step 15 of [`development-plan.md`](development-plan.md); until then `import geocase`
+exposes nothing and users go through `geocase.catalog` or the pytest fixtures.
 
-Current status:
+### `src/geocase/cli/` — removed
 
-- they exist in the repo structure,
-- but they are not yet the main way contributors or users interact with the
-  package.
+There is no CLI. The stubs and the broken `[project.scripts]` entry point were removed
+for v1.0; see the Decision log in [`development-plan.md`](development-plan.md).
 
 ---
 
@@ -422,5 +425,5 @@ changes than starting from ad hoc fixture files alone.
 - [`workflow.md`](workflow.md)
 - [`manifests-and-storage.md`](manifests-and-storage.md)
 - [`raster-dtypes-and-radiometric-resolution.md`](raster-dtypes-and-radiometric-resolution.md)
-- [`../plans/07-raster-coverage-plan.md`](../plans/07-raster-coverage-plan.md)
-- [`../plans/08-raster-action-plan.md`](../plans/08-raster-action-plan.md)
+- [`development-plan.md`](development-plan.md) — the roadmap
+- [`../plans/archive/`](../plans/archive/index.md) — superseded plans, retained as history

@@ -1,7 +1,7 @@
 """Failing-first unit tests for Step 9 of the raster action plan.
 
 These cover the Priority 2 through Priority 4 raster families described in
-``docs/plans/08-raster-action-plan.md`` (Step 9). None of these cases exist in
+``docs/plans/archive/08-raster-action-plan.md`` (Step 9). None of these cases exist in
 the bundled catalog yet, so every test here is expected to **fail** until the
 fixtures, ``case.yaml`` metadata, and typed expectations are added through the
 generator path established in Steps 2–4.
@@ -92,7 +92,7 @@ def _require_case(case_id: str):
     if case_id not in registry:
         pytest.fail(
             f"Step 9 raster case '{case_id}' is not registered yet "
-            f"(see docs/plans/08-raster-action-plan.md, Step 9)"
+            f"(see docs/plans/archive/08-raster-action-plan.md, Step 9)"
         )
     return registry.get(case_id)
 

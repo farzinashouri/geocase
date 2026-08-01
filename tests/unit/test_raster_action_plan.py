@@ -1,10 +1,10 @@
-"""Failing TDD tests codifying ``docs/plans/08-raster-action-plan.md``.
+"""Failing TDD tests codifying ``docs/plans/archive/08-raster-action-plan.md``.
 
 Each test class maps to a step in the raster action plan. These are written
 *before* implementation, so they are expected to FAIL until the corresponding
 step lands. They define the acceptance criteria for the raster expansion phase.
 
-See: docs/plans/08-raster-action-plan.md
+See: docs/plans/archive/08-raster-action-plan.md
 """
 
 from __future__ import annotations

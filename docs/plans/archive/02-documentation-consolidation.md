@@ -1,7 +1,11 @@
 # Documentation Consolidation Plan
 
+> **Archived — superseded. Retained as an implementation log.** The documentation restructure it describes was carried out.
+>
+> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+
 > Created: April 2026
-> Status: ✅ COMPLETED
+> Status: Complete (April 2026)
 
 This document outlines the plan for restructuring and consolidating GeoCase documentation.
 

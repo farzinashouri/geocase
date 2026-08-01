@@ -1,7 +1,7 @@
 """Generate a markdown coverage matrix for core raster cases.
 
 Mirrors ``scripts/generate_vector_coverage_matrix.py`` for the raster side
-(Step 7 of ``docs/plans/08-raster-action-plan.md``). Scans
+(Step 7 of ``docs/plans/archive/08-raster-action-plan.md``). Scans
 ``src/geocase/data/core/raster/**/case.yaml`` through the catalog loader and
 emits a matrix covering product families, dtypes, delivery styles, and typed
 expectation coverage.

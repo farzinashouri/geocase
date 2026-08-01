@@ -1,7 +1,11 @@
 # Raster Action Plan
 
+> **Archived — superseded. Retained as an implementation log.** Raster coverage, fixture generation, and checksum tooling shipped.
+>
+> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+
 > Created: June 2026
-> Status: Active execution plan
+> Status: Complete (July 2026)
 
 This document turns the broader raster strategy in
 [`docs/plans/07-raster-coverage-plan.md`](07-raster-coverage-plan.md)

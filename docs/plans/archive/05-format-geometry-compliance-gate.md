@@ -1,7 +1,11 @@
 # Plan: Universal Format & Geometry Compliance Gate
 
+> **Archived — superseded. Retained as an implementation log.** The compliance gate shipped as `tests/unit/test_format_compliance.py` (211 tests).
+>
+> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+
 > Created: April 2026
-> Status: Implemented (April 2026)
+> Status: Complete (April 2026)
 > Depends on: Phase 2 Step 2 (format-specific cases)
 
 ---

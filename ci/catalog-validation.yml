@@ -3,7 +3,12 @@ catalog_validation:
   # Fixture generation needs the GDAL Python bindings (``osgeo``), which are
   # source-only on PyPI, so this job runs on the upstream GDAL image where they
   # are prebuilt rather than on a bare python image.
-  image: ghcr.io/osgeo/gdal:ubuntu-small-3.10.0
+  #
+  # ``ubuntu-full`` rather than ``ubuntu-small``: the vector fixture gate creates
+  # SpatiaLite databases, which needs GDAL linked against libspatialite.
+  # ``ubuntu-small`` omits it, and generate_vector_fixtures.py exits 2 with an
+  # explanatory message rather than silently passing if that support is absent.
+  image: ghcr.io/osgeo/gdal:ubuntu-full-3.10.0
   before_script:
     # ``--system-site-packages`` keeps the image's osgeo bindings importable
     # while pip-installed packages land in the venv (Ubuntu marks the system
@@ -19,7 +24,11 @@ catalog_validation:
     - python scripts/build_case_index.py --check
     - python scripts/validate_catalog.py
     - python scripts/generate_raster_fixtures.py --check
-    - python scripts/generate_checksums.py --check --data-root src/geocase/data/core/raster
+    - python scripts/generate_vector_fixtures.py --check
+    # Checksums now cover the whole bundled catalog, not just raster: the vector
+    # SQLite fixtures drifted to 6.7 MB each precisely because nothing watched
+    # them.
+    - python scripts/generate_checksums.py --check
     - python scripts/generate_vector_coverage_matrix.py --output docs/_generated/vector-coverage-matrix.md
     - git diff --exit-code -- docs/_generated/vector-coverage-matrix.md
     - python scripts/generate_raster_coverage_matrix.py --output docs/_generated/raster-coverage-matrix.md
