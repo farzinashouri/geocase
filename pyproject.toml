@@ -70,8 +70,11 @@ filterwarnings = [
     "ignore:numpy.ndarray size changed:RuntimeWarning",
 ]
 markers = [
-    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
-    "remote: marks tests that require network access",
+    # `remote` is also registered by the plugin itself (see
+    # pytest_plugin/markers.py) so it works in a fresh install; it is repeated
+    # here because this repository's own suite runs with the plugin under test.
+    # `slow` was declared here and used zero times — dropped in Step 13.5.
+    "remote: a GeoCase case whose data is not bundled with the package",
 ]
 
 [tool.mypy]

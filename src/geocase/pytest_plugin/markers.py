@@ -19,3 +19,11 @@ def register_markers(config: pytest.Config) -> None:
         "markers",
         "geocase_select(**filters): select cases using SuiteSelection-like filters",
     )
+    # Attached automatically by ``pytest_generate_tests`` to cases whose
+    # ``storage_class`` is ``remote``. Registered here rather than left to the
+    # user's own config so ``pytest -m "not remote"`` works in a fresh install.
+    config.addinivalue_line(
+        "markers",
+        "remote: a GeoCase case whose data is not bundled with the package "
+        '(deselect with -m "not remote")',
+    )

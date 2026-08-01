@@ -6,6 +6,10 @@ from pathlib import Path
 
 import pytest
 
+from geocase.cases.base import BaseCase
+from geocase.catalog.registry import get_registry
+from geocase.pytest_plugin import marks_for_case
+
 pytest_plugins = ("pytester",)
 
 _ROOT = Path(__file__).resolve().parents[2]
@@ -149,3 +153,32 @@ def test_selection_with_no_matches(geocase):
             "case ids, suite keys, or selector filters.*",
         ]
     )
+
+
+class TestRemoteMarker:
+    """Step 13.5: `remote` is attached from metadata, not by hand."""
+
+    @staticmethod
+    def _case(storage_class: str) -> BaseCase:
+        registry = get_registry()
+        meta = registry.list_cases()[0].model_copy(
+            update={"storage_class": storage_class}
+        )
+        return BaseCase(meta, _ROOT)
+
+    def test_bundled_case_gets_no_marks(self) -> None:
+        """Leaves bundled cases unmarked, so `-m "not remote"` keeps them."""
+        assert marks_for_case(self._case("bundled")) == []
+
+    def test_remote_case_gets_the_remote_marker(self) -> None:
+        """Attaches `pytest.mark.remote` to cases whose data is not bundled."""
+        marks = marks_for_case(self._case("remote"))
+        assert [mark.name for mark in marks] == ["remote"]
+
+    def test_marker_is_registered_by_the_plugin(
+        self, pytester: pytest.Pytester
+    ) -> None:
+        """Registers `remote` in a fresh install, so `-m` needs no user config."""
+        _make_plugin_conftest(pytester)
+        result = pytester.runpytest_subprocess("--markers")
+        result.stdout.fnmatch_lines(["*@pytest.mark.remote:*not bundled*"])

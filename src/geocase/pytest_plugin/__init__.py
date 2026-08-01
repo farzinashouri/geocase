@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from geocase.cases.base import BaseCase
 from geocase.pytest_plugin.fixtures import (
     geocase,
     geocase_case,
@@ -19,6 +20,18 @@ def pytest_configure(config: pytest.Config) -> None:
     register_markers(config)
 
 
+def marks_for_case(case: BaseCase) -> list[pytest.MarkDecorator]:
+    """Return the pytest marks a generated parameter should carry.
+
+    Cases whose data is not bundled with the package get
+    ``pytest.mark.remote``, so users can run ``pytest -m "not remote"``
+    without knowing which case ids that covers.
+    """
+    if case.metadata.storage_class == "remote":
+        return [pytest.mark.remote]
+    return []
+
+
 def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
     """Auto-parametrize the ``geocase`` fixture from markers.
 
@@ -32,7 +45,10 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
     if not cases:
         return
 
-    metafunc.parametrize("geocase", cases, ids=[case.id for case in cases])
+    metafunc.parametrize(
+        "geocase",
+        [pytest.param(case, id=case.id, marks=marks_for_case(case)) for case in cases],
+    )
 
 
 __all__ = [
@@ -40,4 +56,5 @@ __all__ = [
     "geocase_registry",
     "geocase_cases",
     "geocase_case",
+    "marks_for_case",
 ]
