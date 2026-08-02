@@ -39,17 +39,24 @@ Most spatial tests use overly simple geometries or ad hoc local files. GeoCase p
 
 ```python
 import pytest
-from geocase import select_cases
+import geocase
 
 @pytest.mark.parametrize(
-    "case",
-    select_cases(category="vector", test_tier="unit"),
-    ids=lambda c: c.id,
+    "meta",
+    geocase.list_cases(category="vector", test_tier="unit"),
+    ids=lambda m: m.id,
 )
-def test_vector_loading(case):
-    gdf = case.load()
+def test_vector_loading(meta):
+    if not meta.assertions.expect_loadable:
+        pytest.skip(f"{meta.id} is a case that should not load cleanly")
+    gdf = geocase.load_case(meta.id).load()
     assert len(gdf) > 0
 ```
+
+`list_cases()` returns metadata, and `load_case()` turns a case id into
+something loadable. The `expect_loadable` check matters because some cases
+exist precisely to break loaders. See
+[`using-parameterized-tests.md`](using-parameterized-tests.md) for both points.
 
 ## Next reads
 
