@@ -22,15 +22,17 @@ what is in progress, and what still needs to land before v1.0.
 - Core metadata, catalog, runtime case loading, and assertion layers are implemented.
 - The pytest plugin is implemented and working for normal `pytest` usage.
 - The catalog holds **134 cases** (103 vector / 30 raster / 1 netcdf) and **727 tests**
-  (715 before Batch 3, which added 13 and removed the three empty stub modules).
+  (715 before Batch 3, which added 13; 780 after Batch 4, which added 53).
   Measured from `case-index.yaml`, not from a file count: the five
   `raster/footprint_edge_cases/case_*.yaml` entries share one directory, so counting
   files named `case.yaml` undercounts. Plan 10's "130 cases / 26 raster" was wrong on
   both figures.
 - Validation, manifest parsing, loaders, and raster coverage are all implemented.
-- Manifest support is implemented but **not yet reachable** at runtime (Step 14).
-- The remaining work is release readiness: a public API surface, quality gates that
-  actually run, and PyPI publishing.
+- Manifest support is reachable at runtime as of Batch 4 (Step 14): manifest case ids
+  resolve through the registry and refuse to load with an error naming the artifact URI.
+  No transport — fetching is v1.1.
+- The public API surface landed in Batch 4 (Step 15). The remaining work is the docs
+  truth pass, the dataset-catalog page, and PyPI publishing (Batch 5).
 - **v1.0 scope is deliberately narrow:** a compatibility promise about the pytest
   workflow and a small public API. Storage transport is deferred to v1.1.
 
@@ -349,45 +351,53 @@ in `src` (not 18), all config artifacts.
   empty stub (found via coverage reporting zero statements) and was deleted; Step 8's
   "Done" list above is corrected.
 
-### Step 14 — Make manifests reachable and honest (no transport)
+### Step 14 — Make manifests reachable and honest (no transport) ✅
 
-- **14.1** Wire `get_registry()` to `from_sources` with a `GEOCASE_MANIFESTS` env var.
-  Read the env var **inside** `get_registry`, not at module import, or tests that
-  monkeypatch it silently no-op.
-- **14.2** Close the `CaseRegistry` asymmetry — manifest ids appear in
-  `list_ids`/`__contains__`/`__len__` but not `list_cases`/`__iter__`/`get`. Do **not**
-  force manifest entries into `list_cases()`; `ManifestCaseEntry` is not `CaseMetadata`
-  and that would be a type lie. Add `is_remote()`, `list_remote_ids()`,
-  `get_manifest()`, `get_manifest_entry()`, and have `get()` raise a
-  `RemoteCaseUnavailableError` **subclassed from `KeyError`** so existing callers keep
-  working, with `build_manifest_uri(...)` in the message.
-- **14.3** `fixtures.py::_case_roots_by_id` is `@lru_cache`d and built only from
-  `case-index.yaml`, so once manifest ids resolve, `_materialize_case` raises an
-  internal-sounding `KeyError` that defeats 14.2's clear error. `_materialize_case` must
-  check `is_remote()` first and `reset_registry()` must call `cache_clear()`.
-  **14.2 and 14.3 must land in the same commit.**
-- **14.4** Teach `scripts/validate_catalog.py` to validate `extended-manifests/`.
-  Explicitly **allow** `sha256: "replace_me"` with a warning — gating on the
-  placeholders would block the v1.1 work they exist for.
-- **Out of scope:** no download, cache, unpack, or `materialize_case`.
+Done (Aug 2026), in two commits: 14.1 with 14.2+14.3 (which had to be atomic), then 14.4.
 
-### Step 15 — Public API surface
+- **14.1** ✅ `get_registry()` builds via `from_sources`, layering in the manifests named
+  by `GEOCASE_MANIFESTS` — an `os.pathsep`-separated list of manifest files, or of
+  directories whose `*.yaml` are manifests. Reading the variable *inside* the function
+  turned out to be only half the fix: the singleton would still hand back the registry
+  built before a test monkeypatched it, so the resolved paths are now part of the cache
+  key and a changed variable rebuilds.
+- **14.2** ✅ `is_remote()`, `list_remote_ids()`, `get_manifest()`,
+  `get_manifest_entry()`; `get()` raises `RemoteCaseUnavailableError`, a `KeyError`
+  subclass carrying the published URI, the case id, and the manifest key. It overrides
+  `__str__`, because `KeyError.__str__` reprs its argument and would have wrapped the
+  whole message in quotes. `list_cases()`/`__iter__` still return `CaseMetadata` only.
+- **14.3** ✅ Same commit. `materialize_case` checks `is_remote()` **before** the
+  `case_roots_by_id` lookup, and `reset_registry()` clears that `lru_cache`. Both paths
+  a user can reach — `geocase.load_case()` and the pytest plugin's marker resolution —
+  are covered by tests asserting the URI appears and `No case root found` does not.
+- **14.4** ✅ `scripts/validate_catalog.py` now validates `extended-manifests/`:
+  parseable, ids unique within and across manifests, no id shadowing a bundled case,
+  and `bundled_analog` naming a case that exists. `sha256: "replace_me"` warns rather
+  than fails — all **7** entries in the two bundled manifests use it, so gating would
+  block the v1.1 work they were written for. A malformed digest (anything that is
+  neither 64 hex characters nor the placeholder) *is* an error.
+- **Out of scope, and still absent:** no download, cache, unpack, or `materialize_case`
+  transport.
 
-Mostly a facade; `src/geocase/catalog/__init__.py` already exports a clean `__all__`.
+### Step 15 — Public API surface ✅
 
-- `api/types.py` — re-export stable types from `catalog/models.py` and `cases/`.
-  **Deliberately exclude the manifest models**: exporting a schema that will be revised
-  in v1.1 pins the wrong thing. They stay importable from `geocase.catalog`.
-- `api/public.py` — `list_cases()`, `get_case()`, `load_case()`, `show_case()`,
-  `list_suites()`/`get_suite()`. **Move `_case_roots_by_id`/`_materialize_case` out of
-  `pytest_plugin/fixtures.py`** into the API (or a shared `catalog/roots.py`) and have
-  the plugin import them — duplicating it would create two `lru_cache`s to invalidate.
-- `src/geocase/__init__.py` — the public surface plus `__version__` from
-  `importlib.metadata.version("geocase")`, *not* a hardcoded literal.
-- `tests/unit/test_public_api.py` — pin `sorted(__all__)` against a literal. This is the
-  compatibility promise made executable.
-- Document that `list_cases()` returns `CaseMetadata` while the `geocase` *fixture*
-  yields a `BaseCase`.
+Done (Aug 2026), before Step 14 — `show_case` reports remote state, so the API had to
+exist first.
+
+- ✅ `api/types.py` re-exports the stable types; the manifest models are deliberately
+  absent and stay importable from `geocase.catalog`.
+- ✅ `api/public.py` — `list_cases()`, `get_case()`, `load_case()`, `show_case()`,
+  `list_suites()`, `get_suite()`. `_case_roots_by_id`/`_materialize_case` moved out of
+  `pytest_plugin/fixtures.py` into `catalog/roots.py`, which the plugin now imports.
+  `roots.py` is **not** re-exported from `geocase.catalog`: it is the one catalog module
+  that imports `geocase.cases`, and `cases/base.py` imports `catalog/models.py`, so eager
+  re-export makes the two packages circular. A test asserts the plugin and the API share
+  one `materialize_case` object, so the second `lru_cache` cannot come back.
+- ✅ `src/geocase/__init__.py` exports the surface plus `__version__` from
+  `importlib.metadata.version("geocase")`.
+- ✅ `tests/unit/test_public_api.py` pins `sorted(__all__)` against a literal — 26 names.
+- ✅ The `CaseMetadata` / `BaseCase` asymmetry is documented in the module docstring, in
+  `api/public.py`, and asserted in the tests.
 
 ### Step 16 — Docs truth pass and release
 

@@ -6,6 +6,8 @@ Checks:
 - Duplicate case ids are rejected.
 - Referenced case data files (primary/notes/preview/sidecars) exist.
 - ``suite-index.yaml`` can be loaded and suites parse as ``SuiteMetadata``.
+- Manifests in ``extended-manifests/`` parse, declare unique ids, and shadow
+  no bundled case.
 - ``case_order`` entries reference known case ids.
 - Declared ``size_class`` matches the actual on-disk payload size.
 - No ``*.yaml`` under ``data/core`` is missing from ``case-index.yaml``.
@@ -23,6 +25,7 @@ PACKAGE_ROOT = SRC_ROOT / "geocase"
 METADATA_DIR = PACKAGE_ROOT / "metadata"
 CASE_INDEX_PATH = METADATA_DIR / "case-index.yaml"
 SUITE_INDEX_PATH = METADATA_DIR / "suite-index.yaml"
+MANIFESTS_DIR = REPO_ROOT / "extended-manifests"
 
 if str(SRC_ROOT) not in sys.path:
 	sys.path.insert(0, str(SRC_ROOT))
@@ -33,6 +36,7 @@ from geocase.catalog.loader import (  # noqa: E402
 	load_suite_index,
 	load_suite_metadata,
 )
+from geocase.catalog.manifests import load_manifest  # noqa: E402
 from geocase.catalog.registry import CaseRegistry  # noqa: E402
 from geocase.catalog.suites import load_and_resolve_suite  # noqa: E402
 
@@ -263,6 +267,92 @@ def _validate_suites(
 	return entries
 
 
+#: A manifest checksum that is deliberately not a checksum yet.
+#:
+#: Both bundled manifests use it: the archives they describe are not published,
+#: so there is nothing to hash. Gating on it would fail the build over the exact
+#: placeholder the v1.1 storage work exists to replace, so it is a warning --
+#: loud enough to be seen, not loud enough to block.
+_PLACEHOLDER_SHA256 = "replace_me"
+
+#: A real SHA-256 digest is 64 hex characters.
+_SHA256_LENGTH = 64
+
+
+def _validate_manifests(
+	manifests_dir: Path,
+	registry: CaseRegistry,
+) -> tuple[list[Path], list[str]]:
+	"""Validate every manifest in *manifests_dir* against the bundled catalog.
+
+	Manifests declare cases that live outside the wheel. Nothing here fetches
+	anything -- the checks are that each file parses, that its case ids are
+	unique within and across manifests, that none shadows a bundled case, and
+	that each ``sha256`` is either a real digest or the known placeholder.
+
+	Returns:
+		The validated manifest paths, and any warnings worth printing.
+	"""
+	if not manifests_dir.exists():
+		return [], []
+
+	manifest_paths = sorted(manifests_dir.glob("*.yaml"))
+	if not manifest_paths:
+		return [], []
+
+	errors: list[str] = []
+	warnings: list[str] = []
+	seen_case_ids: dict[str, str] = {}
+
+	for manifest_path in manifest_paths:
+		try:
+			manifest = load_manifest(manifest_path)
+		except Exception as exc:
+			errors.append(f"Invalid manifest {manifest_path.name}: {exc}")
+			continue
+
+		for entry in manifest.cases:
+			if entry.case_id in registry:
+				errors.append(
+					f"Manifest '{manifest.manifest_key}' declares case id "
+					f"'{entry.case_id}', which is already bundled. A manifest "
+					f"must not shadow packaged data."
+				)
+			owner = seen_case_ids.get(entry.case_id)
+			if owner is not None:
+				errors.append(
+					f"Case id '{entry.case_id}' is declared by both "
+					f"'{owner}' and '{manifest.manifest_key}'"
+				)
+			else:
+				seen_case_ids[entry.case_id] = manifest.manifest_key
+
+			if entry.sha256 == _PLACEHOLDER_SHA256:
+				warnings.append(
+					f"{manifest.manifest_key}/{entry.case_id}: sha256 is the "
+					f"'{_PLACEHOLDER_SHA256}' placeholder (expected until the "
+					f"archive is published)"
+				)
+			elif len(entry.sha256) != _SHA256_LENGTH:
+				errors.append(
+					f"Manifest '{manifest.manifest_key}' case '{entry.case_id}' "
+					f"has sha256 '{entry.sha256}', which is neither a 64-character "
+					f"digest nor the '{_PLACEHOLDER_SHA256}' placeholder"
+				)
+
+			if entry.bundled_analog and entry.bundled_analog not in registry:
+				errors.append(
+					f"Manifest '{manifest.manifest_key}' case '{entry.case_id}' "
+					f"names bundled_analog '{entry.bundled_analog}', which is "
+					f"not a bundled case id"
+				)
+
+	if errors:
+		raise CatalogValidationError("\n".join(errors))
+
+	return manifest_paths, warnings
+
+
 def parse_args() -> argparse.Namespace:
 	parser = argparse.ArgumentParser(
 		description="Validate GeoCase case and suite catalog metadata."
@@ -280,9 +370,15 @@ def parse_args() -> argparse.Namespace:
 		help="Path to suite-index.yaml",
 	)
 	parser.add_argument(
+		"--manifests-dir",
+		type=Path,
+		default=MANIFESTS_DIR,
+		help="Directory of external manifest YAML files",
+	)
+	parser.add_argument(
 		"--cases-only",
 		action="store_true",
-		help="Validate case metadata/index only (skip suites).",
+		help="Validate case metadata/index only (skip suites and manifests).",
 	)
 	return parser.parse_args()
 
@@ -294,9 +390,14 @@ def main() -> int:
 		registry, case_entries = _validate_cases(args.case_index)
 		_validate_no_orphan_case_metadata(args.case_index, case_entries)
 		suite_entries: list[str] = []
+		manifest_paths: list[Path] = []
+		manifest_warnings: list[str] = []
 
 		if not args.cases_only:
 			suite_entries = _validate_suites(args.suite_index, registry)
+			manifest_paths, manifest_warnings = _validate_manifests(
+				args.manifests_dir, registry
+			)
 	except CatalogValidationError as exc:
 		print("Catalog validation failed:")
 		print(exc)
@@ -307,8 +408,12 @@ def main() -> int:
 	print(f"- Resolved unique case ids: {len(registry)}")
 	if args.cases_only:
 		print("- Suite validation: skipped (--cases-only)")
+		print("- Manifest validation: skipped (--cases-only)")
 	else:
 		print(f"- Indexed suite files: {len(suite_entries)}")
+		print(f"- Validated manifests: {len(manifest_paths)}")
+	for warning in manifest_warnings:
+		print(f"  warning: {warning}")
 	return 0
 
 

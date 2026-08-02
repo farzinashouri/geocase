@@ -13,17 +13,18 @@ dataset-catalog work.
 
 ## Status
 
-**Batches 1–3 complete.** Bundled data 36 MB → 4.2 MB; wheel 458 KB; `pytest tests -q`
-green on both Python 3.11 and 3.14; ruff and mypy clean and gated; coverage measured at
-**54%** (non-blocking).
+**Batches 1–4 complete.** Bundled data 36 MB → 4.2 MB; wheel 458 KB; `pytest tests -q`
+green at **780 passed, 1 skipped**; ruff and mypy clean and gated; coverage measured at
+**54%** in Batch 3 (non-blocking, to be re-measured before release). `import geocase`
+now yields a pinned 26-name public surface, and manifest case ids resolve.
 
 | Batch | Contents | Checkpoint | Status |
 |---|---|---|---|
 | **1** | Roadmap collapse + Steps 11.1–11.5 | `pytest tests -q` green, no collection error, no console script | ✅ Done |
 | **2** | Step 12 — catalog shrink, alone | checksums regenerate; SQLite tests pass; wheel size | ✅ Done |
 | **3** | Step 13 — quality gates **+ the 4 catalog defects** | CI green on directory runs; coverage number recorded | ✅ Done |
-| **4** | Step 15 (public API) → Step 14 (manifests) | `__all__` pinned; remote-id error asserted both paths | ⬜ **Next** |
-| **5** | Step 16 — docs truth pass, **dataset catalog**, release | `mkdocs build`; wheel holds all 134 cases; TestPyPI dry run | ⬜ |
+| **4** | Step 15 (public API) → Step 14 (manifests) | `__all__` pinned; remote-id error asserted both paths | ✅ Done |
+| **5** | Step 16 — docs truth pass, **dataset catalog**, release | `mkdocs build`; wheel holds all 134 cases; TestPyPI dry run | ⬜ **Next** |
 
 ## The batches
 
@@ -74,13 +75,40 @@ matrix generator now fails if its own discovery disagrees with `case-index.yaml`
 pins every schema enum to the Literal that enforces it, and `validate_catalog.py` fails on
 any case file missing from the index.
 
-### Batch 4 — Public API, then manifests ⬜
+### Batch 4 — Public API, then manifests ✅ Done
 
-Step 15 before Step 14: `show_case` reports remote state, so the API has to exist first.
+Step 15 before Step 14: `show_case` reports remote state, so the API had to exist first.
 
-**Steps 14.2 and 14.3 must land in the same commit.** 14.3's `lru_cache` path raises an
-internal-sounding `KeyError` that defeats 14.2's clear error message, so shipping them
-separately ships a worse experience than shipping neither.
+**Outcome (Aug 2026).** Three commits — Step 15; Steps 14.1–14.3; Step 14.4 — and
+53 new tests (727 → 780). The public surface is 26 names, pinned against a literal in
+`tests/unit/test_public_api.py`.
+
+Both ordering constraints earned their place:
+
+- **Step 15 first** was not merely convenient. `show_case` is the one public function
+  that *describes* a remote case rather than refusing it, so writing Step 14's error
+  paths without it would have left no way to inspect a manifest case at all.
+- **14.2 + 14.3 atomic** held exactly as predicted. `materialize_case` now checks
+  `is_remote()` before the `case_roots_by_id` lookup; without that check the cache —
+  built from `case-index.yaml` alone — misses every manifest id and raises
+  `No case root found`, which is what the pytest plugin's path would have surfaced.
+  A test asserts that string is *absent* from both error paths.
+
+Two things the plan did not anticipate:
+
+- **Reading the env var inside `get_registry` is only half of 14.1.** The singleton
+  still returned the registry built before a test monkeypatched `GEOCASE_MANIFESTS`.
+  The resolved manifest paths are now part of the cache key.
+- **`catalog/roots.py` cannot be re-exported from `geocase.catalog`.** It is the one
+  catalog module importing `geocase.cases`, and `cases/base.py` imports
+  `catalog/models.py`; eager re-export makes `import geocase` circular. Import it
+  directly.
+
+Per the gate-over-promise rule, each change got one: `__all__` is pinned, a test asserts
+the plugin and the API share one `materialize_case` object (so the duplicate
+`lru_cache` cannot return), and `validate_catalog.py` now opens `extended-manifests/`
+— catching shadowed ids, cross-manifest duplicates, malformed digests, and dangling
+`bundled_analog` references, while letting the 7 `replace_me` placeholders warn.
 
 ### Batch 5 — Docs, dataset catalog, release ⬜
 
@@ -105,12 +133,12 @@ These are non-negotiable regardless of how the work is grouped.
 | Step 12 before the first upload | PyPI artifacts are immutable; 36 MB would set a baseline that cannot be walked back. ✅ satisfied |
 | Ruff normalization before the ruff gate | Otherwise the fix is to suppress the rules. |
 | Step 13.4 before release | Classifiers and `requires-python` are published metadata. |
-| Step 15 before Step 14.2 | `show_case` reports remote state. |
-| **Steps 14.2 + 14.3 atomic** | Split, the internal `KeyError` masks the actionable error. |
+| Step 15 before Step 14.2 | `show_case` reports remote state. ✅ satisfied |
+| **Steps 14.2 + 14.3 atomic** | Split, the internal `KeyError` masks the actionable error. ✅ satisfied |
 | Batch 4 before the dataset-catalog page | §7 describes the surface Batch 4 changes. |
 | Generated tables before the catalog narrative | The prose must rest on gated facts. |
 
-## Two rules learned from Batches 1–3
+## Two rules learned from Batches 1–4
 
 **Verify the plan's empirical claims before acting on them.** Step 12's headline numbers
 reproduced exactly (6844 KB → 240 KB), but its supporting argument did not survive
@@ -124,7 +152,7 @@ counting 25 of 30. When a batch corrects a fact, add the check that keeps it cor
 
 ## If the priority is a fast first upload
 
-Batches 1, 4, and 5 alone are sufficient to publish. Batch 3 is what makes the release
+Batches 1, 4, and 5 alone are sufficient to publish (1 and 4 are now done). Batch 3 is what makes the release
 *trustworthy* rather than merely *installable*, and it is the batch that prevents the next
 round of drift — skipping it is a decision to accept that drift, not a way to avoid the
 cost.
