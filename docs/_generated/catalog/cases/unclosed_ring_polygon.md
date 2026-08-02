@@ -41,10 +41,10 @@ Expose loaders or validators that silently accept unclosed polygon rings, which 
 
 ## Risk types covered
 
-- [`parse_exception`](../../risk/parse-exception.md)
-- [`ring_closure_error`](../../risk/ring-closure-error.md)
-- [`silent_invalid_geometry`](../../risk/silent-invalid-geometry.md)
-- [`topology_error`](../../risk/topology-error.md)
+- `parse_exception`
+- `ring_closure_error`
+- [`silent_invalid_geometry`](../risk/silent-invalid-geometry.md)
+- [`topology_error`](../risk/topology-error.md)
 
 ## Expected behavior
 

@@ -41,8 +41,8 @@ Provide a canonical point encoded as Feather so Arrow-backed point loading can b
 
 ## Risk types covered
 
-- [`columnar_storage_behavior`](../../risk/columnar-storage-behavior.md)
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`columnar_storage_behavior`](../risk/columnar-storage-behavior.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

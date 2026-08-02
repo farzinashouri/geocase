@@ -41,8 +41,8 @@ Ensure polygon-based utilities handle geometries near the north pole without cra
 
 ## Risk types covered
 
-- [`area_distortion`](../../risk/area-distortion.md)
-- [`polar_projection_singularity`](../../risk/polar-projection-singularity.md)
+- [`area_distortion`](../risk/area-distortion.md)
+- [`polar_projection_singularity`](../risk/polar-projection-singularity.md)
 
 ## Expected behavior
 

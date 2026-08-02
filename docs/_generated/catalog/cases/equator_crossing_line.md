@@ -41,8 +41,8 @@ Ensure line-based workflows can process geometries that cross the equator withou
 
 ## Risk types covered
 
-- [`coordinate_sign_assumption`](../../risk/coordinate-sign-assumption.md)
-- [`equatorial_boundary_case`](../../risk/equatorial-boundary-case.md)
+- `coordinate_sign_assumption`
+- `equatorial_boundary_case`
 
 ## Expected behavior
 

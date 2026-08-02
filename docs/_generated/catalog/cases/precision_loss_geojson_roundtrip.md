@@ -41,10 +41,10 @@ Expose precision loss during GeoJSON text serialization. Detect workflows where 
 
 ## Risk types covered
 
-- [`coordinate_drift`](../../risk/coordinate-drift.md)
-- [`format_specific`](../../risk/format-specific.md)
-- [`precision_loss`](../../risk/precision-loss.md)
-- [`roundtrip_degradation`](../../risk/roundtrip-degradation.md)
+- `coordinate_drift`
+- [`format_specific`](../risk/format-specific.md)
+- [`precision_loss`](../risk/precision-loss.md)
+- `roundtrip_degradation`
 
 ## Expected behavior
 

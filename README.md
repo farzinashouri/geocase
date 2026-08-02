@@ -2,7 +2,7 @@
 
 GeoCase is a geospatial testing toolkit and case catalog for realistic, reproducible `pytest` tests.
 
-> Status: alpha. The core `pytest` workflow is usable today; current work focuses on expanding case coverage, polishing docs, and release readiness.
+> Status: **1.0**. The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 134 bundled cases, 4.2 MB. Remote dataset transport is deferred to v1.1; see the [changelog](CHANGELOG.md).
 
 The main goal is simple: use plain `pytest` with a few GeoCase fixtures and markers to run your geospatial code against curated edge cases.
 

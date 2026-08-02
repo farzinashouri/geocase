@@ -41,7 +41,7 @@ Ensure multi-part line geometries are represented in core vector coverage and se
 
 ## Risk types covered
 
-- [`none`](../../risk/none.md)
+- [`none`](../risk/none.md)
 
 ## Expected behavior
 

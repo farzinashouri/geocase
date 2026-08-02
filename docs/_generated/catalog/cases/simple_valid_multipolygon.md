@@ -41,7 +41,7 @@ Provide baseline multipolygon coverage for loading and geometry-type selector be
 
 ## Risk types covered
 
-- [`none`](../../risk/none.md)
+- [`none`](../risk/none.md)
 
 ## Expected behavior
 

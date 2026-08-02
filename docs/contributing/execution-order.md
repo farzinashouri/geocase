@@ -16,7 +16,7 @@ dataset-catalog work.
 **Batches 1–4 complete.** Bundled data 36 MB → 4.2 MB; wheel 458 KB; `pytest tests -q`
 green at **780 passed, 1 skipped**; ruff and mypy clean and gated; coverage measured at
 **54%** in Batch 3 (non-blocking, to be re-measured before release). `import geocase`
-now yields a pinned 26-name public surface, and manifest case ids resolve.
+now yields a pinned 27-name public surface, and manifest case ids resolve.
 
 | Batch | Contents | Checkpoint | Status |
 |---|---|---|---|
@@ -24,7 +24,7 @@ now yields a pinned 26-name public surface, and manifest case ids resolve.
 | **2** | Step 12 — catalog shrink, alone | checksums regenerate; SQLite tests pass; wheel size | ✅ Done |
 | **3** | Step 13 — quality gates **+ the 4 catalog defects** | CI green on directory runs; coverage number recorded | ✅ Done |
 | **4** | Step 15 (public API) → Step 14 (manifests) | `__all__` pinned; remote-id error asserted both paths | ✅ Done |
-| **5** | Step 16 — docs truth pass, **dataset catalog**, release | `mkdocs build`; wheel holds all 134 cases; TestPyPI dry run | ⬜ **Next** |
+| **5** | Step 16 — docs truth pass, **dataset catalog**, release | `mkdocs build`; wheel holds all 134 cases; TestPyPI dry run | ✅ Done to the upload boundary |
 
 ## The batches
 
@@ -80,7 +80,7 @@ any case file missing from the index.
 Step 15 before Step 14: `show_case` reports remote state, so the API had to exist first.
 
 **Outcome (Aug 2026).** Three commits — Step 15; Steps 14.1–14.3; Step 14.4 — and
-53 new tests (727 → 780). The public surface is 26 names, pinned against a literal in
+53 new tests (727 → 780). The public surface is 27 names, pinned against a literal in
 `tests/unit/test_public_api.py`.
 
 Both ordering constraints earned their place:
@@ -110,7 +110,39 @@ the plugin and the API share one `materialize_case` object (so the duplicate
 — catching shadowed ids, cross-manifest duplicates, malformed digests, and dangling
 `bundled_analog` references, while letting the 7 `replace_me` placeholders warn.
 
-### Batch 5 — Docs, dataset catalog, release ⬜
+### Batch 5 — Docs, dataset catalog, release ✅ Done to the upload boundary
+
+**Outcome (Aug 2026).** Everything through local artifact verification is done; the
+irreversible steps — TestPyPI dry run, trusted-publishing setup, and `twine upload` — are
+deliberately left for a human to authorize, since PyPI artifacts are immutable.
+
+Measured, not inherited: **134 cases** (103/30/1) and **780 passed, 1 skipped** both
+reproduced. The public surface is **27 names, not the 26** that four documents quoted —
+`__version__` is exported too. That figure was corrected in all five places.
+
+Two defects surfaced that no gate was watching, both of the same kind the batch was
+supposed to end:
+
+- **The generated catalog pages were stale by 127 files.** They predated the
+  `MIN_HUB_CASES` thin-content rule and the shape-rendering change, and nothing checked
+  them. `generate_catalog_pages.py --check` is now in `ci/catalog-validation.yml`.
+- **Every case page linked its risk hubs one directory too high** (`../../risk/` from
+  `catalog/cases/`), producing **187 broken links**. Nothing caught it because
+  `mkdocs build` was never run with `--strict` in CI, and the generated pages were not in
+  the nav. Fixed in the generator; `mkdocs build --strict` is now clean.
+
+Per the gate-over-promise rule, the narrative page got one too: `validate_catalog.py` now
+extracts every backticked snake_case token from `docs/dataset-catalog.md` and fails if it
+is not a known case id — verified by planting a typo. That is the drift-control mechanism
+`dataset-catalog-plan.md` required, and it covers 18 ids today.
+
+The plan's geographic section needed correcting against the fixtures rather than
+transcribing: only the **Point** baseline is at Copenhagen (the other five sit at
+10–11.5°E, 49.8–51°N), the "UTM 33N tile" is at **40.65°N**, not Scandinavia, and
+`optical_polar_small` lands at **64.4°N** — it exercises the polar stereographic
+projection without being near a pole. Re-measuring paid off for the fourth batch running.
+
+Also fixed: `project.urls` and `mkdocs.yml` pointed at GitHub while `origin` is GitLab.
 
 Step 16, plus the dataset-catalog page. The page waits until here because its §7
 (Remote / non-bundled) documents exactly the surface Batch 4 rewrites — writing it earlier

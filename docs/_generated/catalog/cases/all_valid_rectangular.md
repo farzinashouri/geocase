@@ -39,7 +39,7 @@ Confirm footprint generation returns a clean geometry for a fully valid rectangu
 
 ## Risk types covered
 
-- [`footprint_generation_error`](../../risk/footprint-generation-error.md)
+- [`footprint_generation_error`](../risk/footprint-generation-error.md)
 
 ## Expected behavior
 

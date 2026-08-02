@@ -40,9 +40,9 @@ Confirm GeoCase can open a float32 DEM, preserve its single band, and treat the 
 
 ## Risk types covered
 
-- [`dtype_drift`](../../risk/dtype-drift.md)
-- [`nan_mishandled`](../../risk/nan-mishandled.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
+- [`dtype_drift`](../risk/dtype-drift.md)
+- [`nan_mishandled`](../risk/nan-mishandled.md)
+- [`nodata_ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -54,7 +54,7 @@ Confirm GeoCase can open a float32 DEM, preserve its single band, and treat the 
 | `expect_nodata` | yes |
 | `expected_band_count` | `1` |
 | `expected_dtype` | `float32` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `nodata_convention` | `nan` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `elevation` |

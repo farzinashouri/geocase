@@ -40,9 +40,9 @@ Confirm GeoCase preserves a scaled int16 NDVI product, its scale factor, and its
 
 ## Risk types covered
 
-- [`dtype_drift`](../../risk/dtype-drift.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
-- [`scale_factor_ignored`](../../risk/scale-factor-ignored.md)
+- [`dtype_drift`](../risk/dtype-drift.md)
+- [`nodata_ignored`](../risk/nodata-ignored.md)
+- `scale_factor_ignored`
 
 ## Expected behavior
 
@@ -54,7 +54,7 @@ Confirm GeoCase preserves a scaled int16 NDVI product, its scale factor, and its
 | `expect_nodata` | yes |
 | `expected_band_count` | `1` |
 | `expected_dtype` | `int16` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `expected_nodata_value` | `-32768` |
 | `nodata_convention` | `sentinel` |
 | `expected_compression` | `deflate` |

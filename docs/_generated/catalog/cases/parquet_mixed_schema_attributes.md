@@ -41,10 +41,10 @@ Detect loaders that silently downcast Parquet nullable integer columns to float6
 
 ## Risk types covered
 
-- [`attribute_loss`](../../risk/attribute-loss.md)
-- [`columnar_storage_behavior`](../../risk/columnar-storage-behavior.md)
-- [`nullable_type_coercion`](../../risk/nullable-type-coercion.md)
-- [`schema_mismatch`](../../risk/schema-mismatch.md)
+- [`attribute_loss`](../risk/attribute-loss.md)
+- [`columnar_storage_behavior`](../risk/columnar-storage-behavior.md)
+- `nullable_type_coercion`
+- [`schema_mismatch`](../risk/schema-mismatch.md)
 
 ## Expected behavior
 

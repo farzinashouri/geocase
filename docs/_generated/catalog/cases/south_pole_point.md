@@ -41,8 +41,8 @@ Ensure point-based utilities handle the south pole without crashing or making in
 
 ## Risk types covered
 
-- [`coordinate_edge_case`](../../risk/coordinate-edge-case.md)
-- [`polar_projection_singularity`](../../risk/polar-projection-singularity.md)
+- [`coordinate_edge_case`](../risk/coordinate-edge-case.md)
+- [`polar_projection_singularity`](../risk/polar-projection-singularity.md)
 
 ## Expected behavior
 

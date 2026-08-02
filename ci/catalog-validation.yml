@@ -33,3 +33,9 @@ catalog_validation:
     - git diff --exit-code -- docs/_generated/vector-coverage-matrix.md
     - python scripts/generate_raster_coverage_matrix.py --output docs/_generated/raster-coverage-matrix.md
     - git diff --exit-code -- docs/_generated/raster-coverage-matrix.md
+    # The per-case catalog pages enumerate every id, CRS, dtype and nodata value
+    # in the catalog, which makes them the highest-drift-risk artifact in the
+    # repository. They were already stale by 127 files when this gate was added.
+    # ``--check`` reports missing, out-of-date and stale pages by name, so it is
+    # used in place of a ``git diff`` on a 187-file tree.
+    - python scripts/generate_catalog_pages.py --check

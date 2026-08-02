@@ -395,7 +395,7 @@ exist first.
   one `materialize_case` object, so the second `lru_cache` cannot come back.
 - ✅ `src/geocase/__init__.py` exports the surface plus `__version__` from
   `importlib.metadata.version("geocase")`.
-- ✅ `tests/unit/test_public_api.py` pins `sorted(__all__)` against a literal — 26 names.
+- ✅ `tests/unit/test_public_api.py` pins `sorted(__all__)` against a literal — 27 names.
 - ✅ The `CaseMetadata` / `BaseCase` asymmetry is documented in the module docstring, in
   `api/public.py`, and asserted in the tests.
 

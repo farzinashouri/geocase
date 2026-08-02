@@ -40,8 +40,8 @@ Confirm GeoCase reads external ``.ovr`` overviews transparently and treats the s
 
 ## Risk types covered
 
-- [`overviews_missing`](../../risk/overviews-missing.md)
-- [`sidecar_dropped`](../../risk/sidecar-dropped.md)
+- [`overviews_missing`](../risk/overviews-missing.md)
+- `sidecar_dropped`
 
 ## Expected behavior
 
@@ -52,7 +52,7 @@ Confirm GeoCase reads external ``.ovr`` overviews transparently and treats the s
 | `expected_epsg` | `32633` |
 | `expected_band_count` | `1` |
 | `expected_dtype` | `uint8` |
-| `expected_shape` | `64`, `64` |
+| `expected_shape` | `[64, 64]` |
 | `expected_compression` | `deflate` |
 | `expected_overviews` | yes |
 

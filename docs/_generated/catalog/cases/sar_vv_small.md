@@ -40,8 +40,8 @@ Confirm GeoCase preserves a single-band VV SAR amplitude scene and its band nami
 
 ## Risk types covered
 
-- [`band_loss`](../../risk/band-loss.md)
-- [`dtype_drift`](../../risk/dtype-drift.md)
+- [`band_loss`](../risk/band-loss.md)
+- [`dtype_drift`](../risk/dtype-drift.md)
 
 ## Expected behavior
 
@@ -52,7 +52,7 @@ Confirm GeoCase preserves a single-band VV SAR amplitude scene and its band nami
 | `expected_epsg` | `32633` |
 | `expected_band_count` | `1` |
 | `expected_dtype` | `float32` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `VV` |
 

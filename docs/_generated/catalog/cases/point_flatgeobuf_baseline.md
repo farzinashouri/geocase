@@ -41,8 +41,8 @@ Provide a canonical point encoded as FlatGeobuf so binary driver-backed loading 
 
 ## Risk types covered
 
-- [`driver_behavior`](../../risk/driver-behavior.md)
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`driver_behavior`](../risk/driver-behavior.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

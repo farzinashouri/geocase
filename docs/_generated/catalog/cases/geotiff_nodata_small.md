@@ -40,9 +40,9 @@ Confirm that NoData pixels are correctly masked and excluded from statistical co
 
 ## Risk types covered
 
-- [`incorrect_statistics`](../../risk/incorrect-statistics.md)
-- [`nan_propagation`](../../risk/nan-propagation.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
+- `incorrect_statistics`
+- `nan_propagation`
+- [`nodata_ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 

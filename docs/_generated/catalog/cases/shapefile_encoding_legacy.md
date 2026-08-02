@@ -41,10 +41,10 @@ Expose loaders that assume UTF-8 encoding for Shapefile attributes. Detect mojib
 
 ## Risk types covered
 
-- [`attribute_corruption`](../../risk/attribute-corruption.md)
-- [`encoding_error`](../../risk/encoding-error.md)
-- [`format_specific`](../../risk/format-specific.md)
-- [`mojibake`](../../risk/mojibake.md)
+- `attribute_corruption`
+- [`encoding_error`](../risk/encoding-error.md)
+- [`format_specific`](../risk/format-specific.md)
+- [`mojibake`](../risk/mojibake.md)
 
 ## Expected behavior
 

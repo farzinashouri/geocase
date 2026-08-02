@@ -1,11 +1,16 @@
 # Codebase Summary
 
-> Created: June 2026
+> Created: June 2026 — revised August 2026 for the v1.0 release.
 > Audience: contributors and maintainers
 
 This document is a concise map of the current GeoCase codebase.
 It focuses on how the package is organized today, which parts are already
-working, and which areas are still intentionally stubbed or incomplete.
+working, and which areas are deliberately deferred.
+
+Nothing in `src/geocase/` is a stub. The empty-module pattern was retired in Batches 1–4:
+every one-line docstring placeholder was implemented or deleted. Where something is
+absent — the CLI, storage transport — it is absent by decision, and the decision is
+recorded in the roadmap's decision log.
 
 For roadmap-level sequencing, see [`development-plan.md`](development-plan.md) — the
 single roadmap. The superseded planning documents it replaced are retained as an
@@ -83,8 +88,10 @@ Current behavior:
 Current design note:
 
 - some format-specific behavior still lives directly in the case classes,
-  especially for vector and raster.
-- the `loaders/` package exists but is still mostly stubbed.
+  especially for vector.
+- `loaders/` is implemented and is the single raster load path: `cases/raster.py`
+  calls `loaders/rasterio_loader.open_raster`, which closed the last open item
+  from plan 03's Phase 4.
 
 ### `src/geocase/assertions/`
 
@@ -159,9 +166,12 @@ Important files:
 
 Current status:
 
-- these files are largely placeholders today,
-- actual loading logic still lives mostly in `cases/`,
-- so this remains a future refactor boundary rather than an active subsystem.
+- `rasterio_loader.py` is the single raster load path — `cases/raster.py` calls it rather
+  than opening rasters itself,
+- the vector and xarray sides are thinner, and some format-specific branching still lives
+  in `cases/vector.py`,
+- so this is an active subsystem on the raster side and a partial refactor boundary on the
+  vector side.
 
 ### `src/geocase/storage/`
 
@@ -176,9 +186,16 @@ Current status:
 
 ### `src/geocase/api/`
 
-The intended stable import surface for v1.0, currently still stubs. Filling it in is
-Step 15 of [`development-plan.md`](development-plan.md); until then `import geocase`
-exposes nothing and users go through `geocase.catalog` or the pytest fixtures.
+The stable import surface for v1.0, implemented in Step 15. `import geocase` exposes a
+pinned **27-name** `__all__`, asserted against a literal in
+`tests/unit/test_public_api.py` so the surface cannot widen or narrow by accident. The
+compatibility promise for v1.0 covers this surface and the pytest workflow, and nothing
+else.
+
+One import constraint is load-bearing: `catalog/roots.py` **cannot** be re-exported from
+`geocase.catalog`. It is the one catalog module that imports `geocase.cases`, while
+`cases/base.py` imports `catalog/models.py`, so eager re-export makes `import geocase`
+circular. Import it directly.
 
 ### `src/geocase/cli/` — removed
 
@@ -289,13 +306,18 @@ Important files:
 
 Current limitations:
 
-- raster metadata expectations are still lighter than planned,
-- the dedicated raster integration suite is still a stub,
-- the loader abstraction is not implemented yet,
-- fixture generation is not yet reproducible through scripts,
-- and coverage reporting for raster does not yet mirror the vector workflow.
+- the dedicated raster integration suite is implemented
+  (`tests/integration/test_core_raster_suite.py`), alongside four unit modules,
+- the loader abstraction is implemented and is the single load path,
+- fixture generation is reproducible and CI-gated:
+  `scripts/generate_raster_fixtures.py --check` regenerates the 30 GeoTIFFs and fails on
+  any byte difference, and `generate_checksums.py --check` covers the whole catalog,
+- and the raster coverage matrix is generated and gated the same way the vector one is.
 
-This is why raster is one of the main active planning areas for v1.0.
+Two genuine gaps remain, both on the v1.1 list rather than pretended away: rotated or
+skewed affine transforms and non-square pixels are not covered by any case, and no case
+sits in a southern-hemisphere UTM zone. See the
+[dataset catalog](../dataset-catalog.md#coverage-gaps).
 
 ---
 
@@ -312,8 +334,11 @@ Current pattern:
 
 - many important runtime behaviors are covered in unit tests,
 - examples double as realistic usage demonstrations,
-- and some named raster/integration targets still exist as stubs waiting to be
-  filled in.
+- and the empty stub test modules were deleted in Batch 3 rather than left standing.
+
+`pytest tests -q` is green at **780 passed, 1 skipped**. Runs are directory-based rather
+than an allowlist, so a new test file is picked up without being registered anywhere.
+Line coverage was measured at **54%** and is reported without gating.
 
 Notable current state:
 

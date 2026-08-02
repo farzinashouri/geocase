@@ -41,7 +41,7 @@ Confirm that geometry utilities gracefully handle Polygon EMPTY inputs.
 
 ## Risk types covered
 
-- [`empty_geometry`](../../risk/empty-geometry.md)
+- `empty_geometry`
 
 ## Expected behavior
 

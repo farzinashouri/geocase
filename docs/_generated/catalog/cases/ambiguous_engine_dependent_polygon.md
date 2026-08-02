@@ -41,9 +41,9 @@ Expose workflows that assume all geometry engines agree on polygon validity and 
 
 ## Risk types covered
 
-- [`ambiguous_engine_dependent`](../../risk/ambiguous-engine-dependent.md)
-- [`repair_variability`](../../risk/repair-variability.md)
-- [`topology_error`](../../risk/topology-error.md)
+- `ambiguous_engine_dependent`
+- `repair_variability`
+- [`topology_error`](../risk/topology-error.md)
 
 ## Expected behavior
 

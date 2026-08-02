@@ -30,7 +30,6 @@ SRC_ROOT = REPO_ROOT / "src"
 OUTPUT_ROOT = REPO_ROOT / "docs" / "_generated" / "catalog"
 
 DEFAULT_SITE_URL = "https://farzinashouri.github.io/geocase"
-REPO_URL = "https://github.com/farzinashouri/geocase"
 
 if str(SRC_ROOT) not in sys.path:
 	sys.path.insert(0, str(SRC_ROOT))
@@ -276,7 +275,9 @@ def _render_case_page(
 		lines.append("")
 		for risk in sorted(case.risk_types):
 			if risk in hub_risks:
-				lines.append(f"- [`{risk}`](../../risk/{_slug(risk)}.md)")
+				# Case pages live at ``catalog/cases/<id>.md`` and risk hubs at
+				# ``catalog/risk/<slug>.md``, so the hop is one level, not two.
+				lines.append(f"- [`{risk}`](../risk/{_slug(risk)}.md)")
 			else:
 				lines.append(f"- `{risk}`")
 		lines.append("")

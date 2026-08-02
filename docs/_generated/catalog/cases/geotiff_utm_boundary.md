@@ -40,9 +40,9 @@ Detect raster code that assumes the entire tile lives in a single UTM zone, caus
 
 ## Risk types covered
 
-- [`pixel_shift`](../../risk/pixel-shift.md)
-- [`reprojection_error`](../../risk/reprojection-error.md)
-- [`zone_boundary_artifact`](../../risk/zone-boundary-artifact.md)
+- `pixel_shift`
+- [`reprojection_error`](../risk/reprojection-error.md)
+- `zone_boundary_artifact`
 
 ## Expected behavior
 

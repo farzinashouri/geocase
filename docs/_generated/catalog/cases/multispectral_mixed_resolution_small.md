@@ -40,9 +40,9 @@ Confirm GeoCase preserves a multispectral stack assembled from bands of differin
 
 ## Risk types covered
 
-- [`band_loss`](../../risk/band-loss.md)
-- [`resampling_assumptions`](../../risk/resampling-assumptions.md)
-- [`resolution_mismatch`](../../risk/resolution-mismatch.md)
+- [`band_loss`](../risk/band-loss.md)
+- `resampling_assumptions`
+- `resolution_mismatch`
 
 ## Expected behavior
 
@@ -54,7 +54,7 @@ Confirm GeoCase preserves a multispectral stack assembled from bands of differin
 | `expect_nodata` | yes |
 | `expected_band_count` | `3` |
 | `expected_dtype` | `uint16` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `expected_nodata_value` | `0` |
 | `nodata_convention` | `sentinel` |
 | `expected_compression` | `deflate` |

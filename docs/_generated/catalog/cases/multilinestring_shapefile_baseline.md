@@ -41,7 +41,7 @@ Provide a canonical multilinestring encoded as a Shapefile so format-specific lo
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

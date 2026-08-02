@@ -41,10 +41,10 @@ Detect loaders or cross-format converters that assume attribute types (integer, 
 
 ## Risk types covered
 
-- [`attribute_loss`](../../risk/attribute-loss.md)
-- [`format_limitation`](../../risk/format-limitation.md)
-- [`schema_mismatch`](../../risk/schema-mismatch.md)
-- [`type_coercion`](../../risk/type-coercion.md)
+- [`attribute_loss`](../risk/attribute-loss.md)
+- `format_limitation`
+- [`schema_mismatch`](../risk/schema-mismatch.md)
+- `type_coercion`
 
 ## Expected behavior
 

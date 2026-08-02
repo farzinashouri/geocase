@@ -41,9 +41,9 @@ Expose code that naively interpolates across the Prime Meridian (0°) instead of
 
 ## Risk types covered
 
-- [`antimeridian_wrapping`](../../risk/antimeridian-wrapping.md)
-- [`distance_calculation_error`](../../risk/distance-calculation-error.md)
-- [`incorrect_rendering`](../../risk/incorrect-rendering.md)
+- `antimeridian_wrapping`
+- `distance_calculation_error`
+- `incorrect_rendering`
 
 ## Expected behavior
 

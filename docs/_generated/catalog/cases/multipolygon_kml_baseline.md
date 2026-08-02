@@ -41,7 +41,7 @@ Provide a canonical multipolygon encoded as KML so format-specific loader behavi
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

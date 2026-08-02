@@ -41,8 +41,8 @@ Confirm that disjoint features remain separate and do not intersect.
 
 ## Risk types covered
 
-- [`false_positive_intersection`](../../risk/false-positive-intersection.md)
-- [`overaggressive_dissolve`](../../risk/overaggressive-dissolve.md)
+- `false_positive_intersection`
+- `overaggressive_dissolve`
 
 ## Expected behavior
 

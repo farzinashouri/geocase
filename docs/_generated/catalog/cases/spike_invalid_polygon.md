@@ -41,9 +41,9 @@ Expose geometry repair helpers that return mixed geometry collections instead of
 
 ## Risk types covered
 
-- [`linear_artifacts_after_repair`](../../risk/linear-artifacts-after-repair.md)
-- [`mixed_geometry_output`](../../risk/mixed-geometry-output.md)
-- [`repair_returns_geometrycollection`](../../risk/repair-returns-geometrycollection.md)
+- `linear_artifacts_after_repair`
+- [`mixed_geometry_output`](../risk/mixed-geometry-output.md)
+- `repair_returns_geometrycollection`
 
 ## Expected behavior
 

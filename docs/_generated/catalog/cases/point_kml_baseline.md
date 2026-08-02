@@ -41,8 +41,8 @@ Provide a canonical point encoded as KML so driver-backed loading can be compare
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
-- [`xml_driver_behavior`](../../risk/xml-driver-behavior.md)
+- [`format_comparison`](../risk/format-comparison.md)
+- [`xml_driver_behavior`](../risk/xml-driver-behavior.md)
 
 ## Expected behavior
 

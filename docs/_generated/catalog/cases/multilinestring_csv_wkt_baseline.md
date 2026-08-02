@@ -41,7 +41,7 @@ Provide a canonical multilinestring encoded as CSV with WKT so format-specific l
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

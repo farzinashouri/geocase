@@ -40,9 +40,9 @@ Verify that latitude/longitude dimensions are correctly identified, fill values 
 
 ## Risk types covered
 
-- [`coordinate_order`](../../risk/coordinate-order.md)
-- [`dimension_mismatch`](../../risk/dimension-mismatch.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
+- `coordinate_order`
+- `dimension_mismatch`
+- [`nodata_ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 

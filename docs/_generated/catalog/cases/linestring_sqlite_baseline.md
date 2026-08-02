@@ -41,7 +41,7 @@ Provide a canonical linestring encoded as SQLite so format-specific loader behav
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

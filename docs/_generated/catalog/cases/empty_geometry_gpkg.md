@@ -41,9 +41,9 @@ Expose loaders that incorrectly handle EMPTY geometries in GeoPackage format. De
 
 ## Risk types covered
 
-- [`empty_geometry_handling`](../../risk/empty-geometry-handling.md)
-- [`format_specific`](../../risk/format-specific.md)
-- [`null_empty_conflation`](../../risk/null-empty-conflation.md)
+- `empty_geometry_handling`
+- [`format_specific`](../risk/format-specific.md)
+- `null_empty_conflation`
 
 ## Expected behavior
 

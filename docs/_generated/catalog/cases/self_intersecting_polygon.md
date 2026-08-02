@@ -41,9 +41,9 @@ Expose code that silently accepts invalid polygons or computes incorrect area/ce
 
 ## Risk types covered
 
-- [`incorrect_area`](../../risk/incorrect-area.md)
-- [`silent_invalid_geometry`](../../risk/silent-invalid-geometry.md)
-- [`topology_error`](../../risk/topology-error.md)
+- [`incorrect_area`](../risk/incorrect-area.md)
+- [`silent_invalid_geometry`](../risk/silent-invalid-geometry.md)
+- [`topology_error`](../risk/topology-error.md)
 
 ## Expected behavior
 

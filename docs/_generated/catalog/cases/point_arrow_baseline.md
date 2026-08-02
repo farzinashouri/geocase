@@ -41,8 +41,8 @@ Provide a canonical point encoded as Arrow IPC so the explicit Arrow loader path
 
 ## Risk types covered
 
-- [`arrow_ipc_behavior`](../../risk/arrow-ipc-behavior.md)
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`arrow_ipc_behavior`](../risk/arrow-ipc-behavior.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

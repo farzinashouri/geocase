@@ -39,8 +39,8 @@ Ensure footprint generation handles interior NoData correctly and stays close to
 
 ## Risk types covered
 
-- [`footprint_generation_error`](../../risk/footprint-generation-error.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
+- [`footprint_generation_error`](../risk/footprint-generation-error.md)
+- [`nodata_ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 

@@ -41,9 +41,9 @@ Expose clustering logic that fails to connect a transitive dateline-spanning clu
 
 ## Risk types covered
 
-- [`coordinate_wrapping`](../../risk/coordinate-wrapping.md)
-- [`local_projection_distortion`](../../risk/local-projection-distortion.md)
-- [`transitive_cluster_split`](../../risk/transitive-cluster-split.md)
+- [`coordinate_wrapping`](../risk/coordinate-wrapping.md)
+- `local_projection_distortion`
+- `transitive_cluster_split`
 
 ## Expected behavior
 

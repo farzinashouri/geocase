@@ -41,10 +41,10 @@ Expose workflows that assume arbitrary field name lengths or fail to detect/hand
 
 ## Risk types covered
 
-- [`attribute_loss`](../../risk/attribute-loss.md)
-- [`field_name_truncation`](../../risk/field-name-truncation.md)
-- [`format_specific`](../../risk/format-specific.md)
-- [`schema_mismatch`](../../risk/schema-mismatch.md)
+- [`attribute_loss`](../risk/attribute-loss.md)
+- `field_name_truncation`
+- [`format_specific`](../risk/format-specific.md)
+- [`schema_mismatch`](../risk/schema-mismatch.md)
 
 ## Expected behavior
 

@@ -41,7 +41,7 @@ Confirm that a basic point fixture is discoverable and loadable through the cata
 
 ## Risk types covered
 
-- [`none`](../../risk/none.md)
+- [`none`](../risk/none.md)
 
 ## Expected behavior
 

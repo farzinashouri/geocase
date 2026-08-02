@@ -41,8 +41,8 @@ Confirm that vector geometries in WGS84 can be reprojected to the raster grid CR
 
 ## Risk types covered
 
-- [`rasterization_alignment`](../../risk/rasterization-alignment.md)
-- [`reprojection_error`](../../risk/reprojection-error.md)
+- [`rasterization_alignment`](../risk/rasterization-alignment.md)
+- [`reprojection_error`](../risk/reprojection-error.md)
 
 ## Expected behavior
 

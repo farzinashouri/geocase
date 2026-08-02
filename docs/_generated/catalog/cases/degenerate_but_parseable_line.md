@@ -41,9 +41,9 @@ Ensure loading succeeds for a degenerate but parseable line while making its zer
 
 ## Risk types covered
 
-- [`degenerate_but_parseable`](../../risk/degenerate-but-parseable.md)
-- [`invalid_measurement`](../../risk/invalid-measurement.md)
-- [`zero_length_geometry`](../../risk/zero-length-geometry.md)
+- `degenerate_but_parseable`
+- `invalid_measurement`
+- `zero_length_geometry`
 
 ## Expected behavior
 

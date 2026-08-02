@@ -41,8 +41,8 @@ Provide a canonical polygon encoded as WKT so plain-text geometry loading can be
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
-- [`text_geometry_parsing`](../../risk/text-geometry-parsing.md)
+- [`format_comparison`](../risk/format-comparison.md)
+- [`text_geometry_parsing`](../risk/text-geometry-parsing.md)
 
 ## Expected behavior
 

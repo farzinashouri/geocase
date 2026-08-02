@@ -40,9 +40,9 @@ Confirm GeoCase can open a binary water mask, preserve its single uint8 band, an
 
 ## Risk types covered
 
-- [`dtype_drift`](../../risk/dtype-drift.md)
-- [`mask_misread`](../../risk/mask-misread.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
+- [`dtype_drift`](../risk/dtype-drift.md)
+- `mask_misread`
+- [`nodata_ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -54,7 +54,7 @@ Confirm GeoCase can open a binary water mask, preserve its single uint8 band, an
 | `expect_nodata` | yes |
 | `expected_band_count` | `1` |
 | `expected_dtype` | `uint8` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `expected_nodata_value` | `255` |
 | `nodata_convention` | `sentinel` |
 | `expected_compression` | `deflate` |

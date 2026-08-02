@@ -40,9 +40,9 @@ Confirm that GeoCase can open a small multi-band raster, preserve its declared b
 
 ## Risk types covered
 
-- [`band_loss`](../../risk/band-loss.md)
-- [`incorrect_band_order`](../../risk/incorrect-band-order.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
+- [`band_loss`](../risk/band-loss.md)
+- [`incorrect_band_order`](../risk/incorrect-band-order.md)
+- [`nodata_ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 

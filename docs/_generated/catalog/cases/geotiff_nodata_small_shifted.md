@@ -40,9 +40,9 @@ Expose alignment helpers that require identical extents instead of recognizing r
 
 ## Risk types covered
 
-- [`alignment_too_strict`](../../risk/alignment-too-strict.md)
-- [`pixel_lattice_misclassification`](../../risk/pixel-lattice-misclassification.md)
-- [`shifted_origin`](../../risk/shifted-origin.md)
+- `alignment_too_strict`
+- `pixel_lattice_misclassification`
+- `shifted_origin`
 
 ## Expected behavior
 

@@ -40,8 +40,8 @@ Confirm GeoCase handles an RGB optical scene whose extent crosses the antimeridi
 
 ## Risk types covered
 
-- [`antimeridian_split`](../../risk/antimeridian-split.md)
-- [`bounds_normalization`](../../risk/bounds-normalization.md)
+- `antimeridian_split`
+- `bounds_normalization`
 
 ## Expected behavior
 
@@ -52,7 +52,7 @@ Confirm GeoCase handles an RGB optical scene whose extent crosses the antimeridi
 | `expected_epsg` | `4326` |
 | `expected_band_count` | `3` |
 | `expected_dtype` | `uint8` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `red`, `green`, `blue` |
 

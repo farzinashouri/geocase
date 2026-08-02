@@ -41,8 +41,8 @@ Ensure polygon-based utilities handle geometries that straddle the equator witho
 
 ## Risk types covered
 
-- [`hemisphere_boundary`](../../risk/hemisphere-boundary.md)
-- [`utm_zone_ambiguity`](../../risk/utm-zone-ambiguity.md)
+- `hemisphere_boundary`
+- `utm_zone_ambiguity`
 
 ## Expected behavior
 

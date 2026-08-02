@@ -41,7 +41,7 @@ Confirm that rasterization works when vector and raster coordinates already matc
 
 ## Risk types covered
 
-- [`rasterization_alignment`](../../risk/rasterization-alignment.md)
+- [`rasterization_alignment`](../risk/rasterization-alignment.md)
 
 ## Expected behavior
 

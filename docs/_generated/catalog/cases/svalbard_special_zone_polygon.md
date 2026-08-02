@@ -41,8 +41,8 @@ Confirm that robust UTM-zone logic applies the Svalbard special zone rules.
 
 ## Risk types covered
 
-- [`polar_projection_edge_case`](../../risk/polar-projection-edge-case.md)
-- [`zone_selection`](../../risk/zone-selection.md)
+- `polar_projection_edge_case`
+- [`zone_selection`](../risk/zone-selection.md)
 
 ## Expected behavior
 

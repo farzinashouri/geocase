@@ -41,7 +41,7 @@ Ensure MultiPoint fixtures are discoverable and load correctly for selector-driv
 
 ## Risk types covered
 
-- [`none`](../../risk/none.md)
+- [`none`](../risk/none.md)
 
 ## Expected behavior
 

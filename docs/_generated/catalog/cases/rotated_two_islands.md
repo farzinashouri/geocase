@@ -39,8 +39,8 @@ Validate footprint extraction under rotated transform and disconnected valid pix
 
 ## Risk types covered
 
-- [`affine_transform_bug`](../../risk/affine-transform-bug.md)
-- [`footprint_generation_error`](../../risk/footprint-generation-error.md)
+- `affine_transform_bug`
+- [`footprint_generation_error`](../risk/footprint-generation-error.md)
 
 ## Expected behavior
 

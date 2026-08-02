@@ -40,9 +40,9 @@ Confirm GeoCase recognises an internally tiled, overview-bearing single-band Geo
 
 ## Risk types covered
 
-- [`dtype_drift`](../../risk/dtype-drift.md)
-- [`not_tiled`](../../risk/not-tiled.md)
-- [`overviews_missing`](../../risk/overviews-missing.md)
+- [`dtype_drift`](../risk/dtype-drift.md)
+- [`not_tiled`](../risk/not-tiled.md)
+- [`overviews_missing`](../risk/overviews-missing.md)
 
 ## Expected behavior
 
@@ -53,7 +53,7 @@ Confirm GeoCase recognises an internally tiled, overview-bearing single-band Geo
 | `expected_epsg` | `32633` |
 | `expected_band_count` | `1` |
 | `expected_dtype` | `uint16` |
-| `expected_shape` | `64`, `64` |
+| `expected_shape` | `[64, 64]` |
 | `expected_compression` | `deflate` |
 | `expected_overviews` | yes |
 | `is_cog` | yes |

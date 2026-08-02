@@ -41,9 +41,9 @@ Detect code that assumes longitude continuity across the antimeridian or produce
 
 ## Risk types covered
 
-- [`bbox_misinterpretation`](../../risk/bbox-misinterpretation.md)
-- [`coordinate_wrapping`](../../risk/coordinate-wrapping.md)
-- [`reprojection_error`](../../risk/reprojection-error.md)
+- [`bbox_misinterpretation`](../risk/bbox-misinterpretation.md)
+- [`coordinate_wrapping`](../risk/coordinate-wrapping.md)
+- [`reprojection_error`](../risk/reprojection-error.md)
 
 ## Expected behavior
 

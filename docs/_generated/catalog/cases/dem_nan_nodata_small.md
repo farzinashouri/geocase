@@ -40,8 +40,8 @@ Confirm GeoCase detects NaN-encoded NoData in a float DEM rather than treating N
 
 ## Risk types covered
 
-- [`nan_mishandled`](../../risk/nan-mishandled.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
+- [`nan_mishandled`](../risk/nan-mishandled.md)
+- [`nodata_ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -53,7 +53,7 @@ Confirm GeoCase detects NaN-encoded NoData in a float DEM rather than treating N
 | `expect_nodata` | yes |
 | `expected_band_count` | `1` |
 | `expected_dtype` | `float32` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `nodata_convention` | `nan` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `elevation` |

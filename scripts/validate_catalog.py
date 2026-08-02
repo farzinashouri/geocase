@@ -11,11 +11,13 @@ Checks:
 - ``case_order`` entries reference known case ids.
 - Declared ``size_class`` matches the actual on-disk payload size.
 - No ``*.yaml`` under ``data/core`` is missing from ``case-index.yaml``.
+- Hand-written docs name only case ids the catalog actually defines.
 """
 
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -26,6 +28,7 @@ METADATA_DIR = PACKAGE_ROOT / "metadata"
 CASE_INDEX_PATH = METADATA_DIR / "case-index.yaml"
 SUITE_INDEX_PATH = METADATA_DIR / "suite-index.yaml"
 MANIFESTS_DIR = REPO_ROOT / "extended-manifests"
+DOCS_ROOT = REPO_ROOT / "docs"
 
 if str(SRC_ROOT) not in sys.path:
 	sys.path.insert(0, str(SRC_ROOT))
@@ -197,6 +200,93 @@ def _validate_no_orphan_case_metadata(
 		"Either complete them (then run scripts/build_case_index.py) or delete "
 		"them. An unindexed case still ships in the wheel."
 	)
+
+
+#: Hand-written documentation pages that name case ids in prose or tables.
+#:
+#: Generated pages are excluded: they are rebuilt from the registry and gated by
+#: ``generate_catalog_pages.py --check``, so scanning them would only re-assert
+#: what that gate already proves.
+_DOC_PAGES_WITH_CASE_IDS = ("dataset-catalog.md",)
+
+#: A backticked lowercase token long enough to be a case id rather than a field
+#: name. Case ids are ``snake_case`` and every one contains an underscore.
+_DOC_ID_PATTERN = re.compile(r"`([a-z][a-z0-9]*(?:_[a-z0-9]+)+)`")
+
+
+def _validate_documented_case_ids(docs_root: Path, registry: CaseRegistry) -> int:
+	"""Fail if a hand-written doc names a case id the catalog does not have.
+
+	The dataset catalog page enumerates ids, CRS values and bundled analogs in
+	prose. Nothing else would catch a typo there, or an id that survives in the
+	docs after the case is renamed -- the exact drift that made the roadmap
+	collapse necessary. Returns the number of ids checked.
+
+	Only backticked snake_case tokens are considered, and a token is a finding
+	only if it looks like a case id *and* is absent from both the registry and
+	the manifests. Field names like ``size_class`` are filtered by the same
+	shape, so the check compares against known vocabulary rather than guessing.
+	"""
+	known = set(registry.list_ids())
+	for manifest_path in sorted(MANIFESTS_DIR.glob("*.yaml")):
+		try:
+			manifest = load_manifest(manifest_path)
+		except Exception:  # pragma: no cover - _validate_manifests reports this
+			continue
+		known.update(entry.case_id for entry in manifest.cases)
+
+	# Vocabulary that shares the snake_case shape but names a field, an enum
+	# value, or a config key rather than a case.
+	allowed_non_ids = {
+		"base_uri",
+		"bundled_analog",
+		"case_order",
+		"case_index",
+		"expected_band_count",
+		"expected_dtype",
+		"expected_nodata",
+		"expected_shape",
+		"nodata_convention",
+		"replace_me",
+		"size_class",
+		"storage_class",
+		"test_tier",
+		"geometry_type",
+		"schema_version",
+		"manifest_key",
+		"relative_path",
+		"archive_format",
+		"byte_size",
+		"requires_auth",
+		"is_public",
+		"storage_type",
+		"affine_transform_quirk",
+	}
+
+	problems: list[str] = []
+	checked = 0
+	for page in _DOC_PAGES_WITH_CASE_IDS:
+		path = docs_root / page
+		if not path.exists():
+			problems.append(f"{page}: missing (listed in _DOC_PAGES_WITH_CASE_IDS)")
+			continue
+		for match in _DOC_ID_PATTERN.finditer(path.read_text(encoding="utf-8")):
+			token = match.group(1)
+			if token in allowed_non_ids:
+				continue
+			checked += 1
+			if token not in known:
+				problems.append(f"{page}: `{token}` is not a known case id")
+
+	if problems:
+		listed = "\n".join(f"  {problem}" for problem in sorted(set(problems)))
+		raise CatalogValidationError(
+			"Documentation names case ids the catalog does not define:\n"
+			f"{listed}\n"
+			"Either fix the id in the page or add the token to allowed_non_ids "
+			"in scripts/validate_catalog.py if it is a field name rather than a case."
+		)
+	return checked
 
 
 def _validate_suite_index_structure(suite_index_path: Path) -> list[str]:
@@ -376,6 +466,12 @@ def parse_args() -> argparse.Namespace:
 		help="Directory of external manifest YAML files",
 	)
 	parser.add_argument(
+		"--docs-root",
+		type=Path,
+		default=DOCS_ROOT,
+		help="Directory holding the hand-written documentation pages",
+	)
+	parser.add_argument(
 		"--cases-only",
 		action="store_true",
 		help="Validate case metadata/index only (skip suites and manifests).",
@@ -392,12 +488,14 @@ def main() -> int:
 		suite_entries: list[str] = []
 		manifest_paths: list[Path] = []
 		manifest_warnings: list[str] = []
+		documented_ids = 0
 
 		if not args.cases_only:
 			suite_entries = _validate_suites(args.suite_index, registry)
 			manifest_paths, manifest_warnings = _validate_manifests(
 				args.manifests_dir, registry
 			)
+			documented_ids = _validate_documented_case_ids(args.docs_root, registry)
 	except CatalogValidationError as exc:
 		print("Catalog validation failed:")
 		print(exc)
@@ -412,6 +510,7 @@ def main() -> int:
 	else:
 		print(f"- Indexed suite files: {len(suite_entries)}")
 		print(f"- Validated manifests: {len(manifest_paths)}")
+		print(f"- Case ids cross-checked in documentation: {documented_ids}")
 	for warning in manifest_warnings:
 		print(f"  warning: {warning}")
 	return 0

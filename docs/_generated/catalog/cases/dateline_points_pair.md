@@ -41,9 +41,9 @@ Expose logic that treats antimeridian-adjacent points as far apart.
 
 ## Risk types covered
 
-- [`coordinate_wrapping`](../../risk/coordinate-wrapping.md)
-- [`distance_threshold_error`](../../risk/distance-threshold-error.md)
-- [`zone_selection`](../../risk/zone-selection.md)
+- [`coordinate_wrapping`](../risk/coordinate-wrapping.md)
+- [`distance_threshold_error`](../risk/distance-threshold-error.md)
+- [`zone_selection`](../risk/zone-selection.md)
 
 ## Expected behavior
 

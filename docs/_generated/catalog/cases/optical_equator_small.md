@@ -40,7 +40,7 @@ Confirm GeoCase handles an RGB optical scene whose extent spans the equator.
 
 ## Risk types covered
 
-- [`crs_mishandled`](../../risk/crs-mishandled.md)
+- [`crs_mishandled`](../risk/crs-mishandled.md)
 
 ## Expected behavior
 
@@ -51,7 +51,7 @@ Confirm GeoCase handles an RGB optical scene whose extent spans the equator.
 | `expected_epsg` | `4326` |
 | `expected_band_count` | `3` |
 | `expected_dtype` | `uint8` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `red`, `green`, `blue` |
 

@@ -41,8 +41,8 @@ Provide a canonical polygon encoded as WKB so plain binary geometry loading can 
 
 ## Risk types covered
 
-- [`binary_geometry_parsing`](../../risk/binary-geometry-parsing.md)
-- [`format_comparison`](../../risk/format-comparison.md)
+- `binary_geometry_parsing`
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

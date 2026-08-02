@@ -41,7 +41,7 @@ Ensure GeometryCollection features can be indexed and loaded without being coerc
 
 ## Risk types covered
 
-- [`mixed_geometry_output`](../../risk/mixed-geometry-output.md)
+- [`mixed_geometry_output`](../risk/mixed-geometry-output.md)
 
 ## Expected behavior
 

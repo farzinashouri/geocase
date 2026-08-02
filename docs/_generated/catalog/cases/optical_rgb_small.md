@@ -40,9 +40,9 @@ Confirm GeoCase can open a small RGB optical raster and preserve its three uint8
 
 ## Risk types covered
 
-- [`band_loss`](../../risk/band-loss.md)
-- [`dtype_drift`](../../risk/dtype-drift.md)
-- [`incorrect_band_order`](../../risk/incorrect-band-order.md)
+- [`band_loss`](../risk/band-loss.md)
+- [`dtype_drift`](../risk/dtype-drift.md)
+- [`incorrect_band_order`](../risk/incorrect-band-order.md)
 
 ## Expected behavior
 
@@ -53,7 +53,7 @@ Confirm GeoCase can open a small RGB optical raster and preserve its three uint8
 | `expected_epsg` | `32633` |
 | `expected_band_count` | `3` |
 | `expected_dtype` | `uint8` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `red`, `green`, `blue` |
 

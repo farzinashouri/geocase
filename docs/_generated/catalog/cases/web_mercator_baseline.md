@@ -41,8 +41,8 @@ Ensure vector loading and downstream utilities handle a baseline Web Mercator po
 
 ## Risk types covered
 
-- [`projected_coordinate_assumption`](../../risk/projected-coordinate-assumption.md)
-- [`reprojection_error`](../../risk/reprojection-error.md)
+- `projected_coordinate_assumption`
+- [`reprojection_error`](../risk/reprojection-error.md)
 
 ## Expected behavior
 

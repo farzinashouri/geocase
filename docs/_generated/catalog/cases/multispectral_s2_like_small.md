@@ -40,10 +40,10 @@ Confirm GeoCase preserves a four-band uint16 multispectral stack, its band order
 
 ## Risk types covered
 
-- [`band_loss`](../../risk/band-loss.md)
-- [`dtype_drift`](../../risk/dtype-drift.md)
-- [`incorrect_band_order`](../../risk/incorrect-band-order.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
+- [`band_loss`](../risk/band-loss.md)
+- [`dtype_drift`](../risk/dtype-drift.md)
+- [`incorrect_band_order`](../risk/incorrect-band-order.md)
+- [`nodata_ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -55,7 +55,7 @@ Confirm GeoCase preserves a four-band uint16 multispectral stack, its band order
 | `expect_nodata` | yes |
 | `expected_band_count` | `4` |
 | `expected_dtype` | `uint16` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `expected_nodata_value` | `0` |
 | `nodata_convention` | `sentinel` |
 | `expected_compression` | `deflate` |

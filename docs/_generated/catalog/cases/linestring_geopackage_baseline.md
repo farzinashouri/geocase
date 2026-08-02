@@ -41,7 +41,7 @@ Provide a canonical linestring encoded as a GeoPackage so format-specific loader
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

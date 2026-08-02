@@ -41,8 +41,8 @@ Expose helpers that preserve wrapped geographic longitudes instead of normalizin
 
 ## Risk types covered
 
-- [`longitude_not_normalized`](../../risk/longitude-not-normalized.md)
-- [`wrapped_coordinate_retention`](../../risk/wrapped-coordinate-retention.md)
+- `longitude_not_normalized`
+- `wrapped_coordinate_retention`
 
 ## Expected behavior
 

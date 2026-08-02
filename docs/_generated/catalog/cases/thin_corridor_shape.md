@@ -39,8 +39,8 @@ Verify footprint generation preserves narrow valid structures and remains close 
 
 ## Risk types covered
 
-- [`footprint_generation_error`](../../risk/footprint-generation-error.md)
-- [`geometry_simplification_loss`](../../risk/geometry-simplification-loss.md)
+- [`footprint_generation_error`](../risk/footprint-generation-error.md)
+- `geometry_simplification_loss`
 
 ## Expected behavior
 

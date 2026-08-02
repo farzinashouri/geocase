@@ -40,9 +40,9 @@ Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its
 
 ## Risk types covered
 
-- [`category_misread`](../../risk/category-misread.md)
-- [`colormap_dropped`](../../risk/colormap-dropped.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
+- `category_misread`
+- `colormap_dropped`
+- [`nodata_ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -54,7 +54,7 @@ Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its
 | `expect_nodata` | yes |
 | `expected_band_count` | `1` |
 | `expected_dtype` | `uint8` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `expected_nodata_value` | `0` |
 | `nodata_convention` | `sentinel` |
 | `expected_compression` | `deflate` |

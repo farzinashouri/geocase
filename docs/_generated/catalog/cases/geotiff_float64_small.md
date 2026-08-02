@@ -40,9 +40,9 @@ Confirm that 64-bit floating-point rasters open with the correct dtype and prese
 
 ## Risk types covered
 
-- [`dtype_coercion`](../../risk/dtype-coercion.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
-- [`precision_loss`](../../risk/precision-loss.md)
+- [`dtype_coercion`](../risk/dtype-coercion.md)
+- [`nodata_ignored`](../risk/nodata-ignored.md)
+- [`precision_loss`](../risk/precision-loss.md)
 
 ## Expected behavior
 

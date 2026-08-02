@@ -41,7 +41,7 @@ Confirm that a minimal valid polygon loads without error and passes all standard
 
 ## Risk types covered
 
-- [`none`](../../risk/none.md)
+- [`none`](../risk/none.md)
 
 ## Expected behavior
 

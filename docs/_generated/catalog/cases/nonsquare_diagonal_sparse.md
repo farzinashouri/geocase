@@ -39,8 +39,8 @@ Ensure footprint extraction remains robust for sparse and anisotropic raster sam
 
 ## Risk types covered
 
-- [`footprint_generation_error`](../../risk/footprint-generation-error.md)
-- [`pixel_shape_assumption`](../../risk/pixel-shape-assumption.md)
+- [`footprint_generation_error`](../risk/footprint-generation-error.md)
+- `pixel_shape_assumption`
 
 ## Expected behavior
 

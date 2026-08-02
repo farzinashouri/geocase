@@ -40,9 +40,9 @@ Confirm that signed 8-bit integer rasters open with the correct dtype and preser
 
 ## Risk types covered
 
-- [`dtype_coercion`](../../risk/dtype-coercion.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
-- [`overflow_assumption`](../../risk/overflow-assumption.md)
+- [`dtype_coercion`](../risk/dtype-coercion.md)
+- [`nodata_ignored`](../risk/nodata-ignored.md)
+- `overflow_assumption`
 
 ## Expected behavior
 

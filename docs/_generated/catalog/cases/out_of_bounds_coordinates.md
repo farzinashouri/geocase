@@ -41,11 +41,11 @@ Expose code that silently accepts coordinates outside valid geographic ranges. L
 
 ## Risk types covered
 
-- [`coordinate_range_error`](../../risk/coordinate-range-error.md)
-- [`lat_lon_swap`](../../risk/lat-lon-swap.md)
-- [`projection_failure`](../../risk/projection-failure.md)
-- [`silent_invalid_geometry`](../../risk/silent-invalid-geometry.md)
-- [`spatial_index_failure`](../../risk/spatial-index-failure.md)
+- `coordinate_range_error`
+- `lat_lon_swap`
+- `projection_failure`
+- [`silent_invalid_geometry`](../risk/silent-invalid-geometry.md)
+- `spatial_index_failure`
 
 ## Expected behavior
 

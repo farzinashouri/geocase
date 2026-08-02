@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "geocase"
-version = "0.1.0"
+version = "1.0.0"
 description = "A curated library of geospatial test cases for automated and parameterized testing."
 readme = "README.md"
 license = "MIT"
@@ -14,7 +14,7 @@ authors = [
 ]
 keywords = ["geospatial", "testing", "gis", "pytest", "test-cases"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Framework :: Pytest",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
@@ -57,9 +57,11 @@ docs = [
 geocase = "geocase.pytest_plugin"
 
 [project.urls]
-Homepage = "https://github.com/farzinashouri/geocase"
+Homepage = "https://gitlab.com/fashouri/geocase"
 Documentation = "https://farzinashouri.github.io/geocase"
-Repository = "https://github.com/farzinashouri/geocase"
+Repository = "https://gitlab.com/fashouri/geocase"
+Issues = "https://gitlab.com/fashouri/geocase/-/issues"
+Changelog = "https://gitlab.com/fashouri/geocase/-/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/geocase"]

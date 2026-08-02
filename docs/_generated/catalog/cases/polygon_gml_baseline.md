@@ -41,8 +41,8 @@ Provide a canonical polygon encoded as GML so polygon XML-driver loading can be 
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
-- [`xml_driver_behavior`](../../risk/xml-driver-behavior.md)
+- [`format_comparison`](../risk/format-comparison.md)
+- [`xml_driver_behavior`](../risk/xml-driver-behavior.md)
 
 ## Expected behavior
 

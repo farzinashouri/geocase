@@ -40,8 +40,8 @@ Confirm GeoCase can open an NDVI-style derived raster and preserve its single fl
 
 ## Risk types covered
 
-- [`dtype_drift`](../../risk/dtype-drift.md)
-- [`value_range_violation`](../../risk/value-range-violation.md)
+- [`dtype_drift`](../risk/dtype-drift.md)
+- `value_range_violation`
 
 ## Expected behavior
 
@@ -52,7 +52,7 @@ Confirm GeoCase can open an NDVI-style derived raster and preserve its single fl
 | `expected_epsg` | `32633` |
 | `expected_band_count` | `1` |
 | `expected_dtype` | `float32` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `ndvi` |
 

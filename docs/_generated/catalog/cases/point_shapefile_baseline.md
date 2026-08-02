@@ -41,7 +41,7 @@ Provide a canonical point encoded as a Shapefile so format-specific loader behav
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

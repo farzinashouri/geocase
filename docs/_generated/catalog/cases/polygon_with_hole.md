@@ -41,8 +41,8 @@ Verify that inner rings are preserved on load and that area calculations subtrac
 
 ## Risk types covered
 
-- [`incorrect_area`](../../risk/incorrect-area.md)
-- [`ring_ordering`](../../risk/ring-ordering.md)
+- [`incorrect_area`](../risk/incorrect-area.md)
+- `ring_ordering`
 
 ## Expected behavior
 

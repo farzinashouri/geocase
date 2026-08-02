@@ -1,7 +1,10 @@
 # Structure and Planning
 
-> **Status (April 2026):** Core implementation is complete. All waves (1-5) are done with 216+ passing tests.
-> See [workflow.md](workflow.md) for the detailed status tracker.
+> **Status (August 2026):** Core implementation is complete; `pytest tests -q` is green at
+> 780 passed, 1 skipped, and the public API is pinned for v1.0.
+> See [workflow.md](workflow.md) for the detailed status tracker and
+> [development-plan.md](development-plan.md) for the roadmap, which is authoritative on
+> scope.
 
 The core implementation is complete:
 
@@ -11,7 +14,7 @@ The core implementation is complete:
 4. ~~implement **selectors**~~ ✅
 5. ~~implement **suites**~~ ✅
 6. ~~implement **case factory + loaders**~~ ✅
-7. ~~add a few **tests**~~ ✅ (216 tests)
+7. ~~add a few **tests**~~ ✅ (781 collected)
 8. ~~wire the **pytest plugin**~~ ✅
 
 Remaining work focuses on documentation cleanup, additional test cases, and polish.
@@ -403,19 +406,25 @@ Why it exists: keeps structure explicit and reviewable.
 
 Bundled sample data. All 8 `case.yaml` files are populated with full metadata.
 
-### `data/core/vector/` (5 cases)
+The catalog is **134 cases**. The lists that were once here enumerated eight of them and
+went stale within one release; the enumeration is now generated from the registry and
+CI-gated instead. See the [dataset catalog](../dataset-catalog.md) for the reasoning and
+the [case catalog](../_generated/catalog/index.md) for the full list.
 
-* `simple_valid_polygon` — baseline valid polygon
-* `polygon_with_hole` — interior ring handling
-* `self_intersecting_polygon` — invalid geometry detection
-* `dateline_crossing_polygon` — antimeridian wrapping
-* `mixed_encoding_attributes` — multi-encoding attributes (GPKG)
+### `data/core/vector/` (103 cases)
 
-### `data/core/raster/` (2 cases + 1 stub)
+A 66-case geometry × format baseline (6 geometry types across the formats that support
+them), 36 `special/` edge cases in eight families — `crs`, `dateline`, `invalid`,
+`encoding`, `precision`, `empty`, `degenerate`, `holes` — and one GeometryCollection.
 
-* `geotiff_nodata_small` — NoData masking
-* `geotiff_utm_boundary` — UTM zone boundary straddling
-* `affine_transform_quirk` — stub, not yet populated
+### `data/core/raster/` (30 cases)
+
+GeoTIFFs in four groups: product families (17), the dtype family (5), the
+nodata/alignment/CRS family (3), and footprint edge cases (5).
+
+Rotated and skewed affine transforms are **not** covered. `affine_transform_quirk` was an
+empty stub claiming that coverage and was deleted in Batch 3; the gap is on the v1.1 list,
+and `validate_catalog.py` now fails on any unindexed `*.yaml` under `data/core`.
 
 ### `data/core/netcdf/` (1 case)
 

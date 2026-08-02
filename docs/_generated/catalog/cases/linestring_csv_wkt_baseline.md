@@ -41,8 +41,8 @@ Provide a canonical line encoded as CSV_WKT so text-based vector serialization c
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
-- [`text_geometry_parsing`](../../risk/text-geometry-parsing.md)
+- [`format_comparison`](../risk/format-comparison.md)
+- [`text_geometry_parsing`](../risk/text-geometry-parsing.md)
 
 ## Expected behavior
 

@@ -41,7 +41,7 @@ Confirm that a basic LineString fixture is discoverable and loadable through the
 
 ## Risk types covered
 
-- [`none`](../../risk/none.md)
+- [`none`](../risk/none.md)
 
 ## Expected behavior
 

@@ -41,8 +41,8 @@ Provide a canonical polygon encoded in SQLite so database-backed vector loading 
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
-- [`sqlite_driver_behavior`](../../risk/sqlite-driver-behavior.md)
+- [`format_comparison`](../risk/format-comparison.md)
+- `sqlite_driver_behavior`
 
 ## Expected behavior
 

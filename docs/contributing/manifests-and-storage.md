@@ -1,7 +1,26 @@
 # Manifests and Storage Support
 
-> **Status (April 2026):** The metadata model and sample manifest files already
-> exist, but runtime manifest parsing and storage handling are still stubbed.
+> **Status (August 2026):** Manifest support is **implemented**. Storage transport is
+> **deliberately deferred to v1.1** — not unfinished, but declined for v1.0 with a
+> specific condition for reopening it.
+>
+> Manifests parse, validate, and resolve: `catalog/manifests.py` loads them, the registry
+> merges their ids with the bundled catalog, `GEOCASE_MANIFESTS` selects which files are
+> read (the resolved paths are part of the registry cache key), and
+> `scripts/validate_catalog.py` gates them in CI — catching shadowed ids, cross-manifest
+> duplicates, malformed digests, and dangling `bundled_analog` references. Remote cases
+> are discoverable through the public API: `show_case` describes one, and `materialize_case`
+> refuses it with an actionable error rather than an internal `KeyError`.
+>
+> Transport — download, cache, unpack, verify — does not exist. That is the decision, and
+> the reason is that there is no cargo. Both manifests are 100% placeholder: every `sha256`
+> is the literal `replace_me`, every `base_uri` points at `example.org`, and nothing has
+> ever been published. Building a transport layer whose only user would be its own tests
+> ships a maintenance burden and an implied promise in exchange for nothing.
+>
+> **The v1.1 gate is concrete: at least one real published archive with a real sha256.**
+> Until that exists, the honest surface is a catalog that knows what it cannot give you and
+> says so clearly.
 
 This page explains what **manifest support** and **storage support** mean in
 GeoCase, why they are different, and why both matter.

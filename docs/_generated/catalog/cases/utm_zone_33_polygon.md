@@ -41,7 +41,7 @@ Provide a stable WGS84 polygon whose representative point maps to EPSG:32633.
 
 ## Risk types covered
 
-- [`zone_selection`](../../risk/zone-selection.md)
+- [`zone_selection`](../risk/zone-selection.md)
 
 ## Expected behavior
 

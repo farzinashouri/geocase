@@ -40,9 +40,9 @@ Confirm that signed 16-bit integer rasters open with the correct dtype and prese
 
 ## Risk types covered
 
-- [`dtype_coercion`](../../risk/dtype-coercion.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
-- [`range_assumption`](../../risk/range-assumption.md)
+- [`dtype_coercion`](../risk/dtype-coercion.md)
+- [`nodata_ignored`](../risk/nodata-ignored.md)
+- `range_assumption`
 
 ## Expected behavior
 

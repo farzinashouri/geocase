@@ -40,9 +40,9 @@ Confirm GeoCase preserves a dual-pol VV/VH SAR scene, its band ordering, and ban
 
 ## Risk types covered
 
-- [`band_loss`](../../risk/band-loss.md)
-- [`dtype_drift`](../../risk/dtype-drift.md)
-- [`incorrect_band_order`](../../risk/incorrect-band-order.md)
+- [`band_loss`](../risk/band-loss.md)
+- [`dtype_drift`](../risk/dtype-drift.md)
+- [`incorrect_band_order`](../risk/incorrect-band-order.md)
 
 ## Expected behavior
 
@@ -53,7 +53,7 @@ Confirm GeoCase preserves a dual-pol VV/VH SAR scene, its band ordering, and ban
 | `expected_epsg` | `32633` |
 | `expected_band_count` | `2` |
 | `expected_dtype` | `float32` |
-| `expected_shape` | `16`, `16` |
+| `expected_shape` | `[16, 16]` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `VV`, `VH` |
 

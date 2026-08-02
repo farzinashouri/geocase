@@ -41,9 +41,9 @@ Expose workflows that silently reduce coordinate precision and thereby invalidat
 
 ## Risk types covered
 
-- [`driver_specific_precision_loss`](../../risk/driver-specific-precision-loss.md)
-- [`format_limited`](../../risk/format-limited.md)
-- [`precision_rounding`](../../risk/precision-rounding.md)
+- `driver_specific_precision_loss`
+- `format_limited`
+- `precision_rounding`
 
 ## Expected behavior
 

@@ -41,7 +41,7 @@ Provide a canonical multipolygon encoded as CSV with WKT so format-specific load
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

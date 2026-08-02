@@ -41,8 +41,8 @@ Provide a canonical point encoded as GML so XML-driver loading can be compared a
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
-- [`xml_driver_behavior`](../../risk/xml-driver-behavior.md)
+- [`format_comparison`](../risk/format-comparison.md)
+- [`xml_driver_behavior`](../risk/xml-driver-behavior.md)
 
 ## Expected behavior
 

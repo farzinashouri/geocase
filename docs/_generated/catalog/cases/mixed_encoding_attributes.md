@@ -41,9 +41,9 @@ Detect loaders that assume a single encoding or silently corrupt non-ASCII attri
 
 ## Risk types covered
 
-- [`attribute_loss`](../../risk/attribute-loss.md)
-- [`encoding_error`](../../risk/encoding-error.md)
-- [`mojibake`](../../risk/mojibake.md)
+- [`attribute_loss`](../risk/attribute-loss.md)
+- [`encoding_error`](../risk/encoding-error.md)
+- [`mojibake`](../risk/mojibake.md)
 
 ## Expected behavior
 

@@ -41,8 +41,8 @@ Provide a canonical antimeridian polygon that heuristic crossing checks are expe
 
 ## Risk types covered
 
-- [`bbox_misinterpretation`](../../risk/bbox-misinterpretation.md)
-- [`coordinate_wrapping`](../../risk/coordinate-wrapping.md)
+- [`bbox_misinterpretation`](../risk/bbox-misinterpretation.md)
+- [`coordinate_wrapping`](../risk/coordinate-wrapping.md)
 
 ## Expected behavior
 

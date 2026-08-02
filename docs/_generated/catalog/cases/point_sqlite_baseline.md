@@ -41,7 +41,7 @@ Provide a canonical point encoded as SQLite so format-specific loader behavior c
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

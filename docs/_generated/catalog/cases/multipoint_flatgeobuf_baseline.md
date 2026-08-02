@@ -41,7 +41,7 @@ Provide a canonical multipoint encoded as FlatGeobuf so format-specific loader b
 
 ## Risk types covered
 
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 

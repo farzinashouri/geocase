@@ -41,7 +41,7 @@ Confirm that nearby local points are grouped into a single cluster.
 
 ## Risk types covered
 
-- [`distance_threshold_error`](../../risk/distance-threshold-error.md)
+- [`distance_threshold_error`](../risk/distance-threshold-error.md)
 
 ## Expected behavior
 

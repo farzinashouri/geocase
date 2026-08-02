@@ -40,10 +40,10 @@ Confirm GeoCase recognises a tiled, overview-bearing multispectral GeoTIFF as CO
 
 ## Risk types covered
 
-- [`band_loss`](../../risk/band-loss.md)
-- [`nodata_ignored`](../../risk/nodata-ignored.md)
-- [`not_tiled`](../../risk/not-tiled.md)
-- [`overviews_missing`](../../risk/overviews-missing.md)
+- [`band_loss`](../risk/band-loss.md)
+- [`nodata_ignored`](../risk/nodata-ignored.md)
+- [`not_tiled`](../risk/not-tiled.md)
+- [`overviews_missing`](../risk/overviews-missing.md)
 
 ## Expected behavior
 
@@ -55,7 +55,7 @@ Confirm GeoCase recognises a tiled, overview-bearing multispectral GeoTIFF as CO
 | `expect_nodata` | yes |
 | `expected_band_count` | `4` |
 | `expected_dtype` | `uint16` |
-| `expected_shape` | `64`, `64` |
+| `expected_shape` | `[64, 64]` |
 | `expected_nodata_value` | `0` |
 | `nodata_convention` | `sentinel` |
 | `expected_compression` | `deflate` |

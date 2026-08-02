@@ -41,10 +41,10 @@ Expose pipelines that fail to flag or filter (0, 0) coordinates, which usually i
 
 ## Risk types covered
 
-- [`data_quality`](../../risk/data-quality.md)
-- [`default_value_sink`](../../risk/default-value-sink.md)
-- [`geocoding_failure`](../../risk/geocoding-failure.md)
-- [`silent_bad_data`](../../risk/silent-bad-data.md)
+- `data_quality`
+- `default_value_sink`
+- `geocoding_failure`
+- `silent_bad_data`
 
 ## Expected behavior
 

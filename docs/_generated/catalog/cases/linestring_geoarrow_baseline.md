@@ -41,8 +41,8 @@ Provide a canonical line encoded as GeoArrow IPC so Arrow-native geometry loadin
 
 ## Risk types covered
 
-- [`arrow_ipc_behavior`](../../risk/arrow-ipc-behavior.md)
-- [`format_comparison`](../../risk/format-comparison.md)
+- [`arrow_ipc_behavior`](../risk/arrow-ipc-behavior.md)
+- [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
 
