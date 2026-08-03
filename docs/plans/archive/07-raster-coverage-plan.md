@@ -2,7 +2,7 @@
 
 > **Archived — superseded. Retained as an implementation log.** Executed by plan 08; the coverage strategy it defines is reflected in the raster catalog.
 >
-> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
 
 > Created: April 2026
 > Status: Superseded (July 2026)

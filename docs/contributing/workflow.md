@@ -109,7 +109,7 @@ the grounds that an empty module implies a commitment the project has not made.
   `tests/unit/test_public_api.py`.
 - **`catalog/validators.py`** was deleted. Nothing imported it.
 - **`cli/`** was deleted along with its broken `[project.scripts]` entry point. There is no
-  CLI in v1.0; see the decision log in [the roadmap](development-plan.md).
+  CLI in v1.0; see the decision log in [the roadmap](../plans/development-plan.md).
 - **`storage/`** transport is **deferred to v1.1**, deliberately rather than
   incidentally. Remote cases stay discoverable and raise clear errors, but nothing
   downloads, caches, or unpacks. See

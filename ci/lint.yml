@@ -15,7 +15,7 @@ lint:
     - python -m pip install "ruff==0.15.7"
   script:
     # ``src`` and ``tests`` only — see the July 2026 decision log entry in
-    # docs/contributing/development-plan.md: ``examples/`` is a 5,350-line
+    # docs/plans/development-plan.md: ``examples/`` is a 5,350-line
     # demo corpus that would dominate every number and make the gate
     # meaningless.
     - ruff format --check src tests

@@ -97,6 +97,6 @@ If a GeoCase marker is missing, resolves no cases, refers to an unknown suite, o
 - [`docs/case-discovery.md`](docs/case-discovery.md)
 - [`docs/assertions-reference.md`](docs/assertions-reference.md)
 - [`docs/examples-index.md`](docs/examples-index.md)
-- [`docs/contributing/development-plan.md`](docs/contributing/development-plan.md)
+- [`docs/plans/development-plan.md`](docs/plans/development-plan.md)
 - [`docs/contributing/workflow.md`](docs/contributing/workflow.md)
 - [`docs/design/case-recommendation-service.md`](docs/design/case-recommendation-service.md)

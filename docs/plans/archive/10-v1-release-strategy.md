@@ -2,7 +2,7 @@
 
 > **Archived — superseded. Retained as an implementation log.** Retained as the detailed rationale and evidence behind Steps 11-16 of the roadmap.
 >
-> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
 
 > Created: July 2026
 > Status: Folded into the roadmap (July 2026); partially implemented (August 2026)
@@ -106,7 +106,7 @@ class-construction time — on 3.9 that raises `TypeError` without `eval-type-ba
 is a compatibility promise, this is the biggest hole.
 
 Underneath it all is a process problem: **four competing "what's next" documents**
-(`docs/plans/01`, `03`, `09`, and `docs/contributing/development-plan.md` — the only one
+(`docs/plans/01`, `03`, `09`, and `docs/plans/development-plan.md` — the only one
 README links) using **five sequencing vocabularies** (Phases/Steps/Workstreams/Waves/
 "stages"). That already produced commit `6391e04 "stage 3 of plan 9 is done"`, which
 actually contained plan 08 Step 9 work, and left plan 09 calling the implemented
@@ -135,7 +135,7 @@ otherwise the 5,350-line demo corpus dominates every number and the gates mean n
 Every later stage edits plan statuses; doing this last means writing updates into four
 documents that are about to be retired.
 
-- **Keep one roadmap.** Recommend `docs/contributing/development-plan.md` as the
+- **Keep one roadmap.** Recommend `docs/plans/development-plan.md` as the
   survivor — it is the only one README links and already uses one vocabulary ("Step N").
   Fold this plan's content in as later steps.
 - **Archive, don't delete,** `docs/plans/01..09` → `docs/plans/archive/`, each with a

@@ -2,7 +2,7 @@
 
 > **Archived — superseded. Retained as an implementation log.** Its remaining items were re-scoped by the v1.0 strategy; see Steps 11-16 of the roadmap.
 >
-> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
 
 > Created: April 2026
 > Status: Superseded (July 2026)

@@ -3,7 +3,7 @@
 > **Status (August 2026):** Core implementation is complete; `pytest tests -q` is green at
 > 780 passed, 1 skipped, and the public API is pinned for v1.0.
 > See [workflow.md](workflow.md) for the detailed status tracker and
-> [development-plan.md](development-plan.md) for the roadmap, which is authoritative on
+> [development-plan.md](../plans/development-plan.md) for the roadmap, which is authoritative on
 > scope.
 
 The core implementation is complete:
@@ -18,7 +18,7 @@ The core implementation is complete:
 8. ~~wire the **pytest plugin**~~ ✅
 
 Remaining work focuses on documentation cleanup, additional test cases, and polish.
-See [`development-plan.md`](development-plan.md) for the current roadmap.
+See [`development-plan.md`](../plans/development-plan.md) for the current roadmap.
 
 ---
 
@@ -333,7 +333,7 @@ existed here as one-line docstring stubs and were deleted — an empty module im
 commitment the project has not made, and both extended manifests are still 100%
 placeholder (`sha256: "replace_me"`, `base_uri: example.org`). They return in v1.1,
 gated on at least one real published archive with a real checksum. See
-[`development-plan.md`](development-plan.md).
+[`development-plan.md`](../plans/development-plan.md).
 
 ---
 

@@ -2,7 +2,7 @@
 
 These demonstrate testing real raster *behaviour* (masking, band math, terrain
 stats) rather than only opening files. See
-``docs/plans/08-raster-action-plan.md`` Step 8.
+``docs/plans/archive/08-raster-action-plan.md`` Step 8.
 """
 
 from __future__ import annotations

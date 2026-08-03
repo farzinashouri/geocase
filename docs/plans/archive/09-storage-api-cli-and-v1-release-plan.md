@@ -2,7 +2,7 @@
 
 > **Archived — superseded. Retained as an implementation log.** Superseded by plan 10; its storage and CLI workstreams were deferred/withdrawn. See the Decision log.
 >
-> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
 
 > Created: June 2026
 > Status: Withdrawn (July 2026)

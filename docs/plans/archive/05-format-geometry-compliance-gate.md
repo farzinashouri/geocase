@@ -2,7 +2,7 @@
 
 > **Archived — superseded. Retained as an implementation log.** The compliance gate shipped as `tests/unit/test_format_compliance.py` (211 tests).
 >
-> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
 
 > Created: April 2026
 > Status: Complete (April 2026)

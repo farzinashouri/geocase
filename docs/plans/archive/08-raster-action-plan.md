@@ -2,7 +2,7 @@
 
 > **Archived — superseded. Retained as an implementation log.** Raster coverage, fixture generation, and checksum tooling shipped.
 >
-> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
 
 > Created: June 2026
 > Status: Complete (July 2026)

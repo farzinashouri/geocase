@@ -5,7 +5,7 @@ dataset-catalog work.
 
 > **This document owns *order*, not *scope*.** What each step contains is defined once, in
 > [`development-plan.md`](development-plan.md); the detailed rationale is in
-> [`../plans/archive/10-v1-release-strategy.md`](../plans/archive/10-v1-release-strategy.md)
+> [`archive/10-v1-release-strategy.md`](archive/10-v1-release-strategy.md)
 > and [`dataset-catalog-plan.md`](dataset-catalog-plan.md). If this page and the roadmap
 > ever disagree about *what* a step includes, the roadmap wins. Keeping the split this
 > narrow is deliberate: four documents each claiming to say "what's next" is what made the

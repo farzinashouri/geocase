@@ -1,6 +1,6 @@
 """Reproducible generator for the bundled SQLite/SpatiaLite vector fixtures.
 
-Implements Step 12 of ``docs/contributing/development-plan.md``. Raster fixtures
+Implements Step 12 of ``docs/plans/development-plan.md``. Raster fixtures
 have had a generator plus a ``--check`` CI gate since plan 08; vector had
 neither, so its binary fixtures were unreproducible hand-made artifacts and
 nothing would have noticed one growing 280x. That is exactly what happened: the

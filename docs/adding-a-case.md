@@ -449,5 +449,5 @@ python scripts/validate_catalog.py
 - `docs/contributing/vector-dataset-generation.md`
 - `docs/testing-your-function-with-geocase.md`
 - `docs/contributing/workflow.md`
-- `docs/contributing/development-plan.md`
+- `docs/plans/development-plan.md`
 

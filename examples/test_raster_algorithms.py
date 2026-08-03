@@ -2,7 +2,7 @@
 
 Demonstrates the public GeoCase testing pattern: resolve a bundled case, open
 it, and assert on real algorithm behaviour. See
-``docs/plans/08-raster-action-plan.md`` Step 8.
+``docs/plans/archive/08-raster-action-plan.md`` Step 8.
 """
 
 from __future__ import annotations

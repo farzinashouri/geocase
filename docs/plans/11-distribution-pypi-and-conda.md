@@ -2,7 +2,7 @@
 
 ## Context
 
-`docs/contributing/execution-order.md` reports Batches 1–5 complete — but only **"to the
+`docs/plans/execution-order.md` reports Batches 1–5 complete — but only **"to the
 upload boundary."** That phrasing is accurate: everything the library *does* is
 implemented and gated (780 tests, ruff/mypy/docs/catalog gates green, 134 cases, 4.2 MB
 bundled data, 27-name public API pinned). What does **not** exist is the packaging and
@@ -125,9 +125,9 @@ PyPI upload.
 - `CHANGELOG.md` — leave the 1.0.0 entry, but only after the upload actually happens does
   its "published to PyPI" line become true. If the upload slips past 2026-08-02, correct
   the date rather than leaving a false one.
-- `docs/contributing/execution-order.md` — Batch 5 row moves from "Done to the upload
+- `docs/plans/execution-order.md` — Batch 5 row moves from "Done to the upload
   boundary" to done, and the Status block gains the release facts once measured.
-- `docs/contributing/development-plan.md:421-425` — strike through the PyPI checklist
+- `docs/plans/development-plan.md:421-425` — strike through the PyPI checklist
   items as each lands.
 - `README.md` — add the conda install line alongside pip.
 

@@ -5,7 +5,7 @@ than as guidance. They record what was decided and why at the time, which is wor
 keeping — plans 04 and 08 in particular contain real history.
 
 **Do not treat anything here as current.** The single active roadmap is
-[`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+[`docs/plans/development-plan.md`](../development-plan.md).
 These documents were collapsed into it in July 2026, because four competing "what's
 next" documents using five different sequencing vocabularies had started producing
 contradictory and mislabeled work.

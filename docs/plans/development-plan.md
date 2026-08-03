@@ -5,11 +5,11 @@ what is in progress, and what still needs to land before v1.0.
 
 > **This is the only roadmap.** Earlier planning documents (`docs/plans/01..10`) were
 > collapsed into this one in July 2026 and moved to
-> [`docs/plans/archive/`](../plans/archive/index.md), where they are retained as an
+> [`docs/plans/archive/`](archive/index.md), where they are retained as an
 > implementation log. Do not add "what's next" content anywhere else — four competing
 > roadmaps using five different sequencing vocabularies is what made this collapse
 > necessary. The detailed rationale and measured evidence behind Steps 11-16 lives in
-> [`docs/plans/archive/10-v1-release-strategy.md`](../plans/archive/10-v1-release-strategy.md).
+> [`docs/plans/archive/10-v1-release-strategy.md`](archive/10-v1-release-strategy.md).
 >
 > **This document defines *scope*: what each step contains.** For the *order* in which to
 > execute them — the batching, the checkpoints, and the hard constraints — see
@@ -157,7 +157,7 @@ Key files:
 - `README.md`
 - [`docs/testing-your-function-with-geocase.md`](../testing-your-function-with-geocase.md)
 - [`docs/using-parameterized-tests.md`](../using-parameterized-tests.md)
-- [`docs/contributing/workflow.md`](workflow.md)
+- [`docs/contributing/workflow.md`](../contributing/workflow.md)
 - [`docs/design/case-recommendation-service.md`](../design/case-recommendation-service.md)
 
 ### Step 7 — Plugin hardening and case-driven examples ✅
@@ -454,7 +454,7 @@ silently re-litigated.
 | July 2026 | **Storage transport deferred to v1.1.** Remote cases stay discoverable with clear errors; no download, cache, or unpack. | Both manifests are 100% placeholder — every `sha256` is `"replace_me"`, every `base_uri` is `example.org`, and nothing was ever published. Building transport for cargo that does not exist ships a layer whose only user is its own tests. **The v1.1 gate is: at least one real published archive with a real sha256.** |
 | July 2026 | **`examples/` stays as-is** (repo-only, not in the wheel); cleanup revisited post-1.0. Lint and type gates are therefore **scoped to `src` and `tests`**. | Otherwise the 5,350-line demo corpus dominates every number and the gates mean nothing. |
 | July 2026 | **Keep `src/geocase/loaders/` and make it the single load path** (have `cases/raster.py` call it). Closes the last open item from plan 03's Phase 4. | Plan 03 recommended deleting it, but four test modules import `rasterio_loader.open_raster`. Routing through it is a smaller diff than rewriting those tests, and it removes the duplication. |
-| Aug 2026 | **Two dev environments, deliberately.** conda/3.14 (`environment.yml`) is primary; `.venv`/3.11 is the CI mirror. Documented in [`workflow.md`](workflow.md). | Only conda has the GDAL bindings, which are source-only on PyPI. Without them `pytest examples` collects 37 tests instead of 1238, because two support modules `importorskip("osgeo")`. Both interpreters pass `pytest tests` identically, so 3.14 is a supported ceiling, not a risk. |
+| Aug 2026 | **Two dev environments, deliberately.** conda/3.14 (`environment.yml`) is primary; `.venv`/3.11 is the CI mirror. Documented in [`workflow.md`](../contributing/workflow.md). | Only conda has the GDAL bindings, which are source-only on PyPI. Without them `pytest examples` collects 37 tests instead of 1238, because two support modules `importorskip("osgeo")`. Both interpreters pass `pytest tests` identically, so 3.14 is a supported ceiling, not a risk. |
 | Aug 2026 | **`requires-python = ">=3.11"`**, not the `>=3.10` plan 10 proposed. Classifiers 3.11–3.14. | Promise only what is tested. CI runs 3.11 and development happens on 3.14, so both ends are real; 3.10 is installed nowhere and would have been the same untested claim as `>=3.9`, one version up. Also removes the `eval-type-backport` question entirely — `catalog/models.py` has 40 PEP 604 unions in pydantic model bodies under `from __future__ import annotations`, which needs ≥3.10 natively. Widen later once a matrix exists. |
 | Aug 2026 | **Lint and type gates cover `src` + `tests`, and `scripts/` stays out.** `scripts/` keeps 549 ruff errors (517 W191) and is not formatted. | The July decision scoped the gates around `examples/`; `scripts/` was never argued either way. Formatting it is a 517-line diff across the generators whose byte-for-byte `--check` gates are the catalog's safety net, and it buys nothing a reviewer would notice. Revisit in v1.1, as one commit, with the fixture gates re-run. |
 | Aug 2026 | **`affine_transform_quirk` deleted, not authored.** The rotated/skewed-transform coverage it described moves to the v1.1 list. | Authoring it means a new fixture, checksums, and an index entry, and moves the canonical counts to 135/31 — figures four documents quote and Batch 5 re-verifies. The empty directory was the defect; the missing coverage is a gap, and a gap on a list is honest in a way a placeholder in the wheel is not. |

@@ -2,7 +2,7 @@
 
 > **Archived — superseded. Retained as an implementation log.** Manifest parsing and models shipped; wiring them into the registry is Step 14 of the roadmap.
 >
-> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
 
 > Created: April 2026
 > Status: Complete (June 2026)

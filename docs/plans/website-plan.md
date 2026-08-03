@@ -2,11 +2,9 @@
 
 Status: **Proposed, unscheduled** — no batch assigned; see [Ordering](#ordering-and-hard-constraints).
 
-> **Why this lives in `contributing/` and not `docs/plans/`.** `docs/plans/` holds only the
-> archive of superseded roadmaps; the single roadmap is
-> [`development-plan.md`](development-plan.md). This is a scoped implementation plan for one
-> deliverable, not a competing roadmap — the same reasoning that placed
-> [`dataset-catalog-plan.md`](dataset-catalog-plan.md) here.
+> **This is a scoped implementation plan for one deliverable, not a roadmap.** The single
+> roadmap is [`development-plan.md`](development-plan.md) — the same framing as
+> [`dataset-catalog-plan.md`](dataset-catalog-plan.md).
 
 ## Context
 

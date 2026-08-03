@@ -2,7 +2,7 @@
 
 > **Archived — superseded. Retained as an implementation log.** The documentation restructure it describes was carried out.
 >
-> The single active roadmap is [`docs/contributing/development-plan.md`](../../contributing/development-plan.md).
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
 
 > Created: April 2026
 > Status: Complete (April 2026)
@@ -71,7 +71,7 @@ mkdir -p docs/contributing docs/design docs/plans
 | Current location | New location |
 |---|---|
 | `docs/workflow.md` | `docs/contributing/workflow.md` |
-| `docs/development-plan.md` | `docs/contributing/development-plan.md` |
+| `docs/development-plan.md` | `docs/plans/development-plan.md` |
 | `docs/structure-and-planning.md` | `docs/contributing/structure-and-planning.md` |
 
 ### Step 3: Move design specs to `design/`
@@ -128,7 +128,7 @@ Several files may still reference the pre-consolidation paths. Prioritize:
 - `README.md`
 - `docs/getting-started.md`
 - `docs/contributing/workflow.md`
-- `docs/contributing/development-plan.md`
+- `docs/plans/development-plan.md`
 - any remaining references to old root-level `docs/*.md` files that were moved to `docs/contributing/` or `docs/design/`
 
 Goal: eliminate broken or outdated cross-links after the docs move.
@@ -148,7 +148,7 @@ Add:
 
 Update the README “Learn More” or equivalent sections so they point to:
 
-- `docs/contributing/development-plan.md`
+- `docs/plans/development-plan.md`
 - `docs/contributing/workflow.md`
 - `docs/design/case-recommendation-service.md`
 

@@ -9,7 +9,7 @@ GeoCase keeps its bundled core intentionally small. Larger or richer cases can b
     cache, or unpack them — asking for a remote case raises a clear error telling
     you where the artifact lives. The download and cache layer described below is
     planned for v1.1. See
-    [the roadmap](contributing/development-plan.md) for the current scope.
+    [the roadmap](plans/development-plan.md) for the current scope.
 
 ## Why remote storage exists
 

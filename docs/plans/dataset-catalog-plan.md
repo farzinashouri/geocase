@@ -1,13 +1,10 @@
 # Dataset Catalog & Geographic Coverage — implementation plan
 
 Status: **Approved, scheduled** — see [`execution-order.md`](execution-order.md).
-Formerly `docs/plans/11-dataset-catalog-doc.md`.
-
-> **Why this lives in `contributing/` and not `docs/plans/`.** `docs/plans/` now holds
-> only the archive of superseded roadmaps; the single roadmap is
-> [`development-plan.md`](development-plan.md). Adding a new numbered `docs/plans/NN-*.md`
-> would restart exactly the drift that collapse was meant to end. This is a scoped
-> implementation plan for one deliverable, not a competing roadmap, so it belongs here.
+> **This is a scoped implementation plan for one deliverable, not a roadmap.** The single
+> roadmap is [`development-plan.md`](development-plan.md); adding "what's next" content
+> here would restart exactly the drift the July 2026 roadmap collapse ended. Active plans
+> live in `docs/plans/`, superseded ones in [`archive/`](archive/index.md).
 
 **The deliverable is split across two batches**, not implemented in one pass:
 
@@ -67,9 +64,9 @@ Outcome: one hand-written page, `docs/dataset-catalog.md`, that gives the whole 
 
 ~~Note: `not_in_nav` needs widening to `/plans/*.md`.~~ **Superseded.** Widening the glob
 would silently hide every future file under `docs/plans/`, which is the drift pattern the
-roadmap collapse just retired. This plan was moved to `docs/contributing/` instead, so
-`not_in_nav` stays narrowly scoped to `/plans/archive/*.md` and `docs/plans/` continues to
-hold nothing but the archive. Both this file and `execution-order.md` are in the nav.
+roadmap collapse just retired. `not_in_nav` stays narrowly scoped to `/plans/archive/*.md`;
+every active plan, including this one and `execution-order.md`, is listed in the nav under
+**Plans**.
 
 ## Data sourcing
 

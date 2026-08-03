@@ -42,15 +42,19 @@ nav:
       - Dataset Catalog: dataset-catalog.md
   - Contributing:
       - Workflow: contributing/workflow.md
-      - Roadmap: contributing/development-plan.md
-      - Execution Order: contributing/execution-order.md
-      - Dataset Catalog Plan: contributing/dataset-catalog-plan.md
-      - Website Plan: contributing/website-plan.md
       - Structure & Planning: contributing/structure-and-planning.md
       - Manifests & Storage: contributing/manifests-and-storage.md
       - Testing Edge Cases: contributing/testing-edge-cases.md
       - Raster Dtypes & Radiometric Resolution: contributing/raster-dtypes-and-radiometric-resolution.md
       - Vector Dataset Generation: contributing/vector-dataset-generation.md
+  - Plans:
+      - Overview: plans/index.md
+      - Roadmap: plans/development-plan.md
+      - Execution Order: plans/execution-order.md
+      - Dataset Catalog Plan: plans/dataset-catalog-plan.md
+      - Website Plan: plans/website-plan.md
+      - Distribution (PyPI & conda): plans/11-distribution-pypi-and-conda.md
+      - Archived Plans: plans/archive/index.md
   - Design:
       - Case Recommendation Service: design/case-recommendation-service.md
       - Case Recommendation API Spec: design/case-recommendation-api-spec.md
@@ -60,10 +64,11 @@ nav:
       - Case Catalog: _generated/catalog/index.md
       - Vector Coverage Matrix: _generated/vector-coverage-matrix.md
       - Raster Coverage Matrix: _generated/raster-coverage-matrix.md
-      - Codebase Summary: contributing/codebase-summary.md
+      - Codebase Summary: reference/codebase-summary.md
 
 # Superseded planning documents, retained as an implementation log rather than
-# published. The single roadmap is contributing/development-plan.md.
+# published. The single roadmap is plans/development-plan.md; the archive index
+# that links them is in the nav, the archived plans themselves are not.
 #
 # The generated per-case, per-risk and per-format pages are excluded too: there
 # are 186 of them and they are reached from the Case Catalog index above, not
