@@ -12,6 +12,7 @@ Nothing here describes how the project works today — that lives in
 | [Dataset Catalog Plan](dataset-catalog-plan.md) | Approved, scheduled | The dataset catalog and geographic coverage deliverable. |
 | [Website Plan](website-plan.md) | Proposed, unscheduled | The public website. |
 | [Distribution — PyPI & conda](11-distribution-pypi-and-conda.md) | Proposed | Packaging and release to PyPI, then conda-forge. |
+| [Docs Site Publication](12-docs-site-publication.md) | Proposed | Publishing the built docs to GitHub Pages, and the canonical-URL fix that goes with it. |
 | [Archived plans](archive/index.md) | Superseded | Plans 01–10, retained as an implementation log. |
 
 ## Rules for this folder

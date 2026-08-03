@@ -54,6 +54,7 @@ nav:
       - Dataset Catalog Plan: plans/dataset-catalog-plan.md
       - Website Plan: plans/website-plan.md
       - Distribution (PyPI & conda): plans/11-distribution-pypi-and-conda.md
+      - Docs Site Publication: plans/12-docs-site-publication.md
       - Archived Plans: plans/archive/index.md
   - Design:
       - Case Recommendation Service: design/case-recommendation-service.md
