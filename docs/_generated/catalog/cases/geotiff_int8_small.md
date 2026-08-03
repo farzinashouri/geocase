@@ -7,6 +7,10 @@ description: "A small single-band GeoTIFF stored as signed 8-bit integers. Tests
 
 # GeoTIFF Int8 Small
 
+<div class="gc-badges">
+<span class="gc-badge">raster</span><span class="gc-badge">GeoTIFF</span><span class="gc-badge">EPSG:32633</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A small single-band GeoTIFF stored as signed 8-bit integers. Tests that raster loaders and downstream code preserve narrow integer dtype semantics rather than coercing values to floating point implicitly.
 
 | Property | Value |

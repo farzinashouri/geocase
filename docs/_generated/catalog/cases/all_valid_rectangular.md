@@ -7,6 +7,10 @@ description: "Raster with fully valid rectangular coverage used as a baseline fo
 
 # All Valid Rectangular Raster
 
+<div class="gc-badges">
+<span class="gc-badge">raster</span><span class="gc-badge">GeoTIFF</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 Raster with fully valid rectangular coverage used as a baseline footprint edge-case fixture.
 
 | Property | Value |

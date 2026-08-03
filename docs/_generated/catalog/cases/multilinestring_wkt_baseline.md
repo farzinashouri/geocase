@@ -7,7 +7,16 @@ description: "Canonical baseline multilinestring stored as plain WKT file for cr
 
 # MultiLineString WKT Baseline
 
+<div class="gc-badges">
+<span class="gc-badge">vector</span><span class="gc-badge">WKT</span><span class="gc-badge">MultiLineString</span><span class="gc-badge">EPSG:4326</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 Canonical baseline multilinestring stored as plain WKT file for cross-format comparison and format-specific loader behavior testing.
+
+<figure class="gc-figure">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<figcaption>Schematic: MultiLineString geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+</figure>
 
 | Property | Value |
 |---|---|

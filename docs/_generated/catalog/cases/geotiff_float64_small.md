@@ -7,6 +7,10 @@ description: "A small single-band GeoTIFF stored as 64-bit floating-point values
 
 # GeoTIFF Float64 Small
 
+<div class="gc-badges">
+<span class="gc-badge">raster</span><span class="gc-badge">GeoTIFF</span><span class="gc-badge">EPSG:32633</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A small single-band GeoTIFF stored as 64-bit floating-point values. Tests that raster loaders and downstream code preserve high-precision floating dtype semantics rather than narrowing to `float32` implicitly.
 
 | Property | Value |

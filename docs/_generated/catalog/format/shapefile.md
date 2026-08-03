@@ -9,6 +9,49 @@ description: "8 GeoCase test cases available in Shapefile format."
 
 These 8 cases are packaged as Shapefile.
 
+<div class="gc-grid">
+<a class="gc-card" href="../../cases/linestring_shapefile_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">LineString Shapefile Baseline</span>
+<span class="gc-card-meta">Shapefile &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/multilinestring_shapefile_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiLineString Shapefile Baseline</span>
+<span class="gc-card-meta">Shapefile &middot; MultiLineString</span>
+</a>
+<a class="gc-card" href="../../cases/multipoint_shapefile_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">MultiPoint Shapefile Baseline</span>
+<span class="gc-card-meta">Shapefile &middot; MultiPoint</span>
+</a>
+<a class="gc-card" href="../../cases/multipolygon_shapefile_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiPolygon Shapefile Baseline</span>
+<span class="gc-card-meta">Shapefile &middot; MultiPolygon</span>
+</a>
+<a class="gc-card" href="../../cases/point_shapefile_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point Shapefile Baseline</span>
+<span class="gc-card-meta">Shapefile &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/polygon_shapefile_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Polygon Shapefile Baseline</span>
+<span class="gc-card-meta">Shapefile &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/shapefile_encoding_legacy/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Shapefile Legacy DBF Encoding</span>
+<span class="gc-card-meta">Shapefile &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/shapefile_field_truncation/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Shapefile Field Name Truncation</span>
+<span class="gc-card-meta">Shapefile &middot; Point</span>
+</a>
+</div>
+
 | Case | Category | Format | Geometry |
 |---|---|---|---|
 | [LineString Shapefile Baseline](../cases/linestring_shapefile_baseline.md) | vector | Shapefile | LineString |

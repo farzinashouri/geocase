@@ -7,7 +7,16 @@ description: "A GeoParquet file with deliberately mixed attribute types and null
 
 # Parquet Mixed Schema Attributes
 
+<div class="gc-badges">
+<span class="gc-badge">vector</span><span class="gc-badge">Parquet</span><span class="gc-badge">Point</span><span class="gc-badge">EPSG:4326</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A GeoParquet file with deliberately mixed attribute types and nullable columns: nullable integers (Int64), nullable booleans, nullable strings, and NaN floats. Exercises Parquet's native nullable type support and exposes loaders that silently downcast nullable types, lose null distinctions, or fail on mixed-type attribute schemas.
+
+<figure class="gc-figure">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+</figure>
 
 | Property | Value |
 |---|---|

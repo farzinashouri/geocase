@@ -7,7 +7,16 @@ description: "Canonical baseline multipolygon stored as plain WKT file for cross
 
 # MultiPolygon WKT Baseline
 
+<div class="gc-badges">
+<span class="gc-badge">vector</span><span class="gc-badge">WKT</span><span class="gc-badge">MultiPolygon</span><span class="gc-badge">EPSG:4326</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 Canonical baseline multipolygon stored as plain WKT file for cross-format comparison and format-specific loader behavior testing.
+
+<figure class="gc-figure">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<figcaption>Schematic: MultiPolygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+</figure>
 
 | Property | Value |
 |---|---|

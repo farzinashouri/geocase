@@ -9,6 +9,14 @@ description: "2 GeoCase test cases that exercise the precision loss failure mode
 
 These 2 cases exercise the `precision_loss` failure mode. Run your function against all of them to check how it behaves.
 
+<div class="gc-grid">
+<a class="gc-card" href="../../cases/precision_loss_geojson_roundtrip/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">GeoJSON Precision Loss Roundtrip</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+</div>
+
 | Case | Category | Format | Geometry |
 |---|---|---|---|
 | [GeoTIFF Float64 Small](../cases/geotiff_float64_small.md) | raster | GeoTIFF | -- |

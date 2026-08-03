@@ -7,7 +7,16 @@ description: "A minimal MultiPoint fixture in EPSG:4326 to cover non-singleton p
 
 # Simple Valid MultiPoint
 
+<div class="gc-badges">
+<span class="gc-badge">vector</span><span class="gc-badge">GeoJSON</span><span class="gc-badge">MultiPoint</span><span class="gc-badge">EPSG:4326</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A minimal MultiPoint fixture in EPSG:4326 to cover non-singleton point geometry behavior.
+
+<figure class="gc-figure">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Schematic: MultiPoint geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+</figure>
 
 | Property | Value |
 |---|---|

@@ -7,6 +7,10 @@ description: "A small single-band GeoTIFF stored as signed 16-bit integers. Test
 
 # GeoTIFF Int16 Small
 
+<div class="gc-badges">
+<span class="gc-badge">raster</span><span class="gc-badge">GeoTIFF</span><span class="gc-badge">EPSG:32633</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A small single-band GeoTIFF stored as signed 16-bit integers. Tests that raster loaders and downstream code preserve medium-range integer dtype semantics without silently widening or converting values.
 
 | Property | Value |

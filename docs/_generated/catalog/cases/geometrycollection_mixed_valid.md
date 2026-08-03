@@ -7,7 +7,16 @@ description: "A valid GeometryCollection fixture containing a point, line, and p
 
 # GeometryCollection Mixed Valid
 
+<div class="gc-badges">
+<span class="gc-badge">vector</span><span class="gc-badge">GeoJSON</span><span class="gc-badge">GeometryCollection</span><span class="gc-badge">EPSG:4326</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A valid GeometryCollection fixture containing a point, line, and polygon to support mixed-geometry loader behavior checks.
+
+<figure class="gc-figure">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a GeometryCollection geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a GeometryCollection geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="16,30 46,26 44,54 20,56" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="58,58 76,34 96,48" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="92" cy="22" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Schematic: GeometryCollection geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+</figure>
 
 | Property | Value |
 |---|---|

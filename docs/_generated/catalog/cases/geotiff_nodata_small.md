@@ -7,6 +7,10 @@ description: "A small single-band GeoTIFF with an explicit NoData sentinel value
 
 # GeoTIFF NoData Small
 
+<div class="gc-badges">
+<span class="gc-badge">raster</span><span class="gc-badge">GeoTIFF</span><span class="gc-badge">EPSG:32633</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A small single-band GeoTIFF with an explicit NoData sentinel value. Tests correct masking and propagation of NoData through raster operations.
 
 | Property | Value |

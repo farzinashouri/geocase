@@ -7,7 +7,16 @@ description: "A tiny two-band float32 SAR amplitude scene with VV and VH polaris
 
 # SAR Dual-Pol Small
 
+<div class="gc-badges">
+<span class="gc-badge">raster</span><span class="gc-badge">GeoTIFF</span><span class="gc-badge">EPSG:32633</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A tiny two-band float32 SAR amplitude scene with VV and VH polarisations. Exercises dual-polarisation radar band handling and ordering.
+
+<figure class="gc-figure">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 2 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 2 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="34.0" y="20.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="28.0" y="26.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="42.5" y1="26.0" x2="42.5" y2="60.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="57.0" y1="26.0" x2="57.0" y2="60.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="71.5" y1="26.0" x2="71.5" y2="60.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="28.0" y1="37.3" x2="86.0" y2="37.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="28.0" y1="48.7" x2="86.0" y2="48.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg>
+<figcaption>Schematic: 2 bands, 16x16 px, float32. Drawn from metadata, not from the pixels.</figcaption>
+</figure>
 
 | Property | Value |
 |---|---|

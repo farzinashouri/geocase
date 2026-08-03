@@ -36,6 +36,10 @@ if str(SRC_ROOT) not in sys.path:
 
 from geocase.catalog.registry import get_registry  # noqa: E402
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from catalog_svg import case_diagram, case_thumbnail  # noqa: E402
+
 
 # Descriptions are written for contributors, not searchers. Until they are
 # rewritten, fall back through the richer prose fields before using the title.
@@ -126,6 +130,57 @@ def _attribute_rows(case: Any) -> list[tuple[str, str]]:
 	if status:
 		rows.append(("Status", _value(status)))
 	return rows
+
+
+def _badges(case: Any) -> list[str]:
+	"""Render the case's defining facts as chips under the page title.
+
+	These duplicate rows in the property table by design: the table is a
+	reference a reader scans once, the badges are the identity of the page.
+	"""
+	bits = [_value(case.category), _value(case.format)]
+	if case.geometry_type:
+		bits.append(_value(case.geometry_type))
+	if case.crs:
+		bits.append(case.crs)
+	bits.append(_value(case.size_class))
+	bits.append(_value(case.storage_class))
+
+	chips = "".join(f'<span class="gc-badge">{bit}</span>' for bit in bits if bit)
+	return ['<div class="gc-badges">', chips, "</div>", ""]
+
+
+def _case_card(case: Any, href: str) -> list[str]:
+	"""Render one case as a thumbnail card for a grid listing."""
+	meta = _value(case.format)
+	geom = _value(case.geometry_type)
+	if geom:
+		meta = f"{meta} &middot; {geom}"
+	return [
+		f'<a class="gc-card" href="{href}">',
+		case_thumbnail(case),
+		f'<span class="gc-card-title">{case.title}</span>',
+		f'<span class="gc-card-meta">{meta}</span>',
+		"</a>",
+	]
+
+
+def _case_grid(cases: list[Any], href_prefix: str) -> list[str]:
+	"""Render a grid of case cards, skipping cases with no drawable schematic.
+
+	``href_prefix`` must be a *resolved* URL prefix, not a Markdown path.
+	These anchors are raw HTML, so mkdocs does not rewrite ``.md`` targets
+	inside them the way it does for Markdown links -- emitting ``foo.md`` here
+	ships a broken link that ``mkdocs build --strict`` will not catch.
+	"""
+	cards: list[str] = []
+	for case in cases:
+		if not case_thumbnail(case):
+			continue
+		cards.extend(_case_card(case, f"{href_prefix}{case.id}/"))
+	if not cards:
+		return []
+	return ['<div class="gc-grid">', *cards, "</div>", ""]
 
 
 def _assertion_rows(case: Any) -> list[tuple[str, str]]:
@@ -244,9 +299,15 @@ def _render_case_page(
 	lines.append(f"# {case.title}")
 	lines.append("")
 
+	lines.extend(_badges(case))
+
 	if case.description:
 		lines.append(_collapse(case.description))
 		lines.append("")
+
+	# The schematic sits above the tables: it answers "what shape of thing is
+	# this?" in one glance, which is the question the tables answer slowly.
+	lines.extend(case_diagram(case))
 
 	lines.extend(_table(("Property", "Value"), _attribute_rows(case)))
 	lines.append("")
@@ -352,6 +413,13 @@ def _render_hub_page(
 	lines.append("")
 	lines.append(intro)
 	lines.append("")
+
+	# The grid first, then the table. Someone landing on a risk hub is asking
+	# "what kind of data trips this?" -- the schematics answer that before the
+	# table's names do.
+	# Hub pages render at /catalog/<facet>/<slug>/, so cases sit two levels up.
+	lines.extend(_case_grid(sorted(cases, key=lambda item: item.id), "../../cases/"))
+
 	lines.append("| Case | Category | Format | Geometry |")
 	lines.append("|---|---|---|---|")
 	for case in sorted(cases, key=lambda item: item.id):
@@ -385,6 +453,26 @@ def _render_index(
 	lines.append(
 		f"GeoCase ships {len(cases)} curated geospatial test cases. "
 		"Every case is addressable by ID from a plain `pytest` test."
+	)
+	lines.append("")
+
+	lines.append("## Reading the schematics")
+	lines.append("")
+	lines.append(
+		"Each case page carries a diagram of the case's *structure*: the geometry type "
+		"for vector cases, and the band stack, pixel grid, and NoData marker for raster "
+		"cases."
+	)
+	lines.append("")
+	lines.append(
+		'!!! warning "Schematics are not pictures of the data"'
+	)
+	lines.append("")
+	lines.append(
+		"    They are drawn from case metadata alone -- never from the fixture bytes. "
+		"A `Polygon` schematic shows *a* polygon, not the case's real coordinates, and "
+		"a raster grid shows *that* there are pixels, not their values. Load the case "
+		"to see the actual data."
 	)
 	lines.append("")
 

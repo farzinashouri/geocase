@@ -9,6 +9,19 @@ description: "2 GeoCase test cases that exercise the distance threshold error fa
 
 These 2 cases exercise the `distance_threshold_error` failure mode. Run your function against all of them to check how it behaves.
 
+<div class="gc-grid">
+<a class="gc-card" href="../../cases/dateline_points_pair/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Dateline Points Pair</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/nearby_points_cluster/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Nearby Points Cluster</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+</div>
+
 | Case | Category | Format | Geometry |
 |---|---|---|---|
 | [Dateline Points Pair](../cases/dateline_points_pair.md) | vector | GeoJSON | Point |

@@ -7,7 +7,16 @@ description: "A straightforward LineString in EPSG:4326 used as a baseline for l
 
 # Simple Valid LineString
 
+<div class="gc-badges">
+<span class="gc-badge">vector</span><span class="gc-badge">GeoJSON</span><span class="gc-badge">LineString</span><span class="gc-badge">EPSG:4326</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A straightforward LineString in EPSG:4326 used as a baseline for line-loading and geometry-type selection behavior.
+
+<figure class="gc-figure">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<figcaption>Schematic: LineString geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+</figure>
 
 | Property | Value |
 |---|---|

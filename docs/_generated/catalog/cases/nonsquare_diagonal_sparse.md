@@ -7,6 +7,10 @@ description: "Raster with non-square cells and sparse diagonal valid pixels to s
 
 # Nonsquare Diagonal Sparse Raster
 
+<div class="gc-badges">
+<span class="gc-badge">raster</span><span class="gc-badge">GeoTIFF</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 Raster with non-square cells and sparse diagonal valid pixels to surface edge behavior in footprint generation.
 
 | Property | Value |

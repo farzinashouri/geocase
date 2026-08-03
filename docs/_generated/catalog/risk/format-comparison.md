@@ -9,6 +9,309 @@ description: "60 GeoCase test cases that exercise the format comparison failure 
 
 These 60 cases exercise the `format_comparison` failure mode. Run your function against all of them to check how it behaves.
 
+<div class="gc-grid">
+<a class="gc-card" href="../../cases/linestring_csv_wkt_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">LineString CSV_WKT Baseline</span>
+<span class="gc-card-meta">CSV_WKT &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/linestring_flatgeobuf_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">LineString FlatGeobuf Baseline</span>
+<span class="gc-card-meta">FlatGeobuf &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/linestring_geoarrow_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">LineString GeoArrow Baseline</span>
+<span class="gc-card-meta">GeoArrow &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/linestring_geopackage_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">LineString GeoPackage Baseline</span>
+<span class="gc-card-meta">GPKG &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/linestring_gml_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">LineString GML Baseline</span>
+<span class="gc-card-meta">GML &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/linestring_kml_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">LineString KML Baseline</span>
+<span class="gc-card-meta">KML &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/linestring_shapefile_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">LineString Shapefile Baseline</span>
+<span class="gc-card-meta">Shapefile &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/linestring_sqlite_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">LineString SQLite Baseline</span>
+<span class="gc-card-meta">SQLite &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/linestring_wkb_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">LineString WKB Baseline</span>
+<span class="gc-card-meta">WKB &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/linestring_wkt_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">LineString WKT Baseline</span>
+<span class="gc-card-meta">WKT &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/multilinestring_csv_wkt_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiLineString CSV WKT Baseline</span>
+<span class="gc-card-meta">CSV_WKT &middot; MultiLineString</span>
+</a>
+<a class="gc-card" href="../../cases/multilinestring_flatgeobuf_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiLineString FlatGeobuf Baseline</span>
+<span class="gc-card-meta">FlatGeobuf &middot; MultiLineString</span>
+</a>
+<a class="gc-card" href="../../cases/multilinestring_geopackage_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiLineString GeoPackage Baseline</span>
+<span class="gc-card-meta">GPKG &middot; MultiLineString</span>
+</a>
+<a class="gc-card" href="../../cases/multilinestring_gml_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiLineString GML Baseline</span>
+<span class="gc-card-meta">GML &middot; MultiLineString</span>
+</a>
+<a class="gc-card" href="../../cases/multilinestring_kml_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiLineString KML Baseline</span>
+<span class="gc-card-meta">KML &middot; MultiLineString</span>
+</a>
+<a class="gc-card" href="../../cases/multilinestring_parquet_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiLineString Parquet Baseline</span>
+<span class="gc-card-meta">Parquet &middot; MultiLineString</span>
+</a>
+<a class="gc-card" href="../../cases/multilinestring_shapefile_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiLineString Shapefile Baseline</span>
+<span class="gc-card-meta">Shapefile &middot; MultiLineString</span>
+</a>
+<a class="gc-card" href="../../cases/multilinestring_sqlite_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiLineString SQLite Baseline</span>
+<span class="gc-card-meta">SQLite &middot; MultiLineString</span>
+</a>
+<a class="gc-card" href="../../cases/multilinestring_wkb_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiLineString WKB Baseline</span>
+<span class="gc-card-meta">WKB &middot; MultiLineString</span>
+</a>
+<a class="gc-card" href="../../cases/multilinestring_wkt_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiLineString WKT Baseline</span>
+<span class="gc-card-meta">WKT &middot; MultiLineString</span>
+</a>
+<a class="gc-card" href="../../cases/multipoint_csv_wkt_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">MultiPoint CSV WKT Baseline</span>
+<span class="gc-card-meta">CSV_WKT &middot; MultiPoint</span>
+</a>
+<a class="gc-card" href="../../cases/multipoint_feather_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">MultiPoint Feather Baseline</span>
+<span class="gc-card-meta">Feather &middot; MultiPoint</span>
+</a>
+<a class="gc-card" href="../../cases/multipoint_flatgeobuf_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">MultiPoint FlatGeobuf Baseline</span>
+<span class="gc-card-meta">FlatGeobuf &middot; MultiPoint</span>
+</a>
+<a class="gc-card" href="../../cases/multipoint_geopackage_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">MultiPoint GeoPackage Baseline</span>
+<span class="gc-card-meta">GPKG &middot; MultiPoint</span>
+</a>
+<a class="gc-card" href="../../cases/multipoint_gml_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">MultiPoint GML Baseline</span>
+<span class="gc-card-meta">GML &middot; MultiPoint</span>
+</a>
+<a class="gc-card" href="../../cases/multipoint_kml_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">MultiPoint KML Baseline</span>
+<span class="gc-card-meta">KML &middot; MultiPoint</span>
+</a>
+<a class="gc-card" href="../../cases/multipoint_shapefile_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">MultiPoint Shapefile Baseline</span>
+<span class="gc-card-meta">Shapefile &middot; MultiPoint</span>
+</a>
+<a class="gc-card" href="../../cases/multipoint_sqlite_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">MultiPoint SQLite Baseline</span>
+<span class="gc-card-meta">SQLite &middot; MultiPoint</span>
+</a>
+<a class="gc-card" href="../../cases/multipoint_wkb_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">MultiPoint WKB Baseline</span>
+<span class="gc-card-meta">WKB &middot; MultiPoint</span>
+</a>
+<a class="gc-card" href="../../cases/multipoint_wkt_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">MultiPoint WKT Baseline</span>
+<span class="gc-card-meta">WKT &middot; MultiPoint</span>
+</a>
+<a class="gc-card" href="../../cases/multipolygon_csv_wkt_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiPolygon CSV WKT Baseline</span>
+<span class="gc-card-meta">CSV_WKT &middot; MultiPolygon</span>
+</a>
+<a class="gc-card" href="../../cases/multipolygon_flatgeobuf_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiPolygon FlatGeobuf Baseline</span>
+<span class="gc-card-meta">FlatGeobuf &middot; MultiPolygon</span>
+</a>
+<a class="gc-card" href="../../cases/multipolygon_geopackage_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiPolygon GeoPackage Baseline</span>
+<span class="gc-card-meta">GPKG &middot; MultiPolygon</span>
+</a>
+<a class="gc-card" href="../../cases/multipolygon_gml_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiPolygon GML Baseline</span>
+<span class="gc-card-meta">GML &middot; MultiPolygon</span>
+</a>
+<a class="gc-card" href="../../cases/multipolygon_kml_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiPolygon KML Baseline</span>
+<span class="gc-card-meta">KML &middot; MultiPolygon</span>
+</a>
+<a class="gc-card" href="../../cases/multipolygon_shapefile_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiPolygon Shapefile Baseline</span>
+<span class="gc-card-meta">Shapefile &middot; MultiPolygon</span>
+</a>
+<a class="gc-card" href="../../cases/multipolygon_sqlite_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiPolygon SQLite Baseline</span>
+<span class="gc-card-meta">SQLite &middot; MultiPolygon</span>
+</a>
+<a class="gc-card" href="../../cases/multipolygon_wkb_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiPolygon WKB Baseline</span>
+<span class="gc-card-meta">WKB &middot; MultiPolygon</span>
+</a>
+<a class="gc-card" href="../../cases/multipolygon_wkt_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">MultiPolygon WKT Baseline</span>
+<span class="gc-card-meta">WKT &middot; MultiPolygon</span>
+</a>
+<a class="gc-card" href="../../cases/point_arrow_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point Arrow Baseline</span>
+<span class="gc-card-meta">Arrow &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/point_csv_wkt_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point CSV WKT Baseline</span>
+<span class="gc-card-meta">CSV_WKT &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/point_feather_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point Feather Baseline</span>
+<span class="gc-card-meta">Feather &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/point_flatgeobuf_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point FlatGeobuf Baseline</span>
+<span class="gc-card-meta">FlatGeobuf &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/point_geopackage_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point GeoPackage Baseline</span>
+<span class="gc-card-meta">GPKG &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/point_gml_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point GML Baseline</span>
+<span class="gc-card-meta">GML &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/point_kml_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point KML Baseline</span>
+<span class="gc-card-meta">KML &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/point_shapefile_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point Shapefile Baseline</span>
+<span class="gc-card-meta">Shapefile &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/point_sqlite_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point SQLite Baseline</span>
+<span class="gc-card-meta">SQLite &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/point_wkb_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point WKB Baseline</span>
+<span class="gc-card-meta">WKB &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/point_wkt_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point WKT Baseline</span>
+<span class="gc-card-meta">WKT &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/polygon_csv_wkt_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Polygon CSV WKT Baseline</span>
+<span class="gc-card-meta">CSV_WKT &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/polygon_flatgeobuf_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Polygon FlatGeobuf Baseline</span>
+<span class="gc-card-meta">FlatGeobuf &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/polygon_geopackage_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Polygon GeoPackage Baseline</span>
+<span class="gc-card-meta">GPKG &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/polygon_gml_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Polygon GML Baseline</span>
+<span class="gc-card-meta">GML &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/polygon_kml_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Polygon KML Baseline</span>
+<span class="gc-card-meta">KML &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/polygon_parquet_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Polygon Parquet Baseline</span>
+<span class="gc-card-meta">Parquet &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/polygon_shapefile_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Polygon Shapefile Baseline</span>
+<span class="gc-card-meta">Shapefile &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/polygon_sqlite_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Polygon SQLite Baseline</span>
+<span class="gc-card-meta">SQLite &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/polygon_wkb_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Polygon WKB Baseline</span>
+<span class="gc-card-meta">WKB &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/polygon_wkt_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Polygon WKT Baseline</span>
+<span class="gc-card-meta">WKT &middot; Polygon</span>
+</a>
+</div>
+
 | Case | Category | Format | Geometry |
 |---|---|---|---|
 | [LineString CSV_WKT Baseline](../cases/linestring_csv_wkt_baseline.md) | vector | CSV_WKT | LineString |

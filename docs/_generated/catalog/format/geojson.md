@@ -9,6 +9,194 @@ description: "37 GeoCase test cases available in GeoJSON format."
 
 These 37 cases are packaged as GeoJSON.
 
+<div class="gc-grid">
+<a class="gc-card" href="../../cases/ambiguous_engine_dependent_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Ambiguous Engine-dependent Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/antimeridian_crossing_line/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Antimeridian Crossing LineString</span>
+<span class="gc-card-meta">GeoJSON &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/classic_antimeridian_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Classic Antimeridian Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/dateline_chain_cluster/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Dateline Chain Cluster</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/dateline_crossing_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Dateline crossing polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/dateline_points_pair/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Dateline Points Pair</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/degenerate_but_parseable_line/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Degenerate but Parseable Line</span>
+<span class="gc-card-meta">GeoJSON &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/disjoint_polygons/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Disjoint Polygons</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/empty_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Empty Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/equator_crossing_line/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Equator Crossing Line</span>
+<span class="gc-card-meta">GeoJSON &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/equator_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Equator-Crossing Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/format_limited_precision_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Format-limited Precision Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/geometrycollection_mixed_valid/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a GeometryCollection geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a GeometryCollection geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="16,30 46,26 44,54 20,56" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="58,58 76,34 96,48" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="92" cy="22" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">GeometryCollection Mixed Valid</span>
+<span class="gc-card-meta">GeoJSON &middot; GeometryCollection</span>
+</a>
+<a class="gc-card" href="../../cases/nearby_points_cluster/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Nearby Points Cluster</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/north_pole_point/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">North Pole Point</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/north_pole_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">North Pole Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/null_island_point/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Null Island Point</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/out_of_bounds_coordinates/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Out-of-Bounds / Invalid Coordinates</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/polygon_with_hole/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Polygon with Hole</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/precision_loss_geojson_roundtrip/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">GeoJSON Precision Loss Roundtrip</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/rasterize_match_utm33_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Rasterize Match UTM33 Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/rasterize_match_wgs84_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Rasterize Match WGS84 Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/self_intersecting_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Self-Intersecting Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/simple_valid_linestring/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Simple Valid LineString</span>
+<span class="gc-card-meta">GeoJSON &middot; LineString</span>
+</a>
+<a class="gc-card" href="../../cases/simple_valid_multilinestring/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Simple Valid MultiLineString</span>
+<span class="gc-card-meta">GeoJSON &middot; MultiLineString</span>
+</a>
+<a class="gc-card" href="../../cases/simple_valid_multipoint/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Simple Valid MultiPoint</span>
+<span class="gc-card-meta">GeoJSON &middot; MultiPoint</span>
+</a>
+<a class="gc-card" href="../../cases/simple_valid_multipolygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Simple Valid MultiPolygon</span>
+<span class="gc-card-meta">GeoJSON &middot; MultiPolygon</span>
+</a>
+<a class="gc-card" href="../../cases/simple_valid_point/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Simple Valid Point</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/simple_valid_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Simple Valid Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/south_pole_point/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">South Pole Point</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/south_pole_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">South Pole Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/spike_invalid_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Spike Invalid Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/svalbard_special_zone_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Svalbard Special Zone Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/unclosed_ring_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Unclosed Ring Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/utm_zone_33_polygon/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">UTM Zone 33 Polygon</span>
+<span class="gc-card-meta">GeoJSON &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/web_mercator_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Web Mercator Baseline Point</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/wrapped_longitude_point/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Wrapped Longitude Point</span>
+<span class="gc-card-meta">GeoJSON &middot; Point</span>
+</a>
+</div>
+
 | Case | Category | Format | Geometry |
 |---|---|---|---|
 | [Ambiguous Engine-dependent Polygon](../cases/ambiguous_engine_dependent_polygon.md) | vector | GeoJSON | Polygon |

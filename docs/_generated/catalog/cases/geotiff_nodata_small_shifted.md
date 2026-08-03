@@ -7,6 +7,10 @@ description: "A copy of the small NoData GeoTIFF shifted exactly one pixel east 
 
 # GeoTIFF NoData Small Shifted
 
+<div class="gc-badges">
+<span class="gc-badge">raster</span><span class="gc-badge">GeoTIFF</span><span class="gc-badge">EPSG:32633</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A copy of the small NoData GeoTIFF shifted exactly one pixel east while preserving CRS, resolution, band structure, and pixel values. Useful for testing whether raster alignment logic recognizes grids that are aligned on the same pixel lattice but have different extents.
 
 | Property | Value |

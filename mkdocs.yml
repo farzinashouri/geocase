@@ -24,6 +24,9 @@ theme:
     - navigation.sections
     - content.code.copy
 
+extra_css:
+  - stylesheets/catalog.css
+
 nav:
   - Home: index.md
   - Getting Started: getting-started.md

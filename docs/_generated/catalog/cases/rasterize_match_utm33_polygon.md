@@ -7,7 +7,16 @@ description: "A projected polygon in EPSG:32633 that sits fully inside the bundl
 
 # Rasterize Match UTM33 Polygon
 
+<div class="gc-badges">
+<span class="gc-badge">vector</span><span class="gc-badge">GeoJSON</span><span class="gc-badge">Polygon</span><span class="gc-badge">EPSG:32633</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A projected polygon in EPSG:32633 that sits fully inside the bundled UTM raster extent. Used for rasterization tests that should succeed without reprojection.
+
+<figure class="gc-figure">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+</figure>
 
 | Property | Value |
 |---|---|

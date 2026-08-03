@@ -7,6 +7,10 @@ description: "A GeoTIFF that straddles a UTM zone boundary. Exercises reprojecti
 
 # GeoTIFF UTM Boundary
 
+<div class="gc-badges">
+<span class="gc-badge">raster</span><span class="gc-badge">GeoTIFF</span><span class="gc-badge">EPSG:32633</span><span class="gc-badge">small</span><span class="gc-badge">bundled</span>
+</div>
+
 A GeoTIFF that straddles a UTM zone boundary. Exercises reprojection and mosaic logic where a single tile spans two coordinate zones.
 
 | Property | Value |

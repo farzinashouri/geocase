@@ -9,6 +9,29 @@ description: "4 GeoCase test cases that exercise the attribute loss failure mode
 
 These 4 cases exercise the `attribute_loss` failure mode. Run your function against all of them to check how it behaves.
 
+<div class="gc-grid">
+<a class="gc-card" href="../../cases/format_limited_kml_case/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<span class="gc-card-title">Format-Limited KML Case</span>
+<span class="gc-card-meta">KML &middot; Polygon</span>
+</a>
+<a class="gc-card" href="../../cases/mixed_encoding_attributes/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Mixed Encoding Attributes</span>
+<span class="gc-card-meta">GPKG &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/parquet_mixed_schema_attributes/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Parquet Mixed Schema Attributes</span>
+<span class="gc-card-meta">Parquet &middot; Point</span>
+</a>
+<a class="gc-card" href="../../cases/shapefile_field_truncation/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Shapefile Field Name Truncation</span>
+<span class="gc-card-meta">Shapefile &middot; Point</span>
+</a>
+</div>
+
 | Case | Category | Format | Geometry |
 |---|---|---|---|
 | [Format-Limited KML Case](../cases/format_limited_kml_case.md) | vector | KML | Polygon |

@@ -7,6 +7,10 @@ description: "A minimal CF-compliant NetCDF file with latitude/longitude dimensi
 
 # Lat/Lon Small NetCDF
 
+<div class="gc-badges">
+<span class="gc-badge">netcdf</span><span class="gc-badge">NetCDF</span><span class="gc-badge">EPSG:4326</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A minimal CF-compliant NetCDF file with latitude/longitude dimensions and a single data variable. Baseline for xarray-based loading and coordinate inspection.
 
 | Property | Value |

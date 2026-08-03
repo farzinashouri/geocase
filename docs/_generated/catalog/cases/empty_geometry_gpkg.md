@@ -7,7 +7,16 @@ description: "A GeoPackage containing rows with empty geometries (WKB EMPTY repr
 
 # Empty Geometry in GeoPackage
 
+<div class="gc-badges">
+<span class="gc-badge">vector</span><span class="gc-badge">GPKG</span><span class="gc-badge">Point</span><span class="gc-badge">EPSG:4326</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A GeoPackage containing rows with empty geometries (WKB EMPTY representation) to test how loaders handle the distinction between NULL geometry and EMPTY geometry. In GeoPackage/SQLite, NULL means "no geometry value" while EMPTY means "a geometry that contains no coordinates". This case exposes loaders that conflate NULL and EMPTY or fail to handle EMPTY geometries correctly.
+
+<figure class="gc-figure">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+</figure>
 
 | Property | Value |
 |---|---|

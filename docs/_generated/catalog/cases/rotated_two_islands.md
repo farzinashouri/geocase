@@ -7,6 +7,10 @@ description: "Raster with rotated/skewed transform and disconnected valid region
 
 # Rotated Two Islands Raster
 
+<div class="gc-badges">
+<span class="gc-badge">raster</span><span class="gc-badge">GeoTIFF</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 Raster with rotated/skewed transform and disconnected valid regions, designed to stress convex-hull style footprint generation.
 
 | Property | Value |

@@ -7,6 +7,10 @@ description: "Raster whose valid region forms a thin corridor geometry, sensitiv
 
 # Thin Corridor Shape Raster
 
+<div class="gc-badges">
+<span class="gc-badge">raster</span><span class="gc-badge">GeoTIFF</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 Raster whose valid region forms a thin corridor geometry, sensitive to simplification and footprint stability assumptions.
 
 | Property | Value |

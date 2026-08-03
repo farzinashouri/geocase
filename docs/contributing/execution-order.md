@@ -13,7 +13,9 @@ dataset-catalog work.
 
 ## Status
 
-**Batches 1–4 complete.** Bundled data 36 MB → 4.2 MB; wheel 458 KB; `pytest tests -q`
+**Batches 1–5 complete, to the upload boundary.** The three irreversible release steps —
+TestPyPI dry run, trusted-publishing setup, and `twine upload` — remain, deliberately left
+for a human to authorize. Bundled data 36 MB → 4.2 MB; wheel 458 KB; `pytest tests -q`
 green at **780 passed, 1 skipped**; ruff and mypy clean and gated; coverage measured at
 **54%** in Batch 3 (non-blocking, to be re-measured before release). `import geocase`
 now yields a pinned 27-name public surface, and manifest case ids resolve.
@@ -184,7 +186,8 @@ counting 25 of 30. When a batch corrects a fact, add the check that keeps it cor
 
 ## If the priority is a fast first upload
 
-Batches 1, 4, and 5 alone are sufficient to publish (1 and 4 are now done). Batch 3 is what makes the release
+Batches 1, 4, and 5 alone are sufficient to publish. All five are now done to the upload
+boundary, so this section is retained only as a record of the reasoning. Batch 3 is what makes the release
 *trustworthy* rather than merely *installable*, and it is the batch that prevents the next
 round of drift — skipping it is a decision to accept that drift, not a way to avoid the
 cost.

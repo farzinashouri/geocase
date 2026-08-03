@@ -7,7 +7,16 @@ description: "A simple rectangle straddling the equator in EPSG:4326, spanning l
 
 # Equator-Crossing Polygon
 
+<div class="gc-badges">
+<span class="gc-badge">vector</span><span class="gc-badge">GeoJSON</span><span class="gc-badge">Polygon</span><span class="gc-badge">EPSG:4326</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A simple rectangle straddling the equator in EPSG:4326, spanning latitudes -5 to 5 and longitudes -10 to 10. This exercises hemisphere-boundary logic in spatial operations -- sign changes in latitude, UTM zone selection, and area calculations that cross from the southern to northern hemisphere.
+
+<figure class="gc-figure">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+</figure>
 
 | Property | Value |
 |---|---|

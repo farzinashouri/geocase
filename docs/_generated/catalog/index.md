@@ -9,6 +9,14 @@ description: "Browse all 134 curated GeoCase test cases by category, format, and
 
 GeoCase ships 134 curated geospatial test cases. Every case is addressable by ID from a plain `pytest` test.
 
+## Reading the schematics
+
+Each case page carries a diagram of the case's *structure*: the geometry type for vector cases, and the band stack, pixel grid, and NoData marker for raster cases.
+
+!!! warning "Schematics are not pictures of the data"
+
+    They are drawn from case metadata alone -- never from the fixture bytes. A `Polygon` schematic shows *a* polygon, not the case's real coordinates, and a raster grid shows *that* there are pixels, not their values. Load the case to see the actual data.
+
 ## Browse by risk type
 
 Start here if you know the failure mode you want to test against.

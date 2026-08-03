@@ -7,6 +7,10 @@ description: "Raster where valid pixels form a ring around central NoData, stres
 
 # Hole Center NoData Raster
 
+<div class="gc-badges">
+<span class="gc-badge">raster</span><span class="gc-badge">GeoTIFF</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 Raster where valid pixels form a ring around central NoData, stressing footprint extraction near interior voids.
 
 | Property | Value |

@@ -7,7 +7,16 @@ description: "A KML file demonstrating inherent format limitations: all extended
 
 # Format-Limited KML Case
 
+<div class="gc-badges">
+<span class="gc-badge">vector</span><span class="gc-badge">KML</span><span class="gc-badge">Polygon</span><span class="gc-badge">EPSG:4326</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 A KML file demonstrating inherent format limitations: all extended-data attributes are stored as strings regardless of their original type, coordinates are always WGS 84, and Z coordinates are included even when not meaningful. Exposes loaders or converters that assume numeric attribute types survive a KML round-trip.
+
+<figure class="gc-figure">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+</figure>
 
 | Property | Value |
 |---|---|

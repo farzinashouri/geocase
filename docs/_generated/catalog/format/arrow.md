@@ -9,6 +9,14 @@ description: "1 GeoCase test cases available in Arrow format."
 
 These 1 cases are packaged as Arrow.
 
+<div class="gc-grid">
+<a class="gc-card" href="../../cases/point_arrow_baseline/">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<span class="gc-card-title">Point Arrow Baseline</span>
+<span class="gc-card-meta">Arrow &middot; Point</span>
+</a>
+</div>
+
 | Case | Category | Format | Geometry |
 |---|---|---|---|
 | [Point Arrow Baseline](../cases/point_arrow_baseline.md) | vector | Arrow | Point |

@@ -7,7 +7,16 @@ description: "Canonical baseline point stored as an Arrow IPC file to exercise t
 
 # Point Arrow Baseline
 
+<div class="gc-badges">
+<span class="gc-badge">vector</span><span class="gc-badge">Arrow</span><span class="gc-badge">Point</span><span class="gc-badge">EPSG:4326</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
+</div>
+
 Canonical baseline point stored as an Arrow IPC file to exercise the explicit Arrow loader path.
+
+<figure class="gc-figure">
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+</figure>
 
 | Property | Value |
 |---|---|
