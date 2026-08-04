@@ -66,6 +66,19 @@ Changelog = "https://gitlab.com/fashouri/geocase/-/blob/main/CHANGELOG.md"
 [tool.hatch.build.targets.wheel]
 packages = ["src/geocase"]
 
+# conda-forge builds from the sdist, so it must carry `tests/` (the recipe's test
+# section runs the suite against the installed package) alongside the sources.
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/geocase",
+    "tests",
+    "conftest.py",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "pyproject.toml",
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 filterwarnings = [

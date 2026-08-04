@@ -17,43 +17,60 @@ symptom exactly: two lines of caption text, no shape.
 Two further facts make this more than a CI addition:
 
 - `site_url` in `mkdocs.yml` and `Documentation` in `pyproject.toml` both point at
-  `farzinashouri.github.io/geocase` — a host nothing deploys to. Batch 5 corrected
-  `repo_url` to GitLab but missed these two.
-- That wrong URL is **baked into all 134 generated case pages** as the JSON-LD `url` and
+  `farzinashouri.github.io/geocase` — a host nothing deploys to *yet*. With the GitHub
+  account `github.com/farzinashouri` now created, this URL is correct and no longer needs
+  changing; only the deployment is missing.
+- The same URL is baked into all 134 generated case pages as the JSON-LD `url` and
   `isPartOf.url`, which is the Google Dataset Search surface the generator exists to feed.
+  Those are correct as written — no regeneration is required.
 
-Target: `https://fashouri1.github.io/geocase`, deployed by GitHub Actions from a mirror of
-the GitLab repo. GitLab CI keeps its `--strict` check; GitHub does the publishing.
+Target: `https://farzinashouri.github.io/geocase`, deployed by GitHub Actions from a mirror
+of the GitLab repo. GitLab CI keeps its `--strict` check; GitHub does the publishing.
 
 ## Prerequisites (manual, outside this repo)
 
 The CI work is inert until these are done, and they are deliberately left to a human:
 
-1. Create `github.com/fashouri1/geocase`.
-2. In GitLab: **Settings → Repository → Mirroring repositories**, add a push mirror to the
-   GitHub repo (needs a GitHub PAT with `repo` scope).
+1. Create `github.com/farzinashouri/geocase` — **empty**, with no README, `.gitignore`, or
+   license, so the first mirror push does not conflict. (The account
+   `github.com/farzinashouri` already exists; the repository does not yet.) Description:
+   the `pyproject.toml` `description` verbatim — "A curated library of geospatial test
+   cases for automated and parameterized testing."
+2. In GitLab: **Settings → Repository → Mirroring repositories**. Mirroring is configured
+   only on the GitLab side — GitHub has no corresponding setting, because the direction is
+   GitLab → GitHub. Add a push mirror to `https://github.com/farzinashouri/geocase.git`,
+   mirror direction **Push**, authentication **Username and Password**, username
+   `farzinashouri`, password a GitHub PAT with `repo` scope. Both checkboxes stay
+   **unchecked**:
+   - *Keep divergent refs* — off, so GitLab force-pushes and GitHub always matches GitLab
+     exactly. On, any diverged branch silently stops mirroring. This one is **immutable
+     after creation** except via the API, so it must be right the first time.
+   - *Mirror only protected branches* — off, so every branch and tag mirrors, not just
+     `main`.
+
+   Then use **Update now** on the new mirror row to trigger the first sync.
 3. In GitHub: **Settings → Pages → Source: GitHub Actions**.
+
+GitLab push mirroring pushes the full repository — every commit, branch, and tag — not a
+squashed snapshot. So the GitHub copy carries the complete commit history, and it stays in
+sync on each subsequent push. (Only the initial mirror sync must be allowed to finish; use
+**Update now** on the mirror row to trigger it.)
 
 ## Steps
 
-### 12.1 Point the canonical URL at the real host
+### 12.1 Canonical URL — no change required
 
-Three places, all currently `farzinashouri.github.io` → `fashouri1.github.io`:
+With the account `github.com/farzinashouri`, the existing value
+`https://farzinashouri.github.io/geocase` is already the correct published host in all
+three places (`mkdocs.yml` `site_url`, `pyproject.toml` `Documentation`,
+`scripts/generate_catalog_pages.py` `DEFAULT_SITE_URL`), and therefore in the JSON-LD of
+all 134 generated case pages. No edit, no regeneration, no gate churn.
 
-- `mkdocs.yml` — `site_url`
-- `pyproject.toml` — `Documentation`
-- `scripts/generate_catalog_pages.py` — `DEFAULT_SITE_URL`
-
-Then regenerate so the JSON-LD matches:
+Only confirm the gate still agrees:
 
 ```
-python scripts/generate_catalog_pages.py
+python scripts/generate_catalog_pages.py --check
 ```
-
-This rewrites `url` / `isPartOf.url` in 134 case pages. Because `--check` reads the same
-`DEFAULT_SITE_URL`, the existing gate stays consistent automatically — no gate change is
-needed. The regenerated pages must be committed alongside the source change, or
-`catalog_validation` goes red.
 
 ### 12.2 Add the GitHub Actions deploy workflow
 
@@ -91,30 +108,26 @@ On the GitHub side, `--strict` in the workflow is the equivalent guard.
 | File | Change |
 |---|---|
 | `.github/workflows/docs.yml` | new — build + deploy to Pages |
-| `mkdocs.yml` | `site_url` → `fashouri1.github.io` |
-| `pyproject.toml` | `Documentation` URL |
-| `scripts/generate_catalog_pages.py` | `DEFAULT_SITE_URL` |
 | `ci/docs.yml` | `needs: [catalog_validation]` |
-| `docs/_generated/catalog/cases/*.md` | 134 files, JSON-LD URL only (regenerated) |
+
+`mkdocs.yml`, `pyproject.toml`, `scripts/generate_catalog_pages.py`, and the 134 generated
+case pages are unchanged — their `farzinashouri.github.io` URL is already correct.
 
 ## Verification
 
 Local, before pushing:
 
 ```
-python scripts/generate_catalog_pages.py          # regenerate
 python scripts/generate_catalog_pages.py --check  # gate agrees
 python -m mkdocs build --strict                   # zero warnings
 python -m pytest tests -q                         # 786 passed, 1 skipped
 python -m ruff check src tests && python -m mypy src
 ```
 
-Confirm no stale host remains:
+Confirm the canonical host is the one that will be served:
 
 ```
-grep -rl "farzinashouri.github.io" docs/ mkdocs.yml pyproject.toml scripts/
-# expected: no output
-grep -c "fashouri1.github.io" docs/_generated/catalog/cases/dem_small.md
+grep -c "farzinashouri.github.io" docs/_generated/catalog/cases/dem_small.md
 # expected: 2  (url + isPartOf.url)
 ```
 
@@ -128,7 +141,7 @@ python -m mkdocs serve
 ```
 
 After the mirror and Pages source are configured, push to `main`, confirm the Actions run
-is green, and confirm `https://fashouri1.github.io/geocase` serves the Case Catalog with
+is green, and confirm `https://farzinashouri.github.io/geocase` serves the Case Catalog with
 schematics visible.
 
 ## Note on reversibility
