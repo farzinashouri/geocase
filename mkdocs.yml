@@ -42,6 +42,7 @@ nav:
       - Dataset Catalog: dataset-catalog.md
   - Contributing:
       - Workflow: contributing/workflow.md
+      - Releasing: contributing/releasing.md
       - Viewing Schematics: contributing/viewing-schematics.md
       - Structure & Planning: contributing/structure-and-planning.md
       - Manifests & Storage: contributing/manifests-and-storage.md

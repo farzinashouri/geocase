@@ -24,6 +24,13 @@ When a package release is published, install from the package index:
 pip install "geocase[all]"
 ```
 
+Or from conda-forge — note the extras are not packaged there, since bundling
+GDAL would make the conda package far heavier than the PyPI equivalent:
+
+```bash
+conda install -c conda-forge geocase
+```
+
 ### 2) Write a test with GeoCase markers
 
 ```python

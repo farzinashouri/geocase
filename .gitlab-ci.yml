@@ -8,6 +8,7 @@
 stages:
 - test
 - secret-detection
+- release
 
 sast:
   stage: test
@@ -19,6 +20,7 @@ include:
 - local: ci/tests.yml
 - local: ci/lint.yml
 - local: ci/docs.yml
+- local: ci/release.yml
 
 variables:
   SECRET_DETECTION_ENABLED: 'true'
