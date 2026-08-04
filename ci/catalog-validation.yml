@@ -1,11 +1,41 @@
 catalog_validation:
   stage: test
-  image: python:3.11
+  # Fixture generation needs the GDAL Python bindings (``osgeo``), which are
+  # source-only on PyPI, so this job runs on the upstream GDAL image where they
+  # are prebuilt rather than on a bare python image.
+  #
+  # ``ubuntu-full`` rather than ``ubuntu-small``: the vector fixture gate creates
+  # SpatiaLite databases, which needs GDAL linked against libspatialite.
+  # ``ubuntu-small`` omits it, and generate_vector_fixtures.py exits 2 with an
+  # explanatory message rather than silently passing if that support is absent.
+  image: ghcr.io/osgeo/gdal:ubuntu-full-3.10.0
   before_script:
+    # ``--system-site-packages`` keeps the image's osgeo bindings importable
+    # while pip-installed packages land in the venv (Ubuntu marks the system
+    # interpreter externally managed).
+    - apt-get update -qq && apt-get install -y -qq python3-venv git
+    - python3 -m venv --system-site-packages /venv
+    - . /venv/bin/activate
     - python -m pip install --upgrade pip
-    - python -m pip install -e .
+    # The image's osgeo bindings are compiled against NumPy 1.x; letting pip
+    # pull NumPy 2 breaks ``osgeo.gdal_array`` at import time.
+    - python -m pip install -e .[raster] "numpy<2"
   script:
     - python scripts/build_case_index.py --check
     - python scripts/validate_catalog.py
+    - python scripts/generate_raster_fixtures.py --check
+    - python scripts/generate_vector_fixtures.py --check
+    # Checksums now cover the whole bundled catalog, not just raster: the vector
+    # SQLite fixtures drifted to 6.7 MB each precisely because nothing watched
+    # them.
+    - python scripts/generate_checksums.py --check
     - python scripts/generate_vector_coverage_matrix.py --output docs/_generated/vector-coverage-matrix.md
     - git diff --exit-code -- docs/_generated/vector-coverage-matrix.md
+    - python scripts/generate_raster_coverage_matrix.py --output docs/_generated/raster-coverage-matrix.md
+    - git diff --exit-code -- docs/_generated/raster-coverage-matrix.md
+    # The per-case catalog pages enumerate every id, CRS, dtype and nodata value
+    # in the catalog, which makes them the highest-drift-risk artifact in the
+    # repository. They were already stale by 127 files when this gate was added.
+    # ``--check`` reports missing, out-of-date and stale pages by name, so it is
+    # used in place of a ``git diff`` on a 187-file tree.
+    - python scripts/generate_catalog_pages.py --check

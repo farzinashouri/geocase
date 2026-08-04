@@ -2,7 +2,7 @@
 
 GeoCase is a geospatial testing toolkit and case catalog for realistic, reproducible `pytest` tests.
 
-> Status: alpha. The core `pytest` workflow is usable today; current work focuses on expanding case coverage, polishing docs, and release readiness.
+> Status: **1.0**. The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 134 bundled cases, 4.2 MB. Remote dataset transport is deferred to v1.1; see the [changelog](CHANGELOG.md).
 
 The main goal is simple: use plain `pytest` with a few GeoCase fixtures and markers to run your geospatial code against curated edge cases.
 
@@ -22,6 +22,13 @@ When a package release is published, install from the package index:
 
 ```bash
 pip install "geocase[all]"
+```
+
+Or from conda-forge — note the extras are not packaged there, since bundling
+GDAL would make the conda package far heavier than the PyPI equivalent:
+
+```bash
+conda install -c conda-forge geocase
 ```
 
 ### 2) Write a test with GeoCase markers
@@ -62,12 +69,12 @@ This repository uses GitLab CI with job definitions in `ci/` and includes from
 
 - `catalog_validation` (`ci/catalog-validation.yml`)
     - runs catalog integrity checks (`build_case_index.py` generation smoke check and `validate_catalog.py`)
-- `core_tests` (`ci/core-tests.yml`)
+- `tests` (`ci/tests.yml`)
+    - runs on push and merge request pipelines, on Python 3.11 and 3.14
+    - executes the whole `tests/` directory and reports coverage (not gated)
+- `lint` (`ci/lint.yml`)
     - runs on push and merge request pipelines
-    - executes metadata/catalog/plugin-focused unit tests
-- `extended_tests` (`ci/extended-tests.yml`)
-    - runs on merge request pipelines and on the default branch
-    - executes runtime/loaders/assertions-focused unit tests
+    - `ruff format --check` and `ruff check` over `src` and `tests`
 
 Local equivalents:
 
@@ -75,8 +82,8 @@ Local equivalents:
 python scripts/build_case_index.py --check
 python scripts/validate_catalog.py
 
-python -m pytest tests/unit/test_case_models.py tests/unit/test_loader.py tests/unit/test_registry.py tests/unit/test_selectors.py tests/unit/test_suites.py tests/unit/test_pytest_plugin.py -q
-python -m pytest tests/unit/test_cases.py tests/unit/test_assertions.py tests/unit/test_vector_loaders.py tests/unit/test_raster_loaders.py -q
+python -m pytest tests -q
+ruff format --check src tests && ruff check src tests
 ```
 
 ## Core Concepts
@@ -97,6 +104,6 @@ If a GeoCase marker is missing, resolves no cases, refers to an unknown suite, o
 - [`docs/case-discovery.md`](docs/case-discovery.md)
 - [`docs/assertions-reference.md`](docs/assertions-reference.md)
 - [`docs/examples-index.md`](docs/examples-index.md)
-- [`docs/contributing/development-plan.md`](docs/contributing/development-plan.md)
+- [`docs/plans/development-plan.md`](docs/plans/development-plan.md)
 - [`docs/contributing/workflow.md`](docs/contributing/workflow.md)
 - [`docs/design/case-recommendation-service.md`](docs/design/case-recommendation-service.md)

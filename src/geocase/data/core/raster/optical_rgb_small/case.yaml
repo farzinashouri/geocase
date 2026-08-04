@@ -1,0 +1,61 @@
+id: optical_rgb_small
+title: Optical RGB Small
+description: >
+  A tiny three-band uint8 optical RGB scene. Exercises basic true-colour
+  raster handling: band count, dtype, and explicit band naming.
+category: raster
+format: GeoTIFF
+test_tier: integration
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - eo
+  - optical
+  - rgb
+  - product:optical
+  - geography:utm
+  - delivery:single-file
+
+risk_types:
+  - band_loss
+  - incorrect_band_order
+  - dtype_drift
+
+behavioral_goal: >
+  Confirm GeoCase can open a small RGB optical raster and preserve its three
+  uint8 bands and their red/green/blue ordering.
+
+expected_capabilities:
+  - load
+  - multiband-read
+  - band-name-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: optical_rgb_small.tif
+  notes: notes.md
+
+source:
+  name: geocase-synthetic
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expected_band_count: 3
+  expected_dtype: uint8
+  expected_shape: [16, 16]
+  expected_band_names: [red, green, blue]
+  expected_compression: deflate
+
+params:
+  generator: scripts/generate_raster_fixtures.py

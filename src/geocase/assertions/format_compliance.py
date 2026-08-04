@@ -18,7 +18,6 @@ import xml.etree.ElementTree as ET
 from collections.abc import Callable
 from pathlib import Path
 
-
 # ===================================================================
 # Public entry points
 # ===================================================================
@@ -82,25 +81,19 @@ def assert_geoparquet_metadata(path: Path) -> None:
             f"'geo' metadata is not valid JSON in {path.name}: {exc}"
         ) from exc
 
-    assert isinstance(geo, dict), (
-        f"'geo' metadata is not a JSON object in {path.name}"
-    )
+    assert isinstance(geo, dict), f"'geo' metadata is not a JSON object in {path.name}"
     assert "primary_column" in geo, (
         f"GeoParquet metadata missing 'primary_column' in {path.name}"
     )
-    assert "columns" in geo, (
-        f"GeoParquet metadata missing 'columns' in {path.name}"
-    )
+    assert "columns" in geo, f"GeoParquet metadata missing 'columns' in {path.name}"
 
 
 # ===================================================================
 # Per-format validators (private)
 # ===================================================================
 
-
-def _validate_geojson(path: Path) -> None:
-    """GeoJSON: must parse as JSON with a recognized GeoJSON ``type``."""
-    _GEOJSON_TYPES = {
+_GEOJSON_TYPES = frozenset(
+    {
         "Feature",
         "FeatureCollection",
         "GeometryCollection",
@@ -111,18 +104,22 @@ def _validate_geojson(path: Path) -> None:
         "Polygon",
         "MultiPolygon",
     }
+)
+
+_WKT_COLUMN_NAMES = frozenset({"wkt", "geometry_wkt", "geometry"})
+
+
+def _validate_geojson(path: Path) -> None:
+    """GeoJSON: must parse as JSON with a recognized GeoJSON ``type``."""
     try:
         with path.open() as f:
             data = json.load(f)
     except (json.JSONDecodeError, UnicodeDecodeError) as exc:
-        raise AssertionError(
-            f"File is not valid JSON: {path.name} — {exc}"
-        ) from exc
+        raise AssertionError(f"File is not valid JSON: {path.name} — {exc}") from exc
 
     if not isinstance(data, dict):
         raise AssertionError(
-            f"GeoJSON root must be an object, got {type(data).__name__}: "
-            f"{path.name}"
+            f"GeoJSON root must be an object, got {type(data).__name__}: {path.name}"
         )
 
     top_type = data.get("type")
@@ -150,8 +147,7 @@ def _validate_gpkg(path: Path) -> None:
     conn = sqlite3.connect(str(path))
     try:
         cur = conn.execute(
-            "SELECT name FROM sqlite_master "
-            "WHERE type='table' AND name='gpkg_contents'"
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='gpkg_contents'"
         )
         if cur.fetchone() is None:
             raise AssertionError(
@@ -167,9 +163,7 @@ def _validate_shapefile(path: Path) -> None:
     with path.open("rb") as f:
         raw = f.read(4)
     if len(raw) < 4:
-        raise AssertionError(
-            f"Shapefile too small to contain magic bytes: {path.name}"
-        )
+        raise AssertionError(f"Shapefile too small to contain magic bytes: {path.name}")
     magic = struct.unpack(">i", raw)[0]
     if magic != 9994:
         raise AssertionError(
@@ -192,17 +186,14 @@ def _validate_kml(path: Path) -> None:
     try:
         tree = ET.parse(path)  # noqa: S314
     except ET.ParseError as exc:
-        raise AssertionError(
-            f"File is not valid XML: {path.name} — {exc}"
-        ) from exc
+        raise AssertionError(f"File is not valid XML: {path.name} — {exc}") from exc
 
     root = tree.getroot()
     # Namespace-aware: {http://www.opengis.net/kml/2.2}kml
     tag = root.tag.lower()
     if "kml" not in tag:
         raise AssertionError(
-            f"XML root tag is '{root.tag}', expected a KML root element: "
-            f"{path.name}"
+            f"XML root tag is '{root.tag}', expected a KML root element: {path.name}"
         )
 
 
@@ -211,9 +202,7 @@ def _validate_gml(path: Path) -> None:
     try:
         tree = ET.parse(path)  # noqa: S314
     except ET.ParseError as exc:
-        raise AssertionError(
-            f"File is not valid XML: {path.name} — {exc}"
-        ) from exc
+        raise AssertionError(f"File is not valid XML: {path.name} — {exc}") from exc
 
     root = tree.getroot()
     tag_lower = root.tag.lower()
@@ -236,8 +225,7 @@ def _validate_sqlite(path: Path) -> None:
     conn = sqlite3.connect(str(path))
     try:
         cur = conn.execute(
-            "SELECT name FROM sqlite_master "
-            "WHERE type='table' AND name='gpkg_contents'"
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='gpkg_contents'"
         )
         if cur.fetchone() is not None:
             raise AssertionError(
@@ -273,7 +261,6 @@ def _validate_arrow_ipc(path: Path) -> None:
 
 def _validate_csv_wkt(path: Path) -> None:
     """CSV_WKT: parseable CSV with a WKT-like column in the header."""
-    _WKT_COLUMN_NAMES = {"wkt", "geometry_wkt", "geometry"}
     try:
         with path.open(newline="") as f:
             reader = csv.reader(f)
@@ -324,8 +311,7 @@ def _validate_wkb(path: Path) -> None:
             wkb.loads(bytes.fromhex(raw.decode("ascii").strip()))
         except Exception as exc:
             raise AssertionError(
-                f"File content is not valid WKB (binary or hex): "
-                f"{path.name} — {exc}"
+                f"File content is not valid WKB (binary or hex): {path.name} — {exc}"
             ) from exc
 
 
@@ -340,8 +326,7 @@ def _assert_sqlite_header(path: Path) -> None:
         header = f.read(16)
     if header != b"SQLite format 3\x00":
         raise AssertionError(
-            f"File does not start with SQLite header: {path.name} "
-            f"(got {header!r})"
+            f"File does not start with SQLite header: {path.name} (got {header!r})"
         )
 
 

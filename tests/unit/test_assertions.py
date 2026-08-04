@@ -10,6 +10,11 @@ import numpy as np
 import pytest
 
 from geocase.assertions.crs import assert_crs_units, assert_epsg, assert_has_crs
+from geocase.assertions.footprint import (
+    assert_footprint_no_holes,
+    assert_footprint_rectangularity,
+    assert_footprint_similar_to_expected,
+)
 from geocase.assertions.geometry import (
     assert_feature_count,
     assert_geometry_type,
@@ -17,11 +22,6 @@ from geocase.assertions.geometry import (
     assert_invalid_geometry,
     assert_no_holes,
     assert_valid_geometry,
-)
-from geocase.assertions.footprint import (
-    assert_footprint_no_holes,
-    assert_footprint_rectangularity,
-    assert_footprint_similar_to_expected,
 )
 from geocase.assertions.metadata import (
     assert_case_loadable,
@@ -41,11 +41,10 @@ from geocase.assertions.topology import (
     assert_no_null_geometries,
     assert_no_self_intersections,
 )
-from geocase.catalog.loader import load_case_metadata
 from geocase.cases.factory import create_case
 from geocase.cases.raster import RasterCase
 from geocase.cases.vector import VectorCase
-
+from geocase.catalog.loader import load_case_metadata
 
 # ---------------------------------------------------------------------------
 # Path constants
@@ -73,8 +72,8 @@ def _meta(case_dir):
 # Geometry assertions
 # ===================================================================
 
-class TestAssertValidGeometry:
 
+class TestAssertValidGeometry:
     def test_valid_polygon_passes(self):
         """Does not raise for a valid polygon geometry."""
         gdf = gpd.read_file(_SIMPLE / "geometry.geojson")
@@ -94,9 +93,8 @@ class TestAssertValidGeometry:
 
 
 class TestAssertInvalidGeometry:
-
     def test_self_intersecting_passes(self):
-        """Does not raise when invalid-geometry assertion sees a self-intersecting polygon."""
+        """Does not raise when invalid-geometry sees a self-intersecting polygon."""
         gdf = gpd.read_file(_SELF_INTER / "geometry.geojson")
         assert_invalid_geometry(gdf)  # should not raise
 
@@ -108,9 +106,8 @@ class TestAssertInvalidGeometry:
 
 
 class TestAssertGeometryType:
-
     def test_polygon_type_passes(self):
-        """Accepts a GeoDataFrame whose geometry type matches the expected polygon type."""
+        """Accepts a GeoDataFrame whose geometry type matches the expected type."""
         gdf = gpd.read_file(_SIMPLE / "geometry.geojson")
         assert_geometry_type(gdf, "Polygon")
 
@@ -132,7 +129,6 @@ class TestAssertGeometryType:
 
 
 class TestAssertHasHoles:
-
     def test_polygon_with_hole_passes(self):
         """Detects interior rings in the polygon-with-hole fixture."""
         gdf = gpd.read_file(_HOLE / "geometry.geojson")
@@ -146,7 +142,6 @@ class TestAssertHasHoles:
 
 
 class TestAssertNoHoles:
-
     def test_simple_polygon_passes(self):
         """Passes when a polygon has no interior rings."""
         gdf = gpd.read_file(_SIMPLE / "geometry.geojson")
@@ -160,7 +155,6 @@ class TestAssertNoHoles:
 
 
 class TestAssertFeatureCount:
-
     def test_single_feature(self):
         """Validates a one-feature GeoDataFrame."""
         gdf = gpd.read_file(_SIMPLE / "geometry.geojson")
@@ -182,8 +176,8 @@ class TestAssertFeatureCount:
 # CRS assertions
 # ===================================================================
 
-class TestAssertHasCrs:
 
+class TestAssertHasCrs:
     def test_geodataframe_with_crs(self):
         """Accepts vector data that carries a CRS."""
         gdf = gpd.read_file(_SIMPLE / "geometry.geojson")
@@ -204,7 +198,6 @@ class TestAssertHasCrs:
 
 
 class TestAssertEpsg:
-
     def test_epsg_4326(self):
         """Accepts vector data with EPSG:4326."""
         gdf = gpd.read_file(_SIMPLE / "geometry.geojson")
@@ -231,7 +224,6 @@ class TestAssertEpsg:
 
 
 class TestAssertCrsUnits:
-
     def test_degree_units(self):
         """Accepts geographic CRS units expressed in degrees."""
         gdf = gpd.read_file(_SIMPLE / "geometry.geojson")
@@ -254,8 +246,8 @@ class TestAssertCrsUnits:
 # Raster assertions
 # ===================================================================
 
-class TestAssertBandCount:
 
+class TestAssertBandCount:
     def test_single_band(self):
         """Accepts a single-band raster."""
         case = RasterCase(_meta(_NODATA), _NODATA)
@@ -271,7 +263,6 @@ class TestAssertBandCount:
 
 
 class TestAssertNodataValue:
-
     def test_nodata_present(self):
         """Accepts a raster that defines any NoData value."""
         case = RasterCase(_meta(_NODATA), _NODATA)
@@ -300,7 +291,6 @@ class TestAssertNodataValue:
 
 
 class TestAssertDtype:
-
     def test_float32(self):
         """Accepts a raster whose dtype is `float32`."""
         case = RasterCase(_meta(_NODATA), _NODATA)
@@ -316,7 +306,6 @@ class TestAssertDtype:
 
 
 class TestAssertShape:
-
     def test_correct_shape(self):
         """Accepts a raster with the expected width and height."""
         case = RasterCase(_meta(_NODATA), _NODATA)
@@ -332,7 +321,6 @@ class TestAssertShape:
 
 
 class TestAssertNodataMasked:
-
     def test_nodata_pixels_present(self):
         """Accepts arrays that contain pixels equal to the NoData sentinel."""
         case = RasterCase(_meta(_NODATA), _NODATA)
@@ -348,7 +336,6 @@ class TestAssertNodataMasked:
 
 
 class TestAssertNoNodataPixels:
-
     def test_clean_array_passes(self):
         """Accepts arrays without any NoData pixels."""
         data = np.ones((10, 10), dtype=np.float32)
@@ -366,8 +353,8 @@ class TestAssertNoNodataPixels:
 # Topology assertions
 # ===================================================================
 
-class TestAssertNoSelfIntersections:
 
+class TestAssertNoSelfIntersections:
     def test_valid_polygon_passes(self):
         """Accepts geometries without self-intersections."""
         gdf = gpd.read_file(_SIMPLE / "geometry.geojson")
@@ -381,7 +368,6 @@ class TestAssertNoSelfIntersections:
 
 
 class TestAssertNoDuplicates:
-
     def test_unique_geometries_passes(self):
         """Accepts fixtures without duplicate geometries."""
         gdf = gpd.read_file(_ENCODING / "mixed_attrs.gpkg")
@@ -401,7 +387,6 @@ class TestAssertNoDuplicates:
 
 
 class TestAssertNoNullGeometries:
-
     def test_no_nulls_passes(self):
         """Accepts fixtures without null geometries."""
         gdf = gpd.read_file(_SIMPLE / "geometry.geojson")
@@ -419,8 +404,8 @@ class TestAssertNoNullGeometries:
 # Metadata assertions (high-level)
 # ===================================================================
 
-class TestAssertCaseLoadable:
 
+class TestAssertCaseLoadable:
     def test_existing_case_passes(self):
         """Accepts a case whose primary file exists and is loadable."""
         meta = _meta(_SIMPLE)
@@ -436,7 +421,6 @@ class TestAssertCaseLoadable:
 
 
 class TestAssertMatchesVectorHints:
-
     def test_simple_valid_passes_all_hints(self):
         """Matches vector assertion hints for the simple polygon fixture."""
         meta = _meta(_SIMPLE)
@@ -475,7 +459,6 @@ class TestAssertMatchesVectorHints:
 
 
 class TestAssertMatchesRasterHints:
-
     def test_nodata_raster_passes(self):
         """Matches raster assertion hints for the NoData raster fixture."""
         meta = _meta(_NODATA)
@@ -495,8 +478,8 @@ class TestAssertMatchesRasterHints:
 # Footprint assertions
 # ===================================================================
 
-class TestFootprintAssertions:
 
+class TestFootprintAssertions:
     def test_no_holes_passes_on_expected_footprint(self):
         """Accepts an expected footprint polygon without holes."""
         expected = gpd.read_file(_EDGE / "all_valid_rectangular_footprint.geojson")

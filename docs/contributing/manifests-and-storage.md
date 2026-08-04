@@ -1,7 +1,26 @@
 # Manifests and Storage Support
 
-> **Status (April 2026):** The metadata model and sample manifest files already
-> exist, but runtime manifest parsing and storage handling are still stubbed.
+> **Status (August 2026):** Manifest support is **implemented**. Storage transport is
+> **deliberately deferred to v1.1** — not unfinished, but declined for v1.0 with a
+> specific condition for reopening it.
+>
+> Manifests parse, validate, and resolve: `catalog/manifests.py` loads them, the registry
+> merges their ids with the bundled catalog, `GEOCASE_MANIFESTS` selects which files are
+> read (the resolved paths are part of the registry cache key), and
+> `scripts/validate_catalog.py` gates them in CI — catching shadowed ids, cross-manifest
+> duplicates, malformed digests, and dangling `bundled_analog` references. Remote cases
+> are discoverable through the public API: `show_case` describes one, and `materialize_case`
+> refuses it with an actionable error rather than an internal `KeyError`.
+>
+> Transport — download, cache, unpack, verify — does not exist. That is the decision, and
+> the reason is that there is no cargo. Both manifests are 100% placeholder: every `sha256`
+> is the literal `replace_me`, every `base_uri` points at `example.org`, and nothing has
+> ever been published. Building a transport layer whose only user would be its own tests
+> ships a maintenance burden and an implied promise in exchange for nothing.
+>
+> **The v1.1 gate is concrete: at least one real published archive with a real sha256.**
+> Until that exists, the honest surface is a catalog that knows what it cannot give you and
+> says so clearly.
 
 This page explains what **manifest support** and **storage support** mean in
 GeoCase, why they are different, and why both matter.
@@ -22,8 +41,10 @@ You can have a useful catalog before delivery exists. But delivery without a
 catalog is much less useful, because you do not know what is available or what
 you are supposed to ask for.
 
-For the concrete implementation sequence, scope boundaries, and proposed phase
-breakdown, see [`docs/plans/06-manifest-support.md`](../plans/06-manifest-support.md).
+For the current implementation sequence and scope boundaries, see
+[`development-plan.md`](../plans/development-plan.md). The original manifest plan is retained as
+an implementation log in
+[`../plans/archive/06-manifest-support.md`](../plans/archive/06-manifest-support.md).
 
 ---
 
@@ -226,6 +247,37 @@ Manifests provide a clean way to say:
 - the **core package** stays small,
 - the **extended catalog** stays external,
 - but both are still part of the same logical GeoCase universe.
+
+#### The bundled/remote raster boundary
+
+Raster is where this separation bites first, so the boundary is written down
+explicitly in `extended-manifests/satellite-scenes.yaml`:
+
+- **Bundled** raster fixtures (`src/geocase/data/core/raster/`) stay `tiny` or
+  `small` and exist to cover *structure* — dtypes, nodata conventions, band
+  counts, CRS/tiling edge cases, COG layout.
+- **Remote** raster scenes stay in the `satellite-scenes` manifest and exist to
+  cover *realism* — full-size optical, multispectral, SAR, DEM, and land-cover
+  products that would bloat the package.
+
+Each remote scene names the bundled fixture it is the realistic analog of via
+`bundled_analog`:
+
+| Remote scene | `bundled_analog` |
+| --- | --- |
+| `optical_rgb_scene` | `optical_rgb_small` |
+| `multispectral_s2_scene` | `multispectral_s2_like_small` |
+| `sar_vv_scene` | `sar_vv_small` |
+| `dem_scene` | `dem_small` |
+| `landcover_scene` | `landcover_small` |
+
+That pairing means a contributor can always answer "what is the big version of
+this fixture?" — and the reverse: a new realistic scene is expected to arrive
+with a small bundled counterpart rather than on its own.
+
+The manifest only *declares* these scenes. Their archives are not published yet,
+so the `sha256` values are placeholders and fetching them will fail checksum
+verification by design until real artifacts exist.
 
 ---
 

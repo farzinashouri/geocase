@@ -15,7 +15,6 @@ import geopandas as gpd
 import pandas as pd
 import pytest
 
-
 # ---------------------------------------------------------------------------
 # Path constants
 # ---------------------------------------------------------------------------
@@ -51,7 +50,7 @@ class TestShapefileFieldTruncation:
         assert gdf.crs.to_epsg() == 4326
 
     def test_field_names_are_truncated(self, shapefile_path: Path) -> None:
-        """Preserves truncated and collision-resolved column names instead of the original long names."""
+        """Preserves truncated and collision-resolved names, not the originals."""
         gdf = gpd.read_file(shapefile_path)
         columns = [c for c in gdf.columns if c != "geometry"]
 
@@ -68,14 +67,14 @@ class TestShapefileFieldTruncation:
         assert "temperature_fahrenheit" not in columns
 
     def test_all_field_names_within_limit(self, shapefile_path: Path) -> None:
-        """Keeps every non-geometry field name within the Shapefile 10-character limit."""
+        """Keeps every non-geometry field within the Shapefile 10-character limit."""
         gdf = gpd.read_file(shapefile_path)
         for col in gdf.columns:
             if col != "geometry":
                 assert len(col) <= 10, f"Field '{col}' exceeds 10 characters"
 
     def test_data_values_preserved(self, shapefile_path: Path) -> None:
-        """Preserves representative numeric attribute values after field-name truncation."""
+        """Preserves representative numeric values after field-name truncation."""
         gdf = gpd.read_file(shapefile_path)
         # Check that values are present and reasonable
         assert gdf["temperatur"].iloc[0] == pytest.approx(20.5, rel=0.01)
@@ -95,7 +94,7 @@ class TestShapefileEncodingLegacy:
         return _SHAPEFILE_ENCODING / "legacy_encoding.shp"
 
     def test_shapefile_loads_successfully(self, shapefile_path: Path) -> None:
-        """Loads the legacy-encoded Shapefile with the expected feature count and CRS."""
+        """Loads the legacy-encoded Shapefile with the expected feature count/CRS."""
         gdf = gpd.read_file(shapefile_path, encoding="windows-1252")
         assert len(gdf) == 4
         assert gdf.crs.to_epsg() == 4326
@@ -103,7 +102,7 @@ class TestShapefileEncodingLegacy:
     def test_special_characters_preserved_with_correct_encoding(
         self, shapefile_path: Path
     ) -> None:
-        """Preserves accented city names when the correct Windows-1252 encoding is supplied."""
+        """Preserves accented city names when Windows-1252 encoding is supplied."""
         gdf = gpd.read_file(shapefile_path, encoding="windows-1252")
         cities = list(gdf["city"])
 
@@ -170,20 +169,16 @@ class TestGeoJSONPrecisionLoss:
     def test_roundtrip_maintains_precision(
         self, geojson_path: Path, tmp_path: Path
     ) -> None:
-        """Keeps coordinate precision within tolerance across a GeoJSON write-read roundtrip."""
+        """Keeps coordinate precision within tolerance across a GeoJSON roundtrip."""
         gdf_original = gpd.read_file(geojson_path)
-        original_coords = [
-            (g.x, g.y) for g in gdf_original.geometry
-        ]
+        original_coords = [(g.x, g.y) for g in gdf_original.geometry]
 
         # Write and read back
         output_path = tmp_path / "roundtrip.geojson"
         gdf_original.to_file(output_path, driver="GeoJSON")
         gdf_roundtrip = gpd.read_file(output_path)
 
-        roundtrip_coords = [
-            (g.x, g.y) for g in gdf_roundtrip.geometry
-        ]
+        roundtrip_coords = [(g.x, g.y) for g in gdf_roundtrip.geometry]
 
         # Check precision is maintained within tolerance
         for orig, rt in zip(original_coords, roundtrip_coords):
@@ -255,18 +250,18 @@ class TestGeoPackageNullEmptyGeometry:
         assert is_null, "NULL row should have NaN/None geometry"
         assert is_empty, "EMPTY row should have empty geometry object"
 
-    def test_spatial_filtering_excludes_null_and_empty(
-        self, gpkg_path: Path
-    ) -> None:
+    def test_spatial_filtering_excludes_null_and_empty(self, gpkg_path: Path) -> None:
         """Filters out NULL and EMPTY geometries while retaining valid rows."""
         gdf = gpd.read_file(gpkg_path)
 
         # Filter to only valid (non-null, non-empty) geometries
         valid_gdf = gdf[
             gdf.geometry.apply(
-                lambda geometry: geometry is not None
-                and not pd.isna(geometry)
-                and not geometry.is_empty
+                lambda geometry: (
+                    geometry is not None
+                    and not pd.isna(geometry)
+                    and not geometry.is_empty
+                )
             )
         ]
 

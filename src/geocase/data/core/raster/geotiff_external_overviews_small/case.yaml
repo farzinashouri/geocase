@@ -1,0 +1,59 @@
+id: geotiff_external_overviews_small
+title: GeoTIFF External Overviews Small
+description: >
+  A single-band uint8 GeoTIFF whose overviews live in a sibling ``.ovr``
+  sidecar rather than inside the primary file. Exercises external-overview
+  detection and sidecar handling.
+category: raster
+format: GeoTIFF
+test_tier: integration
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - overviews
+  - product:cog
+  - geography:utm
+  - delivery:external-overviews
+
+risk_types:
+  - overviews_missing
+  - sidecar_dropped
+
+behavioral_goal: >
+  Confirm GeoCase reads external ``.ovr`` overviews transparently and treats
+  the sidecar as part of the case.
+
+expected_capabilities:
+  - load
+  - overview-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: geotiff_external_overviews_small.tif
+  sidecars:
+    - geotiff_external_overviews_small.tif.ovr
+
+source:
+  name: geocase-synthetic
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expected_band_count: 1
+  expected_dtype: uint8
+  expected_shape: [64, 64]
+  expected_compression: deflate
+  expected_overviews: true
+
+params:
+  generator: scripts/generate_raster_fixtures.py

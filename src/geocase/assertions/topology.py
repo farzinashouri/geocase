@@ -41,7 +41,8 @@ def assert_no_self_intersections(
     if bad_rows:
         details = "; ".join(f"row {r}: {m}" for r, m in bad_rows[:5])
         raise AssertionError(
-            msg or (
+            msg
+            or (
                 f"{len(bad_rows)} self-intersecting geometr"
                 f"{'y' if len(bad_rows) == 1 else 'ies'} found. "
                 f"{details}"
@@ -64,9 +65,7 @@ def assert_no_duplicates(
         for j in range(i + 1, n):
             if gdf.geometry.iloc[i].equals(gdf.geometry.iloc[j]):
                 raise AssertionError(
-                    msg or (
-                        f"Duplicate geometry found at rows {i} and {j}"
-                    )
+                    msg or (f"Duplicate geometry found at rows {i} and {j}")
                 )
 
 
@@ -84,7 +83,8 @@ def assert_no_null_geometries(
     null_count = int(null_mask.sum())
     if null_count > 0:
         raise AssertionError(
-            msg or (
+            msg
+            or (
                 f"{null_count} feature(s) have null or empty geometry "
                 f"(rows: {list(gdf.index[null_mask][:10])})"
             )

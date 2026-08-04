@@ -9,7 +9,7 @@ GeoCase is built around a simple workflow:
 3. write a normal `pytest` test,
 4. let GeoCase provide realistic geospatial inputs.
 
-If you want to understand the broader roadmap, see [`docs/contributing/development-plan.md`](contributing/development-plan.md).
+If you want to understand the broader roadmap, see [`docs/plans/development-plan.md`](plans/development-plan.md).
 
 ---
 
@@ -193,12 +193,19 @@ Start simple with explicit case IDs. Move to selectors when your test intent is 
 
 ## Current project status
 
-GeoCase v0.1.0 (alpha) is fully functional for the core `pytest` workflow with 216+ passing tests. The metadata, catalog, runtime, assertions, and pytest plugin layers are complete.
+GeoCase 1.0.0 covers the core `pytest` workflow and a small public API, with 780 passing
+tests and 134 bundled cases. The metadata, catalog, runtime, assertions, loader, and
+pytest plugin layers are complete.
 
-Remaining work focuses on:
-- Adding more vector and raster edge cases
-- Documentation improvements
-- Release automation
+The v1.0 compatibility promise covers **two surfaces only**: the pytest workflow (markers
+and fixtures) and the `import geocase` public API. Everything else is internal and may
+change in a minor release.
 
-See [`docs/plans/`](plans/) for the current roadmap.
+Deferred to v1.1, by decision rather than omission:
+- Remote dataset transport — declared cases are discoverable but not fetchable
+- Rotated/skewed affine transforms and southern-hemisphere UTM coverage
+- A command-line interface
+
+See [`docs/plans/development-plan.md`](plans/development-plan.md) for the
+current roadmap.
 

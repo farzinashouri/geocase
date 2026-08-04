@@ -13,7 +13,6 @@ from geocase.catalog.loader import (
 )
 from geocase.catalog.models import CaseMetadata, SuiteMetadata
 
-
 # ---------------------------------------------------------------------------
 # Resolve paths relative to the package source tree
 # ---------------------------------------------------------------------------
@@ -27,7 +26,9 @@ _SUITES = _SRC / "catalog" / "suites"
 _CASE_INDEX = _METADATA / "case-index.yaml"
 _SUITE_INDEX = _METADATA / "suite-index.yaml"
 
-_DATELINE_CASE = _VEC / "special" / "dateline" / "dateline_crossing_polygon" / "case.yaml"
+_DATELINE_CASE = (
+    _VEC / "special" / "dateline" / "dateline_crossing_polygon" / "case.yaml"
+)
 _SIMPLE_CASE = _VEC / "polygon" / "geojson" / "simple_valid_polygon" / "case.yaml"
 _NODATA_CASE = _DATA / "core" / "raster" / "geotiff_nodata_small" / "case.yaml"
 _NETCDF_CASE = _DATA / "core" / "netcdf" / "latlon_small" / "case.yaml"
@@ -39,6 +40,7 @@ _CRS_SUITE = _SUITES / "crs-edge-cases.yaml"
 # ===================================================================
 # load_case_metadata — happy paths
 # ===================================================================
+
 
 class TestLoadCaseMetadata:
     """Load real case.yaml files from the bundled data directory."""
@@ -97,8 +99,8 @@ class TestLoadCaseMetadataAllCases:
 # load_case_metadata — error paths
 # ===================================================================
 
-class TestLoadCaseMetadataErrors:
 
+class TestLoadCaseMetadataErrors:
     def test_missing_file(self):
         """Raises `FileNotFoundError` for a missing case metadata file."""
         with pytest.raises(FileNotFoundError):
@@ -123,8 +125,8 @@ class TestLoadCaseMetadataErrors:
 # load_suite_metadata
 # ===================================================================
 
-class TestLoadSuiteMetadata:
 
+class TestLoadSuiteMetadata:
     def test_load_core_vector_suite(self):
         """Loads the core vector suite with its bundled filters and case order."""
         suite = load_suite_metadata(_CORE_VECTOR_SUITE)
@@ -157,8 +159,8 @@ class TestLoadSuiteMetadata:
 # load_case_index
 # ===================================================================
 
-class TestLoadCaseIndex:
 
+class TestLoadCaseIndex:
     def test_load_real_index(self):
         """Loads the bundled case index into a list of case metadata paths."""
         paths = load_case_index(_CASE_INDEX)
@@ -190,8 +192,8 @@ class TestLoadCaseIndex:
 # load_suite_index
 # ===================================================================
 
-class TestLoadSuiteIndex:
 
+class TestLoadSuiteIndex:
     def test_load_real_index(self):
         """Loads the bundled suite index into a list of suite metadata paths."""
         paths = load_suite_index(_SUITE_INDEX)

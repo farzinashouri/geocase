@@ -6,7 +6,7 @@ This document describes the current state of the GeoCase project and the workflo
 
 ## Current status
 
-GeoCase has a complete folder structure, real test data, and four fully implemented layers with 216 passing unit tests.
+GeoCase has a complete folder structure, 134 bundled cases, and fully implemented metadata, catalog, runtime, assertion, loader, and plugin layers, with 780 passing tests.
 
 ### Recent updates (April 2026)
 
@@ -21,7 +21,41 @@ GeoCase has a complete folder structure, real test data, and four fully implemen
 	- [`docs/design/case-recommendation-api-spec.md`](../design/case-recommendation-api-spec.md)
 	- [`docs/design/case-recommendation-user-flow.md`](../design/case-recommendation-user-flow.md)
 
-**Environment:** Python 3.14.3 · Conda (Miniforge) · All geospatial deps pinned in `environment.yml`.
+### Development environments
+
+Two environments are maintained deliberately, and they are not interchangeable.
+
+| | Primary — conda `geocase` | CI mirror — `.venv` |
+|---|---|---|
+| Python | 3.14.3 (Miniforge) | 3.11.14 (pyenv) |
+| Defined by | `environment.yml` | `pip install -e ".[dev]"` |
+| GDAL / `osgeo` | ✅ 3.12.2 | ❌ not available |
+| `pytest tests` | 780 passed, 1 skipped | 780 passed, 1 skipped |
+| `pytest examples` | 1238 collected | **37 collected** |
+
+**Use conda for day-to-day work**, and for anything touching `examples/` or fixture
+generation. It is the only environment with the GDAL Python bindings, which are
+source-only on PyPI.
+
+**Use `.venv` to reproduce a CI failure** — CI runs `python:3.11`, and this is the
+supported floor. Note that without `osgeo` the three interview-question example modules
+skip at import (`pytest.importorskip("osgeo")` in
+`examples/_easy_geospatial_interview_test_support.py` and
+`_easy_raster_interview_test_support.py`), silently dropping 1193 tests. That is why
+`.venv` is a floor check, not a substitute for the primary environment.
+
+Both interpreters pass `pytest tests -q` identically, so 3.14 is a supported ceiling
+rather than a risk. `testpaths` is `["tests"]`, so `examples/` only runs when named
+explicitly.
+
+```bash
+# Primary
+conda env create -f environment.yml    # first time
+conda activate geocase
+
+# CI mirror
+python3.11 -m venv .venv && .venv/bin/python -m pip install -e ".[dev]"
+```
 
 ### What is implemented
 
@@ -57,19 +91,30 @@ GeoCase has a complete folder structure, real test data, and four fully implemen
 | Environment lock | `environment.yml` | ✅ Complete | — |
 | Documentation | `docs/*.md` | ✅ Partial | — |
 
-**Total: 216 unit tests passing in ~1.2 s.**
+**Total: `pytest tests -q` is green at 780 passed, 1 skipped.**
 
-### What is still a stub
+The per-component counts above are indicative rather than exact — they predate the move to
+directory-based test runs. The suite total is the number to trust, and it is the one CI
+enforces.
 
-The following Python source files are single-line docstring stubs awaiting implementation:
+### What is deliberately absent
 
-- `catalog/validators.py`, `catalog/manifests.py`
-- `loaders/generic.py`, `geopandas_loader.py`, `rasterio_loader.py`, `xarray_loader.py`
-- `storage/local.py`, `remote.py`, `cache.py`, `hashing.py`
-- `cli/main.py`, `list_cases.py`, `show_case.py`, `fetch_case.py`, `validate_catalog.py` *(optional maintainer tooling for later)*
-- `api/public.py`, `api/types.py`
+Nothing in `src/geocase/` is a stub any more. The empty-module pattern was retired in
+Batches 1–4: every one-line docstring placeholder was either implemented or deleted, on
+the grounds that an empty module implies a commitment the project has not made.
 
-Two docs are also stubs: `docs/getting-started.md` and `docs/adding-a-case.md`.
+- **`catalog/manifests.py` and `loaders/`** are implemented. `cases/raster.py` routes
+  through `loaders/rasterio_loader.py`, which is the single raster load path.
+- **`api/`** is implemented and is the v1.0 compatibility surface — 27 names, pinned by
+  `tests/unit/test_public_api.py`.
+- **`catalog/validators.py`** was deleted. Nothing imported it.
+- **`cli/`** was deleted along with its broken `[project.scripts]` entry point. There is no
+  CLI in v1.0; see the decision log in [the roadmap](../plans/development-plan.md).
+- **`storage/`** transport is **deferred to v1.1**, deliberately rather than
+  incidentally. Remote cases stay discoverable and raise clear errors, but nothing
+  downloads, caches, or unpacks. See
+  [Manifests and storage](manifests-and-storage.md) for why, and the gate that would
+  reopen it.
 
 ---
 
@@ -90,9 +135,9 @@ The package is organized into layers:
 | **Runtime** | `cases/base.py`, `cases/factory.py`, `cases/vector.py`, `cases/raster.py`, `cases/netcdf.py` | Turn metadata into loadable objects |
 | **Loaders** | `loaders/*` | Format-specific file reading |
 | **Assertions** | `assertions/*` | Reusable geospatial test helpers |
-| **Storage** | `storage/*` | Local path resolution, remote download, caching |
+| **Storage** | `storage/*` | SHA-256 integrity checking (transport deferred to v1.1) |
 | **Plugin** | `pytest_plugin/*` | pytest fixtures and markers |
-| **CLI** | `cli/*` | Command-line inspection and maintenance tools |
+| **Public API** | `api/*` | The `import geocase` compatibility surface |
 
 ---
 

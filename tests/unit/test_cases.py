@@ -8,14 +8,13 @@ from pathlib import Path
 
 import pytest
 
-from geocase.catalog.loader import load_case_metadata
-from geocase.catalog.models import CaseMetadata
 from geocase.cases.base import BaseCase
 from geocase.cases.factory import create_case
 from geocase.cases.netcdf import NetCDFCase
 from geocase.cases.raster import RasterCase
 from geocase.cases.vector import VectorCase
-
+from geocase.catalog.loader import load_case_metadata
+from geocase.catalog.models import CaseMetadata
 
 # ---------------------------------------------------------------------------
 # Path constants
@@ -78,39 +77,61 @@ _PARQUET = _VEC / "polygon" / "parquet" / "polygon_parquet_baseline"
 
 # MultiPoint
 _MULTIPOINT = _VEC / "multipoint" / "geojson" / "simple_valid_multipoint"
-_SHAPEFILE_MULTIPOINT = _VEC / "multipoint" / "shapefile" / "multipoint_shapefile_baseline"
+_SHAPEFILE_MULTIPOINT = (
+    _VEC / "multipoint" / "shapefile" / "multipoint_shapefile_baseline"
+)
 _GPKG_MULTIPOINT = _VEC / "multipoint" / "geopackage" / "multipoint_geopackage_baseline"
 _CSV_WKT_MULTIPOINT = _VEC / "multipoint" / "csv_wkt" / "multipoint_csv_wkt_baseline"
 _WKT_MULTIPOINT = _VEC / "multipoint" / "wkt" / "multipoint_wkt_baseline"
 _WKB_MULTIPOINT = _VEC / "multipoint" / "wkb" / "multipoint_wkb_baseline"
 _SQLITE_MULTIPOINT = _VEC / "multipoint" / "sqlite" / "multipoint_sqlite_baseline"
-_FLATGEOBUF_MULTIPOINT = _VEC / "multipoint" / "flatgeobuf" / "multipoint_flatgeobuf_baseline"
+_FLATGEOBUF_MULTIPOINT = (
+    _VEC / "multipoint" / "flatgeobuf" / "multipoint_flatgeobuf_baseline"
+)
 _KML_MULTIPOINT = _VEC / "multipoint" / "kml" / "multipoint_kml_baseline"
 _GML_MULTIPOINT = _VEC / "multipoint" / "gml" / "multipoint_gml_baseline"
 _FEATHER_MULTIPOINT = _VEC / "multipoint" / "feather" / "multipoint_feather_baseline"
 
 # MultiLineString
 _MULTILINESTRING = _VEC / "multilinestring" / "geojson" / "simple_valid_multilinestring"
-_SHAPEFILE_MULTILINE = _VEC / "multilinestring" / "shapefile" / "multilinestring_shapefile_baseline"
-_GPKG_MULTILINE = _VEC / "multilinestring" / "geopackage" / "multilinestring_geopackage_baseline"
-_CSV_WKT_MULTILINE = _VEC / "multilinestring" / "csv_wkt" / "multilinestring_csv_wkt_baseline"
+_SHAPEFILE_MULTILINE = (
+    _VEC / "multilinestring" / "shapefile" / "multilinestring_shapefile_baseline"
+)
+_GPKG_MULTILINE = (
+    _VEC / "multilinestring" / "geopackage" / "multilinestring_geopackage_baseline"
+)
+_CSV_WKT_MULTILINE = (
+    _VEC / "multilinestring" / "csv_wkt" / "multilinestring_csv_wkt_baseline"
+)
 _WKT_MULTILINE = _VEC / "multilinestring" / "wkt" / "multilinestring_wkt_baseline"
 _WKB_MULTILINE = _VEC / "multilinestring" / "wkb" / "multilinestring_wkb_baseline"
-_SQLITE_MULTILINE = _VEC / "multilinestring" / "sqlite" / "multilinestring_sqlite_baseline"
-_FLATGEOBUF_MULTILINE = _VEC / "multilinestring" / "flatgeobuf" / "multilinestring_flatgeobuf_baseline"
+_SQLITE_MULTILINE = (
+    _VEC / "multilinestring" / "sqlite" / "multilinestring_sqlite_baseline"
+)
+_FLATGEOBUF_MULTILINE = (
+    _VEC / "multilinestring" / "flatgeobuf" / "multilinestring_flatgeobuf_baseline"
+)
 _KML_MULTILINE = _VEC / "multilinestring" / "kml" / "multilinestring_kml_baseline"
 _GML_MULTILINE = _VEC / "multilinestring" / "gml" / "multilinestring_gml_baseline"
-_PARQUET_MULTILINE = _VEC / "multilinestring" / "parquet" / "multilinestring_parquet_baseline"
+_PARQUET_MULTILINE = (
+    _VEC / "multilinestring" / "parquet" / "multilinestring_parquet_baseline"
+)
 
 # MultiPolygon
 _MULTIPOLYGON = _VEC / "multipolygon" / "geojson" / "simple_valid_multipolygon"
-_SHAPEFILE_MULTIPOLY = _VEC / "multipolygon" / "shapefile" / "multipolygon_shapefile_baseline"
-_GPKG_MULTIPOLY = _VEC / "multipolygon" / "geopackage" / "multipolygon_geopackage_baseline"
+_SHAPEFILE_MULTIPOLY = (
+    _VEC / "multipolygon" / "shapefile" / "multipolygon_shapefile_baseline"
+)
+_GPKG_MULTIPOLY = (
+    _VEC / "multipolygon" / "geopackage" / "multipolygon_geopackage_baseline"
+)
 _CSV_WKT_MULTIPOLY = _VEC / "multipolygon" / "csv_wkt" / "multipolygon_csv_wkt_baseline"
 _WKT_MULTIPOLY = _VEC / "multipolygon" / "wkt" / "multipolygon_wkt_baseline"
 _WKB_MULTIPOLY = _VEC / "multipolygon" / "wkb" / "multipolygon_wkb_baseline"
 _SQLITE_MULTIPOLY = _VEC / "multipolygon" / "sqlite" / "multipolygon_sqlite_baseline"
-_FLATGEOBUF_MULTIPOLY = _VEC / "multipolygon" / "flatgeobuf" / "multipolygon_flatgeobuf_baseline"
+_FLATGEOBUF_MULTIPOLY = (
+    _VEC / "multipolygon" / "flatgeobuf" / "multipolygon_flatgeobuf_baseline"
+)
 _KML_MULTIPOLY = _VEC / "multipolygon" / "kml" / "multipolygon_kml_baseline"
 _GML_MULTIPOLY = _VEC / "multipolygon" / "gml" / "multipolygon_gml_baseline"
 
@@ -133,6 +154,7 @@ _LATLON = _DATA / "core" / "netcdf" / "latlon_small"
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _load_meta(case_dir: Path) -> CaseMetadata:
     return load_case_metadata(case_dir / "case.yaml")
 
@@ -140,6 +162,7 @@ def _load_meta(case_dir: Path) -> CaseMetadata:
 # ===================================================================
 # BaseCase
 # ===================================================================
+
 
 class TestBaseCase:
     """Test the base case wrapper (path resolution, metadata access)."""
@@ -232,6 +255,7 @@ class TestBaseCase:
 # ===================================================================
 # VectorCase
 # ===================================================================
+
 
 class TestVectorCase:
     """Test VectorCase construction and loading."""
@@ -848,6 +872,7 @@ class TestVectorCase:
 # RasterCase
 # ===================================================================
 
+
 class TestRasterCase:
     """Test RasterCase construction and loading."""
 
@@ -994,7 +1019,6 @@ class TestRasterCase:
 
     def test_nodata_pixels_present(self):
         """Test nodata pixels present."""
-        import numpy as np
 
         meta = _load_meta(_NODATA)
         case = RasterCase(meta, _NODATA)
@@ -1022,6 +1046,7 @@ class TestRasterCase:
 # ===================================================================
 # NetCDFCase
 # ===================================================================
+
 
 class TestNetCDFCase:
     """Test NetCDFCase construction and loading."""
@@ -1102,6 +1127,7 @@ class TestNetCDFCase:
 # ===================================================================
 # Factory — create_case
 # ===================================================================
+
 
 class TestCreateCase:
     """Test the create_case() factory dispatch."""

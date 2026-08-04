@@ -1,8 +1,13 @@
 """Tests for geocase.catalog.models — Pydantic metadata models."""
 
+from pathlib import Path
+from typing import get_args
+
 import pytest
+import yaml
 from pydantic import ValidationError
 
+from geocase.catalog import models
 from geocase.catalog.models import (
     AssertionHints,
     CaseMetadata,
@@ -13,10 +18,10 @@ from geocase.catalog.models import (
     SuiteSelection,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _minimal_case(**overrides) -> dict:
     """Return a minimal valid CaseMetadata dict, with optional overrides."""
@@ -54,6 +59,7 @@ def _minimal_suite(**overrides) -> dict:
 # CaseMetadata — happy paths
 # ===================================================================
 
+
 class TestCaseMetadataValid:
     """Valid CaseMetadata construction."""
 
@@ -65,26 +71,28 @@ class TestCaseMetadataValid:
         assert case.status == "draft"  # default
 
     def test_all_fields(self):
-        """Preserves fully populated case metadata, nested source information, and custom params."""
-        case = CaseMetadata(**_minimal_case(
-            description="Full description.",
-            status="validated",
-            tags=["tag1", "tag2"],
-            risk_types=["risk_a"],
-            behavioral_goal="Find bugs.",
-            expected_capabilities=["load"],
-            geometry_type="Polygon",
-            crs="EPSG:4326",
-            remote={"uri": "https://example.com/data.zip"},
-            source={"name": "test", "license": "MIT"},
-            assertions={
-                "expect_loadable": True,
-                "expect_valid_geometry": True,
-                "expected_epsg": 4326,
-                "expected_geometry_types": ["Polygon"],
-            },
-            params={"custom_key": 42},
-        ))
+        """Preserves fully populated metadata, nested source info, and custom params."""
+        case = CaseMetadata(
+            **_minimal_case(
+                description="Full description.",
+                status="validated",
+                tags=["tag1", "tag2"],
+                risk_types=["risk_a"],
+                behavioral_goal="Find bugs.",
+                expected_capabilities=["load"],
+                geometry_type="Polygon",
+                crs="EPSG:4326",
+                remote={"uri": "https://example.com/data.zip"},
+                source={"name": "test", "license": "MIT"},
+                assertions={
+                    "expect_loadable": True,
+                    "expect_valid_geometry": True,
+                    "expected_epsg": 4326,
+                    "expected_geometry_types": ["Polygon"],
+                },
+                params={"custom_key": 42},
+            )
+        )
         assert case.status == "validated"
         assert case.tags == ["tag1", "tag2"]
         assert case.assertions.expected_epsg == 4326
@@ -108,6 +116,7 @@ class TestCaseMetadataValid:
 # ===================================================================
 # CaseMetadata — validation errors
 # ===================================================================
+
 
 class TestCaseMetadataInvalid:
     """CaseMetadata should reject bad data."""
@@ -179,6 +188,7 @@ class TestCaseMetadataInvalid:
 # FileMap
 # ===================================================================
 
+
 class TestFileMap:
     def test_minimal(self):
         """Builds a file map with an empty sidecar list by default."""
@@ -202,6 +212,7 @@ class TestFileMap:
 # RemoteInfo / SourceInfo / AssertionHints
 # ===================================================================
 
+
 class TestSupportingModels:
     def test_remote_info_defaults(self):
         """Defaults remote metadata fields to `None`."""
@@ -224,6 +235,7 @@ class TestSupportingModels:
 # ===================================================================
 # SuiteSelection
 # ===================================================================
+
 
 class TestSuiteSelection:
     def test_empty_selection(self):
@@ -259,6 +271,7 @@ class TestSuiteSelection:
 # SuiteMetadata
 # ===================================================================
 
+
 class TestSuiteMetadata:
     def test_minimal(self):
         """Constructs minimal suite metadata with no notes or case order."""
@@ -269,11 +282,13 @@ class TestSuiteMetadata:
 
     def test_with_selection(self):
         """Preserves embedded selection filters and explicit case order."""
-        suite = SuiteMetadata(**_minimal_suite(
-            selection={"category": "vector", "tags_any": ["crs"]},
-            case_order=["case_a", "case_b"],
-            notes="Some notes.",
-        ))
+        suite = SuiteMetadata(
+            **_minimal_suite(
+                selection={"category": "vector", "tags_any": ["crs"]},
+                case_order=["case_a", "case_b"],
+                notes="Some notes.",
+            )
+        )
         assert suite.selection.category == "vector"
         assert suite.selection.tags_any == ["crs"]
         assert suite.case_order == ["case_a", "case_b"]
@@ -282,3 +297,65 @@ class TestSuiteMetadata:
         """Requires the mandatory suite metadata fields."""
         with pytest.raises(ValidationError):
             SuiteMetadata(suite_key="x")  # type: ignore[call-arg]
+
+
+# ---------------------------------------------------------------------------
+# Schema / model agreement
+# ---------------------------------------------------------------------------
+
+
+class TestCaseSchemaMatchesModels:
+    """`case.schema.yaml` documents the same contract `models.py` enforces.
+
+    Nothing at runtime reads the schema file — it is documentation for case
+    authors — which is exactly why it drifted: its `format` enum listed 7 of
+    the 17 values `FormatType` accepts, so it could not have validated 10 of
+    the formats already in the catalog, `SQLite` among them.
+    """
+
+    @staticmethod
+    def _schema() -> dict:
+        schema_path = (
+            Path(models.__file__).resolve().parents[1]
+            / "metadata"
+            / "schemas"
+            / "case.schema.yaml"
+        )
+        with schema_path.open() as handle:
+            return yaml.safe_load(handle)
+
+    @pytest.mark.parametrize(
+        ("property_name", "literal"),
+        [
+            ("category", models.Category),
+            ("format", models.FormatType),
+            ("test_tier", models.TestTier),
+            ("size_class", models.SizeClass),
+            ("storage_class", models.StorageClass),
+            ("loader_hint", models.LoaderHint),
+            ("status", models.Status),
+        ],
+    )
+    def test_enum_matches_literal(self, property_name: str, literal: object) -> None:
+        """Keeps each schema enum identical to the Literal that enforces it."""
+        schema_values = self._schema()["properties"][property_name]["enum"]
+        assert schema_values == list(get_args(literal))
+
+    def test_top_level_properties_match_case_metadata_fields(self) -> None:
+        """Documents every CaseMetadata field, and no field that does not exist."""
+        schema_properties = set(self._schema()["properties"])
+        assert schema_properties == set(CaseMetadata.model_fields)
+
+    def test_assertion_properties_match_assertion_hints_fields(self) -> None:
+        """Documents every AssertionHints field, including the raster ones."""
+        schema_properties = set(
+            self._schema()["properties"]["assertions"]["properties"]
+        )
+        assert schema_properties == set(AssertionHints.model_fields)
+
+    def test_nodata_convention_enum_matches_literal(self) -> None:
+        """Keeps the nested nodata_convention enum in step as well."""
+        prop = self._schema()["properties"]["assertions"]["properties"]
+        assert prop["nodata_convention"]["enum"] == list(
+            get_args(models.NodataConvention)
+        )

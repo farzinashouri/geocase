@@ -14,14 +14,13 @@ from pathlib import Path
 
 import pytest
 
-from geocase.catalog.loader import load_case_index, load_case_metadata
-from geocase.catalog.models import CaseMetadata
 from geocase.assertions.format_compliance import (
     assert_format_compliance,
     assert_geoparquet_metadata,
     registered_format_validators,
 )
-from geocase.catalog.models import FormatType
+from geocase.catalog.loader import load_case_index, load_case_metadata
+from geocase.catalog.models import CaseMetadata, FormatType
 
 # ---------------------------------------------------------------------------
 # Path constants
@@ -35,6 +34,7 @@ _CASE_INDEX = _METADATA / "case-index.yaml"
 # ---------------------------------------------------------------------------
 # Auto-discover every bundled vector case
 # ---------------------------------------------------------------------------
+
 
 def _discover_vector_cases() -> list[str]:
     """Return (case_id, relative_path) for every vector case in the index."""
@@ -180,8 +180,8 @@ class TestGeometryTypeTruthfulness:
                 f"Case '{meta.id}' declares no geometry type — nothing to check"
             )
 
-        from geocase.cases.vector import VectorCase
         from geocase.assertions.geometry import assert_geometry_type
+        from geocase.cases.vector import VectorCase
 
         case_dir = (_METADATA.parent / case_path).parent
         case = VectorCase(meta, case_dir)
@@ -192,8 +192,6 @@ class TestGeometryTypeTruthfulness:
         # whose geom_type is NaN, not a real type mismatch.
         gdf_valid = gdf.dropna(subset=[gdf.geometry.name])
         if gdf_valid.empty:
-            pytest.skip(
-                f"Case '{meta.id}' has no non-null geometries to type-check"
-            )
+            pytest.skip(f"Case '{meta.id}' has no non-null geometries to type-check")
 
         assert_geometry_type(gdf_valid, expected)

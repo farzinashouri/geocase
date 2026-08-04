@@ -37,6 +37,8 @@ properties:
 
   format:
     type: string
+    # Must stay identical to `FormatType` in geocase/catalog/models.py;
+    # tests/unit/test_case_models.py asserts it.
     enum:
       - GeoJSON
       - GPKG
@@ -44,6 +46,16 @@ properties:
       - GeoTIFF
       - NetCDF
       - Parquet
+      - GML
+      - KML
+      - CSV_WKT
+      - Feather
+      - Arrow
+      - GeoArrow
+      - WKB
+      - WKT
+      - SQLite
+      - FlatGeobuf
       - Other
 
   test_tier:
@@ -171,6 +183,8 @@ properties:
 
   assertions:
     type: object
+    # Must stay in step with `AssertionHints` in
+    # geocase/catalog/models.py; tests/unit/test_case_models.py asserts it.
     properties:
       expect_loadable:
         type: boolean
@@ -185,6 +199,39 @@ properties:
         items:
           type: string
       expect_nodata:
+        type: boolean
+
+      # Typed raster expectations
+      expected_band_count:
+        type: integer
+      expected_dtype:
+        type: string
+      expected_shape:
+        type: array
+        items:
+          type: integer
+      expected_nodata_value:
+        type: number
+      nodata_convention:
+        type: string
+        enum:
+          - sentinel
+          - nan
+          - mask
+          - none
+      expected_compression:
+        type: string
+      expected_overviews:
+        type: boolean
+      expected_band_names:
+        type: array
+        items:
+          type: string
+      expected_scale_factor:
+        type: number
+      expected_colormap_present:
+        type: boolean
+      is_cog:
         type: boolean
 
   params:

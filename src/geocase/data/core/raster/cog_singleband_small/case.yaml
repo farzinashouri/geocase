@@ -1,0 +1,59 @@
+id: cog_singleband_small
+title: COG Single-Band Small
+description: >
+  A tiny single-band uint16 Cloud-Optimized GeoTIFF: internally tiled with a
+  single overview level. Exercises COG-style structural detection.
+category: raster
+format: GeoTIFF
+test_tier: integration
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - cog
+  - product:cog
+  - geography:utm
+  - delivery:cloud-optimized
+
+risk_types:
+  - overviews_missing
+  - not_tiled
+  - dtype_drift
+
+behavioral_goal: >
+  Confirm GeoCase recognises an internally tiled, overview-bearing single-band
+  GeoTIFF as COG-structured.
+
+expected_capabilities:
+  - load
+  - cog-check
+  - overview-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: cog_singleband_small.tif
+
+source:
+  name: geocase-synthetic
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expected_band_count: 1
+  expected_dtype: uint16
+  expected_shape: [64, 64]
+  expected_compression: deflate
+  expected_overviews: true
+  is_cog: true
+
+params:
+  generator: scripts/generate_raster_fixtures.py

@@ -1,0 +1,55 @@
+id: optical_equator_small
+title: Optical Equator Small
+description: >
+  A tiny three-band uint8 RGB scene in EPSG:4326 centred on the equator.
+  Exercises low-latitude / equator-crossing extent handling.
+category: raster
+format: GeoTIFF
+test_tier: integration
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - eo
+  - optical
+  - product:optical
+  - geography:equator
+  - delivery:single-file
+
+risk_types:
+  - crs_mishandled
+
+behavioral_goal: >
+  Confirm GeoCase handles an RGB optical scene whose extent spans the equator.
+
+expected_capabilities:
+  - load
+  - crs-check
+
+loader_hint: rasterio
+crs: EPSG:4326
+
+files:
+  primary: optical_equator_small.tif
+
+source:
+  name: geocase-synthetic
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_band_count: 3
+  expected_dtype: uint8
+  expected_shape: [16, 16]
+  expected_band_names: [red, green, blue]
+  expected_compression: deflate
+
+params:
+  generator: scripts/generate_raster_fixtures.py

@@ -1,0 +1,56 @@
+id: sar_vv_small
+title: SAR VV Small
+description: >
+  A tiny single-band float32 SAR amplitude scene (VV polarisation). Exercises
+  single-polarisation radar handling.
+category: raster
+format: GeoTIFF
+test_tier: integration
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - sar
+  - product:sar
+  - geography:utm
+  - delivery:single-file
+
+risk_types:
+  - band_loss
+  - dtype_drift
+
+behavioral_goal: >
+  Confirm GeoCase preserves a single-band VV SAR amplitude scene and its band
+  naming.
+
+expected_capabilities:
+  - load
+  - band-name-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: sar_vv_small.tif
+
+source:
+  name: geocase-synthetic
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expected_band_count: 1
+  expected_dtype: float32
+  expected_shape: [16, 16]
+  expected_band_names: [VV]
+  expected_compression: deflate
+
+params:
+  generator: scripts/generate_raster_fixtures.py

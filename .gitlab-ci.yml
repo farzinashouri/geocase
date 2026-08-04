@@ -8,6 +8,7 @@
 stages:
 - test
 - secret-detection
+- release
 
 sast:
   stage: test
@@ -16,8 +17,10 @@ include:
 - template: Security/SAST.gitlab-ci.yml
 - template: Security/Secret-Detection.gitlab-ci.yml
 - local: ci/catalog-validation.yml
-- local: ci/core-tests.yml
-- local: ci/extended-tests.yml
+- local: ci/tests.yml
+- local: ci/lint.yml
+- local: ci/docs.yml
+- local: ci/release.yml
 
 variables:
   SECRET_DETECTION_ENABLED: 'true'

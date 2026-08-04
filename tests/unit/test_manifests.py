@@ -9,11 +9,8 @@ import geocase.catalog.manifests as manifest_module
 import geocase.catalog.models as models_module
 from geocase.catalog.registry import CaseRegistry
 
-
 _EXTENDED_MANIFEST = (
-    Path(__file__).resolve().parents[2]
-    / "extended-manifests"
-    / "public-extended.yaml"
+    Path(__file__).resolve().parents[2] / "extended-manifests" / "public-extended.yaml"
 )
 _CASE_INDEX = (
     Path(__file__).resolve().parents[2]
@@ -26,7 +23,9 @@ _CASE_INDEX = (
 
 def _require_attr(obj: object, name: str):
     value = getattr(obj, name, None)
-    assert value is not None, f"Expected {obj!r} to define `{name}` for manifest support"
+    assert value is not None, (
+        f"Expected {obj!r} to define `{name}` for manifest support"
+    )
     return value
 
 
@@ -34,13 +33,13 @@ class TestManifestModels:
     """Cover the typed manifest models described in the manifest support plan."""
 
     def test_manifest_models_are_exposed_from_catalog_models(self):
-        """Exposes dedicated typed models for manifest storage, entries, and top-level metadata."""
+        """Exposes typed models for storage, entries, and top-level metadata."""
         assert hasattr(models_module, "ManifestStorage")
         assert hasattr(models_module, "ManifestCaseEntry")
         assert hasattr(models_module, "ManifestMetadata")
 
     def test_public_extended_manifest_validates_into_typed_model(self):
-        """Parses the sample extended manifest into typed manifest models with nested storage and case entries."""
+        """Parses the sample manifest into typed storage and case-entry models."""
         manifest_cls = _require_attr(models_module, "ManifestMetadata")
 
         raw = yaml.safe_load(_EXTENDED_MANIFEST.read_text())
@@ -59,7 +58,7 @@ class TestManifestLoader:
     """Cover loading and lookup behavior for external manifest files."""
 
     def test_load_manifest_reads_the_sample_manifest(self):
-        """Loads the sample extended manifest from disk into a validated manifest model."""
+        """Loads the sample extended manifest from disk into a validated model."""
         load_manifest = _require_attr(manifest_module, "load_manifest")
 
         manifest = load_manifest(_EXTENDED_MANIFEST)
@@ -68,7 +67,7 @@ class TestManifestLoader:
         assert len(manifest.cases) == 2
 
     def test_resolve_manifest_case_returns_entry_for_known_case_id(self):
-        """Finds a manifest-backed case entry by case id without downloading any artifacts."""
+        """Finds a manifest-backed case entry by id without downloading artifacts."""
         load_manifest = _require_attr(manifest_module, "load_manifest")
         resolve_manifest_case = _require_attr(manifest_module, "resolve_manifest_case")
 
@@ -80,7 +79,7 @@ class TestManifestLoader:
         assert entry.archive_format == "zip"
 
     def test_build_manifest_uri_joins_base_uri_and_relative_path(self):
-        """Builds a deterministic remote artifact URI from manifest storage metadata and the case entry path."""
+        """Builds a deterministic remote URI from manifest storage and entry path."""
         load_manifest = _require_attr(manifest_module, "load_manifest")
         resolve_manifest_case = _require_attr(manifest_module, "resolve_manifest_case")
         build_manifest_uri = _require_attr(manifest_module, "build_manifest_uri")
@@ -134,11 +133,11 @@ class TestManifestRegistryIntegration:
     """Cover the explicit registry path that should expose manifest-backed entries."""
 
     def test_registry_exposes_an_explicit_manifest_aware_constructor(self):
-        """Adds a separate constructor for manifest-backed catalogs without changing the bundled-only default path."""
+        """Adds a manifest-backed constructor without changing the bundled default."""
         assert hasattr(CaseRegistry, "from_sources")
 
     def test_manifest_backed_ids_are_listed_without_breaking_bundled_registry(self):
-        """Lists bundled and manifest-backed case ids together when the explicit manifest-aware registry path is used."""
+        """Lists bundled and manifest ids together via the manifest-aware registry."""
         from_sources = _require_attr(CaseRegistry, "from_sources")
 
         registry = from_sources(_CASE_INDEX, manifest_paths=[_EXTENDED_MANIFEST])

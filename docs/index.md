@@ -31,25 +31,37 @@ Most spatial tests use overly simple geometries or ad hoc local files. GeoCase p
 
 ## Documentation map
 
-- User guides explain how to select cases, write tests, and use GeoCase day to day.
-- Contributor docs in `docs/contributing/` describe project workflow, coverage planning, and maintainer practices.
-- Design docs in `docs/design/` capture future-facing ideas that are not part of the core workflow.
+Each folder under `docs/` holds one kind of document:
+
+- User guides at the top level explain how to select cases, write tests, and use GeoCase day to day.
+- `docs/contributing/` — how to work on GeoCase: workflow, conventions, and maintainer practices.
+- `docs/plans/` — what is planned and in what order, including the [roadmap](plans/development-plan.md). Superseded plans stay in `docs/plans/archive/` as an implementation log.
+- `docs/design/` — future-facing designs that are not part of the core workflow.
+- `docs/reference/` — descriptive maps of the project as it exists today, such as the [codebase summary](reference/codebase-summary.md).
+- `docs/_generated/` — pages built by scripts and gated in CI; never edit them by hand.
 
 ## Example
 
 ```python
 import pytest
-from geocase import select_cases
+import geocase
 
 @pytest.mark.parametrize(
-    "case",
-    select_cases(category="vector", test_tier="unit"),
-    ids=lambda c: c.id,
+    "meta",
+    geocase.list_cases(category="vector", test_tier="unit"),
+    ids=lambda m: m.id,
 )
-def test_vector_loading(case):
-    gdf = case.load()
+def test_vector_loading(meta):
+    if not meta.assertions.expect_loadable:
+        pytest.skip(f"{meta.id} is a case that should not load cleanly")
+    gdf = geocase.load_case(meta.id).load()
     assert len(gdf) > 0
 ```
+
+`list_cases()` returns metadata, and `load_case()` turns a case id into
+something loadable. The `expect_loadable` check matters because some cases
+exist precisely to break loaders. See
+[`using-parameterized-tests.md`](using-parameterized-tests.md) for both points.
 
 ## Next reads
 

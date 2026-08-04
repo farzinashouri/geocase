@@ -1,12 +1,15 @@
-
----
-
-## `docs/remote-datasets.md`
-
-```md
 # Remote datasets
 
 GeoCase keeps its bundled core intentionally small. Larger or richer cases can be stored remotely and fetched on demand.
+
+!!! note "Status: manifests in v1.0, transport in v1.1"
+
+    v1.0 ships the *metadata* half of this design. Remote cases are described by
+    manifests and are discoverable by id, but GeoCase does not yet download,
+    cache, or unpack them — asking for a remote case raises a clear error telling
+    you where the artifact lives. The download and cache layer described below is
+    planned for v1.1. See
+    [the roadmap](plans/development-plan.md) for the current scope.
 
 ## Why remote storage exists
 
@@ -53,4 +56,4 @@ GeoCase can use the manifest to:
 
 ## Private cases
 
-Organizations can later maintain their own private manifests and point GeoCase to them without publishing the underlying datasets.s
+Organizations can later maintain their own private manifests and point GeoCase to them without publishing the underlying datasets.

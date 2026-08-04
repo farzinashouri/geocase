@@ -8,7 +8,6 @@ from geocase.catalog.loader import load_case_index
 from geocase.catalog.models import CaseMetadata
 from geocase.catalog.registry import CaseRegistry, get_registry, reset_registry
 
-
 # ---------------------------------------------------------------------------
 # Path constants
 # ---------------------------------------------------------------------------
@@ -22,6 +21,7 @@ _EXPECTED_CASE_COUNT = len(load_case_index(_CASE_INDEX))
 # ===================================================================
 # CaseRegistry.from_index
 # ===================================================================
+
 
 class TestCaseRegistryFromIndex:
     """Build a registry from the bundled case-index.yaml."""
@@ -52,6 +52,7 @@ class TestCaseRegistryFromIndex:
 # ===================================================================
 # CaseRegistry.get / lookup
 # ===================================================================
+
 
 class TestCaseRegistryLookup:
     """Test lookup operations on a pre-built registry."""
@@ -196,15 +197,28 @@ class TestCaseRegistryLookup:
 
         # All 7 geometry families must have at least 1 case
         expected_families = {
-            "Point", "MultiPoint", "LineString", "MultiLineString",
-            "Polygon", "MultiPolygon", "GeometryCollection",
+            "Point",
+            "MultiPoint",
+            "LineString",
+            "MultiLineString",
+            "Polygon",
+            "MultiPolygon",
+            "GeometryCollection",
         }
         assert expected_families <= geom_types
 
         # Core formats must each cover >= 6 geometry types
         core_formats = [
-            "GeoJSON", "GPKG", "Shapefile", "CSV_WKT", "FlatGeobuf",
-            "GML", "KML", "SQLite", "WKB", "WKT",
+            "GeoJSON",
+            "GPKG",
+            "Shapefile",
+            "CSV_WKT",
+            "FlatGeobuf",
+            "GML",
+            "KML",
+            "SQLite",
+            "WKB",
+            "WKT",
         ]
         for fmt in core_formats:
             covered = sum(1 for gt in expected_families if combos.get((gt, fmt), 0) > 0)
@@ -240,6 +254,7 @@ class TestCaseRegistryLookup:
 # ===================================================================
 # get_registry / reset_registry (singleton)
 # ===================================================================
+
 
 class TestDefaultRegistry:
     """Test the module-level singleton helpers."""

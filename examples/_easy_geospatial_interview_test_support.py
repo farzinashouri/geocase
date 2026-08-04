@@ -452,6 +452,13 @@ def _shifted_nodata_raster_case() -> Any:
     )
 
 
+def _rotated_raster_case() -> Any:
+    return _load_unique_case(
+        category="raster",
+        tags_all=["rotated"],
+    )
+
+
 def _rasterize_match_wgs84_polygon_geometry():
     return _load_unique_geometry(
         category="vector",
@@ -1158,6 +1165,60 @@ def test_clip_raster_perfect_handles_all_raster_cases(geocase: Any, tmp_path: Pa
     with rasterio.open(output_path) as clipped:
         assert 0 < clipped.width <= original_width
         assert 0 < clipped.height <= original_height
+
+
+def _rotated_raster_clip_bbox(src: Any) -> tuple[float, float, float, float]:
+    """An inset, axis-aligned bbox (raster CRS) for the rotated fixture."""
+    left, bottom, right, top = src.bounds
+    return (
+        left + (right - left) * 0.2,
+        bottom + (top - bottom) * 0.2,
+        right - (right - left) * 0.2,
+        top - (top - bottom) * 0.2,
+    )
+
+
+def test_clip_raster_fails_on_rotated_geotransform(tmp_path: Path) -> None:
+    """Question 8: the naive helper cannot clip a rotated raster.
+
+    gdal.Translate's -projWin rejects a geotransform with rotation/skew
+    terms, so the simple answer raises on the rotated_two_islands fixture.
+    """
+    raster_case = _rotated_raster_case()
+    output_path = tmp_path / "clipped_rotated_simple.tif"
+
+    with rasterio.open(raster_case.primary_path) as src:
+        assert src.transform.b != 0.0 or src.transform.d != 0.0
+        bbox = _rotated_raster_clip_bbox(src)
+
+    with pytest.raises(RuntimeError):
+        clip_raster(str(raster_case.primary_path), str(output_path), bbox)
+
+
+def test_clip_raster_perfect_handles_rotated_geotransform(tmp_path: Path) -> None:
+    """Question 8 perfect: warp-based fallback clips a rotated raster.
+
+    The robust helper detects the rotated geotransform and falls back to
+    gdal.Warp with an output extent, resampling onto an axis-aligned grid.
+    """
+    raster_case = _rotated_raster_case()
+    output_path = tmp_path / "clipped_rotated_perfect.tif"
+
+    with rasterio.open(raster_case.primary_path) as src:
+        assert src.transform.b != 0.0 or src.transform.d != 0.0
+        bbox = _rotated_raster_clip_bbox(src)
+        original_width = src.width
+        original_height = src.height
+        source_crs = src.crs
+
+    clip_raster_perfect(str(raster_case.primary_path), str(output_path), bbox)
+
+    with rasterio.open(output_path) as clipped:
+        assert 0 < clipped.width <= original_width
+        assert 0 < clipped.height <= original_height
+        assert clipped.crs == source_crs
+        # The warped output is axis-aligned even though the source was rotated.
+        assert clipped.transform.b == 0.0 and clipped.transform.d == 0.0
 
 
 # Question 9: Convert raster pixel coordinates to geographic coordinates

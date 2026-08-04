@@ -1,0 +1,61 @@
+id: ndvi_small
+title: NDVI Small
+description: >
+  A tiny single-band float32 NDVI-style derived product with values in the
+  [-1, 1] range. Exercises derived-index raster handling.
+category: raster
+format: GeoTIFF
+test_tier: integration
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - raster
+  - geotiff
+  - eo
+  - ndvi
+  - index
+  - product:index
+  - geography:utm
+  - delivery:single-file
+
+risk_types:
+  - dtype_drift
+  - value_range_violation
+
+behavioral_goal: >
+  Confirm GeoCase can open an NDVI-style derived raster and preserve its single
+  float32 band of values bounded in [-1, 1].
+
+expected_capabilities:
+  - load
+  - value-range-check
+
+loader_hint: rasterio
+crs: EPSG:32633
+
+files:
+  primary: ndvi_small.tif
+  notes: notes.md
+
+source:
+  name: geocase-synthetic
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_crs: true
+  expected_epsg: 32633
+  expected_band_count: 1
+  expected_dtype: float32
+  expected_shape: [16, 16]
+  expected_band_names: [ndvi]
+  expected_compression: deflate
+
+params:
+  generator: scripts/generate_raster_fixtures.py
+  value_min: -1.0
+  value_max: 1.0

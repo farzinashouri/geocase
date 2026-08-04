@@ -1,11 +1,16 @@
 schema_version: '1.0'
 cases:
 - path: data/core/netcdf/latlon_small/case.yaml
+- path: data/core/raster/cog_multispectral_small/case.yaml
+- path: data/core/raster/cog_singleband_small/case.yaml
+- path: data/core/raster/dem_nan_nodata_small/case.yaml
+- path: data/core/raster/dem_small/case.yaml
 - path: data/core/raster/footprint_edge_cases/case_all_valid_rectangular.yaml
 - path: data/core/raster/footprint_edge_cases/case_hole_center_nodata.yaml
 - path: data/core/raster/footprint_edge_cases/case_nonsquare_diagonal_sparse.yaml
 - path: data/core/raster/footprint_edge_cases/case_rotated_two_islands.yaml
 - path: data/core/raster/footprint_edge_cases/case_thin_corridor_shape.yaml
+- path: data/core/raster/geotiff_external_overviews_small/case.yaml
 - path: data/core/raster/geotiff_float64_small/case.yaml
 - path: data/core/raster/geotiff_int16_small/case.yaml
 - path: data/core/raster/geotiff_int32_small/case.yaml
@@ -14,6 +19,18 @@ cases:
 - path: data/core/raster/geotiff_nodata_small/case.yaml
 - path: data/core/raster/geotiff_nodata_small_shifted/case.yaml
 - path: data/core/raster/geotiff_utm_boundary/case.yaml
+- path: data/core/raster/landcover_small/case.yaml
+- path: data/core/raster/multispectral_mixed_resolution_small/case.yaml
+- path: data/core/raster/multispectral_s2_like_small/case.yaml
+- path: data/core/raster/ndvi_scaled_int16_small/case.yaml
+- path: data/core/raster/ndvi_small/case.yaml
+- path: data/core/raster/optical_dateline_small/case.yaml
+- path: data/core/raster/optical_equator_small/case.yaml
+- path: data/core/raster/optical_polar_small/case.yaml
+- path: data/core/raster/optical_rgb_small/case.yaml
+- path: data/core/raster/sar_dualpol_small/case.yaml
+- path: data/core/raster/sar_vv_small/case.yaml
+- path: data/core/raster/water_mask_small/case.yaml
 - path: data/core/vector/geometrycollection/geojson/case.yaml
 - path: data/core/vector/linestring/csv_wkt/linestring_csv_wkt_baseline/case.yaml
 - path: data/core/vector/linestring/flatgeobuf/linestring_flatgeobuf_baseline/case.yaml

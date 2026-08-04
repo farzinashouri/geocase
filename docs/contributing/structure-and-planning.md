@@ -1,7 +1,10 @@
 # Structure and Planning
 
-> **Status (April 2026):** Core implementation is complete. All waves (1-5) are done with 216+ passing tests.
-> See [workflow.md](workflow.md) for the detailed status tracker.
+> **Status (August 2026):** Core implementation is complete; `pytest tests -q` is green at
+> 780 passed, 1 skipped, and the public API is pinned for v1.0.
+> See [workflow.md](workflow.md) for the detailed status tracker and
+> [development-plan.md](../plans/development-plan.md) for the roadmap, which is authoritative on
+> scope.
 
 The core implementation is complete:
 
@@ -11,11 +14,11 @@ The core implementation is complete:
 4. ~~implement **selectors**~~ ✅
 5. ~~implement **suites**~~ ✅
 6. ~~implement **case factory + loaders**~~ ✅
-7. ~~add a few **tests**~~ ✅ (216 tests)
+7. ~~add a few **tests**~~ ✅ (781 collected)
 8. ~~wire the **pytest plugin**~~ ✅
 
 Remaining work focuses on documentation cleanup, additional test cases, and polish.
-See `docs/plans/` for the current roadmap.
+See [`development-plan.md`](../plans/development-plan.md) for the current roadmap.
 
 ---
 
@@ -193,16 +196,21 @@ Loads suite definitions and resolves them into case lists.
 
 Why it exists: named suites are more convenient than repeating selectors everywhere.
 
-### `catalog/validators.py`
+### `scripts/validate_catalog.py`
 
-Optional extra validation logic beyond Pydantic, such as:
+Extra validation logic beyond Pydantic, such as:
 
 * referenced files exist
 * remote info is present for remote cases
 * duplicate case IDs do not exist
 * suite references are valid
+* declared `size_class` matches the payload's actual size
 
 Why it exists: schema validation alone is not enough.
+
+This lives in `scripts/`, not in the package. `catalog/validators.py` was reserved for it
+and stayed a one-line docstring that nothing imported, so it was deleted in Batch 3;
+plan 03 had already decided validation stays in `scripts/`.
 
 ### `catalog/manifests.py`
 
@@ -312,27 +320,20 @@ Why this folder exists: GeoCase should provide not only data, but also reusable 
 
 ## `src/geocase/storage/`
 
-Storage resolution and caching.
+### `storage/hashing.py` ✅
 
-### `storage/local.py`
-
-Resolve bundled package paths.
-
-### `storage/remote.py`
-
-Download remote cases.
-
-### `storage/cache.py`
-
-Manage local cache directory and file reuse.
-
-### `storage/hashing.py`
-
-Checksum logic for verifying downloads.
+SHA-256 and byte-size verification. `scripts/generate_checksums.py` imports
+`sha256_file` from here, so bundled fixtures and remote artifacts are hashed by the
+same code.
 
 Why it exists: local and remote cases should still feel like one catalog.
 
-For v0.1, you can keep this very light.
+**Transport is deferred to v1.1.** `local.py`, `remote.py`, and `cache.py` previously
+existed here as one-line docstring stubs and were deleted — an empty module implies a
+commitment the project has not made, and both extended manifests are still 100%
+placeholder (`sha256: "replace_me"`, `base_uri: example.org`). They return in v1.1,
+gated on at least one real published archive with a real checksum. See
+[`development-plan.md`](../plans/development-plan.md).
 
 ---
 
@@ -358,33 +359,14 @@ Why it exists: GeoCase is designed for pytest, so first-class integration matter
 
 ---
 
-## `src/geocase/cli/`
+## `src/geocase/cli/` — removed
 
-Command-line tools, optional for first release.
-
-### `cli/main.py`
-
-CLI entry point.
-
-### `cli/list_cases.py`
-
-List available cases.
-
-### `cli/show_case.py`
-
-Show metadata for one case.
-
-### `cli/fetch_case.py`
-
-Download remote case.
-
-### `cli/validate_catalog.py`
-
-Validate all metadata and files.
-
-Why it exists: makes the toolkit easier to inspect and maintain.
-
-For v0.1, CLI is optional.
+There is no CLI. The directory held five one-line docstring stubs while
+`pyproject.toml` declared `geocase = "geocase.cli.main:app"`, so every install got a
+console script that died with `ImportError`. Both the entry point and the stubs were
+removed for v1.0; a CLI is deferred to v1.1 and would be re-added only if maintainer
+workflows need one. Catalog inspection and validation run through
+`scripts/validate_catalog.py` in the meantime.
 
 ---
 
@@ -424,19 +406,25 @@ Why it exists: keeps structure explicit and reviewable.
 
 Bundled sample data. All 8 `case.yaml` files are populated with full metadata.
 
-### `data/core/vector/` (5 cases)
+The catalog is **134 cases**. The lists that were once here enumerated eight of them and
+went stale within one release; the enumeration is now generated from the registry and
+CI-gated instead. See the [dataset catalog](../dataset-catalog.md) for the reasoning and
+the [case catalog](../_generated/catalog/index.md) for the full list.
 
-* `simple_valid_polygon` — baseline valid polygon
-* `polygon_with_hole` — interior ring handling
-* `self_intersecting_polygon` — invalid geometry detection
-* `dateline_crossing_polygon` — antimeridian wrapping
-* `mixed_encoding_attributes` — multi-encoding attributes (GPKG)
+### `data/core/vector/` (103 cases)
 
-### `data/core/raster/` (2 cases + 1 stub)
+A 66-case geometry × format baseline (6 geometry types across the formats that support
+them), 36 `special/` edge cases in eight families — `crs`, `dateline`, `invalid`,
+`encoding`, `precision`, `empty`, `degenerate`, `holes` — and one GeometryCollection.
 
-* `geotiff_nodata_small` — NoData masking
-* `geotiff_utm_boundary` — UTM zone boundary straddling
-* `affine_transform_quirk` — stub, not yet populated
+### `data/core/raster/` (30 cases)
+
+GeoTIFFs in four groups: product families (17), the dtype family (5), the
+nodata/alignment/CRS family (3), and footprint edge cases (5).
+
+Rotated and skewed affine transforms are **not** covered. `affine_transform_quirk` was an
+empty stub claiming that coverage and was deleted in Batch 3; the gap is on the v1.1 list,
+and `validate_catalog.py` now fails on any unindexed `*.yaml` under `data/core`.
 
 ### `data/core/netcdf/` (1 case)
 

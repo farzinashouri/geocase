@@ -24,9 +24,7 @@ class ResolvedSuite:
         cases: Ordered list of matching :class:`CaseMetadata`.
     """
 
-    def __init__(
-        self, metadata: SuiteMetadata, cases: list[CaseMetadata]
-    ) -> None:
+    def __init__(self, metadata: SuiteMetadata, cases: list[CaseMetadata]) -> None:
         self.metadata = metadata
         self.cases = cases
 
@@ -42,10 +40,7 @@ class ResolvedSuite:
         return len(self.cases)
 
     def __repr__(self) -> str:
-        return (
-            f"ResolvedSuite({self.suite_key!r}, "
-            f"{len(self.cases)} cases)"
-        )
+        return f"ResolvedSuite({self.suite_key!r}, {len(self.cases)} cases)"
 
 
 def resolve_suite(
@@ -72,6 +67,7 @@ def resolve_suite(
     # Apply explicit ordering if provided
     if suite.case_order:
         order_map = {cid: idx for idx, cid in enumerate(suite.case_order)}
+
         # Cases listed in case_order come first (in that order),
         # followed by any remaining matches in their original order.
         def sort_key(c: CaseMetadata) -> tuple[int, str]:
@@ -115,9 +111,7 @@ def load_all_suites(
     """
     if suite_index_path is None:
         suite_index_path = (
-            Path(__file__).resolve().parent.parent
-            / "metadata"
-            / "suite-index.yaml"
+            Path(__file__).resolve().parent.parent / "metadata" / "suite-index.yaml"
         )
 
     suite_index_path = Path(suite_index_path)

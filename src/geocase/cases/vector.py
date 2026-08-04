@@ -49,9 +49,7 @@ class VectorCase(BaseCase):
 
         path = self.primary_path
         if not path.is_file():
-            raise FileNotFoundError(
-                f"Primary data file not found: {path}"
-            )
+            raise FileNotFoundError(f"Primary data file not found: {path}")
 
         if self.metadata.format == "CSV_WKT":
             with path.open(newline="") as handle:
@@ -63,7 +61,11 @@ class VectorCase(BaseCase):
 
             columns = rows[0].keys()
             wkt_column = next(
-                (candidate for candidate in ("wkt", "geometry_wkt", "geometry") if candidate in columns),
+                (
+                    candidate
+                    for candidate in ("wkt", "geometry_wkt", "geometry")
+                    if candidate in columns
+                ),
                 None,
             )
             if wkt_column is None:
@@ -77,13 +79,19 @@ class VectorCase(BaseCase):
             for row in rows:
                 geometry_wkt = row[wkt_column]
                 geometries.append(wkt.loads(geometry_wkt))
-                attributes.append({key: value for key, value in row.items() if key != wkt_column})
+                attributes.append(
+                    {key: value for key, value in row.items() if key != wkt_column}
+                )
 
-            return geopandas.GeoDataFrame(attributes, geometry=geometries, crs=self.metadata.crs)
+            return geopandas.GeoDataFrame(
+                attributes, geometry=geometries, crs=self.metadata.crs
+            )
 
         if self.metadata.format == "WKT":
             geometry = wkt.loads(path.read_text().strip())
-            return geopandas.GeoDataFrame([{"name": self.id}], geometry=[geometry], crs=self.metadata.crs)
+            return geopandas.GeoDataFrame(
+                [{"name": self.id}], geometry=[geometry], crs=self.metadata.crs
+            )
 
         if self.metadata.format == "WKB":
             from shapely import wkb
@@ -93,7 +101,9 @@ class VectorCase(BaseCase):
                 geometry = wkb.loads(raw)
             except Exception:
                 geometry = wkb.loads(bytes.fromhex(raw.decode("ascii").strip()))
-            return geopandas.GeoDataFrame([{"name": self.id}], geometry=[geometry], crs=self.metadata.crs)
+            return geopandas.GeoDataFrame(
+                [{"name": self.id}], geometry=[geometry], crs=self.metadata.crs
+            )
 
         if self.metadata.format == "Parquet":
             return geopandas.read_parquet(path)

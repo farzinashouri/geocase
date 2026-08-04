@@ -1,0 +1,36 @@
+tests:
+  stage: test
+  # Floor and ceiling of the supported range (`requires-python = ">=3.11"`,
+  # classifiers 3.11-3.14). Development happens on 3.14 and the previous CI
+  # configuration ran 3.11 only, so the ceiling was verified locally but never
+  # in the pipeline.
+  parallel:
+    matrix:
+      - PYTHON_VERSION: ["3.11", "3.14"]
+  image: python:$PYTHON_VERSION
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - when: never
+  before_script:
+    - python -m pip install --upgrade pip
+    - python -m pip install -e .[dev]
+  script:
+    # The whole directory, not an allowlist. The hand-kept allowlist this
+    # replaced had drifted: it named an empty stub file and left ~300 tests
+    # out of CI entirely. The full suite runs in ~23s, so there is no
+    # split-by-cost argument for keeping two jobs.
+    #
+    # Coverage is reported, not gated (Step 13.6): ~300 tests are entering CI
+    # for the first time here, so any floor picked now would be arbitrary. The
+    # floor lands in v1.1, once the number has settled.
+    - >-
+      python -m pytest tests -q
+      --cov=geocase --cov-report=term --cov-report=xml:coverage.xml
+  coverage: '/^TOTAL\s+\d+\s+\d+\s+(\d+(?:\.\d+)?)%/'
+  artifacts:
+    when: always
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml

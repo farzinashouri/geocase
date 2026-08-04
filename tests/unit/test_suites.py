@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from geocase.catalog.loader import load_suite_index
-from geocase.catalog.models import CaseMetadata, SuiteMetadata, SuiteSelection
+from geocase.catalog.models import SuiteMetadata, SuiteSelection
 from geocase.catalog.registry import CaseRegistry
 from geocase.catalog.suites import (
     ResolvedSuite,
@@ -13,7 +13,6 @@ from geocase.catalog.suites import (
     load_and_resolve_suite,
     resolve_suite,
 )
-
 
 # ---------------------------------------------------------------------------
 # Path constants
@@ -36,6 +35,7 @@ _VECTOR_SCHEMA_SUITE = _SUITES / "vector-schema-encoding.yaml"
 # Shared fixture
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture()
 def registry() -> CaseRegistry:
     return CaseRegistry.from_index(_CASE_INDEX)
@@ -44,6 +44,7 @@ def registry() -> CaseRegistry:
 # ===================================================================
 # resolve_suite — from a SuiteMetadata object
 # ===================================================================
+
 
 class TestResolveSuite:
     """Exercises `resolve_suite()` with programmatically constructed suite metadata."""
@@ -129,7 +130,7 @@ class TestResolveSuite:
         assert len(resolved) == len(registry)
 
     def test_repr(self, registry: CaseRegistry):
-        """Includes the suite key and case count in the resolved suite representation."""
+        """Includes the suite key and case count in the resolved representation."""
         suite_meta = SuiteMetadata(
             suite_key="repr-test",
             title="T",
@@ -145,6 +146,7 @@ class TestResolveSuite:
 # ===================================================================
 # load_and_resolve_suite — from YAML files
 # ===================================================================
+
 
 class TestLoadAndResolveSuite:
     """Exercises loading and resolving real suite YAML files."""
@@ -207,14 +209,12 @@ class TestLoadAndResolveSuite:
     def test_missing_suite_file_raises(self, registry: CaseRegistry):
         """Raises `FileNotFoundError` when resolving a missing suite file."""
         with pytest.raises(FileNotFoundError):
-            load_and_resolve_suite(
-                Path("/nonexistent/suite.yaml"), registry
-            )
+            load_and_resolve_suite(Path("/nonexistent/suite.yaml"), registry)
 
     def test_vector_schema_encoding_suite_includes_step2_format_cases(
         self, registry: CaseRegistry
     ):
-        """Resolves the schema-and-encoding suite with the step 2 format-specific cases."""
+        """Resolves the schema-and-encoding suite with the format-specific cases."""
         resolved = load_and_resolve_suite(_VECTOR_SCHEMA_SUITE, registry)
         ids = set(resolved.case_ids)
         assert "parquet_mixed_schema_attributes" in ids
@@ -224,9 +224,7 @@ class TestLoadAndResolveSuite:
         self, registry: CaseRegistry
     ):
         """Resolves the CRS edge suite with the step 3 polar and equatorial polygons."""
-        resolved = load_and_resolve_suite(
-            _SUITES / "vector-crs-edge.yaml", registry
-        )
+        resolved = load_and_resolve_suite(_SUITES / "vector-crs-edge.yaml", registry)
         ids = set(resolved.case_ids)
         assert "north_pole_polygon" in ids
         assert "south_pole_polygon" in ids
@@ -236,6 +234,7 @@ class TestLoadAndResolveSuite:
 # ===================================================================
 # load_all_suites — bulk resolution from suite-index.yaml
 # ===================================================================
+
 
 class TestLoadAllSuites:
     """Exercises loading every bundled suite from the suite index."""
