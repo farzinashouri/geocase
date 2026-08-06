@@ -64,17 +64,20 @@ pytest -m "geocase_case or geocase_suite or geocase_select" -v
 
 ## CI Jobs
 
-This repository uses GitLab CI with job definitions in `ci/` and includes from
-`.gitlab-ci.yml`.
+This repository uses GitHub Actions, defined in `.github/workflows/`.
 
-- `catalog_validation` (`ci/catalog-validation.yml`)
-    - runs catalog integrity checks (`build_case_index.py` generation smoke check and `validate_catalog.py`)
-- `tests` (`ci/tests.yml`)
-    - runs on push and merge request pipelines, on Python 3.11 and 3.14
-    - executes the whole `tests/` directory and reports coverage (not gated)
-- `lint` (`ci/lint.yml`)
-    - runs on push and merge request pipelines
-    - `ruff format --check` and `ruff check` over `src` and `tests`
+`ci.yml` runs on pushes to `main` and on pull requests:
+
+- `catalog` — catalog integrity checks (`build_case_index.py` smoke check,
+  `validate_catalog.py`, fixture and checksum gates, generated-page freshness)
+- `tests` — the whole `tests/` directory on Python 3.11 and 3.14, reporting
+  coverage (not gated)
+- `lint` — `ruff format --check` and `ruff check` over `src` and `tests`
+- `typecheck` — `mypy src`
+- `docs` — `mkdocs build --strict`
+
+`release.yml` runs only on `vX.Y.Z` tags; see
+[Releasing](contributing/releasing.md).
 
 Local equivalents:
 

@@ -40,12 +40,12 @@ test:
     - python -c "import geocase; assert geocase.load_case('cog_multispectral_small').primary_path.exists()"
 
 about:
-  home: https://gitlab.com/fashouri/geocase
+  home: https://github.com/farzinashouri/geocase
   summary: A curated library of geospatial test cases for automated and parameterized testing.
   license: MIT
   license_file: LICENSE
   doc_url: https://farzinashouri.github.io/geocase
-  dev_url: https://gitlab.com/fashouri/geocase
+  dev_url: https://github.com/farzinashouri/geocase
 
 extra:
   recipe-maintainers:
