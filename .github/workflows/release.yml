@@ -1,0 +1,93 @@
+# Tag-triggered build and publish.
+#
+# Uploading uses PyPI's OIDC trusted publishing: GitHub mints a short-lived
+# JWT, PyPI exchanges it for an API token good for ~15 minutes. No API token is
+# ever stored as a repository secret, so there is nothing to leak or rotate.
+# That is what `permissions: id-token: write` grants -- it is scoped per job,
+# and only the two publish jobs get it.
+
+name: Release
+
+on:
+  push:
+    tags:
+      # rc tags (v1.0.0rc1) and final tags (v1.0.0) both build; which registry
+      # they upload to is chosen by the environment picked when the run is
+      # approved.
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tooling
+        run: |
+          python -m pip install --upgrade pip
+          # Pinned, like the lint gate: an unpinned build backend would let
+          # the artifact change without a code change.
+          python -m pip install "build==1.2.2" "twine==6.1.0"
+          # The verifier imports `geocase.catalog.loader` to read the case
+          # index, and compares the artifact version against
+          # `geocase.__version__`.
+          python -m pip install -e . --no-deps
+
+      - name: Build sdist and wheel
+        run: python -m build
+
+      # The gate. PyPI artifacts are immutable, so a wheel missing
+      # `geocase/data/**` would be a permanently broken release. This checks
+      # all 134 indexed cases are present, that the version matches the tag,
+      # and that no `__pycache__`/`.pyc`/`.DS_Store` slipped in.
+      - name: Verify artifacts
+        run: python scripts/verify_dist.py dist/ --expected-version "${GITHUB_REF_NAME}"
+
+      - name: Twine check
+        run: twine check dist/*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 30
+
+  # Both publish jobs are gated on a GitHub Environment, which is what makes
+  # them manual: the run pauses for approval before uploading. Cutting a tag
+  # and uploading should not be the same action, because the upload cannot be
+  # undone.
+
+  publish-testpypi:
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment: testpypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+  publish-pypi:
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

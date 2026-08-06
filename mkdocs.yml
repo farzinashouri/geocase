@@ -1,7 +1,7 @@
 site_name: GeoCase
 site_description: A curated library of geospatial test cases
 site_url: https://farzinashouri.github.io/geocase
-repo_url: https://gitlab.com/fashouri/geocase
+repo_url: https://github.com/farzinashouri/geocase
 repo_name: fashouri/geocase
 
 theme:

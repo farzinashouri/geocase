@@ -1,0 +1,148 @@
+# Ported from ci/*.yml when the project moved to GitHub. The rationale
+# comments there explain *why* each gate is shaped the way it is; this file
+# keeps the commands identical so the two cannot drift silently.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      # Floor and ceiling of the supported range (`requires-python = ">=3.11"`,
+      # classifiers 3.11-3.14).
+      matrix:
+        python-version: ["3.11", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .[dev]
+      # The whole directory, not an allowlist -- the hand-kept allowlist this
+      # replaced had drifted and left ~300 tests out of CI entirely.
+      #
+      # Coverage is reported, not gated: any floor picked now would be
+      # arbitrary. The floor lands in v1.1, once the number has settled.
+      - run: python -m pytest tests -q --cov=geocase --cov-report=term
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      # Ruff needs no project dependencies, so this job skips the ~200 MB
+      # geopandas/rasterio install the test jobs need. The version is pinned
+      # exactly: formatter output can change between releases, and an
+      # unpinned gate would turn red on a ruff upgrade rather than on a code
+      # change.
+      - run: python -m pip install "ruff==0.15.7"
+      # `src` and `tests` only: `examples/` is a 5,350-line demo corpus that
+      # would dominate every number and make the gate meaningless.
+      - run: ruff format --check src tests
+      - run: ruff check src tests
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      # The real dependencies are needed, not just mypy: the point of the
+      # `ignore_missing_imports` overrides in pyproject.toml is to silence the
+      # untyped geospatial libraries specifically, and an environment without
+      # them would report `import-not-found` instead and hide that.
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .[dev]
+      # `src` only. `tests/` is 429 errors of missing annotations on test
+      # functions; annotating them is a v1.1 ratchet, not a v1.0 gate.
+      - run: mypy src
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .[docs]
+      # `--strict` turns broken internal links into a build failure. Without
+      # it every case page linked its risk hubs one directory too high --
+      # 187 broken links, shipped, because nothing rendered the site in CI.
+      - run: mkdocs build --strict
+
+  catalog:
+    runs-on: ubuntu-latest
+    # Fixture generation needs the GDAL Python bindings (`osgeo`), which are
+    # source-only on PyPI, so this job runs on the upstream GDAL image where
+    # they are prebuilt. `ubuntu-full` rather than `ubuntu-small`: the vector
+    # fixture gate creates SpatiaLite databases, which needs GDAL linked
+    # against libspatialite.
+    container: ghcr.io/osgeo/gdal:ubuntu-full-3.10.0
+    steps:
+      # Must precede actions/checkout: without a git binary in the container
+      # the action falls back to downloading a tarball, which leaves no `.git`
+      # directory, and the freshness checks below then fail with "Not a git
+      # repository". GitLab's runner cloned before the job script ran, so this
+      # ordering constraint did not exist there.
+      - name: Install git before checkout
+        run: apt-get update -qq && apt-get install -y -qq git python3-venv
+
+      - uses: actions/checkout@v4
+
+      # The checkout is owned by a different uid than the container user, which
+      # git refuses to operate on until it is marked safe.
+      - name: Mark checkout safe
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Install dependencies
+        run: |
+          python3 -m venv --system-site-packages /venv
+          . /venv/bin/activate
+          python -m pip install --upgrade pip
+          # The image's osgeo bindings are compiled against NumPy 1.x; letting
+          # pip pull NumPy 2 breaks `osgeo.gdal_array` at import time.
+          python -m pip install -e .[raster] "numpy<2"
+          echo "/venv/bin" >> "$GITHUB_PATH"
+      - run: python scripts/build_case_index.py --check
+      - run: python scripts/validate_catalog.py
+      - run: python scripts/generate_raster_fixtures.py --check
+      - run: python scripts/generate_vector_fixtures.py --check
+      # Checksums cover the whole bundled catalog, not just raster: the vector
+      # SQLite fixtures drifted to 6.7 MB each precisely because nothing
+      # watched them.
+      - run: python scripts/generate_checksums.py --check
+      # `git status --porcelain` rather than `git diff --exit-code`: outside a
+      # working tree the latter reinterprets its arguments as `--no-index` and
+      # exits 129 with a full usage dump, burying the real cause.
+      - name: Vector coverage matrix is current
+        run: |
+          python scripts/generate_vector_coverage_matrix.py --output docs/_generated/vector-coverage-matrix.md
+          test -z "$(git status --porcelain -- docs/_generated/vector-coverage-matrix.md)" \
+            || { echo "vector-coverage-matrix.md is stale -- regenerate and commit"; git diff -- docs/_generated/vector-coverage-matrix.md; exit 1; }
+      - name: Raster coverage matrix is current
+        run: |
+          python scripts/generate_raster_coverage_matrix.py --output docs/_generated/raster-coverage-matrix.md
+          test -z "$(git status --porcelain -- docs/_generated/raster-coverage-matrix.md)" \
+            || { echo "raster-coverage-matrix.md is stale -- regenerate and commit"; git diff -- docs/_generated/raster-coverage-matrix.md; exit 1; }
+      # The per-case catalog pages enumerate every id, CRS, dtype and nodata
+      # value in the catalog, which makes them the highest-drift-risk artifact
+      # in the repository. They were already stale by 127 files when this gate
+      # was added.
+      - run: python scripts/generate_catalog_pages.py --check

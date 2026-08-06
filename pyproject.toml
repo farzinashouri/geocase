@@ -57,11 +57,11 @@ docs = [
 geocase = "geocase.pytest_plugin"
 
 [project.urls]
-Homepage = "https://gitlab.com/fashouri/geocase"
+Homepage = "https://github.com/farzinashouri/geocase"
 Documentation = "https://farzinashouri.github.io/geocase"
-Repository = "https://gitlab.com/fashouri/geocase"
-Issues = "https://gitlab.com/fashouri/geocase/-/issues"
-Changelog = "https://gitlab.com/fashouri/geocase/-/blob/main/CHANGELOG.md"
+Repository = "https://github.com/farzinashouri/geocase"
+Issues = "https://github.com/farzinashouri/geocase/issues"
+Changelog = "https://github.com/farzinashouri/geocase/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/geocase"]
