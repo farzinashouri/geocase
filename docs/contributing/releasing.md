@@ -17,21 +17,27 @@ or rotate.
 
 On **both** [test.pypi.org](https://test.pypi.org) and
 [pypi.org](https://pypi.org) → *Publishing* → *Add a pending publisher* →
-**GitLab**:
+**GitHub**:
 
-| Field | Value |
-|---|---|
-| PyPI Project Name | `geocase` |
-| Namespace | `fashouri` |
-| Repository name | `geocase` |
-| Top-level pipeline file path | `.gitlab-ci.yml` |
-| Environment name | *(blank)* |
+| Field | Value (pypi.org) | Value (test.pypi.org) |
+|---|---|---|
+| PyPI Project Name | `geocase` | `geocase` |
+| Owner | `farzinashouri` | `farzinashouri` |
+| Repository name | `geocase` | `geocase` |
+| Workflow name | `release.yml` | `release.yml` |
+| Environment name | `pypi` | `testpypi` |
 
-Leave the environment blank. If it is set, the CI job must declare a matching
-`environment:` or the token mint fails with a 403 — after the tag is already
-cut. A *pending* publisher works before the project exists on PyPI, which is
-exactly the first-release case; it converts to a normal publisher on first
-upload.
+The environment names are **not** optional here and must match exactly: the
+publish jobs in `.github/workflows/release.yml` declare `environment: pypi` and
+`environment: testpypi`, and a mismatch fails the token mint with a 403 — after
+the tag is already cut.
+
+Create the two environments under the repository's *Settings → Environments*.
+Adding a required reviewer to each is what makes publishing a deliberate,
+approved step rather than an automatic consequence of pushing a tag.
+
+A *pending* publisher works before the project exists on PyPI, which is exactly
+the first-release case; it converts to a normal publisher on first upload.
 
 TestPyPI is a separate account and registry from PyPI. Both are needed: the dry
 run below is not optional.
@@ -86,8 +92,9 @@ git tag -a v1.0.0rc1 -m "GeoCase 1.0.0rc1"
 git push origin v1.0.0rc1
 ```
 
-The tag pipeline runs `build_dist` automatically. Then run **`publish_testpypi`
-manually** from the pipeline view.
+Pushing the tag runs the `build` job automatically. The `publish-testpypi` job
+then waits on the `testpypi` environment — **approve it** from the run's page in
+the Actions tab to upload.
 
 Verify the result in a clean environment:
 
@@ -117,8 +124,9 @@ git tag -a v1.0.0 -m "GeoCase 1.0.0"
 git push origin v1.0.0
 ```
 
-Run **`publish_pypi` manually**. Both publish jobs are `when: manual` because
-cutting a tag and uploading should not be the same action.
+**Approve `publish-pypi`** on the `pypi` environment. Both publish jobs sit
+behind an environment gate because cutting a tag and uploading should not be the
+same action.
 
 Verify:
 
@@ -162,7 +170,7 @@ PyPI upload.
 
 1. Bump `version` in `pyproject.toml`; update `CHANGELOG.md`.
 2. Local gate, merge to `main`.
-3. Tag `vX.Y.Z`, push, run `publish_pypi`.
+3. Tag `vX.Y.Z`, push, approve `publish-pypi`.
 4. Merge the autotick bot's conda-forge PR.
 
 The TestPyPI rehearsal is worth repeating for anything touching packaging —
