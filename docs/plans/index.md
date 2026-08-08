@@ -13,6 +13,7 @@ Nothing here describes how the project works today — that lives in
 | [Website Plan](website-plan.md) | Proposed, unscheduled | The public website. |
 | [Distribution — PyPI & conda](11-distribution-pypi-and-conda.md) | Proposed | Packaging and release to PyPI, then conda-forge. |
 | [Docs Site Publication](12-docs-site-publication.md) | Proposed | Publishing the built docs to GitHub Pages, and the canonical-URL fix that goes with it. |
+| [Cross-Format Canonical Convergence](13-cross-format-canonical-convergence.md) | Proposed | Corpus defect: `*_baseline` families do not hold the geometry they promise. Derive them from their declared canonical and gate it in CI. |
 | [Archived plans](archive/index.md) | Superseded | Plans 01–10, retained as an implementation log. |
 
 ## Rules for this folder
