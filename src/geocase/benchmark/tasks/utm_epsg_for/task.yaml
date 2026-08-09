@@ -1,0 +1,15 @@
+schema_version: 1
+name: utm_epsg_for
+title: UTM EPSG code for a location
+function: utm_epsg_for
+signature: "utm_epsg_for(lon, lat) -> int"
+module: gen_utm_epsg_for.py
+handbook_id: null
+trap_category: zone-exceptions
+packages: [pyproj]
+origin: step0
+checks:
+  - {name: berlin, kind: control}
+  - {name: buenos_aires_south, kind: control}
+  - {name: svalbard_33X, kind: edge}
+  - {name: norway_32V, kind: edge}

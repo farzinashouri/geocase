@@ -1,0 +1,13 @@
+schema_version: 1
+name: split_antimeridian
+title: Split a polygon at the antimeridian
+function: split_antimeridian
+signature: "split_antimeridian(polygon) -> list[Polygon]"
+module: gen_split_antimeridian.py
+handbook_id: FND-0047
+trap_category: antimeridian
+packages: [shapely, pyproj]
+origin: plan15
+checks:
+  - {name: non_crossing_passthrough, kind: control}
+  - {name: crossing_box_two_parts, kind: edge}

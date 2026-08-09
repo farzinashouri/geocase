@@ -1,0 +1,14 @@
+schema_version: 1
+name: label_point
+title: Label point inside a polygon
+function: label_point
+signature: "label_point(polygon) -> Point (any planar CRS)"
+module: gen_label_point.py
+handbook_id: VEC-0007
+trap_category: predicate-semantics
+packages: [shapely]
+origin: step0
+checks:
+  - {name: square, kind: control}
+  - {name: donut, kind: edge}
+  - {name: c_shape, kind: edge}

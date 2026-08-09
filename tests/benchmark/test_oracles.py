@@ -1,0 +1,347 @@
+"""The oracle's own regression net (Plan 15 Phase 3, trap 1).
+
+A wrong oracle silently mislabels every model — the failure mode this project
+exists to name, turned on itself. For each new task this grades a known-good
+implementation (must come back all-PASS) and a known-trapped one (must come
+back SILENT on the edge check specifically, while passing the controls). The
+ten Step 0 tasks carry the same guarantee through the committed-run pin test.
+"""
+
+import textwrap
+
+import pytest
+
+from geocase.benchmark._oracle_utils import (
+    geohash_decode_bounds,
+    geohash_encode,
+    geohash_neighbors_oracle,
+)
+from geocase.benchmark.grading import grade_module
+from geocase.benchmark.registry import get_task
+from geocase.benchmark.taxonomy import CheckKind, Status
+
+GOOD = {}
+TRAPPED = {}
+
+
+GOOD["tag_points"] = """
+from shapely.geometry import Point
+
+def tag_points(points, polygons):
+    out = []
+    for x, y in points:
+        p = Point(x, y)
+        idx = None
+        for i, poly in enumerate(polygons):
+            if poly.covers(p):
+                idx = i
+                break
+        out.append(idx)
+    return out
+"""
+
+TRAPPED["tag_points"] = """
+from shapely.geometry import Point
+
+def tag_points(points, polygons):
+    out = []
+    for x, y in points:
+        p = Point(x, y)
+        idx = None
+        for i, poly in enumerate(polygons):
+            if p.within(poly):  # boundary points silently fall through
+                idx = i
+                break
+        out.append(idx)
+    return out
+"""
+
+GOOD["fix_geometry"] = """
+from shapely.validation import make_valid
+
+def fix_geometry(geom):
+    if geom.is_valid:
+        return geom
+    fixed = make_valid(geom)
+    if fixed.geom_type == "GeometryCollection":
+        from shapely.ops import unary_union
+        polys = [g for g in fixed.geoms if g.geom_type in ("Polygon", "MultiPolygon")]
+        fixed = unary_union(polys)
+    return fixed
+"""
+
+TRAPPED["fix_geometry"] = """
+def fix_geometry(geom):
+    if geom.is_valid:
+        return geom
+    return geom.buffer(0)  # quietly deletes one bowtie lobe
+"""
+
+GOOD["dedupe_geoms"] = """
+def dedupe_geoms(geoms):
+    kept = []
+    for g in geoms:
+        if not any(g.equals(k) for k in kept):
+            kept.append(g)
+    return kept
+"""
+
+TRAPPED["dedupe_geoms"] = """
+def dedupe_geoms(geoms):
+    seen = set()
+    kept = []
+    for g in geoms:
+        key = g.wkb  # misses rotated/reversed rings
+        if key not in seen:
+            seen.add(key)
+            kept.append(g)
+    return kept
+"""
+
+GOOD["to_rfc7946"] = """
+import pyproj
+from shapely.geometry import mapping
+from shapely.geometry.polygon import orient
+from shapely.ops import transform
+
+def to_rfc7946(geom, epsg):
+    if epsg != 4326:
+        t = pyproj.Transformer.from_crs(epsg, 4326, always_xy=True).transform
+        geom = transform(t, geom)
+    if geom.geom_type == "Polygon":
+        geom = orient(geom, 1.0)
+    elif geom.geom_type == "MultiPolygon":
+        from shapely.geometry import MultiPolygon
+        geom = MultiPolygon([orient(p, 1.0) for p in geom.geoms])
+    return dict(mapping(geom))
+"""
+
+TRAPPED["to_rfc7946"] = """
+from shapely.geometry import mapping
+
+def to_rfc7946(geom, epsg):
+    return dict(mapping(geom))  # never reprojects: 3857 metres pass through
+"""
+
+GOOD["project_line"] = """
+from pyproj import Geod, Transformer
+from shapely.geometry import LineString
+
+def project_line(line, dst_epsg):
+    geod = Geod(ellps="WGS84")
+    coords = list(line.coords)
+    pts = [coords[0]]
+    for (lo1, la1), (lo2, la2) in zip(coords, coords[1:]):
+        pts.extend(geod.npts(lo1, la1, lo2, la2, 512))
+        pts.append((lo2, la2))
+    t = Transformer.from_crs(4326, dst_epsg, always_xy=True)
+    return LineString([t.transform(x, y) for x, y in pts])
+"""
+
+TRAPPED["project_line"] = """
+from pyproj import Transformer
+from shapely.geometry import LineString
+
+def project_line(line, dst_epsg):
+    # densifying after (or never) instead of before: vertices only
+    t = Transformer.from_crs(4326, dst_epsg, always_xy=True)
+    return LineString([t.transform(x, y) for x, y in line.coords])
+"""
+
+GOOD["wkt_from_latlon"] = """
+def wkt_from_latlon(lat, lon):
+    return f"POINT ({lon} {lat})"
+"""
+
+TRAPPED["wkt_from_latlon"] = """
+def wkt_from_latlon(lat, lon):
+    return f"POINT ({lat} {lon})"  # swapped axes parse fine and look plausible
+"""
+
+GOOD["segment_intersection"] = """
+from shapely.geometry import LineString
+
+def segment_intersection(a, b):
+    inter = LineString(a).intersection(LineString(b))
+    if inter.is_empty:
+        return None
+    if inter.geom_type == "Point":
+        return (inter.x, inter.y)
+    coords = list(inter.coords)
+    return (tuple(coords[0]), tuple(coords[-1]))
+"""
+
+TRAPPED["segment_intersection"] = """
+def segment_intersection(a, b):
+    (x1, y1), (x2, y2) = a
+    (x3, y3), (x4, y4) = b
+    d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+    if d == 0:
+        return None  # collinear overlap silently reported as disjoint
+    t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / d
+    u = ((x1 - x3) * (y1 - y2) - (y1 - y3) * (x1 - x2)) / d
+    if 0 <= t <= 1 and 0 <= u <= 1:
+        return (x1 + t * (x2 - x1), y1 + t * (y2 - y1))
+    return None
+"""
+
+_GEOHASH_TABLES = """
+_BASE = "0123456789bcdefghjkmnpqrstuvwxyz"
+_NEI = {
+    "n": ["p0r21436x8zb9dcf5h7kjnmqesgutwvy", "bc01fg45238967deuvhjyznpkmstqrwx"],
+    "s": ["14365h7k9dcfesgujnmqp0r2twvyx8zb", "238967debc01fg45kmstqrwxuvhjyznp"],
+    "e": ["bc01fg45238967deuvhjyznpkmstqrwx", "p0r21436x8zb9dcf5h7kjnmqesgutwvy"],
+    "w": ["238967debc01fg45kmstqrwxuvhjyznp", "14365h7k9dcfesgujnmqp0r2twvyx8zb"],
+}
+_BOR = {
+    "n": ["prxz", "bcfguvyz"],
+    "s": ["028b", "0145hjnp"],
+    "e": ["bcfguvyz", "prxz"],
+    "w": ["0145hjnp", "028b"],
+}
+"""
+
+GOOD["geohash_neighbors"] = (
+    _GEOHASH_TABLES
+    + """
+def _adjacent(gh, d):
+    last, parent = gh[-1], gh[:-1]
+    t = len(gh) % 2
+    if last in _BOR[d][t] and parent:
+        parent = _adjacent(parent, d)
+    return parent + _BASE[_NEI[d][t].index(last)]
+
+def geohash_neighbors(gh):
+    n = _adjacent(gh, "n")
+    s = _adjacent(gh, "s")
+    return [n, s, _adjacent(gh, "e"), _adjacent(gh, "w"),
+            _adjacent(n, "e"), _adjacent(n, "w"),
+            _adjacent(s, "e"), _adjacent(s, "w")]
+"""
+)
+
+TRAPPED["geohash_neighbors"] = (
+    _GEOHASH_TABLES
+    + """
+def _adjacent(gh, d):
+    last, parent = gh[-1], gh[:-1]
+    t = len(gh) % 2
+    # border handling omitted: cells across the equator or prime meridian
+    # get a same-prefix neighbour that is simply the wrong cell
+    return parent + _BASE[_NEI[d][t].index(last)]
+
+def geohash_neighbors(gh):
+    n = _adjacent(gh, "n")
+    s = _adjacent(gh, "s")
+    return [n, s, _adjacent(gh, "e"), _adjacent(gh, "w"),
+            _adjacent(n, "e"), _adjacent(n, "w"),
+            _adjacent(s, "e"), _adjacent(s, "w")]
+"""
+)
+
+GOOD["split_antimeridian"] = """
+from shapely.geometry import Polygon, box
+
+def split_antimeridian(polygon):
+    lons = [x for x, _ in polygon.exterior.coords]
+    if not any(abs(a - b) > 180 for a, b in zip(lons, lons[1:])):
+        return [polygon]
+    shifted = Polygon([(x % 360, y) for x, y in polygon.exterior.coords])
+    west = shifted.intersection(box(0, -90, 180, 90))
+    east = shifted.intersection(box(180, -90, 360, 90))
+    east = Polygon([(x - 360, y) for x, y in east.exterior.coords])
+    return [west, east]
+"""
+
+TRAPPED["split_antimeridian"] = """
+def split_antimeridian(polygon):
+    return [polygon]  # a valid-looking list whose one part spans 358 degrees
+"""
+
+GOOD["zonal_mean"] = """
+import rasterio
+from shapely.geometry import Point
+
+def zonal_mean(raster_path, polygon):
+    with rasterio.open(raster_path) as src:
+        arr = src.read(1)
+        nodata = src.nodata
+        vals = []
+        for row in range(src.height):
+            for col in range(src.width):
+                x, y = src.transform * (col + 0.5, row + 0.5)
+                if polygon.contains(Point(x, y)):
+                    v = float(arr[row, col])
+                    if nodata is None or v != nodata:
+                        vals.append(v)
+    return sum(vals) / len(vals) if vals else None
+"""
+
+TRAPPED["zonal_mean"] = """
+import rasterio
+import rasterio.mask
+from shapely.geometry import mapping
+
+def zonal_mean(raster_path, polygon):
+    with rasterio.open(raster_path) as src:
+        arr, _ = rasterio.mask.mask(src, [mapping(polygon)], crop=True)
+    return float(arr[0].mean())  # nodata and fill pixels silently averaged in
+"""
+
+NEW_TASKS = sorted(GOOD)
+
+
+def _grade(name, source, tmp_path):
+    task = get_task(name)
+    (tmp_path / task.module).write_text(textwrap.dedent(source))
+    return task, grade_module(task, tmp_path)
+
+
+@pytest.mark.parametrize("name", NEW_TASKS)
+def test_known_good_passes_everything(name, tmp_path):
+    _, outcome = _grade(name, GOOD[name], tmp_path)
+    assert outcome.outcome == "CORRECT", [
+        (c.check, c.status.value, c.detail) for c in outcome.checks
+    ]
+
+
+@pytest.mark.parametrize("name", NEW_TASKS)
+def test_known_trapped_is_silent_on_the_edge_check(name, tmp_path):
+    _, outcome = _grade(name, TRAPPED[name], tmp_path)
+    by_kind = {}
+    for c in outcome.checks:
+        by_kind.setdefault(c.kind, []).append(c)
+    assert all(c.status == Status.PASS for c in by_kind.get(CheckKind.CONTROL, [])), [
+        (c.check, c.status.value, c.detail) for c in outcome.checks
+    ]
+    assert any(c.status == Status.SILENT for c in by_kind.get(CheckKind.EDGE, [])), [
+        (c.check, c.status.value, c.detail) for c in outcome.checks
+    ]
+    assert outcome.outcome == "SILENT"
+
+
+# ---------------------------------------------------------------- geohash oracle
+# The oracle's geohash arithmetic itself, against published reference values.
+
+
+def test_geohash_encode_reference_value():
+    assert geohash_encode(-5.60302734375, 42.60498046875, 5) == "ezs42"
+
+
+def test_geohash_decode_bounds_contains_center():
+    w, s, e, n = geohash_decode_bounds("ezs42")
+    assert w < -5.604 < e and s < 42.605 < n
+
+
+def test_geohash_oracle_neighbors_of_interior_cell():
+    # Reference neighbours of "ezs42" (geohash.org test vector).
+    assert geohash_neighbors_oracle("ezs42") == {
+        "ezs48",
+        "ezs49",
+        "ezs43",
+        "ezs40",
+        "ezs41",
+        "ezefp",
+        "ezefr",
+        "ezefx",
+    }

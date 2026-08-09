@@ -1,0 +1,13 @@
+schema_version: 1
+name: sample_at
+title: Sample a GeoTIFF at a lon/lat
+function: sample_at
+signature: "sample_at(raster_path, lon, lat) -> float | None"
+module: gen_sample_at.py
+handbook_id: null
+trap_category: nodata
+packages: [rasterio, pyproj]
+origin: step0
+checks:
+  - {name: valid_pixel_utm_raster, kind: control}
+  - {name: nodata_sentinel, kind: edge}

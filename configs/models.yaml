@@ -1,0 +1,36 @@
+# Model roster for the OpenRouter runner (Plan 15 Phase 4).
+# Extend the list freely; every run is bounded by budget.max_usd_total,
+# enforced against OpenRouter's returned usage.cost (hard abort).
+
+defaults:
+  trials: 3
+  temperature: 0.2
+  max_turns: 12        # agentic track only (not used by the one-off bare runner)
+  exec_timeout_s: 60
+
+budget:
+  max_usd_total: 10.00
+
+models:
+  # Free tier
+  - id: deepseek/deepseek-chat-v3.1:free
+    label: DeepSeek V3.1 (free)
+    tracks: [bare]
+    supports_tools: false
+  - id: qwen/qwen3-coder:free
+    label: Qwen3 Coder (free)
+    tracks: [bare]
+    supports_tools: false
+  - id: meta-llama/llama-4-maverick:free
+    label: Llama 4 Maverick (free)
+    tracks: [bare]
+    supports_tools: false
+  # Paid
+  - id: openai/gpt-5-mini
+    label: GPT-5 mini
+    tracks: [bare]
+    supports_tools: true
+  - id: google/gemini-2.5-flash
+    label: Gemini 2.5 Flash
+    tracks: [bare]
+    supports_tools: true

@@ -14,7 +14,8 @@ Nothing here describes how the project works today — that lives in
 | [Distribution — PyPI & conda](11-distribution-pypi-and-conda.md) | Proposed | Packaging and release to PyPI, then conda-forge. |
 | [Docs Site Publication](12-docs-site-publication.md) | Proposed | Publishing the built docs to GitHub Pages, and the canonical-URL fix that goes with it. |
 | [Cross-Format Canonical Convergence](13-cross-format-canonical-convergence.md) | Proposed | Corpus defect: `*_baseline` families do not hold the geometry they promise. Derive them from their declared canonical and gate it in CI. |
-| [Reposition as a Correctness Library](14-reposition-as-correctness-library.md) | Proposed — direction change | Ship the hardened operations from `examples/` as the product; demote the corpus to the test suite that proves them. Supersedes the catalog-as-product framing if adopted. |
+| [Reposition as a Correctness Library](14-reposition-as-correctness-library.md) | **Rejected — Step 0 gate fired (2026-08-09)** | Blind agents got 9/10 operations right; only `buffer_m` across the antimeridian failed, silently, in 2/2 trials. Per the pre-committed decision rule the library is redundant. Evidence: `tests/benchmark/agent_baseline/RESULTS.md`. Salvage path executed by [Plan 15](15-geocase-as-benchmark.md). |
+| [GeoCase as a Benchmark](15-geocase-as-benchmark.md) | Proposed | Promotes Plan 14's Step 0 instrument to the product: a benchmark measuring silent failures in LLM-generated geospatial code across free and paid models, on a bare and an agentic track, with a leaderboard published to GitHub Pages. Full repo pivot in two stages. |
 | [Archived plans](archive/index.md) | Superseded | Plans 01–10, retained as an implementation log. |
 
 ## Rules for this folder

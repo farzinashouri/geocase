@@ -37,8 +37,12 @@ vector = ["geopandas>=0.14", "shapely>=2.0", "pyarrow>=14.0"]
 raster = ["rasterio>=1.3"]
 netcdf = ["xarray>=2023.1", "netCDF4>=1.6"]
 all = ["geocase[vector,raster,netcdf]"]
+# The benchmark runner (Plan 15). scikit-learn is here because committed
+# generated modules may import it during re-grading.
+bench = ["geocase[vector,raster]", "httpx>=0.27", "scikit-learn>=1.4"]
 dev = [
     "geocase[all]",
+    "geocase[bench]",
     "pytest>=7.0",
     "pytest-cov>=4.0",
     "mypy>=1.0",
@@ -137,6 +141,15 @@ warn_unused_ignores = true
 [tool.ruff]
 target-version = "py311"
 line-length = 88
+# Verbatim model-generated benchmark artifacts: they must stay byte-identical
+# to what the agents wrote (their hashes are provenance), so neither the
+# formatter nor the linter may touch them.
+extend-exclude = ["tests/benchmark/agent_baseline/generated"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+# The bare-track prompt template is sent to models verbatim; reflowing its
+# lines to satisfy the line-length gate would change the prompt itself.
+"src/geocase/benchmark/runner/bare.py" = ["E501"]

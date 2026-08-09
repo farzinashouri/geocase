@@ -1,0 +1,13 @@
+schema_version: 1
+name: tile_bounds
+title: TMS tile bounds in WGS84
+function: tile_bounds
+signature: "tile_bounds(z, x, y) -> (west, south, east, north) floats"
+module: gen_tile_bounds.py
+handbook_id: ALG-0022
+trap_category: y-flip
+packages: []
+origin: step0
+checks:
+  - {name: z0_world, kind: control}
+  - {name: z2_tms_row_flip, kind: edge}

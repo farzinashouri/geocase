@@ -1,0 +1,14 @@
+schema_version: 1
+name: cluster_points_m
+title: Single-linkage clustering by metres
+function: cluster_points_m
+signature: "cluster_points_m(points, max_distance_m) -> list[int]"
+module: gen_cluster_points_m.py
+handbook_id: SQL-0042
+trap_category: units-degrees
+packages: [pyproj, scikit-learn]
+origin: step0
+checks:
+  - {name: 300m_pair_plus_outlier, kind: control}
+  - {name: east_west_at_75N, kind: edge}
+  - {name: pair_across_dateline, kind: edge}

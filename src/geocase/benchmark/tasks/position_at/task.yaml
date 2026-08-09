@@ -1,0 +1,13 @@
+schema_version: 1
+name: position_at
+title: Interpolate a ship track
+function: position_at
+signature: "position_at(fixes, t) -> (lon, lat)"
+module: gen_position_at.py
+handbook_id: TRJ-0036
+trap_category: antimeridian
+packages: [pyproj]
+origin: step0
+checks:
+  - {name: quarter_along_leg, kind: control}
+  - {name: leg_across_dateline, kind: edge}

@@ -38,7 +38,13 @@ RESULTS: list[dict] = []
 
 def record(op, check, kind, status, detail=""):
     RESULTS.append(
-        {"op": op, "check": check, "kind": kind, "status": status, "detail": str(detail)}
+        {
+            "op": op,
+            "check": check,
+            "kind": kind,
+            "status": status,
+            "detail": str(detail),
+        }
     )
 
 
@@ -86,7 +92,9 @@ def grade_area_m2(mod):
         exp, _ = GEOD.geometry_area_perimeter(ref)
         exp = abs(exp)
         got = f(poly)
-        return rel_ok(got, exp, 0.01), f"got {got:.4g}, expected {exp:.4g} (2x1 deg box)"
+        return rel_ok(
+            got, exp, 0.01
+        ), f"got {got:.4g}, expected {exp:.4g} (2x1 deg box)"
 
     run_check("area_m2", "berlin_box", "control", control)
     run_check("area_m2", "antimeridian_box", "edge", dateline)
@@ -105,7 +113,10 @@ def grade_buffer_m(mod):
             and buf.intersects(Point(lon_in, lat_in))
             and not buf.intersects(Point(lon_out, lat_out))
         )
-        return ok, f"valid={buf.is_valid}, 900m in={buf.intersects(Point(lon_in, lat_in))}"
+        return (
+            ok,
+            f"valid={buf.is_valid}, 900m in={buf.intersects(Point(lon_in, lat_in))}",
+        )
 
     def dateline():
         buf = f(Point(179.9, 0), 50_000)
@@ -137,9 +148,11 @@ def grade_utm_epsg_for(mod):
         ("norway_32V", "edge", (4.5, 60.0), 32632),
     ]
     for name, kind, (lon, lat), exp in cases:
+
         def chk(lon=lon, lat=lat, exp=exp):
             got = f(lon, lat)
             return int(got) == exp, f"got {got}, expected {exp}"
+
         run_check("utm_epsg_for", name, kind, chk)
 
 
@@ -152,8 +165,16 @@ def _make_raster(path: Path):
     data = np.full((10, 10), 42.0, dtype="float32")
     data[5, 5] = -9999.0
     with rasterio.open(
-        path, "w", driver="GTiff", height=10, width=10, count=1,
-        dtype="float32", crs="EPSG:32633", transform=transform, nodata=-9999.0,
+        path,
+        "w",
+        driver="GTiff",
+        height=10,
+        width=10,
+        count=1,
+        dtype="float32",
+        crs="EPSG:32633",
+        transform=transform,
+        nodata=-9999.0,
     ) as dst:
         dst.write(data, 1)
 
@@ -173,8 +194,11 @@ def grade_sample_at(mod):
     def control():
         lon, lat = _pixel_lonlat(2, 2)
         got = f(str(tmp), lon, lat)
-        ok = got is not None and not (isinstance(got, float) and math.isnan(got)) \
+        ok = (
+            got is not None
+            and not (isinstance(got, float) and math.isnan(got))
             and abs(float(got) - 42.0) < 1e-6
+        )
         return ok, f"got {got!r}, expected 42.0"
 
     def nodata():
@@ -205,7 +229,9 @@ def grade_label_point(mod):
         return p.within(poly), f"point {p.wkt} (centroid lies in the hole)"
 
     def c_shape():
-        poly = Polygon([(0, 0), (10, 0), (10, 10), (0, 10), (0, 8), (8, 8), (8, 2), (0, 2)])
+        poly = Polygon(
+            [(0, 0), (10, 0), (10, 10), (0, 10), (0, 8), (8, 8), (8, 2), (0, 2)]
+        )
         p = f(poly)
         return p.within(poly), f"point {p.wkt} (centroid lies in the notch)"
 
@@ -216,11 +242,14 @@ def grade_label_point(mod):
 
 # ---------------------------------------------------------------- tile_bounds
 def _xyz_tile_bounds(z, x, y_xyz):
-    n = 2 ** z
+    n = 2**z
+
     def lon(xx):
         return xx / n * 360.0 - 180.0
+
     def lat(yy):
         return math.degrees(math.atan(math.sinh(math.pi * (1 - 2 * yy / n))))
+
     return (lon(x), lat(y_xyz + 1), lon(x + 1), lat(y_xyz))
 
 
@@ -238,7 +267,11 @@ def grade_tile_bounds(mod):
         got = f(2, 1, 1)
         exp = _xyz_tile_bounds(2, 1, 2)
         ok = all(abs(g - e) < 1e-6 for g, e in zip(got, exp))
-        return ok, f"got {tuple(round(v, 4) for v in got)}, expected {tuple(round(v, 4) for v in exp)}"
+        return (
+            ok,
+            f"got {tuple(round(v, 4) for v in got)}, "
+            f"expected {tuple(round(v, 4) for v in exp)}",
+        )
 
     run_check("tile_bounds", "z0_world", "control", control)
     run_check("tile_bounds", "z2_tms_row_flip", "edge", tms_flip)
@@ -312,7 +345,11 @@ def grade_position_at(mod):
     def dateline():
         lon, lat = f([(0, 179.5, 10.0), (3600, -179.5, 10.2)], 1800)
         ok = abs(abs(lon) - 180.0) < 0.15 and 10.05 < lat < 10.15
-        return ok, f"got ({lon:.4f}, {lat:.4f}), expected lon near +/-180 (ship crosses the dateline)"
+        return (
+            ok,
+            f"got ({lon:.4f}, {lat:.4f}), "
+            "expected lon near +/-180 (ship crosses the dateline)",
+        )
 
     run_check("position_at", "quarter_along_leg", "control", control)
     run_check("position_at", "leg_across_dateline", "edge", dateline)
@@ -332,7 +369,9 @@ def grade_voronoi_cells(mod):
 
     def order():
         cells = f(pts, bounds)
-        misses = [i for i, (c, p) in enumerate(zip(cells, pts)) if not c.contains(Point(p))]
+        misses = [
+            i for i, (c, p) in enumerate(zip(cells, pts)) if not c.contains(Point(p))
+        ]
         return not misses, (
             f"cells not containing their own point: {misses or 'none'} "
             "(cell order must match input point order)"
@@ -369,16 +408,23 @@ def main() -> int:
         except Exception as exc:  # noqa: BLE001 — import-time crash is LOUD
             record(name, "import", "-", "LOUD", f"{type(exc).__name__}: {exc}")
             continue
-        if mod is None or not hasattr(mod, name if name != "position_at" else "position_at"):
+        if mod is None or not hasattr(
+            mod, name if name != "position_at" else "position_at"
+        ):
             if mod is None or not hasattr(mod, name):
-                record(name, "import", "-", "MISSING", f"gen_{name}.py or function absent")
+                record(
+                    name, "import", "-", "MISSING", f"gen_{name}.py or function absent"
+                )
                 continue
         grader(mod)
 
     wid = max(len(r["op"]) for r in RESULTS) if RESULTS else 10
     print(f"{'operation':<{wid}}  {'check':<28} {'kind':<8} {'status':<8} detail")
     for r in RESULTS:
-        print(f"{r['op']:<{wid}}  {r['check']:<28} {r['kind']:<8} {r['status']:<8} {r['detail']}")
+        print(
+            f"{r['op']:<{wid}}  {r['check']:<28} {r['kind']:<8} "
+            f"{r['status']:<8} {r['detail']}"
+        )
 
     ops = {}
     for r in RESULTS:

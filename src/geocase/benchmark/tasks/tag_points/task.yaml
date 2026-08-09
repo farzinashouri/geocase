@@ -1,0 +1,13 @@
+schema_version: 1
+name: tag_points
+title: Assign points to containing polygons
+function: tag_points
+signature: "tag_points(points, polygons) -> list[int | None]"
+module: gen_tag_points.py
+handbook_id: VEC-0012
+trap_category: predicate-semantics
+packages: [shapely]
+origin: plan15
+checks:
+  - {name: interior_points, kind: control}
+  - {name: point_on_shared_edge, kind: edge}

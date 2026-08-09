@@ -1,0 +1,13 @@
+schema_version: 1
+name: wkt_from_latlon
+title: WKT point from an API-style lat/lon pair
+function: wkt_from_latlon
+signature: "wkt_from_latlon(lat, lon) -> str"
+module: gen_wkt_from_latlon.py
+handbook_id: VEC-0002
+trap_category: axis-order
+packages: [shapely]
+origin: plan15
+checks:
+  - {name: parses_as_point, kind: control}
+  - {name: axis_order, kind: edge}
