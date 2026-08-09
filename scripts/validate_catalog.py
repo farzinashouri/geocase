@@ -12,6 +12,8 @@ Checks:
 - Declared ``size_class`` matches the actual on-disk payload size.
 - No ``*.yaml`` under ``data/core`` is missing from ``case-index.yaml``.
 - Hand-written docs name only case ids the catalog actually defines.
+- ``cross_format_canonical`` cases name a resolvable GeoJSON canonical of a
+  matching geometry type.
 """
 
 from __future__ import annotations
@@ -289,6 +291,119 @@ def _validate_documented_case_ids(docs_root: Path, registry: CaseRegistry) -> in
 	return checked
 
 
+#: Tag asserting that a case holds the same geometry as another case's.
+_CANONICAL_TAG = "cross_format_canonical"
+
+#: ``params`` key naming the case whose geometry is being mirrored.
+_CANONICAL_PARAM = "canonical_source_case_id"
+
+
+def _validate_cross_format_canonical(registry: CaseRegistry) -> int:
+	"""Fail if a ``cross_format_canonical`` declaration is not self-consistent.
+
+	The ``<geomtype>_<format>_baseline`` families exist so a consumer can hold the
+	geometry constant and vary only the file format. Every member says so twice --
+	with the ``cross_format_canonical`` tag and with a ``canonical_source_case_id``
+	param -- and for a long time nothing in ``src/`` or ``tests/`` dereferenced
+	either, so 53 of 60 members quietly held a *different* geometry from the
+	canonical they named. Anyone diffing two members got a fabricated cross-format
+	difference that was purely a fixture accident.
+
+	This is the metadata half of the fix and deliberately opens no data file: the
+	CI ``catalog`` job runs in a GDAL image without geopandas or shapely. Geometry
+	itself is compared in ``tests/unit/test_cross_format_canonical.py``, which
+	rides the ``pytest`` job where those imports exist.
+
+	Checked here:
+
+	- The tag and the param are biconditional -- neither can appear alone.
+	- The named case resolves in the registry.
+	- It is a GeoJSON case (the family's declared reference format).
+	- Its ``geometry_type`` matches the declaring case's.
+	- It does not itself carry the tag, which would make the reference a chain
+	  rather than a single source of truth.
+
+	Returns:
+		The number of declarations checked.
+	"""
+	errors: list[str] = []
+	checked = 0
+
+	for metadata in registry.list_cases():
+		tagged = _CANONICAL_TAG in metadata.tags
+		source_id = metadata.params.get(_CANONICAL_PARAM)
+
+		if tagged and source_id is None:
+			errors.append(
+				f"Case '{metadata.id}' is tagged '{_CANONICAL_TAG}' but declares no "
+				f"'params.{_CANONICAL_PARAM}', so nothing names the geometry it is "
+				f"supposed to mirror"
+			)
+			continue
+		if source_id is not None and not tagged:
+			errors.append(
+				f"Case '{metadata.id}' declares 'params.{_CANONICAL_PARAM}: "
+				f"{source_id}' but is not tagged '{_CANONICAL_TAG}', so selectors "
+				f"that pick the family by tag would skip it"
+			)
+			continue
+		if not tagged:
+			continue
+
+		checked += 1
+
+		if not isinstance(source_id, str):
+			errors.append(
+				f"Case '{metadata.id}' declares 'params.{_CANONICAL_PARAM}: "
+				f"{source_id!r}', which is not a case id string"
+			)
+			continue
+
+		if source_id not in registry:
+			errors.append(
+				f"Case '{metadata.id}' names '{_CANONICAL_PARAM}: {source_id}', "
+				f"which is not a known case id"
+			)
+			continue
+
+		try:
+			source = registry.get(source_id)
+		except KeyError as exc:
+			# Reachable for a manifest-backed id: it is ``in registry`` but has no
+			# ``CaseMetadata`` to compare against.
+			errors.append(
+				f"Case '{metadata.id}' names '{_CANONICAL_PARAM}: {source_id}', "
+				f"which has no bundled metadata: {exc}"
+			)
+			continue
+
+		if source.format != "GeoJSON":
+			errors.append(
+				f"Case '{metadata.id}' names canonical source '{source_id}', whose "
+				f"format is '{source.format}' rather than 'GeoJSON'. The canonical "
+				f"is the text reference the binary formats are generated from."
+			)
+		if source.geometry_type != metadata.geometry_type:
+			errors.append(
+				f"Case '{metadata.id}' declares geometry_type "
+				f"'{metadata.geometry_type}' but its canonical source "
+				f"'{source_id}' declares '{source.geometry_type}'"
+			)
+		if _CANONICAL_TAG in source.tags:
+			errors.append(
+				f"Case '{metadata.id}' names canonical source '{source_id}', which "
+				f"is itself tagged '{_CANONICAL_TAG}'. The reference must be a "
+				f"single source of truth, not a chain."
+			)
+
+	if errors:
+		listed = "\n".join(f"  {problem}" for problem in sorted(set(errors)))
+		raise CatalogValidationError(
+			f"Cross-format canonical declarations are inconsistent:\n{listed}"
+		)
+	return checked
+
+
 def _validate_suite_index_structure(suite_index_path: Path) -> list[str]:
 	if not suite_index_path.exists():
 		raise CatalogValidationError(f"Missing suite index: {suite_index_path}")
@@ -485,6 +600,7 @@ def main() -> int:
 	try:
 		registry, case_entries = _validate_cases(args.case_index)
 		_validate_no_orphan_case_metadata(args.case_index, case_entries)
+		canonical_links = _validate_cross_format_canonical(registry)
 		suite_entries: list[str] = []
 		manifest_paths: list[Path] = []
 		manifest_warnings: list[str] = []
@@ -504,6 +620,7 @@ def main() -> int:
 	print("Catalog validation passed")
 	print(f"- Indexed case metadata files: {len(case_entries)}")
 	print(f"- Resolved unique case ids: {len(registry)}")
+	print(f"- Cross-format canonical links: {canonical_links}")
 	if args.cases_only:
 		print("- Suite validation: skipped (--cases-only)")
 		print("- Manifest validation: skipped (--cases-only)")

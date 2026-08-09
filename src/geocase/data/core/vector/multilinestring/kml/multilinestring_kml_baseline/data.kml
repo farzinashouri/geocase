@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <Document id="root_doc">
+<Schema name="data" id="data">
+	<SimpleField name="id" type="string"></SimpleField>
+</Schema>
 <Folder><name>data</name>
   <Placemark id="data.1">
-	<name>sample_multilinestring</name>
-	<description>A sample multilinestring geometry</description>
+	<name>multilinestring_kml_baseline</name>
 	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
-      <MultiGeometry><LineString><coordinates>0,0 1,1</coordinates></LineString><LineString><coordinates>2,2 3,3</coordinates></LineString></MultiGeometry>
+	<ExtendedData><SchemaData schemaUrl="#data">
+		<SimpleData name="id">1</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><LineString><coordinates>10,50 10.5,50.2 11.0,50.1</coordinates></LineString><LineString><coordinates>10.2,49.8 10.8,49.9 11.1,50.0</coordinates></LineString></MultiGeometry>
   </Placemark>
 </Folder>
 </Document></kml>

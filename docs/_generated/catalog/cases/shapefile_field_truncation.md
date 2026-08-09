@@ -94,7 +94,7 @@ Expose workflows that assume arbitrary field name lengths or fail to detect/hand
 - [Parquet Mixed Schema Attributes](parquet_mixed_schema_attributes.md) -- `parquet_mixed_schema_attributes`
 - [Shapefile Legacy DBF Encoding](shapefile_encoding_legacy.md) -- `shapefile_encoding_legacy`
 - [Mixed Encoding Attributes](mixed_encoding_attributes.md) -- `mixed_encoding_attributes`
-- [Empty Geometry in GeoPackage](empty_geometry_gpkg.md) -- `empty_geometry_gpkg`
+- [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
 
 <script type="application/ld+json">
 {

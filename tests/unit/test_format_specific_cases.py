@@ -5,15 +5,19 @@ or corruption during cross-format conversion:
 
 - Shapefile field name truncation (10-character limit)
 - Shapefile legacy DBF encoding (Windows-1252 code pages)
+- Shapefile ring orientation reversal (CW exterior vs RFC 7946's CCW)
 - GeoJSON precision loss during text serialization roundtrips
 - GeoPackage NULL vs EMPTY geometry distinction
 """
 
+import json
 from pathlib import Path
 
 import geopandas as gpd
 import pandas as pd
 import pytest
+import shapely
+from shapely.geometry import shape
 
 # ---------------------------------------------------------------------------
 # Path constants
@@ -27,6 +31,10 @@ _SPECIAL = _VEC / "special"
 # Format-specific special cases
 _SHAPEFILE_TRUNCATION = _SPECIAL / "encoding" / "shapefile_field_truncation"
 _SHAPEFILE_ENCODING = _SPECIAL / "encoding" / "shapefile_encoding_legacy"
+_SHAPEFILE_WINDING = _SPECIAL / "encoding" / "shapefile_ring_orientation"
+_CANONICAL_POLYGON = (
+    _VEC / "polygon" / "geojson" / "simple_valid_polygon" / "geometry.geojson"
+)
 _GEOJSON_PRECISION = _SPECIAL / "precision" / "precision_loss_geojson_roundtrip"
 _GPKG_EMPTY = _SPECIAL / "empty" / "empty_geometry_gpkg"
 
@@ -267,3 +275,102 @@ class TestGeoPackageNullEmptyGeometry:
 
         assert len(valid_gdf) == 2
         assert set(valid_gdf["id"]) == {"valid_1", "valid_2"}
+
+
+# ---------------------------------------------------------------------------
+# Shapefile ring orientation tests
+# ---------------------------------------------------------------------------
+
+
+class TestShapefileRingOrientation:
+    """Exercises the winding reversal a Shapefile round trip performs.
+
+    The Shapefile specification mandates clockwise exterior rings; RFC 7946 and
+    the OGC right-hand rule mandate counter-clockwise. OGR rewrites orientation
+    on write to satisfy the former, silently, so a GeoJSON polygon written to
+    Shapefile comes back wound the other way.
+
+    All three assertions below have to hold together, and the test is worthless
+    if any one is dropped: that the geometries are topologically the same shape,
+    that this one is CW, and that the reference is CCW. Prove only the first and
+    it says nothing about winding; prove only the second and it cannot
+    distinguish a reversed ring from a different polygon.
+
+    Deliberately its own case rather than an assertion inside
+    `polygon_shapefile_baseline`: the cross-format family is compared through
+    `shapely.normalize`, which canonicalizes ring orientation by construction --
+    it must, since the Shapefile members can never match a CCW canonical -- so
+    inside that family this artifact is not merely undocumented but unassertable.
+    """
+
+    @pytest.fixture
+    def shapefile_path(self) -> Path:
+        return _SHAPEFILE_WINDING / "ring_orientation.shp"
+
+    @pytest.fixture
+    def canonical_geometry(self):
+        """The CCW GeoJSON reference this case is a reversed copy of."""
+        payload = json.loads(_CANONICAL_POLYGON.read_text())
+        return shape(payload["features"][0]["geometry"])
+
+    def test_shapefile_loads_successfully(self, shapefile_path: Path) -> None:
+        """Loads one valid Polygon at EPSG:4326."""
+        gdf = gpd.read_file(shapefile_path)
+
+        assert len(gdf) == 1
+        assert gdf.crs.to_epsg() == 4326
+        assert gdf.geometry.iloc[0].geom_type == "Polygon"
+
+    def test_exterior_ring_is_clockwise(self, shapefile_path: Path) -> None:
+        """Holds a CW exterior ring, against the RFC 7946 convention."""
+        geometry = gpd.read_file(shapefile_path).geometry.iloc[0]
+
+        assert not geometry.exterior.is_ccw
+
+    def test_the_canonical_reference_is_counter_clockwise(
+        self, canonical_geometry
+    ) -> None:
+        """Confirms the reference really is CCW, so the contrast is real."""
+        assert canonical_geometry.exterior.is_ccw
+
+    def test_topologically_equal_to_the_canonical(
+        self, shapefile_path: Path, canonical_geometry
+    ) -> None:
+        """Same shape as the reference: only the winding differs."""
+        geometry = gpd.read_file(shapefile_path).geometry.iloc[0]
+
+        assert geometry.equals(canonical_geometry)
+
+    def test_normalize_hides_the_difference_and_equals_exact_does_not(
+        self, shapefile_path: Path, canonical_geometry
+    ) -> None:
+        """Pins why the cross-format gate cannot catch this.
+
+        `shapely.normalize` canonicalizes ring orientation, so the comparison
+        the `*_baseline` families use passes here. Only a winding-sensitive
+        comparison sees a difference -- which is this case's whole reason to
+        exist as a separate fixture.
+        """
+        geometry = gpd.read_file(shapefile_path).geometry.iloc[0]
+
+        assert shapely.equals_exact(
+            shapely.normalize(geometry),
+            shapely.normalize(canonical_geometry),
+            tolerance=1e-9,
+        )
+        assert not shapely.equals_exact(geometry, canonical_geometry, tolerance=1e-9)
+
+    def test_inferring_ring_role_from_winding_would_be_wrong(
+        self, shapefile_path: Path
+    ) -> None:
+        """Demonstrates the actual bug this case exists to catch.
+
+        Code that picks the exterior ring by `is_ccw` finds none at all here,
+        while `geom.exterior` -- the positional answer, and the correct one --
+        returns it regardless of orientation.
+        """
+        geometry = gpd.read_file(shapefile_path).geometry.iloc[0]
+        rings = [geometry.exterior, *geometry.interiors]
+
+        assert [ring for ring in rings if ring.is_ccw] == []
+        assert geometry.exterior is not None

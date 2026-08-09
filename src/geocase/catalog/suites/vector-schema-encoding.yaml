@@ -28,6 +28,7 @@ case_order:
   - empty_geometry_gpkg
   - parquet_mixed_schema_attributes
   - format_limited_kml_case
+  - shapefile_ring_orientation
 
 notes: >
   This suite validates format-specific behaviors that can cause data

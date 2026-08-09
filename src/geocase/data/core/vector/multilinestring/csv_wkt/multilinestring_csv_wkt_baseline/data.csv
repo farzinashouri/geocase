@@ -1,2 +1,2 @@
-id,name,value,geometry
-1,sample_multiline,2,"MULTILINESTRING ((0 0, 1 1), (2 2, 3 3))"
+id,name,geometry
+1,multilinestring_csv_wkt_baseline,"MULTILINESTRING ((10 50, 10.5 50.2, 11 50.1), (10.2 49.8, 10.8 49.9, 11.1 50))"

@@ -58,6 +58,7 @@ nav:
       - Distribution (PyPI & conda): plans/11-distribution-pypi-and-conda.md
       - Docs Site Publication: plans/12-docs-site-publication.md
       - Cross-Format Canonical Convergence: plans/13-cross-format-canonical-convergence.md
+      - Reposition as a Correctness Library: plans/14-reposition-as-correctness-library.md
       - Archived Plans: plans/archive/index.md
   - Design:
       - Case Recommendation Service: design/case-recommendation-service.md

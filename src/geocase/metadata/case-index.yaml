@@ -124,6 +124,7 @@ cases:
 - path: data/core/vector/special/encoding/parquet_mixed_schema_attributes/case.yaml
 - path: data/core/vector/special/encoding/shapefile_encoding_legacy/case.yaml
 - path: data/core/vector/special/encoding/shapefile_field_truncation/case.yaml
+- path: data/core/vector/special/encoding/shapefile_ring_orientation/case.yaml
 - path: data/core/vector/special/holes/polygon_with_hole/case.yaml
 - path: data/core/vector/special/invalid/ambiguous_engine_dependent_polygon/case.yaml
 - path: data/core/vector/special/invalid/null_island_point/case.yaml

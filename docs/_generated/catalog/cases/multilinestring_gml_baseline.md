@@ -71,6 +71,7 @@ Provide a canonical multilinestring encoded as GML so format-specific loader beh
 ## Files
 
 - Primary: `data.gml`
+- Sidecar: `data.xsd`
 - Notes: notes.md
 
 ## Source and license

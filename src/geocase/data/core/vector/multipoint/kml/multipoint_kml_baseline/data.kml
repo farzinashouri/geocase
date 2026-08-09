@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <Document id="root_doc">
+<Schema name="data" id="data">
+	<SimpleField name="id" type="string"></SimpleField>
+</Schema>
 <Folder><name>data</name>
   <Placemark id="data.1">
-	<name>sample_multipoint</name>
-	<description>A sample multipoint geometry</description>
-      <MultiGeometry><Point><coordinates>0,0</coordinates></Point><Point><coordinates>1,1</coordinates></Point><Point><coordinates>2,2</coordinates></Point></MultiGeometry>
+	<name>multipoint_kml_baseline</name>
+	<ExtendedData><SchemaData schemaUrl="#data">
+		<SimpleData name="id">1</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Point><coordinates>10,50</coordinates></Point><Point><coordinates>10.2,50.1</coordinates></Point><Point><coordinates>10.4,50.2</coordinates></Point></MultiGeometry>
   </Placemark>
 </Folder>
 </Document></kml>

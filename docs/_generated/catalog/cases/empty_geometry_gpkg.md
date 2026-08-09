@@ -89,8 +89,8 @@ Expose loaders that incorrectly handle EMPTY geometries in GeoPackage format. De
 - [GeoJSON Precision Loss Roundtrip](precision_loss_geojson_roundtrip.md) -- `precision_loss_geojson_roundtrip`
 - [Shapefile Legacy DBF Encoding](shapefile_encoding_legacy.md) -- `shapefile_encoding_legacy`
 - [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
+- [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
 - [Empty Polygon](empty_polygon.md) -- `empty_polygon`
-- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
 
 <script type="application/ld+json">
 {

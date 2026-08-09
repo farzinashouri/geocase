@@ -118,7 +118,14 @@ jobs:
           python -m pip install --upgrade pip
           # The image's osgeo bindings are compiled against NumPy 1.x; letting
           # pip pull NumPy 2 breaks `osgeo.gdal_array` at import time.
-          python -m pip install -e .[raster] "numpy<2"
+          #
+          # `vector` as well as `raster` since plan 13: the vector fixture
+          # generator now writes every baseline format, not just SQLite, so it
+          # needs shapely to read the canonical geometry and geopandas/pyarrow
+          # for the Parquet/Feather/Arrow branches. Without them it exits 2
+          # ("cannot verify") rather than passing silently -- but a gate that
+          # can never run is not a gate.
+          python -m pip install -e .[raster,vector] "numpy<2"
           echo "/venv/bin" >> "$GITHUB_PATH"
       - run: python scripts/build_case_index.py --check
       - run: python scripts/validate_catalog.py

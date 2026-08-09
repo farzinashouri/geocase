@@ -259,6 +259,69 @@ Use a hybrid strategy for location reuse across formats:
 
 ---
 
+## `*_baseline` Fixtures Are Generated
+
+**Never hand-edit a `<geometry>_<format>_baseline` payload.** Every one of the 60 is
+written by `scripts/generate_vector_fixtures.py`, and its geometry is *derived* — read at
+generation time from the case named in `params.canonical_source_case_id`, which always
+points at the GeoJSON `simple_valid_<geometry>` canonical.
+
+This is not a style preference. These fixtures were hand-authored until v1.0.0, and 53 of
+the 60 had drifted to hold a different geometry from the canonical they declared. Because
+the declaration was never dereferenced anywhere in `src/` or `tests/`, the divergence was
+structurally invisible: a consumer who trusted the naming and diffed KML against Shapefile
+got a cross-format difference that was purely a fixture accident. Two independent
+evaluations hit it, and one lost its central question to it.
+
+### To change a baseline geometry
+
+Edit the **canonical** — `src/geocase/data/core/vector/<geometry>/geojson/simple_valid_<geometry>/geometry.geojson`
+— then regenerate:
+
+```bash
+python scripts/generate_vector_fixtures.py
+python scripts/generate_checksums.py
+```
+
+All eleven format twins move together, because they all read the same source. Editing one
+twin directly cannot work: `generate_vector_fixtures.py --check` runs in CI and will fail.
+
+Always run `generate_checksums.py` afterwards, and expect the five SpatiaLite databases to
+show as modified **on every run even when nothing changed** — SpatiaLite writes wall-clock
+timestamps and its own library versions into `spatialite_history`, so their bytes are not
+reproducible. Everything else, GeoPackage and Shapefile included, is byte-stable. This is
+why `--check` compares semantics rather than checksums; see the module docstring.
+
+### To add a baseline
+
+Create the case folder and `case.yaml` as usual, then give it both halves of the
+declaration — the `cross_format_canonical` tag *and*
+`params.canonical_source_case_id`. `scripts/validate_catalog.py` enforces that the two are
+biconditional, that the id resolves, that the target is GeoJSON, and that the geometry
+types match. Nothing else is needed: the generator discovers cases by walking `case.yaml`,
+and `tests/unit/test_cross_format_canonical.py` auto-discovers from `case-index.yaml`, so a
+new baseline is generated and gated without either file being edited.
+
+### What the fixtures hold
+
+Every baseline carries exactly one feature, `id: int64 = 1` and `name: str = <case_id>`, in
+that order. The uniform schema is what makes a column diff between two members meaningful —
+whatever differs is attributable to the driver. Three formats cannot honour it and are
+documented exceptions: KML renames `name` to `Name` and synthesizes ~10 columns, and
+WKT/WKB have no attribute slot at all. Format-idiomatic schemas belong in
+`special/encoding/`, not here.
+
+### Winding
+
+Polygons are authored counter-clockwise (RFC 7946 / OGC right-hand rule) via
+`shapely.geometry.polygon.orient(geom, sign=1.0)`, but compared **winding-insensitively**
+through `shapely.normalize`, because the Shapefile specification mandates the opposite and
+OGR rewrites orientation on write regardless of input. The orientation itself is asserted
+by the `shapefile_ring_orientation` case, which exists precisely because it is unassertable
+inside a baseline family.
+
+---
+
 ## Multi-Format Strategy for Special Cases
 
 Most special datasets test **geometry behaviors** that are independent of storage format. Don't duplicate geometry-behavior cases across formats.
@@ -269,6 +332,7 @@ Add format-specific variants only where the **format itself creates a distinct e
 |------|--------|-----------|
 | `shapefile_field_truncation` | Shapefile | 10-character field name limit |
 | `shapefile_encoding_legacy` | Shapefile | DBF code page handling |
+| `shapefile_ring_orientation` | Shapefile | CW exterior rings, against RFC 7946's CCW |
 | `precision_loss_geojson_roundtrip` | GeoJSON | Text serialization precision |
 | `empty_geometry_gpkg` | GPKG | NULL vs EMPTY representation |
 

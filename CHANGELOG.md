@@ -5,6 +5,112 @@ All notable changes to GeoCase are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **BREAKING (data): the `<geometry>_<format>_baseline` fixtures now hold the geometry
+  they always claimed to.** 53 of the 60 shipped different coordinates from the GeoJSON
+  canonical named in their own `params.canonical_source_case_id`. Nothing in `src/` or
+  `tests/` ever dereferenced that link, so the divergence was structurally invisible —
+  and anyone who trusted the naming and diffed, say, KML against Shapefile got a
+  "cross-format difference" that was purely a fixture accident. Two independent
+  evaluations hit exactly that.
+
+  **Every baseline payload changed.** If you assert baseline coordinates downstream, use
+  the table below to update them. Old values are shown normalized, so a row may differ
+  from your file's literal ring order or vertex start.
+
+  | Family | Formats | Old geometry | New (canonical) geometry |
+  |---|---|---|---|
+  | point | CSV_WKT, GPKG, SQLite, Shapefile, WKB, WKT | `POINT (10 52)` | `POINT (12.5 55.7)` |
+  | point | GML | `POINT (10.5 50.5)` | `POINT (12.5 55.7)` |
+  | point | Arrow, Feather, FlatGeobuf, KML | *(already correct)* | `POINT (12.5 55.7)` |
+  | linestring | GML, GPKG, KML, SQLite, Shapefile, WKB, WKT | `LINESTRING (0 0, 1 1, 2 0)` | `LINESTRING (10 50, 10.5 50.3, 11 50.1)` |
+  | linestring | FlatGeobuf, GeoArrow | `LINESTRING (12 55, 12.5 55.4, 13 55.8)` | `LINESTRING (10 50, 10.5 50.3, 11 50.1)` |
+  | linestring | CSV_WKT | *(already correct)* | `LINESTRING (10 50, 10.5 50.3, 11 50.1)` |
+  | polygon | FlatGeobuf, GML, KML, Parquet, WKB, WKT | `POLYGON ((12 55, 12 56, 13 56, 13 55, 12 55))` | `POLYGON ((10 50, 11 50, 11 51, 10 51, 10 50))` |
+  | polygon | CSV_WKT, GPKG | `POLYGON ((0 0, 0 1, 1 1, 1 0, 0 0))` | `POLYGON ((10 50, 11 50, 11 51, 10 51, 10 50))` |
+  | polygon | SQLite, Shapefile | *(already correct)* | `POLYGON ((10 50, 11 50, 11 51, 10 51, 10 50))` |
+  | multipoint | all but Feather | `MULTIPOINT ((0 0), (1 1), (2 2))` | `MULTIPOINT ((10 50), (10.2 50.1), (10.4 50.2))` |
+  | multipoint | Feather | `MULTIPOINT ((12 55), (12.2 55.1), (12.4 55.2))` | `MULTIPOINT ((10 50), (10.2 50.1), (10.4 50.2))` |
+  | multilinestring | all but Parquet | `MULTILINESTRING ((0 0, 1 1), (2 2, 3 3))` | `MULTILINESTRING ((10 50, 10.5 50.2, 11 50.1), (10.2 49.8, 10.8 49.9, 11.1 50))` |
+  | multilinestring | Parquet | `MULTILINESTRING ((12 55, 12.4 55.2, 12.8 55.4), (12.1 54.8, 12.6 55, 13 55.3))` | *(as above)* |
+  | multipolygon | all | `MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)), ((2 2, 3 2, 3 3, 2 3, 2 2)))` | `MULTIPOLYGON (((10 50, 10.5 50, 10.5 50.5, 10 50.5, 10 50)), ((11 50, 11.5 50, 11.5 50.5, 11 50.5, 11 50)))` |
+
+  Note the multilinestring row in particular: the old fixtures had **two-vertex** parts
+  where the canonical has three, so no coordinate tolerance would ever have hidden the
+  difference.
+
+  The six `simple_valid_*` GeoJSON canonicals are unchanged, including
+  `simple_valid_polygon.params.expected_bounds`.
+
+- **BREAKING (data): every baseline now carries exactly `id` (int64, always `1`) and
+  `name` (str, always the case id).** Previously the schemas varied case by case —
+  `polygon_geopackage_baseline` had `id, name, area_sqkm` while
+  `polygon_shapefile_baseline` had only `name` — so a consumer diffing two members could
+  not tell which column differences were *the format* and which were fixture accident.
+  Columns removed: `value`, `area_sqkm`, `length_km`, `poly_count`, `segments`, and
+  `segment_co` (itself a silent, undocumented DBF 10-character truncation of
+  `segment_count`). Format-idiomatic schemas remain covered, deliberately and better, by
+  the `special/encoding/*` cases.
+
+  Three formats cannot honour the schema and are documented exceptions: KML reads `name`
+  back as `Name` and synthesizes ~10 columns of its own, GML injects `gml_id`, and
+  WKT/WKB have no attribute slot at all (`VectorCase.load()` synthesizes `name`).
+
+- **`point_gml_baseline` now declares `params.canonical_source_case_id`.** It carried the
+  `cross_format_canonical` tag while declaring an unrelated `canonical_location: {lon,
+  lat}` literal that nothing read — the entire 59-declared vs 60-tagged gap. The literal
+  is removed.
+
+- **Regenerating the KML baselines drops the hand-added `<Style>` block** that
+  `polygon_kml_baseline` carried. This is intentional, not an oversight: KML styling is
+  `format_limited_kml_case`'s job, and a style element inside a family whose purpose is to
+  hold everything but the format constant is one more uncontrolled variable.
+
+- **CI: the `catalog` job installs `.[raster,vector]`** rather than `.[raster]`. The
+  fixture generator now needs shapely, geopandas and pyarrow.
+
+### Added
+
+- **`shapefile_ring_orientation`** — a new `special/encoding/` case preserving the
+  pre-convergence `polygon_shapefile_baseline` bytes: the same square as
+  `simple_valid_polygon` but with a **clockwise** exterior ring. The Shapefile
+  specification mandates CW exteriors where RFC 7946 mandates CCW, and OGR rewrites
+  orientation on write, so a GeoJSON → Shapefile round trip silently reverses it. Code
+  that reads `is_ccw` to tell an exterior from a hole breaks here.
+
+  It exists as its own case because the cross-format comparison *must* be
+  winding-insensitive — the Shapefile members of any family can never match a CCW
+  canonical — which makes this artifact unassertable inside a baseline family.
+
+- **Three gates, so this class of defect cannot return silently.**
+  - `scripts/validate_catalog.py` now checks that the `cross_format_canonical` tag and
+    `params.canonical_source_case_id` are biconditional, that the id resolves, that the
+    target is GeoJSON, that geometry types match, and that a canonical is not itself
+    tagged. No geospatial dependencies, so it runs in the GDAL-only `catalog` job.
+  - `tests/unit/test_cross_format_canonical.py` loads every tagged case through
+    `VectorCase.load()` and asserts geometry (via `shapely.normalize`, tolerance `1e-9`),
+    geometry type, CRS (via `pyproj.CRS`, since the columnar formats return PROJJSON
+    rather than the string `"EPSG:4326"`), the `name` value, and the column schema. Cases
+    are auto-discovered, so future baselines are gated automatically.
+  - `scripts/generate_vector_fixtures.py` now generates **all 60** baselines rather than
+    only the five SpatiaLite ones, deriving each geometry from its declared canonical, and
+    `--check` verifies every one.
+
+### Fixed
+
+- **`geometry.xsd` is now declared in `files.sidecars` for the six GML cases.** It was
+  hashed by `generate_checksums.py` but undeclared, and `validate_catalog.py` only checks
+  declared files — so a missing GML schema would have shipped unnoticed.
+
+- **`docs/dataset-catalog.md` geography was wrong.** Thirty-six baselines sat at or beside
+  `(0, 0)` — colliding with the `null_island_point` sentinel's entire reason for existing —
+  while the page claimed they were in Central Europe. Convergence makes the claim true and
+  leaves only seven deliberate cases near the origin. The bundled-payload figure is also
+  corrected from 4.2 MB to its actual 2.1 MB.
+
 ## [1.0.0] — 2026-08-02
 
 First stable release, and the first release published to PyPI. Version `0.1.0` was never
