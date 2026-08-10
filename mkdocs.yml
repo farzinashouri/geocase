@@ -62,6 +62,7 @@ nav:
       - Cross-Format Canonical Convergence: plans/13-cross-format-canonical-convergence.md
       - Reposition as a Correctness Library: plans/14-reposition-as-correctness-library.md
       - GeoCase as a Benchmark: plans/15-geocase-as-benchmark.md
+      - Generalize Beyond Geospatial: plans/16-generalize-beyond-geospatial.md
       - Archived Plans: plans/archive/index.md
   - Design:
       - Case Recommendation Service: design/case-recommendation-service.md

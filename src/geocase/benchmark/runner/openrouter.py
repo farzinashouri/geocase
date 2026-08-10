@@ -56,7 +56,7 @@ class ChatReply:
 
 
 class OpenRouterClient:
-    max_attempts = 7
+    max_attempts = 2
     backoff_base = 2.0  # seconds; exponential with jitter
     max_backoff = 60.0  # cap per sleep, incl. a server-supplied Retry-After
 
@@ -65,7 +65,7 @@ class OpenRouterClient:
         api_key: str | None = None,
         *,
         transport: httpx.BaseTransport | None = None,
-        timeout: float = 120.0,
+        timeout: float = 60.0,
     ):
         key = api_key or os.environ.get("OPENROUTER_API_KEY")
         if not key:

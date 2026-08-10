@@ -16,6 +16,7 @@ Nothing here describes how the project works today — that lives in
 | [Cross-Format Canonical Convergence](13-cross-format-canonical-convergence.md) | Proposed | Corpus defect: `*_baseline` families do not hold the geometry they promise. Derive them from their declared canonical and gate it in CI. |
 | [Reposition as a Correctness Library](14-reposition-as-correctness-library.md) | **Rejected — Step 0 gate fired (2026-08-09)** | Blind agents got 9/10 operations right; only `buffer_m` across the antimeridian failed, silently, in 2/2 trials. Per the pre-committed decision rule the library is redundant. Evidence: `tests/benchmark/agent_baseline/RESULTS.md`. Salvage path executed by [Plan 15](15-geocase-as-benchmark.md). |
 | [GeoCase as a Benchmark](15-geocase-as-benchmark.md) | Proposed | Promotes Plan 14's Step 0 instrument to the product: a benchmark measuring silent failures in LLM-generated geospatial code across free and paid models, on a bare and an agentic track, with a leaderboard published to GitHub Pages. Full repo pivot in two stages. |
+| [Generalize Beyond Geospatial](16-generalize-beyond-geospatial.md) | Proposed | Extends Plan 15: makes the benchmark about *coding* rather than *geospatial coding*, with GIS as the first and deepest domain. Adds a per-task `domain`, a second task domain, and a contamination probe that measures whether models already know each trap. |
 | [Archived plans](archive/index.md) | Superseded | Plans 01–10, retained as an implementation log. |
 
 ## Rules for this folder

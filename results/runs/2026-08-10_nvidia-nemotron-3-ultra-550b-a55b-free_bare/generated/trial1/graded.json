@@ -1,0 +1,374 @@
+[
+  {
+    "task": "area_m2",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "berlin_box",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 7.633e+07, expected 7.633e+07"
+      },
+      {
+        "check": "antimeridian_box",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got 2.462e+10, expected 2.462e+10 (2x1 deg box)"
+      }
+    ]
+  },
+  {
+    "task": "buffer_m",
+    "outcome": "SILENT",
+    "checks": [
+      {
+        "check": "1km_at_lat50",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "valid=True, 900m in=True"
+      },
+      {
+        "check": "50km_across_dateline",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "valid=False, across_dateline=False, contains_far_point=True, lon_span=360.0"
+      }
+    ]
+  },
+  {
+    "task": "cluster_points_m",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "300m_pair_plus_outlier",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "labels [0, 0, 1]"
+      },
+      {
+        "check": "east_west_at_75N",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "labels [0, 0] (points are ~346 m apart)"
+      },
+      {
+        "check": "pair_across_dateline",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "labels [0, 0] (points are ~222 m apart)"
+      }
+    ]
+  },
+  {
+    "task": "dedupe_geoms",
+    "outcome": "LOUD",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "LOUD",
+        "detail": "ImportError: cannot import name 'BaseGeometry' from 'shapely.geometry' (/opt/homebrew/Caskroom/miniforge/base/envs/geocase/lib/python3.14/site-packages/shapely/geometry/__init__.py)"
+      }
+    ]
+  },
+  {
+    "task": "fix_geometry",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "valid_input_unchanged",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "valid=True, area 64 (expected 64)"
+      },
+      {
+        "check": "bowtie_keeps_both_lobes",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "valid=True, area 50 (expected 50), both_lobes=True (buffer(0) keeps only one)"
+      }
+    ]
+  },
+  {
+    "task": "geohash_neighbors",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "interior_cell",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g'], expected ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g']"
+      },
+      {
+        "check": "equator_meridian_corner",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003'], expected ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003']"
+      }
+    ]
+  },
+  {
+    "task": "label_point",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "square",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "point POINT (5 5)"
+      },
+      {
+        "check": "donut",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "point POINT (1 5) (centroid lies in the hole)"
+      },
+      {
+        "check": "c_shape",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "point POINT (9 5) (centroid lies in the notch)"
+      }
+    ]
+  },
+  {
+    "task": "length_m",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "1deg_equator",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 111319, expected 111319"
+      },
+      {
+        "check": "1deg_at_lat60",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got 55799.5, expected 55799.5"
+      },
+      {
+        "check": "1deg_across_dateline",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got 111319, expected 111319"
+      }
+    ]
+  },
+  {
+    "task": "position_at",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "quarter_along_leg",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got (5.0498, 50.0500), expected ~(5.05, 50.05)"
+      },
+      {
+        "check": "leg_across_dateline",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got (179.9998, 10.1004), expected lon near +/-180 (ship crosses the dateline)"
+      }
+    ]
+  },
+  {
+    "task": "project_line",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_project_line.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "sample_at",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "valid_pixel_utm_raster",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 42.0, expected 42.0"
+      },
+      {
+        "check": "nodata_sentinel",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got None, expected None (pixel is the -9999 nodata sentinel)"
+      }
+    ]
+  },
+  {
+    "task": "segment_intersection",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "crossing_segments",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got (2.0, 2.0), expected (2.0, 2.0)"
+      },
+      {
+        "check": "disjoint_segments",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got None, expected None"
+      },
+      {
+        "check": "collinear_overlap",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got ((2.0, 0.0), (5.0, 0.0)), expected the overlap segment ((2,0), (5,0))"
+      }
+    ]
+  },
+  {
+    "task": "split_antimeridian",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "non_crossing_passthrough",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "1 part(s), unchanged=True"
+      },
+      {
+        "check": "crossing_box_two_parts",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "2 part(s), max lon span 1.0 deg, area 2.462e+10 (expected 2.462e+10)"
+      }
+    ]
+  },
+  {
+    "task": "tag_points",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "interior_points",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got [0, 1, None], expected [0, 1, None]"
+      },
+      {
+        "check": "point_on_shared_edge",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got [0], expected [0] (point on the shared edge; smallest containing index wins)"
+      }
+    ]
+  },
+  {
+    "task": "tile_bounds",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "z0_world",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got (-180.0, -85.05112877980659, 180.0, 85.0511287798066)"
+      },
+      {
+        "check": "z2_tms_row_flip",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got (-90.0, -66.5133, 0.0, 0.0), expected (-90.0, -66.5133, 0.0, 0.0)"
+      }
+    ]
+  },
+  {
+    "task": "to_rfc7946",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "wgs84_polygon",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "corners_match=True, exterior_ccw=True, no_crs_member=True"
+      },
+      {
+        "check": "mercator_input_reprojected",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "coords_in_lonlat_range=True, corners_match_wgs84=True (first coord (13.099999999999998, 52.0))"
+      }
+    ]
+  },
+  {
+    "task": "utm_epsg_for",
+    "outcome": "SILENT",
+    "checks": [
+      {
+        "check": "berlin",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 32633, expected 32633"
+      },
+      {
+        "check": "buenos_aires_south",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 32721, expected 32721"
+      },
+      {
+        "check": "svalbard_33X",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "got 32632, expected 32633"
+      },
+      {
+        "check": "norway_32V",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "got 32631, expected 32632"
+      }
+    ]
+  },
+  {
+    "task": "voronoi_cells",
+    "outcome": "LOUD",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "LOUD",
+        "detail": "ImportError: cannot import name 'voronoi_polygons' from 'shapely.ops' (/opt/homebrew/Caskroom/miniforge/base/envs/geocase/lib/python3.14/site-packages/shapely/ops.py)"
+      }
+    ]
+  },
+  {
+    "task": "wkt_from_latlon",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "parses_as_point",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "parsed POINT (13.4 52.5)"
+      },
+      {
+        "check": "axis_order",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got x=13.4, y=52.5; expected x=13.4 (lon), y=52.5 (lat)"
+      }
+    ]
+  },
+  {
+    "task": "zonal_mean",
+    "outcome": "LOUD",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "LOUD",
+        "detail": "ImportError: cannot import name 'BaseGeometry' from 'shapely.geometry' (/opt/homebrew/Caskroom/miniforge/base/envs/geocase/lib/python3.14/site-packages/shapely/geometry/__init__.py)"
+      }
+    ]
+  }
+]
