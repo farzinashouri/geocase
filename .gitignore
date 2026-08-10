@@ -36,3 +36,21 @@ Thumbs.db
 
 # GeoCase storage cache
 .geocase_cache/
+
+# Benchmark runs (Plan 15)
+#
+# results/runs/** is deliberately NOT ignored: the committed run records are
+# the deliverable, and the pin test re-grades the committed modules to prove
+# the oracles have not drifted. A benchmark whose results are not in version
+# control is not reproducible.
+#
+# Ignored here is only the byproduct of grading and of driving agents:
+results/runs/**/__pycache__/
+results/**/.ipynb_checkpoints/
+# Manual-protocol agent workdirs (`manual prepare --out DIR`): a sandbox venv
+# plus the agents' own scratch files and a local manifest. Nothing here is a
+# deliverable — `manual ingest` copies the modules that matter into
+# results/runs/. Scoped to these names rather than a bare `scratch_*` or
+# `manifest.json` glob, which would collide with the catalog's own manifests.
+agentlab/
+agentlab*/

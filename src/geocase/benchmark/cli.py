@@ -51,6 +51,78 @@ def _print_table(outcomes: list[TrialOutcome]) -> None:
     )
 
 
+def _manual_main(argv: list[str]) -> int:
+    """`manual prepare` / `manual ingest` — the coding-agent-CLI protocol."""
+    import datetime as dt
+
+    from geocase.benchmark.runner.manual import PROTOCOLS, ingest, prepare
+
+    ap = argparse.ArgumentParser(prog="geocase.benchmark manual")
+    sub = ap.add_subparsers(dest="action", required=True)
+
+    prep = sub.add_parser(
+        "prepare", help="build an agent workdir with rendered prompts"
+    )
+    prep.add_argument("--out", type=Path, required=True)
+    prep.add_argument(
+        "--no-venv",
+        action="store_true",
+        help="skip building the sandbox venv (it takes minutes)",
+    )
+    prep.add_argument("--seed", type=int, default=None, help="seed the session order")
+
+    ing = sub.add_parser(
+        "ingest", help="grade a completed session set into a run record"
+    )
+    ing.add_argument("--dir", type=Path, required=True)
+    ing.add_argument("--model-id", required=True, help="e.g. anthropic/claude-fable-5")
+    ing.add_argument("--label", default=None, help="display name (default: --model-id)")
+    ing.add_argument("--protocol", required=True, choices=sorted(PROTOCOLS))
+    ing.add_argument("--trial", type=int, required=True)
+    ing.add_argument("--out", type=Path, default=Path("results/runs"))
+    ing.add_argument("--date", default=None, help="YYYY-MM-DD (default: today)")
+    args = ap.parse_args(argv)
+
+    if args.action == "prepare":
+        p = prepare(args.out, create_venv=not args.no_venv, seed=args.seed)
+        print(f"workdir ready: {p.workdir}")
+        if p.python:
+            print(f"interpreter:   {p.python}")
+        else:
+            print("interpreter:   NOT BUILT (--no-venv); agents cannot run code")
+        print(f"prompts:       {p.workdir / 'prompts'} ({len(p.prompts)} tasks)")
+        print("\nRun one FRESH agent session per task, in this order:")
+        print(
+            "  cwd = the workdir, no repo access, prompt pasted verbatim, run to DONE."
+        )
+        for i, name in enumerate(p.order, 1):
+            print(f"  {i:>2}. {name}")
+        return 0
+
+    record = ingest(
+        args.dir,
+        out_root=args.out,
+        model_id=args.model_id,
+        label=args.label or args.model_id,
+        protocol=args.protocol,
+        trial=args.trial,
+        date=args.date or dt.date.today().isoformat(),
+    )
+    counts: dict[str, int] = {}
+    for task in record["tasks"].values():
+        for t in task["trials"]:
+            if t["trial"] == args.trial:
+                counts[t["outcome"]] = counts.get(t["outcome"], 0) + 1
+    total = sum(counts.values()) or 1
+    print(f"ingested trial {args.trial} into {args.out / record['run_id']}")
+    print(
+        f"  {counts.get('CORRECT', 0)} CORRECT, {counts.get('SILENT', 0)} SILENT, "
+        f"{counts.get('LOUD', 0)} LOUD, {counts.get('MISSING', 0)} MISSING "
+        f"of {total} — silent-failure rate {counts.get('SILENT', 0) / total:.0%}"
+    )
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv and argv[0] == "run":
@@ -58,6 +130,8 @@ def main(argv: list[str] | None = None) -> int:
         from geocase.benchmark.runner.orchestrator import main as run_main
 
         return run_main(argv[1:])
+    if argv and argv[0] == "manual":
+        return _manual_main(argv[1:])
 
     ap = argparse.ArgumentParser(prog="geocase.benchmark")
     sub = ap.add_subparsers(dest="command", required=True)

@@ -1,0 +1,21 @@
+# Free-tier-only roster: no card on file required, no spend possible.
+# Budget ceiling is 0 so any model that unexpectedly reports a cost aborts
+# the run immediately rather than quietly charging.
+#
+# Free models are rate-limited per day (lower still for accounts that have
+# never added credit), so a 429 mid-run is expected; --resume picks up where
+# it stopped without re-spending or re-asking.
+
+defaults:
+  trials: 1
+  temperature: 0.2
+  exec_timeout_s: 60
+
+budget:
+  max_usd_total: 0.00
+
+models:
+  - id: openai/gpt-oss-20b:free
+    label: GPT-OSS 20B (free)
+    tracks: [bare]
+    supports_tools: false

@@ -31,6 +31,8 @@ nav:
   - Home: index.md
   - Getting Started: getting-started.md
   - Philosophy: philosophy.md
+  - Benchmark:
+      - Quick Start: benchmark/quickstart.md
   - User Guides:
       - Case Discovery: case-discovery.md
       - Assertions Reference: assertions-reference.md

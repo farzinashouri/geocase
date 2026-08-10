@@ -1,6 +1,10 @@
 # Model roster for the OpenRouter runner (Plan 15 Phase 4).
 # Extend the list freely; every run is bounded by budget.max_usd_total,
 # enforced against OpenRouter's returned usage.cost (hard abort).
+#
+# Ids verified against https://openrouter.ai/api/v1/models on 2026-08-09.
+# The free tier churns: an id that vanishes returns 404 at call time, so
+# re-check this list before a run rather than trusting it indefinitely.
 
 defaults:
   trials: 3
@@ -13,16 +17,16 @@ budget:
 
 models:
   # Free tier
-  - id: deepseek/deepseek-chat-v3.1:free
-    label: DeepSeek V3.1 (free)
+  - id: openai/gpt-oss-20b:free
+    label: GPT-OSS 20B (free)
     tracks: [bare]
     supports_tools: false
-  - id: qwen/qwen3-coder:free
-    label: Qwen3 Coder (free)
+  - id: cohere/north-mini-code:free
+    label: North Mini Code (free)
     tracks: [bare]
     supports_tools: false
-  - id: meta-llama/llama-4-maverick:free
-    label: Llama 4 Maverick (free)
+  - id: nvidia/nemotron-3-super-120b-a12b:free
+    label: Nemotron 3 Super 120B (free)
     tracks: [bare]
     supports_tools: false
   # Paid

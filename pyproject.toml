@@ -143,8 +143,13 @@ target-version = "py311"
 line-length = 88
 # Verbatim model-generated benchmark artifacts: they must stay byte-identical
 # to what the agents wrote (their hashes are provenance), so neither the
-# formatter nor the linter may touch them.
-extend-exclude = ["tests/benchmark/agent_baseline/generated"]
+# formatter nor the linter may touch them. Reformatting a committed module
+# would invalidate the module_sha256 recorded alongside it and silently break
+# the reproducibility pin.
+extend-exclude = [
+    "tests/benchmark/agent_baseline/generated",
+    "results/runs",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]

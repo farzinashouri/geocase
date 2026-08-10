@@ -21,7 +21,11 @@ def build_checks(f):
         # Self-crossing ring: two triangular lobes meeting at (5,5), 25 each.
         poly = Polygon([(0, 0), (10, 10), (10, 0), (0, 10)])
         got = f(poly)
-        both_lobes = got.covers(Point(2, 5)) and got.covers(Point(8, 5))
+        # covers() is only meaningful on a valid geometry; asking an invalid
+        # one produces arbitrary answers, so the validity gate comes first.
+        both_lobes = (
+            got.is_valid and got.covers(Point(2, 5)) and got.covers(Point(8, 5))
+        )
         ok = got.is_valid and both_lobes and rel_ok(got.area, 50.0, 0.01)
         return ok, (
             f"valid={got.is_valid}, area {got.area:.4g} (expected 50), "

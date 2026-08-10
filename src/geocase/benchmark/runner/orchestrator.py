@@ -14,6 +14,7 @@ import hashlib
 import json
 import re
 import sys
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -26,6 +27,7 @@ from geocase.benchmark.runner.openrouter import (
     CostTracker,
     OpenRouterClient,
 )
+from geocase.benchmark.taxonomy import TrialOutcome
 
 
 @dataclass
@@ -117,15 +119,42 @@ def run_bare_track(
                 (gen_dir / f"{task.name}.meta.json").write_text(
                     json.dumps(meta, indent=2)
                 )
+                # This reports extraction only — whether a code block came back
+                # and was written to disk. Correctness is not known until the
+                # grading pass below.
                 print(
                     f"{model['id']} trial {trial} {task.name}: "
-                    f"{'ok' if result.code else 'NO CODE BLOCK'} "
+                    f"{'code received' if result.code else 'NO CODE BLOCK'} "
                     f"(spent ${tracker.spent:.4f})"
                 )
+            print(f"grading {model['id']} trial {trial} ...")
             outcomes = grade_in_subprocess(gen_dir)
             graded = [o.model_dump(mode="json") for o in outcomes]
             (gen_dir / "graded.json").write_text(json.dumps(graded, indent=2))
+            _print_verdicts(model["id"], trial, outcomes)
     print(f"done; total spend ${tracker.spent:.4f}")
+
+
+def _print_verdicts(model_id: str, trial: int, outcomes: list[TrialOutcome]) -> None:
+    for o in sorted(outcomes, key=lambda o: o.task):
+        edge_detail = next(
+            (
+                c.detail
+                for c in o.checks
+                if c.status.value in ("SILENT", "LOUD") and c.kind is not None
+            ),
+            "",
+        )
+        print(f"  {o.task:<22} {o.outcome:<8} {edge_detail[:90]}")
+    counts = Counter(o.outcome for o in outcomes)
+    n = len(outcomes)
+    silent = counts.get("SILENT", 0)
+    print(
+        f"{model_id} trial {trial}: "
+        f"{counts.get('CORRECT', 0)} CORRECT, {silent} SILENT, "
+        f"{counts.get('LOUD', 0)} LOUD, {counts.get('MISSING', 0)} MISSING "
+        f"of {n} — silent-failure rate {silent / n:.0%}"
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
