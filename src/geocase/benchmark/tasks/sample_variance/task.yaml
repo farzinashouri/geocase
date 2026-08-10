@@ -1,0 +1,15 @@
+schema_version: 1
+name: sample_variance
+title: Sample variance of a float sequence
+function: sample_variance
+signature: "sample_variance(values) -> float | None"
+module: gen_sample_variance.py
+handbook_id: null
+trap_category: cancellation
+packages: []
+origin: plan16
+domain: stdlib
+checks:
+  - {name: small_integers, kind: control}
+  - {name: single_value_is_none, kind: control}
+  - {name: large_offset, kind: edge}

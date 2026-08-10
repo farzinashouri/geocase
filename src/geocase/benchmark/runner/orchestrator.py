@@ -42,10 +42,14 @@ def _models_for_track(config: dict, track: str) -> list[dict]:
     return [m for m in config.get("models", []) if track in m.get("tracks", [])]
 
 
-def plan_run(config: dict, *, track: str) -> RunPlan:
+def plan_run(
+    config: dict, *, track: str, tasks: list[TaskMeta] | None = None
+) -> RunPlan:
     models = _models_for_track(config, track)
     trials = int(config.get("defaults", {}).get("trials", 1))
-    n_tasks = len(all_tasks())
+    # Same task list the run will use, so --dry-run's call count and cost
+    # ceiling stay truthful under a --domain filter.
+    n_tasks = len(all_tasks() if tasks is None else tasks)
     return RunPlan(
         calls=len(models) * trials * n_tasks,
         models=[m["id"] for m in models],
@@ -56,6 +60,23 @@ def plan_run(config: dict, *, track: str) -> RunPlan:
 
 def _slug(model_id: str) -> str:
     return re.sub(r"[^a-z0-9.-]+", "-", model_id.lower())
+
+
+def _run_dir_suffix(tasks: list[TaskMeta]) -> str:
+    """Partition run directories by domain.
+
+    Geo keeps the bare ``{date}_{slug}_bare`` name, preserving the committed
+    run paths and their resume behaviour; every other domain is suffixed. A
+    mixed-domain run is refused outright: its outcomes could only be reported
+    as a cross-domain aggregate, which is noise dressed as a finding (trap 12).
+    """
+    domains = sorted({t.domain for t in tasks})
+    if len(domains) > 1:
+        raise ValueError(
+            f"refusing a mixed-domain run over {domains}: rates are not "
+            f"comparable across domains (Plan 16, trap 12) — pass --domain"
+        )
+    return "" if domains == ["geo"] else f"_{domains[0]}"
 
 
 def run_bare_track(
@@ -69,6 +90,7 @@ def run_bare_track(
     from geocase.benchmark.runner.bare import run_bare_task
 
     tasks = tasks or all_tasks()
+    suffix = _run_dir_suffix(tasks)
     defaults = config.get("defaults", {})
     trials = int(defaults.get("trials", 1))
     temperature = defaults.get("temperature")
@@ -78,14 +100,16 @@ def run_bare_track(
     failures: Counter[str] = Counter()
 
     for model in _models_for_track(config, "bare"):
-        run_dir = out_root / f"{date}_{_slug(model['id'])}_bare"
+        run_dir = out_root / f"{date}_{_slug(model['id'])}_bare{suffix}"
         for trial in range(1, trials + 1):
             gen_dir = run_dir / "generated" / f"trial{trial}"
             gen_dir.mkdir(parents=True, exist_ok=True)
             for task in tasks:
                 module_path = gen_dir / task.module
-                if resume and module_path.exists() and not _is_api_failure(
-                    gen_dir / f"{task.name}.meta.json"
+                if (
+                    resume
+                    and module_path.exists()
+                    and not _is_api_failure(gen_dir / f"{task.name}.meta.json")
                 ):
                     continue
                 try:
@@ -254,6 +278,14 @@ def main(argv: list[str] | None = None) -> int:
         help="override defaults.trials from the config",
     )
     ap.add_argument("--out", type=Path, default=Path("results/runs"))
+    ap.add_argument(
+        "--domain",
+        default=None,
+        help="which domain's tasks to run; required once more than one exists",
+    )
+    ap.add_argument(
+        "--tasks", nargs="*", default=None, help="task names to run (default: all)"
+    )
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--no-resume", action="store_true")
     args = ap.parse_args(argv)
@@ -262,7 +294,23 @@ def main(argv: list[str] | None = None) -> int:
     if args.trials is not None:
         config.setdefault("defaults", {})["trials"] = args.trials
 
-    plan = plan_run(config, track=args.track)
+    from geocase.benchmark.cli import EmptySelectionError, select_tasks
+
+    try:
+        tasks = select_tasks(args.tasks, args.domain)
+    except EmptySelectionError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    try:
+        # Fails the same way under --dry-run as under a real run: an operator
+        # must never learn a run was refused only after it was launched.
+        _run_dir_suffix(tasks)
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    plan = plan_run(config, track=args.track, tasks=tasks)
     ceiling = (
         f"${plan.budget_ceiling_usd:.2f}"
         if plan.budget_ceiling_usd is not None
@@ -276,7 +324,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.dry_run:
         return 0
 
-    run_bare_track(config, out_root=args.out, resume=not args.no_resume)
+    try:
+        run_bare_track(
+            config, out_root=args.out, tasks=tasks, resume=not args.no_resume
+        )
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
     return 0
 
 

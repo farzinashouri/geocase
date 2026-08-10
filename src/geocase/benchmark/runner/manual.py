@@ -32,10 +32,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from geocase.benchmark.domains import get_domain
 from geocase.benchmark.grading import grade_in_subprocess
 from geocase.benchmark.prompts import render_prompt
 from geocase.benchmark.registry import all_tasks
-from geocase.benchmark.runner.sandbox import REQUIREMENTS, ensure_sandbox
+from geocase.benchmark.runner.sandbox import ensure_sandbox
 
 # How the loop was driven. Recorded per run so tracks are never silently
 # mixed (Plan 15, trap 6).
@@ -56,11 +57,13 @@ class PreparedWorkdir:
     order: list[str]
 
 
-def shuffled_task_order(seed: int | None = None) -> list[str]:
+def shuffled_task_order(
+    seed: int | None = None, domain: str | None = None
+) -> list[str]:
     """Task order for the sessions. Shuffled so that fatigue, rate limits or
     a mid-run abort do not correlate with task identity; seeded so a run can
     be described exactly in the write-up."""
-    names = [t.name for t in all_tasks()]
+    names = [t.name for t in all_tasks() if domain is None or t.domain == domain]
     random.Random(seed).shuffle(names)
     return names
 
@@ -68,11 +71,21 @@ def shuffled_task_order(seed: int | None = None) -> list[str]:
 def prepare(
     workdir: Path,
     *,
+    domain: str,
     create_venv: bool = True,
     seed: int | None = None,
-    requirements: Path = REQUIREMENTS,
+    requirements: Path | None = None,
 ) -> PreparedWorkdir:
-    """Build the agent workdir. Safe to re-run: never deletes generated work."""
+    """Build the agent workdir for one domain.
+
+    ``domain`` is required and mixed-domain workdirs are impossible by
+    construction: the workdir holds exactly one venv and records exactly one
+    ``sandbox_requirements_sha256``, so a mixed set would stamp every task with
+    a hash describing an environment wrong for half of them — the provenance
+    lie trap 7 exists to prevent. Safe to re-run: never deletes generated work.
+    """
+    dom = get_domain(domain)
+    requirements = requirements or dom.requirements
     workdir = workdir.expanduser().resolve()
     (workdir / "generated").mkdir(parents=True, exist_ok=True)
     (workdir / "prompts").mkdir(exist_ok=True)
@@ -82,9 +95,13 @@ def prepare(
         python = ensure_sandbox(workdir, requirements)
     interpreter = python or (workdir / "venv" / "bin" / "python")
 
+    tasks = [t for t in all_tasks() if t.domain == domain]
+    if not tasks:
+        raise ManualRunError(f"no tasks in domain {domain!r}")
+
     prompts: dict[str, Path] = {}
     hashes: dict[str, str] = {}
-    for task in all_tasks():
+    for task in tasks:
         (workdir / f"scratch_{task.name}").mkdir(exist_ok=True)
         text = render_prompt(task, workdir=workdir, python=interpreter)
         path = workdir / "prompts" / f"{task.name}.md"
@@ -92,12 +109,13 @@ def prepare(
         prompts[task.name] = path
         hashes[task.name] = hashlib.sha256(text.encode()).hexdigest()
 
-    order = shuffled_task_order(seed)
+    order = shuffled_task_order(seed, domain=domain)
     (workdir / MANIFEST).write_text(
         json.dumps(
             {
                 "schema_version": 1,
                 "workdir": str(workdir),
+                "domain": domain,
                 "sandbox_requirements_sha256": _sha256_file(requirements),
                 "prompt_sha256": hashes,
                 "order": order,
@@ -142,8 +160,17 @@ def ingest(
         if python is not None
         else grade_in_subprocess(gen_dir)
     )
+    # Workdirs prepared before Plan 16 carry no domain and are all geo.
+    domain = manifest.get("domain", "geo")
+    prepared = set(manifest.get("prompt_sha256", {}))
+    # Only the tasks this workdir actually posed: grading the whole registry
+    # here would import MISSING rows for another domain's tasks the operator
+    # was never given prompts for.
+    outcomes = [o for o in outcomes if not prepared or o.task in prepared]
 
     run_id = f"{date}_{_slug(model_id)}_agentic-manual"
+    if domain != "geo":
+        run_id = f"{run_id}_{domain}"
     run_dir = out_root / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
 
@@ -155,7 +182,14 @@ def ingest(
         label=label,
         protocol=protocol,
         manifest=manifest,
+        domain=domain,
     )
+    if record.get("domain", "geo") != domain:
+        raise ManualRunError(
+            f"{run_dir / 'run.json'} was recorded for domain "
+            f"{record.get('domain', 'geo')!r}; refusing to mix in {domain!r} — "
+            f"rates are not comparable across domains (Plan 16, trap 12)"
+        )
 
     for outcome in outcomes:
         rel = _copy_module(gen_dir, run_dir, outcome.task, trial)
@@ -226,6 +260,7 @@ def _load_or_init_record(
     label: str,
     protocol: str,
     manifest: dict,
+    domain: str = "geo",
 ) -> dict[str, Any]:
     if path.is_file():
         record: dict[str, Any] = json.loads(path.read_text())
@@ -236,12 +271,11 @@ def _load_or_init_record(
             )
         return record
 
-    from geocase.benchmark.runner.sandbox import REQUIREMENTS as REQ
-
     return {
         "schema_version": 2,
         "run_id": run_id,
         "date": date,
+        "domain": domain,
         "model": {"id": model_id, "label": label, "provider": "manual-cli"},
         "track": "agentic-manual",
         "protocol": protocol,
@@ -252,7 +286,7 @@ def _load_or_init_record(
             "max_turns": None,
             "variant_seed": manifest.get("seed"),
             "sandbox_requirements_sha256": manifest.get("sandbox_requirements_sha256")
-            or _sha256_file(REQ),
+            or _sha256_file(get_domain(domain).requirements),
             "prompt_sha256": manifest.get("prompt_sha256", {}),
         },
         "cost_usd": None,

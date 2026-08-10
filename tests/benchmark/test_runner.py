@@ -195,9 +195,7 @@ def test_client_does_not_retry_non_retryable_4xx():
 
 def test_client_honors_retry_after_header(monkeypatch):
     slept = []
-    monkeypatch.setattr(
-        "geocase.benchmark.runner.openrouter.time.sleep", slept.append
-    )
+    monkeypatch.setattr("geocase.benchmark.runner.openrouter.time.sleep", slept.append)
     calls = []
 
     def handler(request):
@@ -231,6 +229,11 @@ def test_plan_run_counts_calls_without_spending():
 # ------------------------------------------------------- failure containment
 
 
+def _geo_tasks():
+    """One domain's tasks: run_bare_track refuses a mixed set (trap 12)."""
+    return [t for t in all_tasks() if t.domain == "geo"]
+
+
 def _bare_config():
     return {
         "defaults": {"trials": 1},
@@ -241,7 +244,7 @@ def _bare_config():
 
 def test_one_failing_task_does_not_stop_the_run(tmp_path, monkeypatch):
     """A 429 on one task must not abort the remaining tasks."""
-    tasks = all_tasks()[:3]
+    tasks = _geo_tasks()[:3]
     seen = []
 
     def fake_run_bare_task(client, model_id, task, **kwargs):
@@ -272,7 +275,7 @@ def test_one_failing_task_does_not_stop_the_run(tmp_path, monkeypatch):
 
 
 def test_resume_retries_api_failures_but_keeps_real_results(tmp_path, monkeypatch):
-    tasks = all_tasks()[:2]
+    tasks = _geo_tasks()[:2]
     attempts = []
     fail_first = {tasks[1].name}
 

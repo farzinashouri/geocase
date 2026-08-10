@@ -13,9 +13,40 @@ import json
 import sys
 from pathlib import Path
 
+from geocase.benchmark.domains import DOMAINS
 from geocase.benchmark.grading import grade_directory
-from geocase.benchmark.registry import all_tasks
+from geocase.benchmark.registry import TaskMeta, all_tasks
 from geocase.benchmark.taxonomy import TrialOutcome
+
+
+class EmptySelectionError(ValueError):
+    """A filter matched no tasks.
+
+    Silently grading nothing and reporting "0 of 0" would be a silent failure
+    in the benchmark's own tooling — exactly the class this project measures.
+    """
+
+
+def select_tasks(
+    names: list[str] | None = None, domain: str | None = None
+) -> list[TaskMeta]:
+    """Tasks matching both filters (AND). Raises rather than returning []."""
+    if domain is not None and domain not in DOMAINS:
+        raise EmptySelectionError(
+            f"unknown domain {domain!r}; known: {sorted(DOMAINS)}"
+        )
+    tasks = all_tasks()
+    if domain is not None:
+        tasks = [t for t in tasks if t.domain == domain]
+    if names:
+        wanted = set(names)
+        unknown = wanted - {t.name for t in all_tasks()}
+        tasks = [t for t in tasks if t.name in wanted]
+        if unknown:
+            raise EmptySelectionError(f"unknown task(s): {sorted(unknown)}")
+    if not tasks:
+        raise EmptySelectionError(f"no tasks matched (names={names}, domain={domain})")
+    return tasks
 
 
 def _records(outcomes: list[TrialOutcome]) -> list[dict]:
@@ -64,6 +95,15 @@ def _manual_main(argv: list[str]) -> int:
         "prepare", help="build an agent workdir with rendered prompts"
     )
     prep.add_argument("--out", type=Path, required=True)
+    # Required, not defaulted: a workdir holds one venv and records one
+    # sandbox_requirements_sha256, so silently defaulting to geo would let an
+    # operator prepare the wrong environment without ever being asked.
+    prep.add_argument(
+        "--domain",
+        required=True,
+        choices=sorted(DOMAINS),
+        help="which domain's tasks to pose; one domain per workdir",
+    )
     prep.add_argument(
         "--no-venv",
         action="store_true",
@@ -84,8 +124,13 @@ def _manual_main(argv: list[str]) -> int:
     args = ap.parse_args(argv)
 
     if args.action == "prepare":
-        p = prepare(args.out, create_venv=not args.no_venv, seed=args.seed)
-        print(f"workdir ready: {p.workdir}")
+        p = prepare(
+            args.out,
+            domain=args.domain,
+            create_venv=not args.no_venv,
+            seed=args.seed,
+        )
+        print(f"workdir ready: {p.workdir} (domain: {args.domain})")
         if p.python:
             print(f"interpreter:   {p.python}")
         else:
@@ -142,13 +187,22 @@ def main(argv: list[str] | None = None) -> int:
         "--tasks", nargs="*", default=None, help="task names to grade (default: all)"
     )
     grade.add_argument(
+        "--domain",
+        default=None,
+        help=f"restrict to one domain ({', '.join(sorted(DOMAINS))}); default: all",
+    )
+    grade.add_argument(
         "--quiet", action="store_true", help="suppress the table (JSON output only)"
     )
     args = ap.parse_args(argv)
 
-    tasks = all_tasks()
-    if args.tasks:
-        tasks = [t for t in tasks if t.name in set(args.tasks)]
+    # Grading everything and reporting MISSING for absent modules is documented
+    # existing behaviour, so --domain defaults to all domains.
+    try:
+        tasks = select_tasks(args.tasks, args.domain)
+    except EmptySelectionError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
     outcomes = grade_directory(args.generated, tasks)
 
     if not args.quiet:

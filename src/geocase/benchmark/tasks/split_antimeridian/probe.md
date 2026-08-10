@@ -1,0 +1,1 @@
+I am about to implement a function that takes a shapely Polygon in EPSG:4326 with longitudes in [-180, 180] and returns a list of valid polygons covering the same region of the Earth's surface. What are the common pitfalls when implementing this? Answer in prose — do not write code.

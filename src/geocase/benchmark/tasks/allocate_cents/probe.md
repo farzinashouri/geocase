@@ -1,0 +1,1 @@
+I am about to implement a function that splits an integer number of cents across a list of weights, returning each party's whole-cent share. What are the common pitfalls when implementing this? Answer in prose — do not write code.

@@ -1,0 +1,15 @@
+schema_version: 1
+name: allocate_cents
+title: Split an integer amount by weights without losing a cent
+function: allocate_cents
+signature: "allocate_cents(total, weights) -> list[int]"
+module: gen_allocate_cents.py
+handbook_id: null
+trap_category: rounding-residue
+packages: []
+origin: plan16
+domain: stdlib
+checks:
+  - {name: exact_split, kind: control}
+  - {name: unequal_weights, kind: control}
+  - {name: indivisible_total, kind: edge}

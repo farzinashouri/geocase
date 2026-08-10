@@ -1,0 +1,15 @@
+schema_version: 1
+name: elapsed_hours
+title: Elapsed wall-clock hours in a named time zone
+function: elapsed_hours
+signature: "elapsed_hours(start, end, tz_name) -> float"
+module: gen_elapsed_hours.py
+handbook_id: null
+trap_category: dst-transition
+packages: []
+origin: plan16
+domain: stdlib
+checks:
+  - {name: same_day, kind: control}
+  - {name: plain_day, kind: control}
+  - {name: dst_fall_back, kind: edge}

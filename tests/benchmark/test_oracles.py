@@ -288,6 +288,145 @@ def zonal_mean(raster_path, polygon):
     return float(arr[0].mean())  # nodata and fill pixels silently averaged in
 """
 
+# ------------------------------------------------- stdlib domain (Plan 16 Phase 2)
+# Same contract as the geo pairs: GOOD grades all-PASS, TRAPPED passes every
+# control and returns a wrong value with no exception on the edge check.
+
+GOOD["sample_variance"] = """
+def sample_variance(values):
+    vals = [float(v) for v in values]
+    n = len(vals)
+    if n < 2:
+        return None
+    mean = sum(vals) / n
+    return sum((v - mean) ** 2 for v in vals) / (n - 1)
+"""
+
+TRAPPED["sample_variance"] = """
+def sample_variance(values):
+    vals = [float(v) for v in values]
+    n = len(vals)
+    if n < 2:
+        return None
+    # Textbook one-pass form: cancels to exactly 0.0 for large offsets.
+    total = sum(vals)
+    total_sq = sum(v * v for v in vals)
+    return (total_sq - total * total / n) / (n - 1)
+"""
+
+GOOD["parse_delimited"] = """
+import csv
+import io
+
+def parse_delimited(line):
+    return next(csv.reader(io.StringIO(line)))
+"""
+
+TRAPPED["parse_delimited"] = """
+def parse_delimited(line):
+    return line.split(",")  # a comma inside quotes silently becomes a field break
+"""
+
+GOOD["dedupe_labels"] = """
+import unicodedata
+
+def dedupe_labels(labels):
+    seen = set()
+    out = []
+    for label in labels:
+        key = unicodedata.normalize("NFC", label).casefold()
+        if key not in seen:
+            seen.add(key)
+            out.append(label)
+    return out
+"""
+
+TRAPPED["dedupe_labels"] = """
+def dedupe_labels(labels):
+    seen = set()
+    out = []
+    for label in labels:
+        key = label.casefold()  # folds case but not Unicode composition
+        if key not in seen:
+            seen.add(key)
+            out.append(label)
+    return out
+"""
+
+GOOD["group_means"] = """
+def group_means(rows):
+    totals = {}
+    counts = {}
+    for key, value in rows:
+        totals.setdefault(key, 0.0)
+        counts.setdefault(key, 0)
+        if value is not None:
+            totals[key] += float(value)
+            counts[key] += 1
+    return {k: (totals[k] / counts[k] if counts[k] else None) for k in totals}
+"""
+
+TRAPPED["group_means"] = """
+def group_means(rows):
+    totals = {}
+    counts = {}
+    for key, value in rows:
+        totals[key] = totals.get(key, 0.0) + (value or 0.0)
+        counts[key] = counts.get(key, 0) + (1 if value is not None else 0)
+    # An all-None group divides nothing by nothing and reports a plain 0.0.
+    return {k: (totals[k] / counts[k] if counts[k] else 0.0) for k in totals}
+"""
+
+GOOD["allocate_cents"] = """
+def allocate_cents(total, weights):
+    total_weight = sum(weights)
+    shares = []
+    allocated = 0
+    for w in weights:
+        share = int(total * w // total_weight)
+        shares.append(share)
+        allocated += share
+    # Hand the rounding residue out one cent at a time, largest remainder first.
+    remainders = sorted(
+        range(len(weights)),
+        key=lambda i: (total * weights[i] / total_weight) - shares[i],
+        reverse=True,
+    )
+    for i in remainders[: total - allocated]:
+        shares[i] += 1
+    return shares
+"""
+
+TRAPPED["allocate_cents"] = """
+def allocate_cents(total, weights):
+    total_weight = sum(weights)
+    # Each share rounded independently: the residue is silently dropped.
+    return [int(round(total * w / total_weight)) for w in weights]
+"""
+
+GOOD["elapsed_hours"] = """
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+def elapsed_hours(start, end, tz_name):
+    tz = ZoneInfo(tz_name)
+    a = datetime.fromisoformat(start).replace(tzinfo=tz)
+    b = datetime.fromisoformat(end).replace(tzinfo=tz)
+    delta = b.astimezone(ZoneInfo("UTC")) - a.astimezone(ZoneInfo("UTC"))
+    return delta.total_seconds() / 3600.0
+"""
+
+TRAPPED["elapsed_hours"] = """
+from datetime import datetime
+
+def elapsed_hours(start, end, tz_name):
+    # Naive subtraction: the zone is accepted and then ignored entirely.
+    a = datetime.fromisoformat(start)
+    b = datetime.fromisoformat(end)
+    return (b - a).total_seconds() / 3600.0
+"""
+
+
 NEW_TASKS = sorted(GOOD)
 
 

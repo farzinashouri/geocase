@@ -10,10 +10,11 @@ from pathlib import Path
 
 import pytest
 
+from geocase.benchmark.domains import DOMAINS
 from geocase.benchmark.grading import grade_module
 from geocase.benchmark.prompts import render_prompt
 from geocase.benchmark.registry import all_tasks, get_task, tasks_root
-from geocase.benchmark.taxonomy import TRAP_CATEGORIES
+from geocase.benchmark.taxonomy import TRAP_CATEGORIES_BY_DOMAIN
 
 STEP0_GENERATED = Path(__file__).parent / "agent_baseline" / "generated"
 
@@ -31,12 +32,31 @@ def test_task_metadata_is_coherent(task):
     assert task.schema_version == 1
     assert task.module == f"gen_{task.name}.py"
     assert task.function == task.name
-    assert task.trap_category in TRAP_CATEGORIES
-    assert task.origin in {"step0", "plan15"}
+    assert task.domain in DOMAINS
+    # A trap category is valid only within its own domain, so this also pins
+    # that no task borrows another domain's vocabulary.
+    assert task.trap_category in TRAP_CATEGORIES_BY_DOMAIN[task.domain]
+    assert task.origin in {"step0", "plan15", "plan16"}
     assert task.checks, "a task must declare at least one check"
     kinds = {c.kind for c in task.checks}
     assert "control" in {k.value for k in kinds}, "every task needs a control check"
     assert "edge" in {k.value for k in kinds}, "every task needs an edge check"
+
+
+@pytest.mark.parametrize("task", TASKS, ids=lambda t: t.name)
+def test_task_packages_are_available_in_its_domain(task):
+    """`packages` must be satisfiable by the domain's sandbox.
+
+    The *prompt* advertises the whole domain environment and never the per-task
+    list — naming only shapely for area_m2 would hint which library the oracle
+    expects (Plan 15, trap 3) — so this is the only thing holding the field
+    honest.
+    """
+    available = DOMAINS[task.domain].packages
+    assert set(task.packages) <= available, (
+        f"{task.name} declares {sorted(set(task.packages) - available)}, "
+        f"absent from the {task.domain} sandbox"
+    )
 
 
 @pytest.mark.parametrize("task", TASKS, ids=lambda t: t.name)

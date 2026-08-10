@@ -12,7 +12,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-TRAP_CATEGORIES = frozenset(
+GEO_TRAP_CATEGORIES = frozenset(
     {
         "antimeridian",
         "axis-order",
@@ -29,6 +29,29 @@ TRAP_CATEGORIES = frozenset(
         "discretization",
     }
 )
+
+STDLIB_TRAP_CATEGORIES = frozenset(
+    {
+        "normalization",
+        "null-propagation",
+        "rounding-residue",
+        "dst-transition",
+        "cancellation",
+        "quoting",
+    }
+)
+
+# Per-domain rather than one flat set: a geo task must not be able to declare a
+# numeric category, and vice versa. Namespacing the strings instead would have
+# rewritten all 13 geo values inside the pin at
+# ``tests/benchmark/test_taxonomy.py``, destroying its value as a drift check.
+TRAP_CATEGORIES_BY_DOMAIN: dict[str, frozenset[str]] = {
+    "geo": GEO_TRAP_CATEGORIES,
+    "stdlib": STDLIB_TRAP_CATEGORIES,
+}
+
+# Back-compat alias: the geo vocabulary is what ``TRAP_CATEGORIES`` always meant.
+TRAP_CATEGORIES = GEO_TRAP_CATEGORIES
 
 
 class Status(StrEnum):

@@ -8,24 +8,31 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from geocase.benchmark.domains import get_domain
 from geocase.benchmark.prompts import task_paragraph
 from geocase.benchmark.registry import TaskMeta
 from geocase.benchmark.runner.extract import extract_code_block
 from geocase.benchmark.runner.openrouter import ChatReply, OpenRouterClient
 
+# The dependency line is a per-domain slot. For `geo` the substituted sentence
+# is byte-identical to the hard-coded one this template used to carry, which is
+# what keeps the 51 committed prompt_sha256 values reproducing (Plan 16).
 BARE_TEMPLATE = """You are writing one small self-contained Python module.
 
 {paragraph}
 
 Requirements:
-- You may use the standard library plus any of: shapely 2.1, pyproj 3.7, rasterio 1.4, numpy, scikit-learn.
+- {deps}
 - Importing the module must have no side effects.
 - Reply with exactly one fenced ```python code block containing the complete module, and nothing else after it.
 """
 
 
 def bare_prompt(task: TaskMeta) -> str:
-    return BARE_TEMPLATE.format(paragraph=task_paragraph(task))
+    return BARE_TEMPLATE.format(
+        paragraph=task_paragraph(task),
+        deps=get_domain(task.domain).package_blurb,
+    )
 
 
 @dataclass

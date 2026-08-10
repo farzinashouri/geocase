@@ -1,0 +1,15 @@
+schema_version: 1
+name: group_means
+title: Per-group mean with SQL AVG null semantics
+function: group_means
+signature: "group_means(rows) -> dict[str, float | None]"
+module: gen_group_means.py
+handbook_id: null
+trap_category: null-propagation
+packages: []
+origin: plan16
+domain: stdlib
+checks:
+  - {name: plain_groups, kind: control}
+  - {name: nulls_excluded_from_denominator, kind: control}
+  - {name: all_null_group, kind: edge}

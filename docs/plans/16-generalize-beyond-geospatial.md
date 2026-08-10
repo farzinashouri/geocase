@@ -1,6 +1,15 @@
 # Plan 16 — Generalize the benchmark beyond geospatial
 
-> **Status: proposed.** Extends [Plan 15](15-geocase-as-benchmark.md) rather than superseding
+> **Status: Phases 0–4 implemented 2026-08-10** — the domain mechanism, the probe tooling,
+> the six-task `stdlib` slate with oracle pairs, the run-path filters and the docs are built
+> and green. What is *not* done is everything requiring a model or a human: the probe run and
+> its `named_trap` review (U7), the oracle review (U8), the `stdlib` bare run (U9) and the
+> repositioning/rename decision (U10). Consequently the `stdlib` slate is **provisional** —
+> Phase 0 was built but has not yet been *run*, so no task has been cleared or cut on
+> evidence, and the top-level README/`pyproject` framing is deliberately untouched pending
+> both U10 and Phase 3 results.
+>
+> Extends [Plan 15](15-geocase-as-benchmark.md) rather than superseding
 > it. Plan 15 stands the benchmark up as the product; this plan makes it a benchmark about
 > *coding* rather than about *geospatial coding*, with GIS as the first and deepest domain.
 > Nothing here starts before Plan 15's Phase 1 task packages and oracle self-tests exist —

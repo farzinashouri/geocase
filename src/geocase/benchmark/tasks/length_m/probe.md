@@ -1,0 +1,1 @@
+I am about to implement a function that takes a shapely LineString with longitude/latitude coordinates in EPSG:4326 and returns its length in meters. What are the common pitfalls when implementing this? Answer in prose — do not write code.

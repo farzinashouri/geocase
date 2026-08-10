@@ -1,0 +1,1 @@
+I am about to implement a function that takes a shapely geometry and the EPSG code its coordinates are in, and returns the geometry as a dict conforming to RFC 7946. What are the common pitfalls when implementing this? Answer in prose — do not write code.

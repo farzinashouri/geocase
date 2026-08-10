@@ -33,15 +33,20 @@ def wkt_from_latlon(lat, lon):
 """
 
 
+def _geo_tasks():
+    """A workdir holds exactly one domain's tasks (Plan 16 Phase 3)."""
+    return [t for t in all_tasks() if t.domain == "geo"]
+
+
 # ---------------------------------------------------------------- prepare
 
 
 def test_prepare_builds_the_workdir_layout(tmp_path):
     workdir = tmp_path / "lab"
-    plan = prepare(workdir, create_venv=False)
+    plan = prepare(workdir, domain="geo", create_venv=False)
 
     assert (workdir / "generated").is_dir()
-    for task in all_tasks():
+    for task in _geo_tasks():
         assert (workdir / f"scratch_{task.name}").is_dir()
         assert (workdir / "prompts" / f"{task.name}.md").is_file()
     assert plan.workdir == workdir
@@ -49,7 +54,7 @@ def test_prepare_builds_the_workdir_layout(tmp_path):
 
 def test_prepare_renders_absolute_paths_of_this_workdir(tmp_path):
     workdir = tmp_path / "lab"
-    prepare(workdir, create_venv=False)
+    prepare(workdir, domain="geo", create_venv=False)
 
     text = (workdir / "prompts" / "buffer_m.md").read_text()
     assert str(workdir) in text
@@ -60,11 +65,11 @@ def test_prepare_renders_absolute_paths_of_this_workdir(tmp_path):
 
 def test_prepare_writes_a_manifest_with_prompt_hashes(tmp_path):
     workdir = tmp_path / "lab"
-    prepare(workdir, create_venv=False)
+    prepare(workdir, domain="geo", create_venv=False)
 
     manifest = json.loads((workdir / "manifest.json").read_text())
     assert manifest["schema_version"] == 1
-    assert set(manifest["prompt_sha256"]) == {t.name for t in all_tasks()}
+    assert set(manifest["prompt_sha256"]) == {t.name for t in _geo_tasks()}
     for sha in manifest["prompt_sha256"].values():
         assert len(sha) == 64
 
@@ -80,10 +85,10 @@ def test_prepare_prompt_never_names_the_benchmark_or_its_traps(tmp_path):
     at the cost of spec ambiguity, which trap 4 rates as the worse defect.
     """
     workdir = tmp_path / "lab"
-    prepare(workdir, create_venv=False)
+    prepare(workdir, domain="geo", create_venv=False)
 
     banned = ("geocase", "benchmark", "trap", "edge case", "gotcha", "be careful")
-    for task in all_tasks():
+    for task in _geo_tasks():
         text = (workdir / "prompts" / f"{task.name}.md").read_text().lower()
         for word in banned:
             assert word not in text, f"{task.name} prompt leaks {word!r}"
@@ -91,11 +96,11 @@ def test_prepare_prompt_never_names_the_benchmark_or_its_traps(tmp_path):
 
 def test_prepare_is_idempotent_and_keeps_generated_modules(tmp_path):
     workdir = tmp_path / "lab"
-    prepare(workdir, create_venv=False)
+    prepare(workdir, domain="geo", create_venv=False)
     module = workdir / "generated" / "gen_length_m.py"
     module.write_text(GOOD_LENGTH_M)
 
-    prepare(workdir, create_venv=False)
+    prepare(workdir, domain="geo", create_venv=False)
     assert module.read_text() == GOOD_LENGTH_M
 
 
@@ -120,7 +125,7 @@ def _fake_agent_session(workdir, task_name, source):
 
 def test_ingest_grades_and_writes_a_run_record(tmp_path):
     workdir = tmp_path / "lab"
-    prepare(workdir, create_venv=False)
+    prepare(workdir, domain="geo", create_venv=False)
     _fake_agent_session(workdir, "length_m", GOOD_LENGTH_M)
     _fake_agent_session(workdir, "wkt_from_latlon", TRAPPED_WKT)
 
@@ -152,7 +157,7 @@ def test_ingest_grades_and_writes_a_run_record(tmp_path):
 
 def test_ingest_copies_modules_and_records_their_hashes(tmp_path):
     workdir = tmp_path / "lab"
-    prepare(workdir, create_venv=False)
+    prepare(workdir, domain="geo", create_venv=False)
     _fake_agent_session(workdir, "length_m", GOOD_LENGTH_M)
 
     out = tmp_path / "runs"
@@ -176,7 +181,7 @@ def test_ingest_copies_modules_and_records_their_hashes(tmp_path):
 def test_ingest_carries_the_prompt_hashes_from_prepare(tmp_path):
     """Plan 15: a prompt edited between runs must be auditable after the fact."""
     workdir = tmp_path / "lab"
-    prepare(workdir, create_venv=False)
+    prepare(workdir, domain="geo", create_venv=False)
     manifest = json.loads((workdir / "manifest.json").read_text())
 
     record = ingest(
@@ -202,12 +207,12 @@ def test_ingest_extends_an_existing_run_with_a_second_trial(tmp_path):
     )
 
     w1 = tmp_path / "lab1"
-    prepare(w1, create_venv=False)
+    prepare(w1, domain="geo", create_venv=False)
     _fake_agent_session(w1, "length_m", GOOD_LENGTH_M)
     ingest(w1, trial=1, **common)
 
     w2 = tmp_path / "lab2"
-    prepare(w2, create_venv=False)
+    prepare(w2, domain="geo", create_venv=False)
     _fake_agent_session(w2, "length_m", TRAPPED_WKT)  # wrong function: MISSING
     record = ingest(w2, trial=2, **common)
 
@@ -233,7 +238,7 @@ def test_ingest_refuses_an_unprepared_directory(tmp_path):
 
 def test_ingest_rejects_an_unknown_protocol(tmp_path):
     workdir = tmp_path / "lab"
-    prepare(workdir, create_venv=False)
+    prepare(workdir, domain="geo", create_venv=False)
     with pytest.raises(ManualRunError, match="protocol"):
         ingest(
             workdir,

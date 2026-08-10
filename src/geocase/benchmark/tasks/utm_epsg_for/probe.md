@@ -1,0 +1,1 @@
+I am about to implement a function that takes a WGS84 longitude and latitude and returns the EPSG code of the UTM coordinate reference system appropriate for that location. What are the common pitfalls when implementing this? Answer in prose — do not write code.

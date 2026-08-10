@@ -1,0 +1,1 @@
+I am about to implement a function that takes a geohash string and returns the geohashes, at the same precision, of the cells surrounding that cell. What are the common pitfalls when implementing this? Answer in prose — do not write code.

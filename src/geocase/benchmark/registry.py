@@ -12,9 +12,9 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ConfigDict, model_validator
 
-from geocase.benchmark.taxonomy import TRAP_CATEGORIES, CheckKind
+from geocase.benchmark.taxonomy import TRAP_CATEGORIES_BY_DOMAIN, CheckKind
 
 
 class CheckDecl(BaseModel):
@@ -23,6 +23,10 @@ class CheckDecl(BaseModel):
 
 
 class TaskMeta(BaseModel):
+    # A task.yaml key this model does not know about is a silent failure in
+    # the benchmark's own tooling — pydantic's default would drop it (Plan 16).
+    model_config = ConfigDict(extra="forbid")
+
     schema_version: Literal[1]
     name: str
     title: str
@@ -32,15 +36,29 @@ class TaskMeta(BaseModel):
     handbook_id: str | None
     trap_category: str
     packages: list[str]
-    origin: Literal["step0", "plan15"]
+    origin: Literal["step0", "plan15", "plan16"]
     checks: list[CheckDecl]
+    # Defaulted so the 20 geo task.yaml files stay untouched: they are not
+    # hashed into run metadata, so leaving `geo` implicit costs no auditability.
+    domain: str = "geo"
 
-    @field_validator("trap_category")
-    @classmethod
-    def _known_category(cls, v: str) -> str:
-        if v not in TRAP_CATEGORIES:
-            raise ValueError(f"unknown trap_category {v!r}")
-        return v
+    @model_validator(mode="after")
+    def _known_category(self) -> TaskMeta:
+        # Cross-field: a category is valid only within its own domain, so a
+        # geo task cannot declare a numeric trap and vice versa.
+        try:
+            allowed = TRAP_CATEGORIES_BY_DOMAIN[self.domain]
+        except KeyError:
+            raise ValueError(
+                f"unknown domain {self.domain!r}; "
+                f"known: {sorted(TRAP_CATEGORIES_BY_DOMAIN)}"
+            ) from None
+        if self.trap_category not in allowed:
+            raise ValueError(
+                f"unknown trap_category {self.trap_category!r} "
+                f"for domain {self.domain!r}"
+            )
+        return self
 
     @property
     def directory(self) -> Path:

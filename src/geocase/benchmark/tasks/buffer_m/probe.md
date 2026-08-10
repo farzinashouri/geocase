@@ -1,0 +1,1 @@
+I am about to implement a function that takes a shapely geometry with longitude/latitude coordinates in EPSG:4326 and a distance in meters, and returns the geometry buffered by that distance, again in EPSG:4326. What are the common pitfalls when implementing this? Answer in prose — do not write code.
