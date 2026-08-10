@@ -75,6 +75,7 @@ def run_bare_track(
     tracker = CostTracker(config.get("budget", {}).get("max_usd_total"))
     client = OpenRouterClient()
     date = dt.date.today().isoformat()
+    failures: Counter[str] = Counter()
 
     for model in _models_for_track(config, "bare"):
         run_dir = out_root / f"{date}_{_slug(model['id'])}_bare"
@@ -83,7 +84,9 @@ def run_bare_track(
             gen_dir.mkdir(parents=True, exist_ok=True)
             for task in tasks:
                 module_path = gen_dir / task.module
-                if resume and module_path.exists():
+                if resume and module_path.exists() and not _is_api_failure(
+                    gen_dir / f"{task.name}.meta.json"
+                ):
                     continue
                 try:
                     result = run_bare_task(
@@ -92,6 +95,21 @@ def run_bare_track(
                 except BudgetExceededError:
                     print(f"BUDGET ABORT after ${tracker.spent:.4f}", file=sys.stderr)
                     raise
+                except Exception as exc:  # noqa: BLE001 - see comment
+                    # Not fatal: any API-side failure (timeout, exhausted 429
+                    # retries, provider 5xx, malformed reply) is recorded as a
+                    # failed task — it grades as MISSING, since no module came
+                    # back — and the run goes on to the next task. Only the
+                    # budget abort above is allowed to stop the run.
+                    _write_failure(gen_dir, task, model["id"], trial, exc)
+                    failures[model["id"]] += 1
+                    print(
+                        f"{model['id']} trial {trial} {task.name}: "
+                        f"FAILED ({type(exc).__name__}: {exc}) "
+                        f"(spent ${tracker.spent:.4f})",
+                        file=sys.stderr,
+                    )
+                    continue
                 tracker.add(result.cost)
                 (gen_dir / f"{task.name}.reply.md").write_text(result.content)
                 module_path.write_text(
@@ -128,11 +146,71 @@ def run_bare_track(
                     f"(spent ${tracker.spent:.4f})"
                 )
             print(f"grading {model['id']} trial {trial} ...")
-            outcomes = grade_in_subprocess(gen_dir)
+            try:
+                outcomes = grade_in_subprocess(gen_dir)
+            except Exception as exc:  # noqa: BLE001
+                # The generated code is already on disk and can be re-graded
+                # offline, so a grading crash must not cost the remaining models.
+                print(
+                    f"{model['id']} trial {trial}: GRADING FAILED "
+                    f"({type(exc).__name__}: {exc}) — generations kept at "
+                    f"{gen_dir}, re-grade offline",
+                    file=sys.stderr,
+                )
+                continue
             graded = [o.model_dump(mode="json") for o in outcomes]
             (gen_dir / "graded.json").write_text(json.dumps(graded, indent=2))
             _print_verdicts(model["id"], trial, outcomes)
     print(f"done; total spend ${tracker.spent:.4f}")
+    if failures:
+        # Loud on purpose: these tasks have no model answer behind them, so any
+        # score computed over this run is incomplete until they are re-run.
+        total = sum(failures.values())
+        print(f"{total} task(s) failed at the API and were NOT scored:")
+        for model_id, n in failures.most_common():
+            print(f"  {model_id}: {n}")
+        print("re-run the same command to retry only the failed tasks")
+
+
+def _is_api_failure(meta_path: Path) -> bool:
+    """True for tasks a previous run recorded as an API failure.
+
+    Resume re-attempts these: a rate-limited task has no result yet, and
+    skipping it would silently bake a transient 429 into the scores."""
+    try:
+        return json.loads(meta_path.read_text()).get("status") in (
+            "api_failure",
+            "timeout",  # written by earlier runs, before the rename
+        )
+    except (OSError, ValueError):
+        return False
+
+
+def _write_failure(
+    gen_dir: Path, task: TaskMeta, model_id: str, trial: int, exc: BaseException
+) -> None:
+    """Record a failed task on disk so grading sees it as MISSING.
+
+    ``status: api_failure`` in the meta marks it as a runner/API failure rather
+    than a model that answered badly — the two must not be confused when the
+    silent-failure rate is read off these files."""
+    detail = f"{type(exc).__name__}: {exc}"
+    (gen_dir / f"{task.name}.reply.md").write_text(f"<!-- api failure: {detail} -->\n")
+    (gen_dir / task.module).write_text(f"# api failure: {detail}\n")
+    meta = {
+        "task": task.name,
+        "model": model_id,
+        "trial": trial,
+        "track": "bare",
+        "protocol": "openrouter-chat",
+        "status": "api_failure",
+        "error_type": type(exc).__name__,
+        "detail": detail,
+        "cost_usd": None,
+        "usage": {},
+        "extracted": False,
+    }
+    (gen_dir / f"{task.name}.meta.json").write_text(json.dumps(meta, indent=2))
 
 
 def _print_verdicts(model_id: str, trial: int, outcomes: list[TrialOutcome]) -> None:
@@ -148,6 +226,9 @@ def _print_verdicts(model_id: str, trial: int, outcomes: list[TrialOutcome]) -> 
         print(f"  {o.task:<22} {o.outcome:<8} {edge_detail[:90]}")
     counts = Counter(o.outcome for o in outcomes)
     n = len(outcomes)
+    if not n:
+        print(f"{model_id} trial {trial}: no graded outcomes")
+        return
     silent = counts.get("SILENT", 0)
     print(
         f"{model_id} trial {trial}: "
