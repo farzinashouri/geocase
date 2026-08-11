@@ -1,0 +1,20 @@
+schema_version: 1
+name: geojson_bounds
+title: Bounding box of a GeoJSON file
+function: geojson_bounds
+signature: "geojson_bounds(path) -> (min_lon, min_lat, max_lon, max_lat)"
+module: gen_geojson_bounds.py
+handbook_id: null
+trap_category: antimeridian
+packages: [shapely]
+origin: plan17
+# Corpus case as INPUT only. The oracle is first-principles (a 2-degree-wide
+# polygon cannot have a 358-degree-wide bbox); nothing is read from case.yaml.
+fixtures:
+  - name: poly
+    case_id: classic_antimeridian_polygon
+    file: geometry.geojson
+    sha256: 9deffb38e6045789f18a550e833ce239e7b22578b603e4974dca9485e479f877
+checks:
+  - {name: berlin_polygon, kind: control}
+  - {name: antimeridian_polygon, kind: edge}

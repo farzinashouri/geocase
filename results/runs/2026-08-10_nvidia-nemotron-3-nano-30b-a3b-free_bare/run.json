@@ -1,0 +1,459 @@
+{
+  "schema_version": 2,
+  "run_id": "2026-08-10_nvidia-nemotron-3-nano-30b-a3b-free_bare",
+  "date": "2026-08-10",
+  "domain": "geo",
+  "model": {
+    "id": "nvidia/nemotron-3-nano-30b-a3b:free",
+    "label": "nvidia/nemotron-3-nano-30b-a3b:free",
+    "provider": "openrouter"
+  },
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "runner": {
+    "name": "geocase-benchmark",
+    "version": "2.0.0.dev0"
+  },
+  "config": {
+    "trials": 1,
+    "temperature": null,
+    "max_turns": null,
+    "variant_seed": null,
+    "sandbox_requirements_sha256": null,
+    "prompt_sha256": {}
+  },
+  "cost_usd": null,
+  "integrity": {
+    "tasks_attempted": 18,
+    "api_failures": 18,
+    "publishable": false,
+    "by_trial": {
+      "trial1": {
+        "tasks_attempted": 18,
+        "api_failures": 18
+      }
+    }
+  },
+  "tasks": {
+    "area_m2": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_area_m2.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "buffer_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_buffer_m.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "cluster_points_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_cluster_points_m.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "dedupe_geoms": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_dedupe_geoms.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "fix_geometry": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_fix_geometry.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "geohash_neighbors": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_geohash_neighbors.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "label_point": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_label_point.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "length_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_length_m.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "position_at": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_position_at.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "project_line": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_project_line.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "sample_at": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_sample_at.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "segment_intersection": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_segment_intersection.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "split_antimeridian": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_split_antimeridian.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "tag_points": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_tag_points.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "tile_bounds": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_tile_bounds.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "to_rfc7946": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_to_rfc7946.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "utm_epsg_for": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_utm_epsg_for.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "voronoi_cells": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_voronoi_cells.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "wkt_from_latlon": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_wkt_from_latlon.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": null
+        }
+      ]
+    },
+    "zonal_mean": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_zonal_mean.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": null
+        }
+      ]
+    }
+  }
+}

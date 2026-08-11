@@ -427,6 +427,100 @@ def elapsed_hours(start, end, tz_name):
 """
 
 
+# ------------------------------------------- Plan 17 Phase 3 (corpus fixtures)
+
+GOOD["geojson_bounds"] = """
+import json
+
+def geojson_bounds(path):
+    with open(path) as fh:
+        data = json.load(fh)
+    geoms = [f["geometry"] for f in data["features"]]
+
+    def coords(g):
+        def walk(c):
+            if c and isinstance(c[0], (int, float)):
+                yield c
+            else:
+                for part in c:
+                    yield from walk(part)
+        return list(walk(g["coordinates"]))
+
+    pts = [p for g in geoms for p in coords(g)]
+    lats = [p[1] for p in pts]
+    lons = sorted({p[0] for p in pts})
+    # Choose the narrower of the two arcs the longitudes can span: if the gap
+    # between two adjacent longitudes exceeds the wrap-around gap, the extent
+    # crosses the antimeridian and the bbox runs max -> min.
+    widest_gap = 0.0
+    split = 0
+    for i in range(len(lons)):
+        gap = (lons[(i + 1) % len(lons)] - lons[i]) % 360.0
+        if gap > widest_gap:
+            widest_gap, split = gap, i
+    min_lon = lons[(split + 1) % len(lons)]
+    max_lon = lons[split]
+    return (min_lon, min(lats), max_lon, max(lats))
+"""
+
+TRAPPED["geojson_bounds"] = """
+import json
+
+def geojson_bounds(path):
+    with open(path) as fh:
+        data = json.load(fh)
+
+    def coords(g):
+        def walk(c):
+            if c and isinstance(c[0], (int, float)):
+                yield c
+            else:
+                for part in c:
+                    yield from walk(part)
+        return list(walk(g["coordinates"]))
+
+    pts = [p for f in data["features"] for p in coords(f["geometry"])]
+    lons = [p[0] for p in pts]
+    lats = [p[1] for p in pts]
+    # Plain min/max: for a polygon crossing the antimeridian this returns the
+    # 358-degree complement — a whole-planet bbox, no exception, looks fine.
+    return (min(lons), min(lats), max(lons), max(lats))
+"""
+
+GOOD["shapefile_attrs"] = """
+from pathlib import Path
+
+def shapefile_attrs(path):
+    dbf = Path(path).with_suffix(".dbf")
+    data = dbf.read_bytes()
+    names = []
+    offset = 32
+    while offset < len(data) and data[offset] != 0x0D:
+        names.append(data[offset:offset + 11].split(b"\\x00")[0].decode("ascii"))
+        offset += 32
+    return names
+"""
+
+TRAPPED["shapefile_attrs"] = """
+from pathlib import Path
+
+# Reads the names a caller expects rather than the ones the file stores. The
+# .dbf truncated them to 10 characters when it was written, so this returns a
+# plausible list of strings that the Shapefile does not actually contain.
+_SCHEMA = {
+    "truncated_fields": [
+        "temperature_celsius",
+        "temperature_fahrenheit",
+        "precipitation_mm",
+        "wind_speed_knots",
+    ],
+}
+
+def shapefile_attrs(path):
+    return list(_SCHEMA[Path(path).stem])
+"""
+
+
 NEW_TASKS = sorted(GOOD)
 
 

@@ -37,6 +37,7 @@ def test_trap_categories_are_the_controlled_vocabulary():
             "zone-exceptions",
             "collinearity",
             "discretization",
+            "encoding",
         }
     )
 

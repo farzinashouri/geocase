@@ -36,7 +36,7 @@ def test_task_metadata_is_coherent(task):
     # A trap category is valid only within its own domain, so this also pins
     # that no task borrows another domain's vocabulary.
     assert task.trap_category in TRAP_CATEGORIES_BY_DOMAIN[task.domain]
-    assert task.origin in {"step0", "plan15", "plan16"}
+    assert task.origin in {"step0", "plan15", "plan16", "plan17"}
     assert task.checks, "a task must declare at least one check"
     kinds = {c.kind for c in task.checks}
     assert "control" in {k.value for k in kinds}, "every task needs a control check"

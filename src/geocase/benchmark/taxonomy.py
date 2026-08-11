@@ -27,6 +27,10 @@ GEO_TRAP_CATEGORIES = frozenset(
         "zone-exceptions",
         "collinearity",
         "discretization",
+        # Plan 17 Phase 3: format-level traps with no geodesy in them. DBF's
+        # 10-character field-name limit is normative, so the oracle is stated
+        # from the spec rather than computed.
+        "encoding",
     }
 )
 

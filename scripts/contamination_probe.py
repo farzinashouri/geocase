@@ -33,6 +33,7 @@ from pathlib import Path
 import yaml
 
 from geocase.benchmark.registry import TaskMeta, all_tasks
+from geocase.benchmark.runner.policy import add_pacing_args, policy_from_args
 from geocase.benchmark.runner.probe import probe_prompt, tasks_with_probes
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -71,14 +72,15 @@ def main(argv: list[str] | None = None) -> int:
         default=3,
         help="consecutive failures before skipping the rest of a model",
     )
-    ap.add_argument(
-        "--task-budget",
-        type=float,
-        default=20.0,
-        help="seconds any single probe may consume, retries included",
-    )
     ap.add_argument("--dry-run", action="store_true")
+    # Shared with `geocase.benchmark run` so the two cannot drift (Plan 17 §1.4).
+    add_pacing_args(ap)
     args = ap.parse_args(argv)
+    # One prose completion is a few seconds' work. Anything slower is a
+    # rate-limited or stalling model, and across 156 calls the right response
+    # is to fail that task fast and let --give-up-after skip the model.
+    if args.task_budget is None:
+        args.task_budget = 20.0
 
     config = yaml.safe_load(args.config.read_text())
     models = [m for m in config.get("models", []) if "bare" in m.get("tracks", [])]
@@ -100,16 +102,13 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  {t.domain:<7} {t.name}")
         return 0
 
-    from geocase.benchmark.runner.openrouter import OpenRouterClient
-
-    client = OpenRouterClient()
-    # One prose completion is a few seconds' work. Anything slower is a
-    # rate-limited or stalling model, and across 156 calls the right response
-    # is to fail that task fast and let --give-up-after skip the model.
-    client.max_total_seconds = args.task_budget
+    pacing = policy_from_args(args, config)
+    print(pacing.describe(), file=sys.stderr)
+    client = pacing.build_client()
     date = dt.date.today().isoformat()
     args.out.mkdir(parents=True, exist_ok=True)
 
+    landed = 0
     for model in models:
         path = args.out / f"{date}_{_slug(model['id'])}.json"
         # Resume-friendly: a rate-limited probe run is re-runnable without
@@ -118,6 +117,9 @@ def main(argv: list[str] | None = None) -> int:
         if path.is_file():
             records = {r["task"]: r for r in json.loads(path.read_text())["probes"]}
 
+        # Resumed probes count as landed: a re-run that finds everything
+        # already on disk has nothing to do and is not a failure.
+        landed += len(records)
         consecutive_failures = 0
         for i, task in enumerate(tasks):
             if task.name in records:
@@ -157,6 +159,7 @@ def main(argv: list[str] | None = None) -> int:
                 "reply": reply.content,
             }
             print(f"{model['id']} {task.name}: probed")
+            landed += 1
             path.write_text(
                 json.dumps(
                     {
@@ -168,7 +171,22 @@ def main(argv: list[str] | None = None) -> int:
                     indent=2,
                 )
             )
-        print(f"wrote {path}")
+        # Inside the loop and conditional on the file: printing "wrote {path}"
+        # unconditionally meant three models reported success on 2026-08-11
+        # with nothing on disk — a silent failure in the silent-failure
+        # benchmark's own tooling.
+        if path.is_file():
+            print(f"wrote {path} ({len(records)} probe(s))")
+        else:
+            print(f"{model['id']}: NO probes landed — nothing written", file=sys.stderr)
+
+    if not landed:
+        print(
+            "NO probes landed — nothing written. Every request failed; check "
+            "the account's rate limits and re-run (resume keeps what lands).",
+            file=sys.stderr,
+        )
+        return 1
 
     print(
         "\nU7: review every reply and set `named_trap` true/false by hand. "

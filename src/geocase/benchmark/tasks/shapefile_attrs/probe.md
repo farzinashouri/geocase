@@ -1,0 +1,1 @@
+I am about to implement a function that takes the path to an ESRI Shapefile and returns the names of its attribute fields as a list of strings, in file order. What are the common pitfalls when implementing this? Answer in prose — do not write code.

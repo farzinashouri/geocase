@@ -111,9 +111,19 @@ def grade_directory(
 
 
 def grade_in_subprocess(
-    gen_dir: Path, *, python: str | Path = sys.executable, timeout: float = 600
+    gen_dir: Path,
+    *,
+    tasks: list[TaskMeta] | None = None,
+    python: str | Path = sys.executable,
+    timeout: float = 600,
 ) -> list[TrialOutcome]:
-    """Grade untrusted generated modules in a child interpreter via the CLI."""
+    """Grade untrusted generated modules in a child interpreter via the CLI.
+
+    ``tasks`` must be passed for a single-domain run: without it every task in
+    every domain is graded, so a 20-task geo run comes back with the 6 stdlib
+    tasks scored MISSING and a silent-failure rate computed over 26.
+    """
+    task_args = ["--tasks", *[t.name for t in tasks]] if tasks else []
     proc = subprocess.run(
         [
             str(python),
@@ -125,6 +135,7 @@ def grade_in_subprocess(
             "--json",
             "/dev/stdout",
             "--quiet",
+            *task_args,
         ],
         capture_output=True,
         text=True,

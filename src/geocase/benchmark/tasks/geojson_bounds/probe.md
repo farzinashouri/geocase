@@ -1,0 +1,1 @@
+I am about to implement a function that reads a GeoJSON file with longitude/latitude coordinates in EPSG:4326 and returns the bounding box of all its features as (min_lon, min_lat, max_lon, max_lat). What are the common pitfalls when implementing this? Answer in prose — do not write code.

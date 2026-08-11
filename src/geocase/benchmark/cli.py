@@ -177,6 +177,15 @@ def main(argv: list[str] | None = None) -> int:
         return run_main(argv[1:])
     if argv and argv[0] == "manual":
         return _manual_main(argv[1:])
+    if argv and argv[0] == "sweep":
+        from geocase.benchmark.runner.sweep import main as sweep_main
+
+        return sweep_main(argv[1:])
+    if argv and argv[0] == "status":
+        # No httpx needed: status only reads what is already on disk.
+        from geocase.benchmark.runner.status import main as status_main
+
+        return status_main(argv[1:])
 
     ap = argparse.ArgumentParser(prog="geocase.benchmark")
     sub = ap.add_subparsers(dest="command", required=True)

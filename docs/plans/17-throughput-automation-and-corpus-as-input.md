@@ -430,3 +430,89 @@ python -m pytest tests -q && ruff format --check src tests && ruff check src tes
 - **Any blended rate across geo + stdlib, or across bare + agentic** — already refused for
   domains via `_run_dir_suffix`; extend the same refusal to tracks.
 - **A Makefile.**
+
+---
+
+## Appendix — Does the correctness library come back? (open question, not a commitment)
+
+Recorded here because Phase 4 produces the evidence that settles it. **Nothing in this
+appendix is scheduled**, and it must not be started before the run described below exists.
+
+### The question
+
+[Plan 14](14-reposition-as-correctness-library.md) was rejected when its Step 0 gate fired:
+blind agents got **9 of 10** operations correct, so per the pre-committed rule the library
+was redundant. That verdict stands on the evidence it had — but note precisely what that
+evidence was: **one frontier model (Claude), on the agentic track, with tools and
+self-verification, n=1 for nine of the ten rows.**
+
+The population most users are in looks different. On the same task family,
+`openai/gpt-oss-20b:free` bare scores **12 CORRECT / 5 SILENT / 3 LOUD** — a ~25% silent
+rate where Claude scored ~10%. If that gap is real, the honest restatement of Step 0 is:
+
+> The library is redundant for people running a frontier model with tools. It may not be
+> redundant for people running free models.
+
+That is a larger audience, and Plan 14's decision rule never tested it.
+
+### Why this is not simply reopening Plan 14
+
+Two things must be true before anyone writes code, and one of them is not yet established.
+
+**The comparison is currently confounded and cannot support the claim.** Claude's 9/10 was
+**agentic on 10 tasks**; gpt-oss-20b's 12/20 was **bare on 20 tasks**. Part of that spread
+is model capability and part is track. Phase 4 of this plan resolves it directly — Claude
+on the bare track, same tasks, same protocol. Until that run exists, "free models need this
+library" is suggestive, not demonstrated, and must not be asserted.
+
+**The pitch that survives is the weaker one Plan 14 already conceded.** Per
+[14-reposition-as-correctness-library.md:126-129](14-reposition-as-correctness-library.md),
+the framing had already moved from *"you didn't know"* to *"this is settled, verified, and
+identical everywhere"* — a claim that never depended on models being ignorant, and so was
+never touched by Step 0. The 2026-08-11 probe data reinforces it: 11 of 11 replies named
+the antimeridian trap unprompted, and the generated code failed anyway. **Knowing the trap
+is not the scarce thing; reliably reproducing the fix is.** Any revival adopts this framing
+and drops the discovery/teaching framing outright, exactly as Plan 14 instructed.
+
+### What a revival would actually be
+
+Not Plan 14's ~15-name surface. The evidence supports one function plus what already exists
+and was never invalidated:
+
+- **`buffer_m`** — the only operation Step 0 found reproducibly broken (2/2 blind trials,
+  silent, invisible to the agents' own geodesic radial check, which is mathematically
+  invariant under the defect).
+- **`src/geocase/assertions/`** — 7 modules of verified checks, already written.
+- **`src/geocase/pytest_plugin/`** — fixtures and markers, already written.
+- **`geocase doctor`** — explicitly flagged *unaffected* by the agentic objection: no
+  amount of reasoning reveals whether *this* machine's `proj.db` is missing its grids.
+
+Plan 14 objected that "one function is not a library." As a *product* that is correct. As a
+package with one clear job it is the shape of `tenacity` or `python-dateutil` — nobody
+adopts those because retry logic or date parsing is mysterious.
+
+### The gate, fixed in advance
+
+Written now so it can fire against this appendix the way Plan 14's fired against its own:
+
+> A correctness library is reconsidered only after Phase 4 has produced a **bare-track**
+> run of at least one frontier model across all 20 geo tasks, k=3, with
+> `integrity.publishable: true`. Then:
+>
+> - **Frontier-bare silent rate is materially above zero** → the case is general, not
+>   free-tier-specific. Reconsider on that basis.
+> - **Frontier-bare is near-perfect and only cheap models fail silently** → the library is
+>   real but its audience is specifically operators on free or small models. Build it only
+>   if that is stated plainly as the scope, without generalising.
+> - **Both tracks are near-perfect** → Step 0's verdict is confirmed under the stronger
+>   test. Do not reopen.
+
+**Trap 13. Do not revive Plan 14 on a track-confounded comparison.** Reading agentic 9/10
+against bare 12/20 as a capability gap is precisely the apples-to-oranges error this plan's
+Phase 4 exists to eliminate. The discipline that made Plan 15 legitimate was refusing to
+re-pivot without new evidence; a fifth reframing on weaker evidence than the fourth would
+forfeit it.
+
+Note the benchmark and the library are not competing directions: **the benchmark is how you
+find out which functions deserve to be in the package**, and `buffer_m` is the one it has
+already found.

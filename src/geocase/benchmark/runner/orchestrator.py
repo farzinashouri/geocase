@@ -27,7 +27,15 @@ from geocase.benchmark.runner.openrouter import (
     CostTracker,
     OpenRouterClient,
 )
+from geocase.benchmark.runner.policy import Pacing, add_pacing_args, policy_from_args
+from geocase.benchmark.runner.record import write_bare_record
 from geocase.benchmark.taxonomy import TrialOutcome
+
+# Measured over the committed bare runs (n=65): 221 prompt / 3164 completion
+# tokens per task. Used only to estimate spend before a run; the hard budget
+# abort is always enforced against OpenRouter's own returned usage.cost.
+EST_PROMPT_TOKENS = 221
+EST_COMPLETION_TOKENS = 3164
 
 
 @dataclass
@@ -36,10 +44,30 @@ class RunPlan:
     models: list[str]
     trials: int
     budget_ceiling_usd: float | None
+    est_usd: float | None = None
+    est_by_model: dict[str, float] | None = None
+    # Models whose config carries no `pricing:` block. Their spend is not in
+    # est_usd, so an estimate that ignored them would read as cheaper than the
+    # run can be — they are named instead of silently dropped.
+    unpriced: list[str] | None = None
 
 
 def _models_for_track(config: dict, track: str) -> list[dict]:
     return [m for m in config.get("models", []) if track in m.get("tracks", [])]
+
+
+def _est_model_usd(model: dict, calls: int) -> float | None:
+    """Estimated spend for one model, or None when it carries no prices."""
+    pricing = model.get("pricing") or {}
+    try:
+        prompt_usd = float(pricing["prompt_usd_per_1m"])
+        completion_usd = float(pricing["completion_usd_per_1m"])
+    except (KeyError, TypeError, ValueError):
+        return None
+    per_call = (
+        EST_PROMPT_TOKENS * prompt_usd + EST_COMPLETION_TOKENS * completion_usd
+    ) / 1_000_000
+    return per_call * calls
 
 
 def plan_run(
@@ -50,12 +78,64 @@ def plan_run(
     # Same task list the run will use, so --dry-run's call count and cost
     # ceiling stay truthful under a --domain filter.
     n_tasks = len(all_tasks() if tasks is None else tasks)
+    calls_per_model = trials * n_tasks
+
+    est_by_model: dict[str, float] = {}
+    unpriced: list[str] = []
+    for m in models:
+        est = _est_model_usd(m, calls_per_model)
+        if est is None:
+            unpriced.append(m["id"])
+        else:
+            est_by_model[m["id"]] = est
     return RunPlan(
-        calls=len(models) * trials * n_tasks,
+        calls=len(models) * calls_per_model,
         models=[m["id"] for m in models],
         trials=trials,
         budget_ceiling_usd=config.get("budget", {}).get("max_usd_total"),
+        est_usd=sum(est_by_model.values()) if est_by_model else None,
+        est_by_model=est_by_model,
+        unpriced=unpriced,
     )
+
+
+def print_plan(plan: RunPlan, *, track: str = "bare") -> None:
+    """The dry-run summary: call count *and* estimated spend, per model."""
+    ceiling = (
+        f"${plan.budget_ceiling_usd:.2f}"
+        if plan.budget_ceiling_usd is not None
+        else "UNLIMITED (set budget.max_usd_total!)"
+    )
+    print(
+        f"track={track}: {len(plan.models)} models x {plan.trials} trials x "
+        f"{plan.calls // max(len(plan.models) * plan.trials, 1)} tasks "
+        f"= {plan.calls} API calls; budget ceiling {ceiling}"
+    )
+    for model_id, est in sorted(
+        (plan.est_by_model or {}).items(), key=lambda kv: -kv[1]
+    ):
+        print(f"  {model_id:<40} est ${est:.2f}")
+    for model_id in plan.unpriced or []:
+        # Named rather than counted as $0: an estimate that silently omits a
+        # model reads as cheaper than the run can actually be.
+        print(f"  {model_id:<40} est UNKNOWN (no pricing: in config)")
+    if plan.est_usd is not None:
+        print(f"  estimated total ${plan.est_usd:.2f} (excludes OpenRouter's fee)")
+
+
+def confirm_estimate(plan: RunPlan, *, yes: bool = False) -> bool:
+    """Refuse to start a run whose estimate is over half the budget ceiling."""
+    if yes or plan.est_usd is None or plan.budget_ceiling_usd is None:
+        return True
+    if plan.est_usd <= 0.5 * plan.budget_ceiling_usd:
+        return True
+    print(
+        f"refusing to start: estimated ${plan.est_usd:.2f} is over half the "
+        f"${plan.budget_ceiling_usd:.2f} ceiling. Re-run with --yes if that is "
+        f"intended, or lower --trials / narrow the roster.",
+        file=sys.stderr,
+    )
+    return False
 
 
 def _slug(model_id: str) -> str:
@@ -85,6 +165,7 @@ def run_bare_track(
     out_root: Path,
     tasks: list[TaskMeta] | None = None,
     resume: bool = True,
+    pacing: Pacing | None = None,
 ) -> None:
     # Imported here so --dry-run and the unit tests never need credentials.
     from geocase.benchmark.runner.bare import run_bare_task
@@ -94,17 +175,30 @@ def run_bare_track(
     defaults = config.get("defaults", {})
     trials = int(defaults.get("trials", 1))
     temperature = defaults.get("temperature")
-    tracker = CostTracker(config.get("budget", {}).get("max_usd_total"))
-    client = OpenRouterClient()
+    budget = config.get("budget", {})
+    max_usd_total = (
+        budget.get("max_usd_total") if pacing is None else pacing.max_usd_total
+    )
+    # A per-model ceiling so one long-running reasoning model cannot eat the
+    # whole budget before the cheap models are ever reached.
+    max_usd_per_model = budget.get("max_usd_per_model")
+    tracker = CostTracker(max_usd_total)
+    client = OpenRouterClient() if pacing is None else pacing.build_client()
     date = dt.date.today().isoformat()
     failures: Counter[str] = Counter()
 
     for model in _models_for_track(config, "bare"):
         run_dir = out_root / f"{date}_{_slug(model['id'])}_bare{suffix}"
+        model_tracker = CostTracker(max_usd_per_model)
+        model_cost = 0.0
+        outcomes_by_trial: dict[int, list[TrialOutcome]] = {}
+        over_model_budget = False
         for trial in range(1, trials + 1):
             gen_dir = run_dir / "generated" / f"trial{trial}"
             gen_dir.mkdir(parents=True, exist_ok=True)
             for task in tasks:
+                if over_model_budget:
+                    break
                 module_path = gen_dir / task.module
                 if (
                     resume
@@ -135,6 +229,18 @@ def run_bare_track(
                     )
                     continue
                 tracker.add(result.cost)
+                # Per-model ceiling checked after the global one, so a run
+                # that trips it skips to the next model instead of aborting.
+                try:
+                    model_tracker.add(result.cost)
+                except BudgetExceededError as exc:
+                    print(
+                        f"{model['id']}: per-model budget reached ({exc}) — "
+                        f"moving to the next model",
+                        file=sys.stderr,
+                    )
+                    over_model_budget = True
+                model_cost += result.cost or 0.0
                 (gen_dir / f"{task.name}.reply.md").write_text(result.content)
                 module_path.write_text(
                     result.code
@@ -171,7 +277,7 @@ def run_bare_track(
                 )
             print(f"grading {model['id']} trial {trial} ...")
             try:
-                outcomes = grade_in_subprocess(gen_dir)
+                outcomes = grade_in_subprocess(gen_dir, tasks=tasks)
             except Exception as exc:  # noqa: BLE001
                 # The generated code is already on disk and can be re-graded
                 # offline, so a grading crash must not cost the remaining models.
@@ -184,7 +290,29 @@ def run_bare_track(
                 continue
             graded = [o.model_dump(mode="json") for o in outcomes]
             (gen_dir / "graded.json").write_text(json.dumps(graded, indent=2))
+            outcomes_by_trial[trial] = outcomes
             _print_verdicts(model["id"], trial, outcomes)
+        # One run.json per model, written even when trials failed to grade —
+        # its whole purpose is to record that a run is incomplete.
+        record = write_bare_record(
+            run_dir,
+            model=model,
+            trials=trials,
+            date=date,
+            config=config,
+            outcomes_by_trial=outcomes_by_trial,
+            cost_usd=model_cost,
+            domain=tasks[0].domain,
+        )
+        integrity = record["integrity"]
+        if not integrity["publishable"]:
+            print(
+                f"{model['id']}: NOT PUBLISHABLE — {integrity['api_failures']} of "
+                f"{integrity['tasks_attempted']} task(s) failed at the API. "
+                f"Any rate over this run has those in its denominator; re-run "
+                f"before quoting it.",
+                file=sys.stderr,
+            )
     print(f"done; total spend ${tracker.spent:.4f}")
     if failures:
         # Loud on purpose: these tasks have no model answer behind them, so any
@@ -288,11 +416,19 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--no-resume", action="store_true")
+    ap.add_argument(
+        "--yes",
+        action="store_true",
+        help="confirm a run whose estimate is over half the budget ceiling",
+    )
+    add_pacing_args(ap)
     args = ap.parse_args(argv)
 
     config = yaml.safe_load(args.config.read_text())
     if args.trials is not None:
         config.setdefault("defaults", {})["trials"] = args.trials
+    if args.max_usd is not None:
+        config.setdefault("budget", {})["max_usd_total"] = args.max_usd
 
     from geocase.benchmark.cli import EmptySelectionError, select_tasks
 
@@ -311,22 +447,21 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     plan = plan_run(config, track=args.track, tasks=tasks)
-    ceiling = (
-        f"${plan.budget_ceiling_usd:.2f}"
-        if plan.budget_ceiling_usd is not None
-        else "UNLIMITED (set budget.max_usd_total!)"
-    )
-    print(
-        f"track={args.track}: {len(plan.models)} models x {plan.trials} trials x "
-        f"{plan.calls // max(len(plan.models) * plan.trials, 1)} tasks "
-        f"= {plan.calls} API calls; budget ceiling {ceiling}"
-    )
+    pacing = policy_from_args(args, config)
+    print_plan(plan, track=args.track)
+    print(pacing.describe())
     if args.dry_run:
         return 0
+    if not confirm_estimate(plan, yes=args.yes):
+        return 3
 
     try:
         run_bare_track(
-            config, out_root=args.out, tasks=tasks, resume=not args.no_resume
+            config,
+            out_root=args.out,
+            tasks=tasks,
+            resume=not args.no_resume,
+            pacing=pacing,
         )
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)

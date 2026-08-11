@@ -22,6 +22,24 @@ class CheckDecl(BaseModel):
     kind: CheckKind
 
 
+class FixtureDecl(BaseModel):
+    """One corpus data file handed to the model's function as INPUT.
+
+    It carries no expectation: the oracle is always computed from first
+    principles in ``grader.py``. See ``benchmark/fixtures.py`` for the rule
+    this declaration exists to keep — a grader may read a fixture's bytes, but
+    never its ``case.yaml``.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+    case_id: str
+    file: str
+    # Pinned because the oracle is stated against these exact bytes.
+    sha256: str | None = None
+
+
 class TaskMeta(BaseModel):
     # A task.yaml key this model does not know about is a silent failure in
     # the benchmark's own tooling — pydantic's default would drop it (Plan 16).
@@ -36,11 +54,14 @@ class TaskMeta(BaseModel):
     handbook_id: str | None
     trap_category: str
     packages: list[str]
-    origin: Literal["step0", "plan15", "plan16"]
+    origin: Literal["step0", "plan15", "plan16", "plan17"]
     checks: list[CheckDecl]
     # Defaulted so the 20 geo task.yaml files stay untouched: they are not
     # hashed into run metadata, so leaving `geo` implicit costs no auditability.
     domain: str = "geo"
+    # Optional, so the existing 20 geo task.yaml files stay untouched and no
+    # committed prompt hash moves (Plan 17 §3.2).
+    fixtures: list[FixtureDecl] = []
 
     @model_validator(mode="after")
     def _known_category(self) -> TaskMeta:
