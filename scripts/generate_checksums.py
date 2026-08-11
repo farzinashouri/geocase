@@ -34,9 +34,7 @@ _SKIP_NAMES = {CHECKSUM_FILE, "case.yaml", "notes.md", ".DS_Store"}
 def _data_files(case_dir: Path) -> list[Path]:
     """Return sorted payload files in *case_dir* (non-recursive)."""
     return sorted(
-        p
-        for p in case_dir.iterdir()
-        if p.is_file() and p.name not in _SKIP_NAMES
+        p for p in case_dir.iterdir() if p.is_file() and p.name not in _SKIP_NAMES
     )
 
 

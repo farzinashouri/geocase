@@ -63,6 +63,7 @@ nav:
       - Reposition as a Correctness Library: plans/14-reposition-as-correctness-library.md
       - GeoCase as a Benchmark: plans/15-geocase-as-benchmark.md
       - Generalize Beyond Geospatial: plans/16-generalize-beyond-geospatial.md
+      - Throughput, Automation & Corpus-as-Input: plans/17-throughput-automation-and-corpus-as-input.md
       - Archived Plans: plans/archive/index.md
   - Design:
       - Case Recommendation Service: design/case-recommendation-service.md

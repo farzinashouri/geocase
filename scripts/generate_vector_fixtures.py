@@ -320,9 +320,7 @@ def _sibling_files(primary: Path) -> list[Path]:
     """
     if not primary.parent.is_dir():
         return []
-    return sorted(
-        p for p in primary.parent.glob(primary.stem + ".*") if p.is_file()
-    )
+    return sorted(p for p in primary.parent.glob(primary.stem + ".*") if p.is_file())
 
 
 def _remove_existing(primary: Path) -> None:

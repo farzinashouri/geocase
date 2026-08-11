@@ -139,8 +139,7 @@ def _build_markdown(entries: list[object]) -> str:
     }
     dtype_present = {
         dtype: any(
-            getattr(getattr(meta, "assertions", None), "expected_dtype", None)
-            == dtype
+            getattr(getattr(meta, "assertions", None), "expected_dtype", None) == dtype
             for meta in entries
         )
         for dtype in DTYPE_TARGETS

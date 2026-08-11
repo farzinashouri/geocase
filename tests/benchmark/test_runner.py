@@ -306,3 +306,38 @@ def test_resume_retries_api_failures_but_keeps_real_results(tmp_path, monkeypatc
     assert attempts == [tasks[1].name]
     gen = next(tmp_path.glob("*_a-model_bare/generated/trial1"))
     assert "status" not in json.loads((gen / f"{tasks[1].name}.meta.json").read_text())
+
+
+def test_client_stops_retrying_timeouts_early():
+    """A stall costs the full read timeout, so it must not be retried like a 429."""
+    calls = []
+
+    def handler(request):
+        calls.append(1)
+        raise httpx.ReadTimeout("stalled", request=request)
+
+    client = _client(handler)
+    client.backoff_base = 0.0
+    with pytest.raises(ChatFailedError):
+        client.chat("test/model", [{"role": "user", "content": "hi"}])
+    assert len(calls) == client.max_timeout_attempts
+    assert len(calls) < client.max_attempts
+
+
+def test_client_honors_a_total_time_budget(monkeypatch):
+    """No combination of attempts and backoff may outlive the budget."""
+    calls = []
+
+    def handler(request):
+        calls.append(1)
+        return httpx.Response(429, json={"error": "rate limited"})
+
+    client = _client(handler)
+    client.backoff_base = 30.0  # each sleep would blow the budget
+    client.max_total_seconds = 1.0
+    slept = []
+    monkeypatch.setattr("geocase.benchmark.runner.openrouter.time.sleep", slept.append)
+    with pytest.raises(ChatFailedError, match="budget"):
+        client.chat("test/model", [{"role": "user", "content": "hi"}])
+    assert not slept, "slept past the budget instead of giving up"
+    assert len(calls) == 1

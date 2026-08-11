@@ -27,6 +27,7 @@ import hashlib
 import json
 import re
 import sys
+import time
 from pathlib import Path
 
 import yaml
@@ -58,6 +59,24 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out", type=Path, default=DEFAULT_OUT)
     ap.add_argument("--tasks", nargs="*", default=None)
     ap.add_argument("--domain", default=None)
+    ap.add_argument(
+        "--delay",
+        type=float,
+        default=3.0,
+        help="seconds between probes; free-tier quotas are per-minute too",
+    )
+    ap.add_argument(
+        "--give-up-after",
+        type=int,
+        default=3,
+        help="consecutive failures before skipping the rest of a model",
+    )
+    ap.add_argument(
+        "--task-budget",
+        type=float,
+        default=20.0,
+        help="seconds any single probe may consume, retries included",
+    )
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args(argv)
 
@@ -84,6 +103,10 @@ def main(argv: list[str] | None = None) -> int:
     from geocase.benchmark.runner.openrouter import OpenRouterClient
 
     client = OpenRouterClient()
+    # One prose completion is a few seconds' work. Anything slower is a
+    # rate-limited or stalling model, and across 156 calls the right response
+    # is to fail that task fast and let --give-up-after skip the model.
+    client.max_total_seconds = args.task_budget
     date = dt.date.today().isoformat()
     args.out.mkdir(parents=True, exist_ok=True)
 
@@ -95,15 +118,36 @@ def main(argv: list[str] | None = None) -> int:
         if path.is_file():
             records = {r["task"]: r for r in json.loads(path.read_text())["probes"]}
 
-        for task in tasks:
+        consecutive_failures = 0
+        for i, task in enumerate(tasks):
             if task.name in records:
                 continue
+            # Pace the requests. Free-tier quotas are per-minute as well as
+            # per-day, and firing 26 completions back to back is the surest way
+            # to spend the whole run inside the retry backoff.
+            if i and args.delay:
+                time.sleep(args.delay)
             prompt = probe_prompt(task)
+            # Printed before the call, not after: a run that is merely slow and
+            # one that is wedged are otherwise indistinguishable from outside.
+            print(f"{model['id']} {task.name}: asking ...", flush=True, file=sys.stderr)
             try:
                 reply = client.chat(model["id"], [{"role": "user", "content": prompt}])
             except Exception as exc:  # noqa: BLE001 - one probe must not end the run
                 print(f"{model['id']} {task.name}: FAILED ({exc})", file=sys.stderr)
+                consecutive_failures += 1
+                if consecutive_failures >= args.give_up_after:
+                    # A model whose quota is exhausted (or whose id is stale)
+                    # fails every remaining task identically. Stop and let the
+                    # operator re-run later; resume keeps what did land.
+                    print(
+                        f"{model['id']}: {consecutive_failures} consecutive "
+                        f"failures — skipping the rest of this model",
+                        file=sys.stderr,
+                    )
+                    break
                 continue
+            consecutive_failures = 0
             records[task.name] = {
                 "task": task.name,
                 "domain": task.domain,

@@ -56,16 +56,45 @@ class ChatReply:
 
 
 class OpenRouterClient:
-    max_attempts = 2
+    # Free-tier 429s are the dominant failure mode, and they clear on a scale
+    # of minutes rather than seconds: with base 2.0 the sleeps are roughly
+    # 2, 4, 8, 16, 32s (jittered), so five attempts spans about a minute.
+    # Two attempts gave up ~2s after the first 429, which on the free tier
+    # means giving up immediately.
+    max_attempts = 5
+    max_timeout_attempts = 2  # timeouts are far costlier to retry than 429s
+    # A 429 whose Retry-After is longer than this is a quota that will not
+    # clear inside the run: fail the task immediately and let the caller's
+    # give-up-after logic skip the model. Sitting through a 60s server-
+    # requested wait, five times, is how a run comes to look frozen.
+    max_retry_after = 10.0
     backoff_base = 2.0  # seconds; exponential with jitter
     max_backoff = 60.0  # cap per sleep, incl. a server-supplied Retry-After
+
+    # A whole task must not be able to outlive this, however attempts and
+    # timeouts interact. Without it, five attempts against a model that stalls
+    # for the full read timeout is a five-minute wait on one prose completion.
+    max_total_seconds = 120.0
+
+    # Default budget for one *task* in a long batch run. 120s is the ceiling
+    # for a deliberate single call; a 156-call probe cannot afford that per
+    # task when a model is rate-limited, so the scripts lower it.
+    batch_total_seconds = 20.0
 
     def __init__(
         self,
         api_key: str | None = None,
         *,
         transport: httpx.BaseTransport | None = None,
-        timeout: float = 60.0,
+        timeout: float | httpx.Timeout = httpx.Timeout(
+            # `read` is the gap between bytes, not the total request time, so a
+            # trickling server never trips a single scalar timeout. 30s is
+            # generous for one short completion.
+            connect=10.0,
+            read=30.0,
+            write=10.0,
+            pool=5.0,
+        ),
     ):
         key = api_key or os.environ.get("OPENROUTER_API_KEY")
         if not key:
@@ -100,14 +129,24 @@ class OpenRouterClient:
 
         last_exc: Exception | None = None
         last_reason = "unknown"
+        started = time.monotonic()
+        timeouts = 0
+        made = 0
         for attempt in range(self.max_attempts):
+            made = attempt + 1
             wait: float | None = None
             try:
                 resp = self._http.post("/chat/completions", json=payload)
             except httpx.TimeoutException as exc:
                 # A slow model is a property of the model, not a runner bug:
-                # retry, then surface it as a per-task outcome upstream.
+                # retry, then surface it as a per-task outcome upstream. Far
+                # fewer retries than a 429 gets, though — a rate limit clears
+                # on its own, whereas a model that stalled once usually stalls
+                # again, and each stall costs the full read timeout.
                 last_exc, last_reason = exc, "timeout"
+                timeouts += 1
+                if timeouts >= self.max_timeout_attempts:
+                    break
             except httpx.HTTPError as exc:
                 # Connection resets, DNS blips, protocol errors — all transient.
                 last_exc, last_reason = exc, f"{type(exc).__name__}"
@@ -120,6 +159,11 @@ class OpenRouterClient:
                     )
                     last_reason = f"HTTP {resp.status_code}"
                     wait = self._retry_after(resp)
+                    if wait is not None and wait > self.max_retry_after:
+                        raise ChatFailedError(
+                            f"{model}: HTTP {resp.status_code}, server asked "
+                            f"for {wait:.0f}s — longer than this run will wait"
+                        ) from last_exc
                 elif resp.is_error:
                     # 4xx other than 429 (bad model id, no credit, moderation):
                     # retrying cannot help, so fail this task immediately.
@@ -147,10 +191,15 @@ class OpenRouterClient:
                 break
             if wait is None:
                 wait = self.backoff_base * (2**attempt) * (0.5 + random.random())
-            time.sleep(min(wait, self.max_backoff))
+            wait = min(wait, self.max_backoff)
+            # Never sleep past the budget only to be cut off on waking.
+            if time.monotonic() - started + wait >= self.max_total_seconds:
+                last_reason = f"{last_reason}; total time budget exhausted"
+                break
+            time.sleep(wait)
         raise ChatFailedError(
-            f"{model}: giving up after {self.max_attempts} attempts "
-            f"(last: {last_reason})"
+            f"{model}: giving up after {made} attempt(s) in "
+            f"{time.monotonic() - started:.1f}s (last: {last_reason})"
         ) from last_exc
 
     def _retry_after(self, resp: httpx.Response) -> float | None:
