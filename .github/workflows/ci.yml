@@ -102,7 +102,16 @@ jobs:
       # repository". GitLab's runner cloned before the job script ran, so this
       # ordering constraint did not exist there.
       - name: Install git before checkout
-        run: apt-get update -qq && apt-get install -y -qq git python3-venv
+        # The image carries an Apache Arrow apt source whose signing key has
+        # rotated out of the image's keyring, which makes `apt-get update` fail
+        # the whole step with NO_PUBKEY. Nothing installed here comes from that
+        # repo -- git and python3-venv are both in the Ubuntu archives -- so
+        # drop the source rather than chase the key.
+        run: |
+          rm -f /etc/apt/sources.list.d/apache-arrow* \
+                /etc/apt/sources.list.d/*arrow*
+          apt-get update -qq
+          apt-get install -y -qq git python3-venv
 
       - uses: actions/checkout@v4
 
