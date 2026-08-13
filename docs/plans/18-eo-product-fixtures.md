@@ -95,6 +95,35 @@ trap-2 problem entirely.
 The third row is live: existing `zonal_mean` results are already LOUD-dominant, which is that
 signature.
 
+### Gate verdict (2026-08-12) — row 1, with a capability-tier boundary
+
+The task was built and run. Valid trials (API 429s and one truncated reply excluded):
+
+| Model | Tier | Control | Edge |
+|---|---|---|---|
+| Claude Opus 5 (clean-room, ×2) | frontier | PASS | **PASS** — `scales=1e-4`, `offsets=-0.1`, tags `-1000`/`10000` |
+| Claude Sonnet 5 (clean-room) | frontier | PASS | **PASS** — tags `BOA_ADD_OFFSET=-1000`, quantification `10000` |
+| Claude Haiku 4.5 (clean-room) | small | PASS | SILENT — `scales=(1,…)`, `offsets=(0,…)`, `tags={}`, no nodata |
+| openai/gpt-oss-20b:free (×2) | small | PASS | SILENT — identical shape |
+| nvidia/nemotron-3-ultra-550b:free | free | PASS | SILENT — identical shape |
+
+**Row 1 is met** — ≥2 families systematically omit the radiometry, and the misses are
+byte-for-byte the shape of the fixtures already in the corpus (flat scale, zero offset, empty
+tags). Row 3 does not fire: every model that returned runnable code passed the control.
+
+**But the premise as stated above is refuted for frontier models.** Opus and Sonnet emit the
+baseline 04.00 radiometry unprompted; −1000 *is* in their weights. Two consequences:
+
+1. Phase 1 proceeds, justified as closing a gap for **small/cheap models** (and by the corpus's
+   independently false `risk_types` labels) — not under "AI can't build these".
+2. The grader's encoding rule as originally drafted here (`scales == 10000`,
+   `offsets == -1000`) was itself wrong — trap 1 fired on first contact. In GDAL's
+   `value = raw*scale + offset` convention the self-consistent form is `1e-4`/`-0.1`, and real
+   granules carry the numbers in `MTD_MSIL2A.xml` tags with *no* GDAL scale/offset at all. The
+   shipped grader accepts the fact in either encoding; the first draft would have scored
+   spec-correct frontier output SILENT and confirmed the premise on a measurement artifact.
+   Verification item 6 below is corrected accordingly.
+
 ---
 
 ## Phase 1 — `geocase.synth` (only if the gate confirms)
@@ -195,7 +224,9 @@ python -m pytest tests/benchmark/test_oracles.py -q -k s2_fixture
 grep -rniE "offset|scale|quantific|nodata|trap" src/geocase/benchmark/tasks/s2_fixture/prompt.md
 
 # 3. RUN THE GATE: >=3 model families, >=2 trials. Apply the decision rule before Phase 1.
-python -m geocase.benchmark.cli run --tasks s2_fixture --models configs/models-free.yaml --trials 2
+#    (flags corrected from the draft: it is --config, and --domain is required
+#    now that a second domain exists)
+python -m geocase.benchmark run --config configs/models-free-gate18.yaml --domain geo --tasks s2_fixture --trials 2
 
 # --- everything below only if the gate confirms ---
 
@@ -205,13 +236,19 @@ python -m pytest tests/synth/test_spec_fidelity.py -q
 # 5. Corpus is reproducible from the generator
 python scripts/generate_raster_fixtures.py --check
 
-# 6. The regenerated fixtures actually carry fidelity now
+# 6. The regenerated fixtures actually carry fidelity now. NOTE: corrected from
+#    the draft, which asserted scales==10000/offsets==-1000 — arithmetically
+#    wrong under GDAL's value = raw*scale + offset convention (trap 1, caught
+#    by the gate run). The self-consistent band form is 1e-4 / -0.1.
 python -c "
 import rasterio
 with rasterio.open('src/geocase/data/core/raster/multispectral_s2_like_small/multispectral_s2_like_small.tif') as s:
-    assert s.scales == (10000.0,)*s.count, s.scales
-    assert s.offsets == (-1000.0,)*s.count, s.offsets
+    assert s.scales == (1e-4,)*s.count, s.scales
+    assert s.offsets == (-0.1,)*s.count, s.offsets
     assert s.nodata == 0
+    t = s.tags()
+    assert t.get('BOA_ADD_OFFSET') == '-1000', t
+    assert t.get('QUANTIFICATION_VALUE') == '10000', t
 print('fidelity present')
 "
 

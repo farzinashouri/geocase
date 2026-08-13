@@ -38,6 +38,7 @@ def test_trap_categories_are_the_controlled_vocabulary():
             "collinearity",
             "discretization",
             "encoding",
+            "product-spec",
         }
     )
 

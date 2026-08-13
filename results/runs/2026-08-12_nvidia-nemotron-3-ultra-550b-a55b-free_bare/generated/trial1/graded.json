@@ -1,0 +1,14 @@
+[
+  {
+    "task": "s2_fixture",
+    "outcome": "LOUD",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "LOUD",
+        "detail": "SyntaxError: unterminated triple-quoted string literal (detected at line 34) (gen_s2_fixture.py, line 16)"
+      }
+    ]
+  }
+]

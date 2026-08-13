@@ -31,6 +31,10 @@ GEO_TRAP_CATEGORIES = frozenset(
         # 10-character field-name limit is normative, so the oracle is stated
         # from the spec rather than computed.
         "encoding",
+        # Plan 18 Phase 0: facts published in a product specification that no
+        # amount of reasoning recovers — Sentinel-2 baseline 04.00's
+        # BOA_ADD_OFFSET, the quantification value, the SCL class codes.
+        "product-spec",
     }
 )
 

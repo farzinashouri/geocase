@@ -54,7 +54,7 @@ class TaskMeta(BaseModel):
     handbook_id: str | None
     trap_category: str
     packages: list[str]
-    origin: Literal["step0", "plan15", "plan16", "plan17"]
+    origin: Literal["step0", "plan15", "plan16", "plan17", "plan18"]
     checks: list[CheckDecl]
     # Defaulted so the 20 geo task.yaml files stay untouched: they are not
     # hashed into run metadata, so leaving `geo` implicit costs no auditability.

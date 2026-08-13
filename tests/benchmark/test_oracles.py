@@ -521,6 +521,54 @@ def shapefile_attrs(path):
 """
 
 
+# ------------------------------------------------ Plan 18 Phase 0 (product spec)
+
+GOOD["s2_fixture"] = """
+import numpy as np
+import rasterio
+from rasterio.transform import from_origin
+
+def s2_fixture(path, size=32):
+    data = np.arange(size * size, dtype="uint16").reshape(size, size) % 10000 + 1000
+    with rasterio.open(
+        path, "w", driver="GTiff", height=size, width=size, count=4,
+        dtype="uint16", crs="EPSG:32633",
+        transform=from_origin(500000, 6600000, 10, 10), nodata=0,
+    ) as dst:
+        for i, name in enumerate(["B2", "B3", "B4", "B8"], start=1):
+            dst.write(data + i, i)
+            dst.set_band_description(i, name)
+        # Baseline 04.00: reflectance = (DN - 1000) / 10000. In GDAL's
+        # value = raw*scale + offset convention the offset is in the scaled
+        # unit, so -1000 DN is -0.1 reflectance.
+        dst.scales = [1e-4] * 4
+        dst.offsets = [-0.1] * 4
+        dst.update_tags(PROCESSING_BASELINE="04.00",
+                        QUANTIFICATION_VALUE="10000",
+                        BOA_ADD_OFFSET="-1000")
+"""
+
+TRAPPED["s2_fixture"] = """
+import numpy as np
+import rasterio
+from rasterio.transform import from_origin
+
+def s2_fixture(path, size=32):
+    # Plausible in every visible respect: right bands, right dtype, right grid.
+    # The radiometry the baseline mandates is simply absent, so anything that
+    # converts these DNs to reflectance is quietly off by 0.1 everywhere.
+    data = np.arange(size * size, dtype="uint16").reshape(size, size) % 10000 + 1000
+    with rasterio.open(
+        path, "w", driver="GTiff", height=size, width=size, count=4,
+        dtype="uint16", crs="EPSG:32633",
+        transform=from_origin(500000, 6600000, 10, 10),
+    ) as dst:
+        for i, name in enumerate(["B2", "B3", "B4", "B8"], start=1):
+            dst.write(data + i, i)
+            dst.set_band_description(i, name)
+"""
+
+
 NEW_TASKS = sorted(GOOD)
 
 
