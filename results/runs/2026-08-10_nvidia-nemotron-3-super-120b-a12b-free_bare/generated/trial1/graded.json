@@ -1,0 +1,272 @@
+[
+  {
+    "task": "area_m2",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "berlin_box",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 7.633e+07, expected 7.633e+07"
+      },
+      {
+        "check": "antimeridian_box",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got 2.462e+10, expected 2.462e+10 (2x1 deg box)"
+      }
+    ]
+  },
+  {
+    "task": "buffer_m",
+    "outcome": "LOUD",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "LOUD",
+        "detail": "ImportError: cannot import name 'BaseGeometry' from 'shapely.geometry' (/opt/homebrew/Caskroom/miniforge/base/envs/geocase/lib/python3.14/site-packages/shapely/geometry/__init__.py)"
+      }
+    ]
+  },
+  {
+    "task": "cluster_points_m",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "300m_pair_plus_outlier",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "labels [0, 0, 1]"
+      },
+      {
+        "check": "east_west_at_75N",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "labels [0, 0] (points are ~346 m apart)"
+      },
+      {
+        "check": "pair_across_dateline",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "labels [0, 0] (points are ~222 m apart)"
+      }
+    ]
+  },
+  {
+    "task": "dedupe_geoms",
+    "outcome": "LOUD",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "LOUD",
+        "detail": "ImportError: cannot import name 'BaseGeometry' from 'shapely.geometry' (/opt/homebrew/Caskroom/miniforge/base/envs/geocase/lib/python3.14/site-packages/shapely/geometry/__init__.py)"
+      }
+    ]
+  },
+  {
+    "task": "fix_geometry",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "valid_input_unchanged",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "valid=True, area 64 (expected 64)"
+      },
+      {
+        "check": "bowtie_keeps_both_lobes",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "valid=True, area 50 (expected 50), both_lobes=True (buffer(0) keeps only one)"
+      }
+    ]
+  },
+  {
+    "task": "geohash_neighbors",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "interior_cell",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g'], expected ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g']"
+      },
+      {
+        "check": "equator_meridian_corner",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003'], expected ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003']"
+      }
+    ]
+  },
+  {
+    "task": "label_point",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_label_point.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "length_m",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_length_m.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "position_at",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_position_at.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "project_line",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_project_line.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "sample_at",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_sample_at.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "segment_intersection",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_segment_intersection.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "split_antimeridian",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_split_antimeridian.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "tag_points",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_tag_points.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "tile_bounds",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_tile_bounds.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "to_rfc7946",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_to_rfc7946.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "utm_epsg_for",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_utm_epsg_for.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "voronoi_cells",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_voronoi_cells.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "wkt_from_latlon",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_wkt_from_latlon.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "zonal_mean",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_zonal_mean.py or function absent"
+      }
+    ]
+  }
+]

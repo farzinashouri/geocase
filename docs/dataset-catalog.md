@@ -22,15 +22,15 @@ ever disagree, the generated one is right.
 
 | | Count |
 |---|---:|
-| **Total bundled cases** | **134** |
-| Vector | 103 |
+| **Total bundled cases** | **135** |
+| Vector | 104 |
 | Raster | 30 |
 | NetCDF | 1 |
 | Declared remote (not fetchable) | 7 |
 
-Bundled payload is **4.2 MB** across 16 formats. Every bundled case is `storage_class:
-bundled` and ships inside the wheel; 133 are `size_class: tiny` and one is `small`. By
-test tier: 117 `unit`, 17 `integration`.
+Bundled payload is **2.1 MB** across 16 formats. Every bundled case is `storage_class:
+bundled` and ships inside the wheel; 134 are `size_class: tiny` and one is `small`. By
+test tier: 118 `unit`, 17 `integration`.
 
 The seven remote cases are *declared*, not available — see
 [Remote and non-bundled](#remote-and-non-bundled).
@@ -44,7 +44,7 @@ path to a failure mode that the others cannot produce.
 |---|---|---|
 | **GeoJSON** (37) | The lingua franca of web geospatial | Coordinate precision loss on roundtrip; CRS is *always* WGS84 by spec, so a reprojection bug has nowhere to hide |
 | **GeoTIFF** (30) | The raster baseline | Everything raster: dtype, nodata convention, transform, band count, overviews |
-| **Shapefile** (8) | The format that refuses to die | DBF 10-character field-name truncation and code-page encoding — both silent, both data-destroying |
+| **Shapefile** (9) | The format that refuses to die | DBF 10-character field-name truncation, code-page encoding, and a ring-orientation rule that inverts every polygon written through it — all three silent |
 | **GPKG** (8) | The modern OGC container | SQL container semantics; the distinction between a NULL row and an empty geometry |
 | **KML** (7) | Consumer/visualization exchange | Forced WGS84 regardless of source CRS, and string-only ExtendedData that flattens every numeric type |
 | **CSV_WKT** (6) | Geometry smuggled through a spreadsheet | No CRS anywhere in the file — the reader must be told, or must guess |
@@ -63,7 +63,7 @@ below.
 
 ## Vector datasets
 
-103 cases, in three groups.
+104 cases, in three groups.
 
 ### The geometry × format baseline (66)
 
@@ -86,7 +86,7 @@ them readable in a diff: the Point baseline is a single vertex at **12.5°E, 55.
 (Copenhagen), and the other five occupy a small box around **10–11.5°E, 49.8–51°N**. The
 locations carry no meaning — these cases test serialization, not geodesy.
 
-### `special/` edge cases (36)
+### `special/` edge cases (37)
 
 Eight families, each targeting one failure mode. Full properties for every id are on the
 [case catalog](_generated/catalog/index.md); the geodetic rationale is under
@@ -97,7 +97,7 @@ Eight families, each targeting one failure mode. Full properties for every id ar
 | `crs` | 11 | UTM zone selection, polar degeneracy, equator crossing, Web Mercator, rasterize alignment across CRS |
 | `dateline` | 6 | Antimeridian splitting, longitude wrapping past ±180, transitive cluster splits |
 | `invalid` | 6 | Self-intersection, unclosed rings, spikes, out-of-range coordinates, Null Island |
-| `encoding` | 5 | Shapefile field truncation and code pages, KML type flattening, mixed attribute schemas |
+| `encoding` | 6 | Shapefile field truncation, code pages and ring-orientation reversal, KML type flattening, mixed attribute schemas |
 | `precision` | 3 | Coordinate drift, near-duplicate clustering, format-imposed precision limits |
 | `empty` | 2 | Empty geometry versus NULL geometry |
 | `degenerate` | 2 | Zero-length lines, disjoint multi-part geometry |
@@ -192,8 +192,8 @@ Markers are approximate to the nearest cell; the table carries the real coordina
 
 | Marker | Cluster | Coordinates | CRS involved | Cases | Why this spot |
 |---|---|---|---|---:|---|
-| **A** | Central Europe baselines | 10–11.5°E, 49.8–51°N | EPSG:4326 | 65 | No geodetic significance. Round numbers at low precision so a serialization diff is readable by eye. |
-| **A** | Copenhagen | 12.5°E, 55.7°N | EPSG:4326 | 1 + precision cluster | The Point baseline and the near-duplicate cluster at 12°E, 55°N, where coordinate drift shows up in the sixth decimal. |
+| **A** | Central Europe baselines | 10–11.5°E, 49.8–51°N | EPSG:4326 | 58 | No geodetic significance. Round numbers at low precision so a serialization diff is readable by eye. Every LineString, Polygon, MultiPoint, MultiLineString and MultiPolygon baseline lives here, in every format. |
+| **A** | Copenhagen | 12.5°E, 55.7°N | EPSG:4326 | 12 + precision cluster | The whole Point family — the GeoJSON canonical and its eleven format twins — plus the near-duplicate cluster at 12°E, 55°N, where coordinate drift shows up in the sixth decimal. |
 | **B** | UTM 33N synthetic tile | 15°E, **40.65°N** (500000 E, 4500000 N) | EPSG:32633 | 15 | The false-easting origin of zone 33N. Most rasters live here. Note the *northing* implies southern Italy, not Scandinavia — the tile is nominal. |
 | **B** | UTM 33N northern band | 15°E, 50.5°N (500000 E, 5.6e6 N) | EPSG:32633 | 3 | The nodata/shifted pair and the zone-boundary raster, one northing band north of the main tile. |
 | **C** | Svalbard | 19.5–20.5°E, 77.5–78.5°N | EPSG:4326 → UTM | 1 | **Zone 33X is a hand-carved exception.** The naive `floor((lon + 180) / 6) + 1` returns zone 34 here and is wrong. This is the single highest-value coordinate in the catalog. |
@@ -206,6 +206,24 @@ Markers are approximate to the nearest cell; the table carries the real coordina
 | — | Web Mercator baseline | 1000000, 1000000 m (≈ 8.98°E, 8.95°N) | EPSG:3857 | 1 | Metres mistaken for degrees is a common bug; these coordinates make it obvious. |
 | — | Arctic stereographic | −2000000, 2000000 m (≈ 135°W, **64.4°N**) | EPSG:3995 | 1 | `optical_polar_small` exercises the polar stereographic *projection*, though its extent lands at 64°N rather than near the pole. |
 | — | Nominal-origin tiles | 500000 E, ~1000 N | EPSG:32633 | 8 | The dtype family and two footprint cases sit at near-zero northing, which is nominally on the equator. The origin is a placeholder — these cases test dtype and footprint, not location. |
+
+!!! note "Where the baselines used to be"
+
+    Until v1.0.0 this map was substantially wrong, and in a way that mattered.
+    Thirty-six `*_baseline` fixtures — every LineString, MultiPoint,
+    MultiLineString and MultiPolygon twin, plus two Polygon ones — actually sat on
+    the unit square at or beside `(0, 0)`, not in Central Europe. They collided
+    head-on with `null_island_point`, whose entire reason for existing is that a
+    coordinate of exactly `(0, 0)` should be recognisable as a geocoding failure
+    rather than as data. A catalog that puts three dozen ordinary fixtures in the
+    same place cannot make that point.
+
+    Worse, the fixtures in a `<geometry>_<format>_baseline` family disagreed with
+    *each other*: 53 of the 60 held different coordinates from the GeoJSON
+    canonical they declared as their source, so diffing KML against Shapefile
+    reported a "cross-format difference" that was purely a fixture accident.
+    Convergence fixed both at once — the family now genuinely holds one geometry
+    in many containers, and only seven deliberate cases remain near `(0, 0)`.
 
 Attribute values carry one more geography: the encoding cases use European city names
 (Zürich, Köln, Malmö, São Paulo) to exercise code pages and non-ASCII field content. São

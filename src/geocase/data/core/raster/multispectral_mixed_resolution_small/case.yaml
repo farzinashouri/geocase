@@ -1,9 +1,10 @@
 id: multispectral_mixed_resolution_small
 title: Multispectral Mixed Resolution Small
 description: >
-  A tiny three-band uint16 multispectral stack combining native 10 m and 20 m
-  bands resampled onto a common 10 m grid. Documents the mixed-resolution
-  delivery pattern in a single GeoTIFF.
+  A tiny three-band uint16 Sentinel-2 L2A stack (B04, B08, B11) on a common
+  10 m grid, where B11 is 20 m-native and carried as 2x2 block-replicated
+  values — so the resolution mismatch exists in the pixels, not only in the
+  metadata. Baseline 04.00 radiometry as in multispectral_s2_like_small.
 category: raster
 format: GeoTIFF
 test_tier: integration
@@ -55,12 +56,15 @@ assertions:
   expected_band_count: 3
   expected_dtype: uint16
   expected_shape: [16, 16]
-  expected_band_names: [red_10m, nir_10m, swir_20m]
+  expected_band_names: [B04, B08, B11]
+  expected_scale_factor: 1.0e-4
   expected_compression: deflate
 
 params:
   generator: scripts/generate_raster_fixtures.py
+  synth: geocase.synth.sentinel2_l2a
+  processing_baseline: "04.00"
   resolutions:
-    red_10m: 10
-    nir_10m: 10
-    swir_20m: 20
+    B04: 10
+    B08: 10
+    B11: 20

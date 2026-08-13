@@ -1,0 +1,1 @@
+I am about to implement a function that takes a list of (x, y) points and a list of shapely Polygons in the same planar system, and returns for each point the index of the polygon containing it. What are the common pitfalls when implementing this? Answer in prose — do not write code.

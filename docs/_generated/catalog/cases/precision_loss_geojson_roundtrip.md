@@ -90,8 +90,8 @@ Expose precision loss during GeoJSON text serialization. Detect workflows where 
 - [Empty Geometry in GeoPackage](empty_geometry_gpkg.md) -- `empty_geometry_gpkg`
 - [Shapefile Legacy DBF Encoding](shapefile_encoding_legacy.md) -- `shapefile_encoding_legacy`
 - [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
+- [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
 - [Equator-Crossing Polygon](equator_polygon.md) -- `equator_polygon`
-- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
 
 <script type="application/ld+json">
 {

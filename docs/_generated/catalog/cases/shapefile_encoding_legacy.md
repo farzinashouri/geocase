@@ -93,9 +93,9 @@ Expose loaders that assume UTF-8 encoding for Shapefile attributes. Detect mojib
 
 - [Mixed Encoding Attributes](mixed_encoding_attributes.md) -- `mixed_encoding_attributes`
 - [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
+- [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
 - [Empty Geometry in GeoPackage](empty_geometry_gpkg.md) -- `empty_geometry_gpkg`
 - [GeoJSON Precision Loss Roundtrip](precision_loss_geojson_roundtrip.md) -- `precision_loss_geojson_roundtrip`
-- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
 
 <script type="application/ld+json">
 {

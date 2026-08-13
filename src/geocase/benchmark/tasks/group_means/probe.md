@@ -1,0 +1,1 @@
+I am about to implement a function that takes a list of (key, value) pairs where values may be missing, and returns the mean value per key using SQL AVG semantics. What are the common pitfalls when implementing this? Answer in prose — do not write code.

@@ -1,0 +1,13 @@
+schema_version: 1
+name: zonal_mean
+title: Zonal mean over pixel centres, nodata excluded
+function: zonal_mean
+signature: "zonal_mean(raster_path, polygon) -> float | None"
+module: gen_zonal_mean.py
+handbook_id: RAS-0024
+trap_category: nodata
+packages: [rasterio, shapely]
+origin: plan15
+checks:
+  - {name: full_clean_region, kind: control}
+  - {name: partial_pixels_and_nodata, kind: edge}

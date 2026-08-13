@@ -1,0 +1,8 @@
+# Sandbox environment for grading model-generated modules, pinned to the
+# Step 0 environment (Plan 15 Phase 4). A dependency upgrade that changes
+# geometry output must be a deliberate, attributable event (trap 7).
+shapely==2.1.*
+pyproj==3.7.*
+rasterio==1.4.*
+numpy
+scikit-learn

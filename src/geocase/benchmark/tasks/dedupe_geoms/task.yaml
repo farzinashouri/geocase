@@ -1,0 +1,13 @@
+schema_version: 1
+name: dedupe_geoms
+title: Remove spatially duplicate geometries
+function: dedupe_geoms
+signature: "dedupe_geoms(geoms) -> list (first occurrence kept)"
+module: gen_dedupe_geoms.py
+handbook_id: VEC-0013
+trap_category: canonical-equality
+packages: [shapely]
+origin: plan15
+checks:
+  - {name: exact_duplicates, kind: control}
+  - {name: rotated_reversed_ring, kind: edge}

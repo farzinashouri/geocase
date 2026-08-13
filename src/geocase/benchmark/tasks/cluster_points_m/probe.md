@@ -1,0 +1,1 @@
+I am about to implement a function that takes a list of (lon, lat) points in WGS84 and a distance threshold in meters, and groups them into single-linkage clusters. What are the common pitfalls when implementing this? Answer in prose — do not write code.

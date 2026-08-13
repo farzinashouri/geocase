@@ -71,6 +71,7 @@ Provide a canonical linestring encoded as GML so format-specific loader behavior
 ## Files
 
 - Primary: `data.gml`
+- Sidecar: `data.xsd`
 - Notes: notes.md
 
 ## Source and license

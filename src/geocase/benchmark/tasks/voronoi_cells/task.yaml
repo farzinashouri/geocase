@@ -1,0 +1,13 @@
+schema_version: 1
+name: voronoi_cells
+title: Bounded Voronoi cells in input order
+function: voronoi_cells
+signature: "voronoi_cells(points, bounds) -> list[Polygon]"
+module: gen_voronoi_cells.py
+handbook_id: ANA-0037
+trap_category: ordering
+packages: [shapely]
+origin: step0
+checks:
+  - {name: partition_of_bounds, kind: control}
+  - {name: cell_order_matches_input, kind: edge}

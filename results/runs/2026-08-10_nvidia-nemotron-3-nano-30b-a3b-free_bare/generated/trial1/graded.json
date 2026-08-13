@@ -1,0 +1,242 @@
+[
+  {
+    "task": "area_m2",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_area_m2.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "buffer_m",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_buffer_m.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "cluster_points_m",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_cluster_points_m.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "dedupe_geoms",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_dedupe_geoms.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "fix_geometry",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_fix_geometry.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "geohash_neighbors",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_geohash_neighbors.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "label_point",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_label_point.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "length_m",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_length_m.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "position_at",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_position_at.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "project_line",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_project_line.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "sample_at",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_sample_at.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "segment_intersection",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_segment_intersection.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "split_antimeridian",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_split_antimeridian.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "tag_points",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_tag_points.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "tile_bounds",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_tile_bounds.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "to_rfc7946",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_to_rfc7946.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "utm_epsg_for",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_utm_epsg_for.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "voronoi_cells",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_voronoi_cells.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "wkt_from_latlon",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_wkt_from_latlon.py or function absent"
+      }
+    ]
+  },
+  {
+    "task": "zonal_mean",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_zonal_mean.py or function absent"
+      }
+    ]
+  }
+]

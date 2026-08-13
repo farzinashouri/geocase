@@ -1,0 +1,75 @@
+id: shapefile_ring_orientation
+title: Shapefile Ring Orientation Reversal
+description: >
+  A Shapefile holding the same square as simple_valid_polygon, but with its
+  exterior ring wound clockwise instead of counter-clockwise. The Shapefile
+  specification mandates CW exterior rings, so OGR silently reverses the
+  winding of any GeoJSON polygon written through it. Code that reads
+  Polygon.exterior.is_ccw to tell an exterior ring from a hole gets the wrong
+  answer here.
+category: vector
+format: Shapefile
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - vector
+  - polygon
+  - shapefile
+  - winding
+  - ring_orientation
+  - format_specific
+
+risk_types:
+  - ring_orientation
+  - format_specific
+
+behavioral_goal: >
+  Expose workflows that assume a polygon read from any format keeps the
+  RFC 7946 right-hand rule, or that infer ring role from orientation rather
+  than from ring position. Provide a fixture where topological equality with
+  the GeoJSON reference holds while orientation differs.
+
+expected_capabilities:
+  - load
+  - geometry-validation
+  - attribute-inspection
+
+loader_hint: geopandas
+geometry_type: Polygon
+crs: EPSG:4326
+
+files:
+  primary: ring_orientation.shp
+  sidecars:
+    - ring_orientation.dbf
+    - ring_orientation.shx
+    - ring_orientation.prj
+    - ring_orientation.cpg
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_valid_geometry: true
+  expect_crs: true
+  expected_epsg: 4326
+  expected_geometry_types:
+    - Polygon
+
+# Deliberately NOT `canonical_source_case_id`, and deliberately without the
+# `cross_format_canonical` tag. This case is *about* a difference from the
+# reference, so joining that family would both trip the biconditional check in
+# scripts/validate_catalog.py and claim an equivalence that is the opposite of
+# the point. The distinct param names keep the two vocabularies separate.
+params:
+  reference_case_id: simple_valid_polygon
+  exterior_ring_orientation: cw
+  reference_ring_orientation: ccw

@@ -72,6 +72,7 @@ Provide a canonical polygon encoded as GML so polygon XML-driver loading can be 
 ## Files
 
 - Primary: `geometry.gml`
+- Sidecar: `geometry.xsd`
 - Notes: notes.md
 
 ## Source and license

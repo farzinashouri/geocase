@@ -1,0 +1,139 @@
+{
+  "schema_version": 2,
+  "run_id": "2026-08-12_openai-gpt-oss-20b-free_bare",
+  "date": "2026-08-12",
+  "domain": "geo",
+  "model": {
+    "id": "openai/gpt-oss-20b:free",
+    "label": "GPT-OSS 20B (free)",
+    "provider": "openrouter"
+  },
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "runner": {
+    "name": "geocase-benchmark",
+    "version": "2.0.0.dev0"
+  },
+  "config": {
+    "trials": 2,
+    "temperature": 0.2,
+    "max_turns": null,
+    "variant_seed": null,
+    "sandbox_requirements_sha256": null,
+    "prompt_sha256": {
+      "s2_fixture": "40163418abf460ee71a9a5420d6507a840797b8ee490e3d0867b4cd3d830e461"
+    }
+  },
+  "cost_usd": 0.0,
+  "integrity": {
+    "tasks_attempted": 2,
+    "api_failures": 0,
+    "publishable": true,
+    "by_trial": {
+      "trial1": {
+        "tasks_attempted": 1,
+        "api_failures": 0
+      },
+      "trial2": {
+        "tasks_attempted": 1,
+        "api_failures": 0
+      }
+    }
+  },
+  "tasks": {
+    "s2_fixture": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "opens_as_4band_utm_10m",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "count=4, dtype=uint16, epsg=32632, res=(10.0, 10.0)"
+            },
+            {
+              "check": "baseline_0400_radiometry",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "nodata=0.0, scales=(1.0, 1.0, 1.0, 1.0), offsets=(0.0, 0.0, 0.0, 0.0), tags={}; expected nodata=0 and BOA reflectance = (DN - 1000) / 10000 recorded in band metadata or product tags (baseline 04.00)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 282,
+            "completion_tokens": 1540,
+            "total_tokens": 1822,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.000111889,
+              "upstream_inference_prompt_cost": 4.089e-06,
+              "upstream_inference_completions_cost": 0.0001078
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 885,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "opens_as_4band_utm_10m",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "count=4, dtype=uint16, epsg=32632, res=(10.0, 10.0)"
+            },
+            {
+              "check": "baseline_0400_radiometry",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "nodata=None, scales=(1.0, 1.0, 1.0, 1.0), offsets=(0.0, 0.0, 0.0, 0.0), tags={}; expected nodata=0 and BOA reflectance = (DN - 1000) / 10000 recorded in band metadata or product tags (baseline 04.00)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 282,
+            "completion_tokens": 2969,
+            "total_tokens": 3251,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.000211919,
+              "upstream_inference_prompt_cost": 4.089e-06,
+              "upstream_inference_completions_cost": 0.00020783
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2535,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "status": null
+        }
+      ]
+    }
+  }
+}

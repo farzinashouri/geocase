@@ -1,0 +1,14 @@
+schema_version: 1
+name: length_m
+title: Geodesic length in metres
+function: length_m
+signature: "length_m(line) -> float (EPSG:4326 in)"
+module: gen_length_m.py
+handbook_id: FND-0010
+trap_category: units-degrees
+packages: [shapely, pyproj]
+origin: step0
+checks:
+  - {name: 1deg_equator, kind: control}
+  - {name: 1deg_at_lat60, kind: edge}
+  - {name: 1deg_across_dateline, kind: edge}

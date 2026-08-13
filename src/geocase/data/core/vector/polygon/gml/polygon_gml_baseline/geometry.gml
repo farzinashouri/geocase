@@ -5,12 +5,13 @@
      xsi:schemaLocation="http://ogr.maptools.org/ geometry.xsd"
      xmlns:ogr="http://ogr.maptools.org/"
      xmlns:gml="http://www.opengis.net/gml/3.2">
-  <gml:boundedBy><gml:Envelope srsName="urn:ogc:def:crs:EPSG::4326"><gml:lowerCorner>55 12</gml:lowerCorner><gml:upperCorner>56 13</gml:upperCorner></gml:Envelope></gml:boundedBy>
+  <gml:boundedBy><gml:Envelope srsName="urn:ogc:def:crs:EPSG::4326"><gml:lowerCorner>50 10</gml:lowerCorner><gml:upperCorner>51 11</gml:upperCorner></gml:Envelope></gml:boundedBy>
                                                                                                                                                                           
   <ogr:featureMember>
     <ogr:geometry gml:id="geometry.0">
-      <gml:boundedBy><gml:Envelope srsName="urn:ogc:def:crs:EPSG::4326"><gml:lowerCorner>55 12</gml:lowerCorner><gml:upperCorner>56 13</gml:upperCorner></gml:Envelope></gml:boundedBy>
-      <ogr:geometryProperty><gml:Polygon srsName="urn:ogc:def:crs:EPSG::4326" gml:id="geometry.geom.0"><gml:exterior><gml:LinearRing><gml:posList>55 12 55 13 56 13 56 12 55 12</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></ogr:geometryProperty>
+      <gml:boundedBy><gml:Envelope srsName="urn:ogc:def:crs:EPSG::4326"><gml:lowerCorner>50 10</gml:lowerCorner><gml:upperCorner>51 11</gml:upperCorner></gml:Envelope></gml:boundedBy>
+      <ogr:geometryProperty><gml:Polygon srsName="urn:ogc:def:crs:EPSG::4326" gml:id="geometry.geom.0"><gml:exterior><gml:LinearRing><gml:posList>50 10 50 11 51 11 51 10 50 10</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></ogr:geometryProperty>
+      <ogr:id>1</ogr:id>
       <ogr:name>polygon_gml_baseline</ogr:name>
     </ogr:geometry>
   </ogr:featureMember>

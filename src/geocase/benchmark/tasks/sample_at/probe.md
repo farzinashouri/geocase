@@ -1,0 +1,1 @@
+I am about to implement a function that opens a single-band GeoTIFF with rasterio and returns the raster's value at a given WGS84 longitude and latitude. What are the common pitfalls when implementing this? Answer in prose — do not write code.

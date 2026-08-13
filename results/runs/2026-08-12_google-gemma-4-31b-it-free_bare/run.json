@@ -1,0 +1,81 @@
+{
+  "schema_version": 2,
+  "run_id": "2026-08-12_google-gemma-4-31b-it-free_bare",
+  "date": "2026-08-12",
+  "domain": "geo",
+  "model": {
+    "id": "google/gemma-4-31b-it:free",
+    "label": "Gemma 4 31B IT (free)",
+    "provider": "openrouter"
+  },
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "runner": {
+    "name": "geocase-benchmark",
+    "version": "2.0.0.dev0"
+  },
+  "config": {
+    "trials": 2,
+    "temperature": 0.2,
+    "max_turns": null,
+    "variant_seed": null,
+    "sandbox_requirements_sha256": null,
+    "prompt_sha256": {}
+  },
+  "cost_usd": 0.0,
+  "integrity": {
+    "tasks_attempted": 2,
+    "api_failures": 2,
+    "publishable": false,
+    "by_trial": {
+      "trial1": {
+        "tasks_attempted": 1,
+        "api_failures": 1
+      },
+      "trial2": {
+        "tasks_attempted": 1,
+        "api_failures": 1
+      }
+    }
+  },
+  "tasks": {
+    "s2_fixture": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_s2_fixture.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_s2_fixture.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,13 @@
+schema_version: 1
+name: area_m2
+title: Geodesic area in square metres
+function: area_m2
+signature: "area_m2(geom) -> float (EPSG:4326 in)"
+module: gen_area_m2.py
+handbook_id: FND-0027
+trap_category: antimeridian
+packages: [shapely, pyproj]
+origin: step0
+checks:
+  - {name: berlin_box, kind: control}
+  - {name: antimeridian_box, kind: edge}

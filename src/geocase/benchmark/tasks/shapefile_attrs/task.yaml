@@ -1,0 +1,40 @@
+schema_version: 1
+name: shapefile_attrs
+title: Attribute field names of a Shapefile
+function: shapefile_attrs
+signature: "shapefile_attrs(path) -> list[str]"
+module: gen_shapefile_attrs.py
+handbook_id: null
+trap_category: encoding
+# Empty on purpose: the sandbox has no fiona/geopandas (see
+# configs/sandbox-requirements.txt), and the DBF header is a documented binary
+# format the standard library can read. The trap is the 10-char limit, not the
+# choice of reader.
+packages: []
+origin: plan17
+# All five sidecars are staged: a .shp without its .dbf carries no attributes
+# at all, so an incomplete staging would test the wrong thing.
+fixtures:
+  - name: shp
+    case_id: shapefile_field_truncation
+    file: truncated_fields.shp
+    sha256: a45fef38e7436e6db75f2edb6ca6ff2ce2b2548ea362e90d76c7a839cc3886b9
+  - name: dbf
+    case_id: shapefile_field_truncation
+    file: truncated_fields.dbf
+    sha256: 2a5f120174a42905ef5a9645e2b5938ecd0d34dfd812a9fa9607f323152f84a8
+  - name: shx
+    case_id: shapefile_field_truncation
+    file: truncated_fields.shx
+    sha256: 73171d98487726aeb36812dee3a3334027db7cd36741210c9b12f275cb24dee8
+  - name: prj
+    case_id: shapefile_field_truncation
+    file: truncated_fields.prj
+    sha256: a02a27b1d1982c8516d83398e85a3c8b1aef1713c13ef4d84d7bde17430c07c4
+  - name: cpg
+    case_id: shapefile_field_truncation
+    file: truncated_fields.cpg
+    sha256: 3ad3031f5503a4404af825262ee8232cc04d4ea6683d42c5dd0a2f2a27ac9824
+checks:
+  - {name: field_count, kind: control}
+  - {name: dbf_truncated_names, kind: edge}

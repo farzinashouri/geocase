@@ -39,6 +39,11 @@ crs: EPSG:4326
 
 files:
   primary: geometry.gml
+  sidecars:
+    # Written by OGR alongside the .gml and hashed by generate_checksums.py,
+    # but undeclared until plan 13 -- and validate_catalog.py only checks
+    # files a case declares, so a missing schema would have shipped unnoticed.
+    - geometry.xsd
   notes: notes.md
 
 source:
@@ -54,6 +59,8 @@ assertions:
     - Point
 
 params:
-  canonical_location:
-    lon: 10.5
-    lat: 50.5
+  # Replaces a hand-written ``canonical_location: {lon: 10.5, lat: 50.5}``. That
+  # literal was read by nothing, matched no other case in the family, and was the
+  # sole reason 60 cases carried ``cross_format_canonical`` while only 59 declared
+  # a source. The geometry now comes from the case named here.
+  canonical_source_case_id: simple_valid_point

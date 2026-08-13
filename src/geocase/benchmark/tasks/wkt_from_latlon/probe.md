@@ -1,0 +1,1 @@
+I am about to implement a function that takes a location as latitude and longitude in WGS84, in that order, and returns a WKT POINT string for that location. What are the common pitfalls when implementing this? Answer in prose — do not write code.

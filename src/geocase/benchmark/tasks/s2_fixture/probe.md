@@ -1,0 +1,1 @@
+I am about to write a function that produces a small synthetic Sentinel-2 L2A product as a GeoTIFF, covering the four 10 m bands at processing baseline 04.00, for use as a unit-test fixture. What are the common pitfalls when doing this? Answer in prose — do not write code.

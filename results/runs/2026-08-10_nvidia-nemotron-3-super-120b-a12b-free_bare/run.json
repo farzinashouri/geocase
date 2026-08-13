@@ -1,0 +1,628 @@
+{
+  "schema_version": 2,
+  "run_id": "2026-08-10_nvidia-nemotron-3-super-120b-a12b-free_bare",
+  "date": "2026-08-10",
+  "domain": "geo",
+  "model": {
+    "id": "nvidia/nemotron-3-super-120b-a12b:free",
+    "label": "nvidia/nemotron-3-super-120b-a12b:free",
+    "provider": "openrouter"
+  },
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "runner": {
+    "name": "geocase-benchmark",
+    "version": "2.0.0.dev0"
+  },
+  "config": {
+    "trials": 1,
+    "temperature": null,
+    "max_turns": null,
+    "variant_seed": null,
+    "sandbox_requirements_sha256": null,
+    "prompt_sha256": {
+      "area_m2": "c42be34198b2a8788f70e3f794cd2e16f52837e78906a42dda63bd6d3199e16f",
+      "buffer_m": "00c0eb6ae1df2d3e4ab6688e81af96e5f83b1b8d2aa9de21a46807ca96b435e2",
+      "cluster_points_m": "dea94540d289d1540d190051659550fc97f0ab5c758999c96ef545d05e351b1b",
+      "dedupe_geoms": "baea32f4acbadd1088e56f950b1773277feee0e71eadb19e7dafd2f1da63c413",
+      "fix_geometry": "2fc1361ca73e9b02d62ad0881efe29cc4f49d09ea40eb473b847708c56ce58aa",
+      "geohash_neighbors": "020a02578e1e4bb5d9f27097002921c4066aa5fd5aeeb8ad48c0e7c432d9ff3c"
+    }
+  },
+  "cost_usd": 0.0,
+  "integrity": {
+    "tasks_attempted": 20,
+    "api_failures": 14,
+    "publishable": false,
+    "by_trial": {
+      "trial1": {
+        "tasks_attempted": 20,
+        "api_failures": 14
+      }
+    }
+  },
+  "tasks": {
+    "area_m2": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_box",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 7.633e+07, expected 7.633e+07"
+            },
+            {
+              "check": "antimeridian_box",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 2.462e+10, expected 2.462e+10 (2x1 deg box)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 171,
+            "completion_tokens": 1749,
+            "total_tokens": 1920,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1265,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "status": null
+        }
+      ]
+    },
+    "buffer_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "LOUD",
+              "detail": "ImportError: cannot import name 'BaseGeometry' from 'shapely.geometry' (/opt/homebrew/Caskroom/miniforge/base/envs/geocase/lib/python3.14/site-packages/shapely/geometry/__init__.py)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 183,
+            "completion_tokens": 1384,
+            "total_tokens": 1567,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 887,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "status": null
+        }
+      ]
+    },
+    "cluster_points_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "300m_pair_plus_outlier",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "labels [0, 0, 1]"
+            },
+            {
+              "check": "east_west_at_75N",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~346 m apart)"
+            },
+            {
+              "check": "pair_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~222 m apart)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 230,
+            "completion_tokens": 987,
+            "total_tokens": 1217,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 467,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "status": null
+        }
+      ]
+    },
+    "dedupe_geoms": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "LOUD",
+              "detail": "ImportError: cannot import name 'BaseGeometry' from 'shapely.geometry' (/opt/homebrew/Caskroom/miniforge/base/envs/geocase/lib/python3.14/site-packages/shapely/geometry/__init__.py)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 187,
+            "completion_tokens": 636,
+            "total_tokens": 823,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 477,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "status": null
+        }
+      ]
+    },
+    "fix_geometry": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_input_unchanged",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, area 64 (expected 64)"
+            },
+            {
+              "check": "bowtie_keeps_both_lobes",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 50 (expected 50), both_lobes=True (buffer(0) keeps only one)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 205,
+            "completion_tokens": 1193,
+            "total_tokens": 1398,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1051,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "status": null
+        }
+      ]
+    },
+    "geohash_neighbors": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_cell",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g'], expected ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g']"
+            },
+            {
+              "check": "equator_meridian_corner",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003'], expected ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003']"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 187,
+            "completion_tokens": 2734,
+            "total_tokens": 2921,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1401,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "status": null
+        }
+      ]
+    },
+    "label_point": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_label_point.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "length_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_length_m.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "position_at": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_position_at.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "project_line": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_project_line.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "sample_at": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_sample_at.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "segment_intersection": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_segment_intersection.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "split_antimeridian": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_split_antimeridian.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "tag_points": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_tag_points.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "tile_bounds": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_tile_bounds.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "to_rfc7946": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_to_rfc7946.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "utm_epsg_for": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_utm_epsg_for.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "voronoi_cells": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_voronoi_cells.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "wkt_from_latlon": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_wkt_from_latlon.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "zonal_mean": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_zonal_mean.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    }
+  }
+}

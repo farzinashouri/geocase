@@ -1,0 +1,177 @@
+[
+  {
+    "op": "area_m2",
+    "check": "berlin_box",
+    "kind": "control",
+    "status": "PASS",
+    "detail": "got 7.633e+07, expected 7.633e+07"
+  },
+  {
+    "op": "area_m2",
+    "check": "antimeridian_box",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "got 2.462e+10, expected 2.462e+10 (2x1 deg box)"
+  },
+  {
+    "op": "buffer_m",
+    "check": "1km_at_lat50",
+    "kind": "control",
+    "status": "PASS",
+    "detail": "valid=True, 900m in=True"
+  },
+  {
+    "op": "buffer_m",
+    "check": "50km_across_dateline",
+    "kind": "edge",
+    "status": "SILENT",
+    "detail": "valid=False, across_dateline=False, contains_far_point=True, lon_span=360.0"
+  },
+  {
+    "op": "utm_epsg_for",
+    "check": "berlin",
+    "kind": "control",
+    "status": "PASS",
+    "detail": "got 32633, expected 32633"
+  },
+  {
+    "op": "utm_epsg_for",
+    "check": "buenos_aires_south",
+    "kind": "control",
+    "status": "PASS",
+    "detail": "got 32721, expected 32721"
+  },
+  {
+    "op": "utm_epsg_for",
+    "check": "svalbard_33X",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "got 32633, expected 32633"
+  },
+  {
+    "op": "utm_epsg_for",
+    "check": "norway_32V",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "got 32632, expected 32632"
+  },
+  {
+    "op": "sample_at",
+    "check": "valid_pixel_utm_raster",
+    "kind": "control",
+    "status": "PASS",
+    "detail": "got 42.0, expected 42.0"
+  },
+  {
+    "op": "sample_at",
+    "check": "nodata_sentinel",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "got None, expected None (pixel is the -9999 nodata sentinel)"
+  },
+  {
+    "op": "label_point",
+    "check": "square",
+    "kind": "control",
+    "status": "PASS",
+    "detail": "point POINT (5 5)"
+  },
+  {
+    "op": "label_point",
+    "check": "donut",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "point POINT (8.828125 8.828125) (centroid lies in the hole)"
+  },
+  {
+    "op": "label_point",
+    "check": "c_shape",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "point POINT (8.828125 1.171875) (centroid lies in the notch)"
+  },
+  {
+    "op": "tile_bounds",
+    "check": "z0_world",
+    "kind": "control",
+    "status": "PASS",
+    "detail": "got (-180.00000000000003, -85.0511287798066, 180.00000000000003, 85.0511287798066)"
+  },
+  {
+    "op": "tile_bounds",
+    "check": "z2_tms_row_flip",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "got (-90.0, -66.5133, 0.0, 0.0), expected (-90.0, -66.5133, 0.0, 0.0)"
+  },
+  {
+    "op": "cluster_points_m",
+    "check": "300m_pair_plus_outlier",
+    "kind": "control",
+    "status": "PASS",
+    "detail": "labels [0, 0, 1]"
+  },
+  {
+    "op": "cluster_points_m",
+    "check": "east_west_at_75N",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "labels [0, 0] (points are ~346 m apart)"
+  },
+  {
+    "op": "cluster_points_m",
+    "check": "pair_across_dateline",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "labels [0, 0] (points are ~222 m apart)"
+  },
+  {
+    "op": "length_m",
+    "check": "1deg_equator",
+    "kind": "control",
+    "status": "PASS",
+    "detail": "got 111319, expected 111319"
+  },
+  {
+    "op": "length_m",
+    "check": "1deg_at_lat60",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "got 55799.5, expected 55799.5"
+  },
+  {
+    "op": "length_m",
+    "check": "1deg_across_dateline",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "got 111319, expected 111319"
+  },
+  {
+    "op": "position_at",
+    "check": "quarter_along_leg",
+    "kind": "control",
+    "status": "PASS",
+    "detail": "got (5.0498, 50.0500), expected ~(5.05, 50.05)"
+  },
+  {
+    "op": "position_at",
+    "check": "leg_across_dateline",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "got (179.9998, 10.1004), expected lon near +/-180 (ship crosses the dateline)"
+  },
+  {
+    "op": "voronoi_cells",
+    "check": "partition_of_bounds",
+    "kind": "control",
+    "status": "PASS",
+    "detail": "5 cells, total area 100.000"
+  },
+  {
+    "op": "voronoi_cells",
+    "check": "cell_order_matches_input",
+    "kind": "edge",
+    "status": "PASS",
+    "detail": "cells not containing their own point: none (cell order must match input point order)"
+  }
+]

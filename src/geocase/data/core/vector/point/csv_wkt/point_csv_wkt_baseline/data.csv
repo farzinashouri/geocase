@@ -1,2 +1,2 @@
-id,name,value,geometry
-1,sample_point,42.5,"POINT (10 52)"
+id,name,geometry
+1,point_csv_wkt_baseline,POINT (12.5 55.7)

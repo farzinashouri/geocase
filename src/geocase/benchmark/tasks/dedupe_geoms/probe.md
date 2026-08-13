@@ -1,0 +1,1 @@
+I am about to implement a function that takes a list of shapely geometries and returns a new list with duplicates removed, keeping the first occurrence of each and preserving order. What are the common pitfalls when implementing this? Answer in prose — do not write code.

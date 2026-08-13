@@ -1,0 +1,92 @@
+# Free-tier-only roster: no card on file required, no spend possible.
+# Budget ceiling is 0 so any model that unexpectedly reports a cost aborts
+# the run immediately rather than quietly charging.
+#
+# Free models are rate-limited per day (lower still for accounts that have
+# never added credit), so a 429 mid-run is expected; --resume picks up where
+# it stopped without re-spending or re-asking.
+
+defaults:
+  trials: 1
+  temperature: 0.2
+  exec_timeout_s: 60
+
+budget:
+  max_usd_total: 0.00
+
+# The `:free` limits are per *account*, not per model: 20 requests/minute
+# account-wide, and 50 requests/day under $10 lifetime credit (1000/day at or
+# above it). rpm is set below the cap because the account's own retries count
+# against it too. requests_per_day is persisted to quota_file so a same-day
+# re-run does not re-spend a quota already burnt.
+limits:
+  rpm: 18
+  requests_per_day: 950
+  quota_file: .geocase_quota.json
+retry:
+  max_retry_after: 60
+  # On for the free roster only: a `Retry-After: 24` here is a per-minute
+  # window that genuinely does clear, and refusing to wait it out is what
+  # landed 25 of 160 completions on 2026-08-11. Every long sleep is logged
+  # with its wake time so the run cannot be mistaken for a hang.
+  honor_long_retry_after: true
+  max_total_seconds: 180
+
+models:
+  - id: openai/gpt-oss-20b:free
+    label: GPT-OSS 20B (free)
+    tracks: [bare]
+    supports_tools: false
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}
+
+  - id: nvidia/nemotron-3-ultra-550b-a55b:free
+    label: Nemotron 3 Ultra 550B A55B (free)
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}
+
+  - id: nvidia/nemotron-3-super-120b-a12b:free
+    label: Nemotron 3 Super 120B A12B (free)
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}
+
+  # - id: nvidia/nemotron-3-nano-30b-a3b:free
+  #   label: Nemotron 3 Nano 30B A3B (free)
+  #   tracks: [bare]
+  #   supports_tools: true
+
+  # - id: nvidia/nemotron-nano-9b-v2:free
+  #   label: Nemotron Nano 9B V2 (free)
+  #   tracks: [bare]
+  #   supports_tools: true
+
+  - id: google/gemma-4-31b-it:free
+    label: Gemma 4 31B IT (free)
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}
+
+  - id: google/gemma-4-26b-a4b-it:free
+    label: Gemma 4 26B A4B IT (free)
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}
+
+  - id: cohere/north-mini-code:free
+    label: Cohere North Mini Code (free)
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}
+
+  - id: poolside/laguna-s-2.1:free
+    label: Poolside Laguna S 2.1 (free)
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}
+
+  - id: inclusionai/ling-3.0-tiny:free
+    label: Ling 3.0 Tiny (free)
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}

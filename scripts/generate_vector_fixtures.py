@@ -1,61 +1,94 @@
-"""Reproducible generator for the bundled SQLite/SpatiaLite vector fixtures.
+"""Reproducible generator for every bundled ``*_baseline`` vector fixture.
 
-Implements Step 12 of ``docs/plans/development-plan.md``. Raster fixtures
-have had a generator plus a ``--check`` CI gate since plan 08; vector had
-neither, so its binary fixtures were unreproducible hand-made artifacts and
-nothing would have noticed one growing 280x. That is exactly what happened: the
-five SpatiaLite baselines were committed at 6.7 MB each while holding a single
-feature, because SpatiaLite's metadata initialization populates
-``spatial_ref_sys`` with 6,559 EPSG rows and ``spatial_ref_sys_aux`` with 6,508
-more. Trimming the unused SRS rows and running ``VACUUM`` takes each to 240 KB
-(-96.5%) while leaving a fully valid SpatiaLite database.
+Started life (plan 12) covering only the five SpatiaLite databases, because
+those were the ones that had silently grown 280x -- 6.7 MB each to hold a single
+feature, since SpatiaLite's metadata initialization populates ``spatial_ref_sys``
+with 6,559 EPSG rows and ``spatial_ref_sys_aux`` with 6,508 more. Trimming the
+unused SRS rows and running ``VACUUM`` takes each to 240 KB (-96.5%) while
+leaving a fully valid SpatiaLite database. That is still what happens below.
+
+Plan 13 extended it to all 60 cases tagged ``cross_format_canonical``, and made
+the geometry *derived* rather than declared -- see :func:`_specs`.
 
 Usage::
 
     python scripts/generate_vector_fixtures.py            # write all fixtures
     python scripts/generate_vector_fixtures.py --check    # verify up to date
 
+One geometry, many formats
+--------------------------
+A ``<geomtype>_<format>_baseline`` case exists so a consumer can hold the
+geometry constant and vary only the container. Each declares which geometry it
+holds via ``params.canonical_source_case_id``, pointing at the GeoJSON
+``simple_valid_<geomtype>`` case. This generator dereferences that link and
+writes exactly that geometry, so the promise is kept by construction rather than
+by whoever last hand-edited a fixture.
+
+It reads the canonical with ``json`` + ``shapely.geometry.shape`` rather than
+``geocase.load_case``: a generator must not depend on the package whose data it
+generates, or a bug in the loader can launder itself into the fixtures and then
+be confirmed by the loader that produced it. ``verify_dist.py`` was made
+independent of the package for the same reason.
+
 Why ``--check`` compares *semantics* and not bytes
 --------------------------------------------------
 ``scripts/generate_raster_fixtures.py`` can byte-compare a regenerated GeoTIFF
-against the committed one. That model does not work here: SpatiaLite records
-wall-clock timestamps and the SQLite/SpatiaLite library versions in its
-``spatialite_history`` table, so two runs of the same code on the same machine
-produce different bytes, and a different machine (or the CI image) adds version
-differences on top. Byte-comparison would therefore fail permanently and
-meaninglessly.
+against the committed one. That model works here for exactly three formats:
 
-Instead ``--check`` verifies everything that a consumer of the fixture can
-observe -- layer name, geometry column, field names and types, feature count,
-per-feature geometry (as WKB) and attributes, SRID, the SpatiaLite table
-signature, and a size budget. That catches real drift, including the 280x
-regression this script exists to prevent, without false failures.
+===================  =============  ==================================
+Format               Reproducible?  Volatile content
+===================  =============  ==================================
+WKT, WKB, CSV_WKT    yes            none -- no driver in the loop
+GML, KML             yes            none, but written through OGR
+FlatGeobuf           per GDAL       none
+Shapefile            **no**         ``.dbf`` bytes 1-3 are the last-edit date
+GPKG                 **no**         ``gpkg_contents.last_change`` is wall-clock
+SQLite/SpatiaLite    **no**         ``spatialite_history`` timestamps + versions
+Parquet/Feather/     **no**         ``created_by`` footer, geopandas creator
+  Arrow/GeoArrow                      metadata
+===================  =============  ==================================
 
-Only the SQLite/SpatiaLite family is generated. The GeoJSON, GeoPackage, Parquet,
-Feather, Arrow, and Shapefile fixtures remain hand-authored; extending this
-generator to cover them is follow-on work.
+So the three pure-Python formats are byte-compared and everything else is
+compared on what a consumer can actually observe -- field names and types,
+feature count, per-feature geometry and attributes, SRID, and a size budget.
+That catches real drift, including the 280x regression this script exists to
+prevent, without failing daily on a date byte.
 """
 
 from __future__ import annotations
 
 import argparse
+import csv
+import json
 import sqlite3
 import sys
 import tempfile
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
+
+import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 VECTOR_ROOT = REPO_ROOT / "src" / "geocase" / "data" / "core" / "vector"
 
-# Every bundled SQLite fixture holds exactly one feature at EPSG:4326.
+# Every bundled baseline fixture holds exactly one feature at EPSG:4326.
 _SRID = 4326
 
-# Size budget per generated fixture. The trimmed SpatiaLite files land at
-# ~240 KB and the plain-SQLite one at ~24 KB; 512 KB leaves room for ordinary
+#: Tag and param that together declare "this case mirrors that case's geometry".
+#: Kept consistent with ``scripts/validate_catalog.py``, which checks the pair is
+#: biconditional; this script only consumes the param.
+_CANONICAL_PARAM = "canonical_source_case_id"
+
+# Size budget per generated fixture, counting the primary file plus every
+# sidecar sharing its stem (a Shapefile is five files, a GML two).
+#
+# The trimmed SpatiaLite files land at ~240 KB; 512 KB leaves room for ordinary
 # variation across SpatiaLite versions while still failing loudly if the
-# untrimmed 6.7 MB form ever comes back.
+# untrimmed 6.7 MB form ever comes back. Nothing else is anywhere near that --
+# the largest is a ~98 KB GeoPackage -- so they get a tighter bound.
 _MAX_BYTES = 512 * 1024
+_MAX_BYTES_NON_SPATIALITE = 256 * 1024
 
 # SpatiaLite drops these rows in on initialization. Everything not referenced by
 # ``geometry_columns`` is dead weight; 0 and -1 are SpatiaLite's own sentinels
@@ -66,100 +99,424 @@ DELETE FROM spatial_ref_sys     WHERE srid NOT IN (SELECT srid FROM geometry_col
 DELETE FROM spatial_ref_sys_aux WHERE srid NOT IN (SELECT srid FROM geometry_columns);
 """
 
+#: Fixed wall-clock stamp written into GeoPackage metadata, so regenerating
+#: twice does not leave the file dirty in ``git status``. See
+#: :func:`_freeze_gpkg_last_change`.
+_FROZEN_TIMESTAMP = "2024-01-01T00:00:00.000Z"
+
+#: ``case.yaml`` ``format`` -> OGR driver name.
+_OGR_DRIVERS: dict[str, str] = {
+    "Shapefile": "ESRI Shapefile",
+    "GPKG": "GPKG",
+    "SQLite": "SQLite",
+    "GML": "GML",
+    "KML": "KML",
+    "FlatGeobuf": "FlatGeobuf",
+}
+
+#: Formats written by hand in pure Python, with no driver in the loop. These are
+#: the only ones ``--check`` can byte-compare.
+_TEXT_FORMATS = frozenset({"WKT", "WKB", "CSV_WKT"})
+
+#: Formats written through geopandas' own writers.
+_GEOPANDAS_FORMATS = frozenset({"Parquet", "Feather"})
+
+#: Formats written as a raw Arrow IPC *file*. Not a stream: ``VectorCase.load()``
+#: reads these with ``pyarrow.ipc.open_file``, which rejects the stream framing.
+_ARROW_FORMATS = frozenset({"Arrow", "GeoArrow"})
+
+#: ``case.yaml`` ``geometry_type`` -> the ``osgeo.ogr`` constant name.
+_OGR_GEOMETRY_TYPES: dict[str, str] = {
+    "Point": "wkbPoint",
+    "LineString": "wkbLineString",
+    "Polygon": "wkbPolygon",
+    "MultiPoint": "wkbMultiPoint",
+    "MultiLineString": "wkbMultiLineString",
+    "MultiPolygon": "wkbMultiPolygon",
+}
+
+#: The unified attribute schema. Every baseline gets these two columns and
+#: nothing else.
+#:
+#: Before unification, ``polygon_geopackage_baseline`` carried ``id, name,
+#: area_sqkm`` and ``polygon_shapefile_baseline`` carried ``name``, so a consumer
+#: diffing the two could not tell which differences were *the format* and which
+#: were fixture accident -- which is the family's entire pedagogical payload.
+#: Format-idiomatic schemas are covered deliberately, and better, by
+#: ``special/encoding/*``; duplicating that concern here is what let
+#: ``multilinestring_shapefile_baseline`` ship a column named ``segment_co``, a
+#: silent DBF 10-character truncation of ``segment_count``.
+#:
+#: Both names are <=10 characters, so no format needs per-driver field-name
+#: special-casing.
+_ID_FIELD = "id"
+_NAME_FIELD = "name"
+
 
 @dataclass
 class VectorSpec:
-    """Declarative description of one bundled SQLite vector fixture."""
+    """One bundled baseline fixture, fully derived from its ``case.yaml``."""
 
     case_id: str
-    #: Path of the fixture relative to ``VECTOR_ROOT``.
+    #: Path of the primary file relative to ``VECTOR_ROOT``.
     rel_path: str
-    #: Table/layer name inside the database.
+    #: ``case.yaml`` ``format`` value, e.g. ``"GPKG"``.
+    format: str
+    #: Table/layer name inside the container. Always the primary file's stem,
+    #: which is the convention the committed fixtures already follow.
     layer: str
-    #: OGR geometry type name, e.g. ``wkbPoint``.
-    geom_type: str
-    #: Geometry as WKT; the single feature's shape.
-    wkt: str
-    #: ``[(field_name, ogr_type_name, value), ...]`` for the single feature.
-    fields: list[tuple[str, str, object]] = field(default_factory=list)
+    #: Declared ``geometry_type``, e.g. ``"Polygon"``.
+    geometry_type: str
+    #: The canonical geometry, oriented CCW if polygonal. A shapely geometry.
+    geometry: Any
     #: SpatiaLite metadata + R-tree index, versus a plain OGR SQLite database.
-    spatialite: bool = True
+    spatialite: bool = False
 
     @property
     def path(self) -> Path:
         return VECTOR_ROOT / self.rel_path
 
+    @property
+    def ogr_geometry_type(self) -> str:
+        return _OGR_GEOMETRY_TYPES[self.geometry_type]
 
-def _specs() -> list[VectorSpec]:
-    """Declare every bundled SQLite fixture.
 
-    Geometries and attributes are declared literally rather than derived from
-    each case's ``params.canonical_source_case_id``. Those declarations do not
-    currently hold for the SpatiaLite five -- ``point_sqlite_baseline`` is
-    ``POINT (10 52)`` while its declared source ``simple_valid_point`` is
-    ``POINT (12.5 55.7)`` -- so deriving would silently rewrite the fixtures and
-    break the tests that assert against them.
+# ---------------------------------------------------------------------------
+# Deriving the specs from the catalog
+# ---------------------------------------------------------------------------
+
+
+def _read_case_files(vector_root: Path) -> dict[str, tuple[Path, dict[str, Any]]]:
+    """Return ``{case_id: (case_dir, parsed case.yaml)}`` for every vector case.
+
+    Parsed with plain ``yaml.safe_load`` rather than ``CaseMetadata``: this
+    script deliberately does not import ``geocase`` (see the module docstring),
+    and every field it needs is a top-level scalar.
     """
-    def std(name: str) -> list[tuple[str, str, object]]:
-        """The shared ``id``/``name`` attribute pair used by the SpatiaLite five."""
-        return [("id", "OFTInteger64", 1), ("name", "OFTString", name)]
+    cases: dict[str, tuple[Path, dict[str, Any]]] = {}
+    for case_yaml in sorted(vector_root.rglob("case.yaml")):
+        data = yaml.safe_load(case_yaml.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            continue
+        case_id = data.get("id")
+        if not isinstance(case_id, str):
+            continue
+        if case_id in cases:
+            raise RuntimeError(f"Duplicate case id '{case_id}' at {case_yaml}")
+        cases[case_id] = (case_yaml.parent, data)
+    return cases
 
-    return [
-        VectorSpec(
-            case_id="point_sqlite_baseline",
-            rel_path="point/sqlite/point_sqlite_baseline/data.sqlite",
-            layer="data",
-            geom_type="wkbPoint",
-            wkt="POINT (10 52)",
-            fields=std("sample_point"),
-        ),
-        VectorSpec(
-            case_id="linestring_sqlite_baseline",
-            rel_path="linestring/sqlite/linestring_sqlite_baseline/data.sqlite",
-            layer="data",
-            geom_type="wkbLineString",
-            wkt="LINESTRING (0 0,1 1,2 0)",
-            fields=std("sample_linestring"),
-        ),
-        VectorSpec(
-            case_id="multipoint_sqlite_baseline",
-            rel_path="multipoint/sqlite/multipoint_sqlite_baseline/data.sqlite",
-            layer="data",
-            geom_type="wkbMultiPoint",
-            wkt="MULTIPOINT (0 0,1 1,2 2)",
-            fields=std("sample_multipoint"),
-        ),
-        VectorSpec(
-            case_id="multilinestring_sqlite_baseline",
-            rel_path=(
-                "multilinestring/sqlite/multilinestring_sqlite_baseline/data.sqlite"
-            ),
-            layer="data",
-            geom_type="wkbMultiLineString",
-            wkt="MULTILINESTRING ((0 0,1 1),(2 2,3 3))",
-            fields=std("sample_multilinestring"),
-        ),
-        VectorSpec(
-            case_id="multipolygon_sqlite_baseline",
-            rel_path="multipolygon/sqlite/multipolygon_sqlite_baseline/data.sqlite",
-            layer="data",
-            geom_type="wkbMultiPolygon",
-            wkt="MULTIPOLYGON (((0 0,1 0,1 1,0 1,0 0)),((2 2,3 2,3 3,2 3,2 2)))",
-            fields=std("sample_multipolygon"),
-        ),
-        # Deliberately plain SQLite, not SpatiaLite: this case tags only
-        # ``sqlite`` and exists to contrast OGR's non-SpatiaLite driver path
-        # against the five above, which tag ``spatialite``.
-        VectorSpec(
-            case_id="polygon_sqlite_baseline",
-            rel_path="polygon/sqlite/polygon_sqlite_baseline/geometry.sqlite",
-            layer="geometry",
-            geom_type="wkbPolygon",
-            wkt="POLYGON ((10 50,11 50,11 51,10 51,10 50))",
-            fields=[("name", "OFTString", "baseline_polygon")],
-            spatialite=False,
-        ),
-    ]
+
+def _canonical_geometry(
+    source_id: str,
+    cases: dict[str, tuple[Path, dict[str, Any]]],
+) -> Any:
+    """Return the single geometry held by canonical case *source_id*.
+
+    Read straight off disk with ``json`` + ``shapely.geometry.shape``. Polygonal
+    geometries are oriented to the RFC 7946 / OGC right-hand rule (exterior CCW,
+    interior CW) before being handed to any writer. The committed canonicals are
+    already CCW, so this is defensive rather than corrective -- but it makes the
+    orientation a property of this script rather than of six JSON files.
+
+    Note that OGR will promptly *reverse* that orientation when writing a
+    Shapefile, because the Shapefile specification mandates the opposite. That
+    is real, documented behaviour and is preserved deliberately: see the
+    ``shapefile_ring_orientation`` case, and the winding-insensitive comparison
+    in ``tests/unit/test_cross_format_canonical.py``.
+    """
+    from shapely.geometry import shape
+    from shapely.geometry.polygon import orient
+
+    try:
+        case_dir, data = cases[source_id]
+    except KeyError:
+        raise RuntimeError(
+            f"Canonical source case '{source_id}' is not a known vector case"
+        ) from None
+
+    if data.get("format") != "GeoJSON":
+        raise RuntimeError(
+            f"Canonical source '{source_id}' has format {data.get('format')!r}; "
+            f"the canonical must be the GeoJSON reference"
+        )
+
+    primary = case_dir / data["files"]["primary"]
+    payload = json.loads(primary.read_text(encoding="utf-8"))
+    features = payload["features"]
+    if len(features) != 1:
+        raise RuntimeError(
+            f"Canonical source '{source_id}' holds {len(features)} features; "
+            f"the baseline families compare exactly one"
+        )
+
+    geometry = shape(features[0]["geometry"])
+    if geometry.geom_type in {"Polygon", "MultiPolygon"}:
+        geometry = orient(geometry, sign=1.0)
+    return geometry
+
+
+def _specs(vector_root: Path = VECTOR_ROOT) -> list[VectorSpec]:
+    """Build one spec per case declaring a canonical source, sorted by id.
+
+    Discovered by walking ``case.yaml`` rather than listed here, so a baseline
+    added later is generated -- and therefore gated -- without anyone
+    remembering to edit this file.
+
+    Geometry is *derived* from ``params.canonical_source_case_id``. Until plan 13
+    it was declared literally, and this docstring said deriving would "silently
+    rewrite the fixtures and break the tests that assert against them". That was
+    true when written and is false now: no test in the suite asserts a baseline
+    coordinate (``grep -rn "POINT (\\|POLYGON ((\\|LINESTRING (" tests/ examples/``
+    returns nothing), and the literals had drifted so far that 53 of the 60
+    fixtures held a *different* geometry from the canonical they named. The
+    warning label was pointing at the wrong hazard: the risk was never rewriting
+    the fixtures, it was leaving them wrong.
+    """
+    cases = _read_case_files(vector_root)
+
+    specs: list[VectorSpec] = []
+    for case_id, (case_dir, data) in sorted(cases.items()):
+        params = data.get("params") or {}
+        source_id = params.get(_CANONICAL_PARAM)
+        if not source_id:
+            continue
+
+        primary = data["files"]["primary"]
+        rel_path = (case_dir / primary).relative_to(vector_root).as_posix()
+        fmt = data["format"]
+        if (
+            fmt not in _OGR_DRIVERS
+            and fmt not in _TEXT_FORMATS
+            and fmt not in _GEOPANDAS_FORMATS
+            and fmt not in _ARROW_FORMATS
+        ):
+            raise RuntimeError(f"Case '{case_id}' has unsupported format {fmt!r}")
+
+        specs.append(
+            VectorSpec(
+                case_id=case_id,
+                rel_path=rel_path,
+                format=fmt,
+                layer=Path(primary).stem,
+                geometry_type=data["geometry_type"],
+                geometry=_canonical_geometry(source_id, cases),
+                spatialite="spatialite" in (data.get("tags") or []),
+            )
+        )
+    return specs
+
+
+# ---------------------------------------------------------------------------
+# Write backends -- one per branch of VectorCase.load()'s dispatch
+# ---------------------------------------------------------------------------
+
+
+def _sibling_files(primary: Path) -> list[Path]:
+    """Return *primary* plus every sidecar sharing its stem.
+
+    A Shapefile is ``.shp/.shx/.dbf/.prj/.cpg`` and a GML is ``.gml/.xsd``; both
+    need removing before a rewrite and counting against the size budget.
+    """
+    if not primary.parent.is_dir():
+        return []
+    return sorted(p for p in primary.parent.glob(primary.stem + ".*") if p.is_file())
+
+
+def _remove_existing(primary: Path) -> None:
+    """Delete *primary* and its sidecars so a rewrite cannot leave stale files.
+
+    Matched on stem rather than delegating to ``Driver.DeleteDataSource``: that
+    leaves the GML ``.xsd`` behind, and a stale ``.xsd`` describing a schema the
+    ``.gml`` no longer has is exactly the kind of half-updated fixture this
+    generator exists to make impossible.
+    """
+    for path in _sibling_files(primary):
+        path.unlink()
+
+
+def _spatial_reference() -> Any:
+    """Return the EPSG:4326 SRS every fixture is written with.
+
+    ``OAMS_TRADITIONAL_GIS_ORDER`` is not optional. EPSG:4326 declares its axes
+    as (latitude, longitude), and GDAL 3 honours that by default -- so the
+    lon/lat coordinates handed to :meth:`SetGeometry` get written out reversed
+    by any driver that serializes in the SRS's declared axis order. The KML
+    driver is one: without this call ``point_kml_baseline`` ships
+    ``<coordinates>55.7,12.5</coordinates>`` and loads back as
+    ``POINT (55.7 12.5)``, a fixture that is wrong in a way no size or checksum
+    check would ever notice.
+
+    GML is deliberately *not* affected: it writes ``urn:ogc:def:crs:EPSG::4326``,
+    which forces (lat, lon) in ``gml:pos`` regardless of this setting, so the
+    committed files read ``55.7 12.5``. That looks swapped to a naive text diff
+    but round-trips correctly through OGR, and it is the real behaviour of the
+    URN form -- worth keeping rather than papering over.
+    """
+    from osgeo import osr
+
+    srs = osr.SpatialReference()
+    srs.ImportFromEPSG(_SRID)
+    srs.SetAxisMappingStrategy(osr.OAMS_TRADITIONAL_GIS_ORDER)
+    return srs
+
+
+def _write_ogr(spec: VectorSpec, dest: Path) -> None:
+    """Write *spec* through an OGR driver: Shapefile, GPKG, SQLite, GML, KML, FGB.
+
+    Still ``osgeo.ogr`` rather than pyogrio, deliberately: the SpatiaLite path
+    below needs ``SPATIALITE=YES`` plus the trim-and-``VACUUM`` step, and pyogrio
+    exposes no equivalent.
+    """
+    from osgeo import gdal, ogr
+
+    ogr.UseExceptions()
+
+    _remove_existing(dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    driver = ogr.GetDriverByName(_OGR_DRIVERS[spec.format])
+
+    ds_options: list[str] = []
+    layer_options: list[str] = []
+    if spec.format == "SQLite":
+        ds_options = ["SPATIALITE=YES"] if spec.spatialite else []
+        layer_options = ["GEOMETRY_NAME=GEOMETRY"]
+        # The R-tree is the point of the SpatiaLite five; the plain-SQLite case
+        # exists to contrast the non-SpatiaLite driver path against them.
+        layer_options.append("SPATIAL_INDEX=YES" if spec.spatialite else "FORMAT=WKB")
+    elif spec.format == "FlatGeobuf":
+        # A spatial index over a single feature is pure overhead, and FlatGeobuf
+        # writes it as a separate packed section that varies with GDAL's
+        # node-size default.
+        layer_options = ["SPATIAL_INDEX=NO"]
+    elif spec.format == "Shapefile":
+        # Makes GDAL emit the ``.cpg`` codepage sidecar the committed fixtures
+        # already carry. Without it a reader has to guess the DBF encoding.
+        layer_options = ["ENCODING=UTF-8"]
+
+    # GeoPackage stamps `gpkg_contents.last_change` from the wall clock. Pinning
+    # it here keeps regeneration idempotent; `_freeze_gpkg_last_change` below
+    # repairs it afterwards for GDAL builds where this option does not take.
+    with gdal.config_option("OGR_CURRENT_DATE", _FROZEN_TIMESTAMP):
+        ds = driver.CreateDataSource(str(dest), options=ds_options)
+        layer = ds.CreateLayer(
+            spec.layer,
+            _spatial_reference(),
+            getattr(ogr, spec.ogr_geometry_type),
+            options=layer_options,
+        )
+
+        layer.CreateField(ogr.FieldDefn(_ID_FIELD, ogr.OFTInteger64))
+        layer.CreateField(ogr.FieldDefn(_NAME_FIELD, ogr.OFTString))
+
+        feature = ogr.Feature(layer.GetLayerDefn())
+        feature.SetField(_ID_FIELD, 1)
+        feature.SetField(_NAME_FIELD, spec.case_id)
+        # Handed over as WKB rather than WKT: float64 in, float64 out, with no
+        # decimal round trip to lose a digit in.
+        feature.SetGeometry(ogr.CreateGeometryFromWkb(spec.geometry.wkb))
+        layer.CreateFeature(feature)
+
+        feature = None
+        layer = None
+        ds = None
+
+    if spec.format == "SQLite":
+        _trim_and_vacuum(dest)
+    elif spec.format == "GPKG":
+        _freeze_gpkg_last_change(dest)
+
+
+def _write_text(spec: VectorSpec, dest: Path) -> None:
+    """Write *spec* as WKT, WKB or CSV_WKT -- pure Python, no driver.
+
+    These three are the only formats ``--check`` byte-compares, because these
+    three are the only ones nothing stamps a timestamp or a library version into.
+    """
+    import shapely
+
+    _remove_existing(dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    if spec.format == "WKT":
+        # No trailing newline, matching the committed fixtures.
+        # ``VectorCase.load()`` strips anyway.
+        dest.write_text(spec.geometry.wkt, encoding="utf-8")
+        return
+
+    if spec.format == "WKB":
+        # Little-endian, no embedded SRID -- the form the committed fixtures
+        # already use, and the one `shapely.wkb.loads` reads without hints.
+        dest.write_bytes(
+            shapely.to_wkb(spec.geometry, byte_order=1, include_srid=False)
+        )
+        return
+
+    if spec.format == "CSV_WKT":
+        # `lineterminator="\n"` because csv.writer defaults to CRLF, which would
+        # make the committed bytes platform-dependent. "geometry" is one of the
+        # three column names `VectorCase.load()` recognises.
+        with dest.open("w", newline="", encoding="utf-8") as handle:
+            writer = csv.writer(handle, lineterminator="\n")
+            writer.writerow([_ID_FIELD, _NAME_FIELD, "geometry"])
+            writer.writerow([1, spec.case_id, spec.geometry.wkt])
+        return
+
+    raise RuntimeError(f"{spec.case_id}: {spec.format} is not a text format")
+
+
+def _frame(spec: VectorSpec) -> Any:
+    """Return the single-row GeoDataFrame the columnar backends write."""
+    import geopandas
+
+    return geopandas.GeoDataFrame(
+        {_ID_FIELD: [1], _NAME_FIELD: [spec.case_id]},
+        geometry=[spec.geometry],
+        crs=f"EPSG:{_SRID}",
+    )
+
+
+def _write_geopandas(spec: VectorSpec, dest: Path) -> None:
+    """Write *spec* as GeoParquet or GeoFeather.
+
+    ``schema_version`` is pinned rather than left to the geopandas default so a
+    geopandas upgrade cannot silently move the committed metadata to a new
+    GeoParquet revision. 1.0.0 is what the committed fixtures carry, and it
+    satisfies ``geocase.assertions.format_compliance.assert_geoparquet_metadata``
+    (it requires ``primary_column`` and ``columns``, both present since 0.4).
+    That assertion runs over these files in ``tests/unit/test_format_compliance.py``.
+    """
+    _remove_existing(dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    frame = _frame(spec)
+    if spec.format == "Parquet":
+        frame.to_parquet(dest, schema_version="1.0.0")
+    else:
+        frame.to_feather(dest, schema_version="1.0.0")
+
+
+def _write_arrow_ipc(spec: VectorSpec, dest: Path) -> None:
+    """Write *spec* as an Arrow IPC **file**.
+
+    ``pyarrow.ipc.new_file``, not ``new_stream``: ``VectorCase.load()`` reads
+    these with ``pyarrow.ipc.open_file``, which needs the file format's footer
+    and magic. A stream-framed fixture is silently unloadable.
+
+    Both ``Arrow`` and ``GeoArrow`` cases go through the same path and land on
+    the ``geoarrow.wkb`` extension type, which is what the committed fixtures
+    already carry -- the two case families differ in what they document, not in
+    their encoding.
+    """
+    import pyarrow as pa
+
+    _remove_existing(dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    table = pa.table(_frame(spec).to_arrow())
+    with pa.ipc.new_file(str(dest), table.schema) as writer:
+        writer.write_table(table)
 
 
 def _trim_and_vacuum(path: Path) -> None:
@@ -178,57 +535,53 @@ def _trim_and_vacuum(path: Path) -> None:
         con.close()
 
 
+def _freeze_gpkg_last_change(path: Path) -> None:
+    """Pin ``gpkg_contents.last_change`` so regeneration is idempotent.
+
+    ``OGR_CURRENT_DATE`` is set around the write above and handles this on GDAL
+    builds that honour it. This is the fallback: whether the config option is
+    respected varies by GDAL version, and without it every regeneration leaves
+    every GeoPackage dirty in ``git status`` -- which trains people to
+    ``git checkout`` fixture changes wholesale, including real ones.
+    """
+    con = sqlite3.connect(path)
+    try:
+        con.execute("UPDATE gpkg_contents SET last_change = ?", (_FROZEN_TIMESTAMP,))
+        con.commit()
+    finally:
+        con.close()
+
+
 def _write_fixture(spec: VectorSpec, dest: Path) -> None:
-    """Create *dest* from *spec* using OGR, then trim and compact it."""
-    from osgeo import ogr, osr
+    """Create *dest* from *spec*, dispatching on format.
 
-    ogr.UseExceptions()
-
-    if dest.exists():
-        dest.unlink()
-    dest.parent.mkdir(parents=True, exist_ok=True)
-
-    driver = ogr.GetDriverByName("SQLite")
-    ds_options = ["SPATIALITE=YES"] if spec.spatialite else []
-    ds = driver.CreateDataSource(str(dest), options=ds_options)
-
-    srs = osr.SpatialReference()
-    srs.ImportFromEPSG(_SRID)
-
-    layer_options = ["GEOMETRY_NAME=GEOMETRY"]
-    if spec.spatialite:
-        layer_options.append("SPATIAL_INDEX=YES")
-    else:
-        layer_options.append("FORMAT=WKB")
-
-    layer = ds.CreateLayer(
-        spec.layer,
-        srs,
-        getattr(ogr, spec.geom_type),
-        options=layer_options,
-    )
-
-    for name, type_name, _value in spec.fields:
-        layer.CreateField(ogr.FieldDefn(name, getattr(ogr, type_name)))
-
-    feature = ogr.Feature(layer.GetLayerDefn())
-    for name, _type_name, value in spec.fields:
-        feature.SetField(name, value)
-    feature.SetGeometry(ogr.CreateGeometryFromWkt(spec.wkt))
-    layer.CreateFeature(feature)
-
-    feature = None
-    layer = None
-    ds = None
-
-    _trim_and_vacuum(dest)
+    The dispatch deliberately mirrors ``VectorCase.load()``'s, branch for
+    branch. If the two ever diverge, a fixture is being written by one code path
+    and read by another, which is how a format ends up unloadable with every
+    test still green.
+    """
+    if spec.format in _OGR_DRIVERS:
+        _write_ogr(spec, dest)
+    elif spec.format in _TEXT_FORMATS:
+        _write_text(spec, dest)
+    elif spec.format in _GEOPANDAS_FORMATS:
+        _write_geopandas(spec, dest)
+    elif spec.format in _ARROW_FORMATS:
+        _write_arrow_ipc(spec, dest)
+    else:  # pragma: no cover - _specs() rejects these first
+        raise RuntimeError(f"{spec.case_id}: no writer for format {spec.format!r}")
 
 
-def _fingerprint(path: Path) -> dict[str, object]:
-    """Return everything observable about a fixture, excluding volatile metadata.
+# ---------------------------------------------------------------------------
+# Fingerprints -- what `--check` compares
+# ---------------------------------------------------------------------------
 
-    Deliberately excludes ``spatialite_history`` (wall-clock timestamps and
-    library versions) and raw file bytes -- see the module docstring.
+
+def _fingerprint_ogr(path: Path, spec: VectorSpec) -> dict[str, object]:
+    """Return everything observable about a driver-backed fixture.
+
+    Deliberately excludes raw bytes, and for SQLite also ``spatialite_history``
+    (wall-clock timestamps and library versions) -- see the module docstring.
     """
     from osgeo import ogr
 
@@ -269,36 +622,113 @@ def _fingerprint(path: Path) -> dict[str, object]:
     layer_name = layer.GetName().lower()
     geom_column = layer.GetGeometryColumn().lower()
 
-    con = sqlite3.connect(path)
-    try:
-        tables = sorted(
-            r[0].lower()
-            for r in con.execute("SELECT name FROM sqlite_master WHERE type='table'")
-        )
-        srs_rows = con.execute("SELECT count(*) FROM spatial_ref_sys").fetchone()[0]
-    finally:
-        con.close()
-
     layer = None
     ds = None
-    return {
+
+    fingerprint: dict[str, object] = {
         "layer": layer_name,
         "geom_column": geom_column,
         "fields": fields,
         "features": features,
         "epsg": str(epsg) if epsg is not None else None,
-        "tables": tables,
-        "spatial_ref_sys_rows": srs_rows,
     }
+
+    if spec.format == "SQLite":
+        # The 280x regression this script exists to prevent was 13,067 rows of
+        # unused EPSG metadata, which is invisible in every field above.
+        con = sqlite3.connect(path)
+        try:
+            fingerprint["tables"] = sorted(
+                r[0].lower()
+                for r in con.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table'"
+                )
+            )
+            fingerprint["spatial_ref_sys_rows"] = con.execute(
+                "SELECT count(*) FROM spatial_ref_sys"
+            ).fetchone()[0]
+        finally:
+            con.close()
+
+    return fingerprint
+
+
+def _fingerprint_text(path: Path, spec: VectorSpec) -> dict[str, object]:
+    """Return the raw bytes of a pure-Python fixture.
+
+    A genuine byte comparison, which these three formats can afford because
+    nothing writes a timestamp or a library version into them.
+    """
+    return {"bytes": path.read_bytes()}
+
+
+def _fingerprint_arrow(path: Path, spec: VectorSpec) -> dict[str, object]:
+    """Return the observable content of a Parquet/Feather/Arrow fixture.
+
+    Bytes are out: all four embed a ``created_by``/``creator`` string naming the
+    writing library and its version, so two correct files from two machines
+    differ. Compared instead on the frame a consumer actually gets back --
+    read through the same calls ``VectorCase.load()`` makes.
+    """
+    import geopandas
+    import shapely
+
+    if spec.format == "Parquet":
+        gdf = geopandas.read_parquet(path)
+    elif spec.format == "Feather":
+        gdf = geopandas.read_feather(path)
+    else:
+        import pyarrow.ipc as ipc
+
+        with ipc.open_file(str(path)) as reader:
+            gdf = geopandas.GeoDataFrame.from_arrow(reader.read_all())
+
+    geometry_column = gdf.geometry.name
+    attributes = [column for column in gdf.columns if column != geometry_column]
+
+    return {
+        "columns": list(gdf.columns),
+        "dtypes": [str(gdf[column].dtype) for column in attributes],
+        "values": [tuple(row) for row in gdf[attributes].itertuples(index=False)],
+        # WKB of the normalized geometry: byte-identical for byte-identical
+        # coordinates, and immune to a driver reordering rings.
+        "geometries": [
+            shapely.to_wkb(shapely.normalize(geom)) for geom in gdf.geometry
+        ],
+        # `to_epsg()` rather than `str(crs)`: these four formats store a full
+        # PROJJSON object, whose key order and PROJ-version-dependent datum
+        # ensemble members are not stable enough to compare textually.
+        "epsg": gdf.crs.to_epsg() if gdf.crs is not None else None,
+    }
+
+
+def _fingerprint(path: Path, spec: VectorSpec) -> dict[str, object]:
+    """Fingerprint *path* using the strategy its format allows."""
+    if spec.format in _OGR_DRIVERS:
+        return _fingerprint_ogr(path, spec)
+    if spec.format in _TEXT_FORMATS:
+        return _fingerprint_text(path, spec)
+    return _fingerprint_arrow(path, spec)
+
+
+def _short(value: object, limit: int = 160) -> str:
+    """Return ``repr(value)`` truncated, so a WKB blob cannot flood the report."""
+    text = repr(value)
+    return text if len(text) <= limit else f"{text[:limit]}... ({len(text)} chars)"
 
 
 def _diff(expected: dict[str, object], actual: dict[str, object]) -> list[str]:
     """Return human-readable differences between two fingerprints."""
     return [
-        f"{key}: expected {expected[key]!r}, got {actual[key]!r}"
+        f"{key}: expected {_short(expected[key])}, got {_short(actual[key])}"
         for key in sorted(expected)
         if expected[key] != actual[key]
     ]
+
+
+def _payload_bytes(primary: Path) -> int:
+    """Return the on-disk size of a fixture, sidecars included."""
+    return sum(path.stat().st_size for path in _sibling_files(primary))
 
 
 def _has_spatialite() -> bool:
@@ -338,9 +768,53 @@ def _has_spatialite() -> bool:
             ogr.UseExceptions()
 
 
+def _missing_dependency() -> str | None:
+    """Return an actionable message naming the first missing dependency, if any.
+
+    Every one of these is a "cannot verify" condition, never a pass. The catalog
+    CI job installed ``.[raster]`` only until plan 13, so geopandas and pyarrow
+    were genuinely absent there -- and a gate that quietly checks nothing is
+    worse than no gate, because it advertises coverage that does not exist.
+    """
+    try:
+        from osgeo import ogr  # noqa: F401
+    except ImportError:
+        return (
+            "this generator needs the GDAL Python bindings (osgeo), which are "
+            "source-only on PyPI. Use the conda environment "
+            "(see docs/contributing/workflow.md)."
+        )
+
+    for module, extra in (
+        ("shapely", "vector"),
+        ("geopandas", "vector"),
+        ("pyarrow", "vector"),
+        ("yaml", "base"),
+    ):
+        try:
+            __import__(module)
+        except ImportError:
+            return (
+                f"this generator needs '{module}', which is missing. Install the "
+                f"'{extra}' extra: pip install -e .[{extra}]"
+                if extra != "base"
+                else f"this generator needs '{module}', which is missing."
+            )
+
+    if not _has_spatialite():
+        return (
+            "GDAL is present but has no SpatiaLite support, so the SpatiaLite "
+            "fixtures cannot be generated or verified.\n"
+            "  Locally: use the conda environment (it bundles libspatialite).\n"
+            "  In CI: the gdal 'ubuntu-small' image omits SpatiaLite; switch the "
+            "job to 'ubuntu-full' or install libsqlite3-mod-spatialite."
+        )
+    return None
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate or verify bundled SQLite/SpatiaLite vector fixtures."
+        description="Generate or verify the bundled baseline vector fixtures."
     )
     parser.add_argument(
         "--check",
@@ -360,33 +834,22 @@ def main() -> int:
     """CLI entrypoint."""
     args = parse_args()
 
-    try:
-        from osgeo import ogr  # noqa: F401
-    except ImportError:
-        print(
-            "ERROR: this generator needs the GDAL Python bindings (osgeo), which "
-            "are source-only on PyPI. Use the conda environment "
-            "(see docs/contributing/workflow.md).",
-            file=sys.stderr,
-        )
-        return 2
-
-    if not _has_spatialite():
+    problem = _missing_dependency()
+    if problem is not None:
         # Exit 2, not 1: this is "cannot verify", which is a different failure
-        # from "fixtures have drifted" and needs a different fix. Never degrade
-        # to a silent pass -- a gate that quietly checks nothing is worse than
-        # no gate, because it advertises coverage that does not exist.
+        # from "fixtures have drifted" and needs a different fix.
+        print(f"ERROR: {problem}", file=sys.stderr)
+        return 2
+
+    specs = _specs(args.vector_root)
+    if not specs:
         print(
-            "ERROR: GDAL is present but has no SpatiaLite support, so the "
-            "SpatiaLite fixtures cannot be generated or verified.\n"
-            "  Locally: use the conda environment (it bundles libspatialite).\n"
-            "  In CI: the gdal 'ubuntu-small' image omits SpatiaLite; switch the "
-            "job to 'ubuntu-full' or install libsqlite3-mod-spatialite.",
+            f"ERROR: no cases under {args.vector_root} declare "
+            f"'params.{_CANONICAL_PARAM}'. Either the tree moved or the catalog "
+            f"lost its cross-format family; either way this is not a pass.",
             file=sys.stderr,
         )
         return 2
-
-    specs = _specs()
 
     if args.check:
         problems: list[str] = []
@@ -396,18 +859,21 @@ def main() -> int:
                 problems.append(f"{spec.case_id}: missing ({dest})")
                 continue
 
-            size = dest.stat().st_size
-            if size > _MAX_BYTES:
+            budget = _MAX_BYTES if spec.spatialite else _MAX_BYTES_NON_SPATIALITE
+            size = _payload_bytes(dest)
+            if size > budget:
                 problems.append(
                     f"{spec.case_id}: {size / 1024:.0f} KB exceeds the "
-                    f"{_MAX_BYTES / 1024:.0f} KB budget -- was it regenerated "
+                    f"{budget / 1024:.0f} KB budget -- was it regenerated "
                     f"without trimming spatial_ref_sys?"
                 )
 
             with tempfile.TemporaryDirectory() as tmp:
                 candidate = Path(tmp) / dest.name
                 _write_fixture(spec, candidate)
-                for line in _diff(_fingerprint(candidate), _fingerprint(dest)):
+                for line in _diff(
+                    _fingerprint(candidate, spec), _fingerprint(dest, spec)
+                ):
                     problems.append(f"{spec.case_id}: {line}")
 
         if problems:
@@ -421,7 +887,10 @@ def main() -> int:
     for spec in specs:
         dest = args.vector_root / spec.rel_path
         _write_fixture(spec, dest)
-        print(f"Wrote {dest.relative_to(REPO_ROOT)} ({dest.stat().st_size / 1024:.0f} KB)")
+        print(
+            f"Wrote {dest.relative_to(REPO_ROOT)} "
+            f"({_payload_bytes(dest) / 1024:.1f} KB)"
+        )
     return 0
 
 

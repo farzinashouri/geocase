@@ -31,6 +31,8 @@ nav:
   - Home: index.md
   - Getting Started: getting-started.md
   - Philosophy: philosophy.md
+  - Benchmark:
+      - Quick Start: benchmark/quickstart.md
   - User Guides:
       - Case Discovery: case-discovery.md
       - Assertions Reference: assertions-reference.md
@@ -58,6 +60,13 @@ nav:
       - Distribution (PyPI & conda): plans/11-distribution-pypi-and-conda.md
       - Docs Site Publication: plans/12-docs-site-publication.md
       - Cross-Format Canonical Convergence: plans/13-cross-format-canonical-convergence.md
+      - Reposition as a Correctness Library: plans/14-reposition-as-correctness-library.md
+      - GeoCase as a Benchmark: plans/15-geocase-as-benchmark.md
+      - Generalize Beyond Geospatial: plans/16-generalize-beyond-geospatial.md
+      - Throughput, Automation & Corpus-as-Input: plans/17-throughput-automation-and-corpus-as-input.md
+      - EO Product Fixtures: plans/18-eo-product-fixtures.md
+      - Spec Table as a Separate Package: plans/19-spec-table-separate-repo.md
+      - Restart, Spec-First: plans/20-restart-spec-first.md
       - Archived Plans: plans/archive/index.md
   - Design:
       - Case Recommendation Service: design/case-recommendation-service.md

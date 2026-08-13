@@ -1,0 +1,14 @@
+[
+  {
+    "task": "s2_fixture",
+    "outcome": "MISSING",
+    "checks": [
+      {
+        "check": "import",
+        "kind": null,
+        "status": "MISSING",
+        "detail": "gen_s2_fixture.py or function absent"
+      }
+    ]
+  }
+]

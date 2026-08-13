@@ -1,0 +1,33 @@
+{
+  "task": "s2_fixture",
+  "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "trial": 1,
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "prompt_sha256": "40163418abf460ee71a9a5420d6507a840797b8ee490e3d0867b4cd3d830e461",
+  "cost_usd": 0,
+  "usage": {
+    "prompt_tokens": 211,
+    "completion_tokens": 2212,
+    "total_tokens": 2423,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1961,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "extracted": true
+}
