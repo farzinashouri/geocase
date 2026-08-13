@@ -1,0 +1,1 @@
+I am about to implement a function that takes two 2D line segments in a planar system and returns what they have in common. What are the common pitfalls when implementing this? Answer in prose — do not write code.

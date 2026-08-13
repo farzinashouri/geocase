@@ -1,0 +1,20 @@
+[
+  {
+    "task": "s2_fixture",
+    "outcome": "SILENT",
+    "checks": [
+      {
+        "check": "opens_as_4band_utm_10m",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "count=4, dtype=uint16, epsg=32632, res=(10.0, 10.0)"
+      },
+      {
+        "check": "baseline_0400_radiometry",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "nodata=None, scales=(1.0, 1.0, 1.0, 1.0), offsets=(0.0, 0.0, 0.0, 0.0), tags={}; expected nodata=0 and BOA reflectance = (DN - 1000) / 10000 recorded in band metadata or product tags (baseline 04.00)"
+      }
+    ]
+  }
+]

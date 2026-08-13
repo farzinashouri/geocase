@@ -102,7 +102,16 @@ jobs:
       # repository". GitLab's runner cloned before the job script ran, so this
       # ordering constraint did not exist there.
       - name: Install git before checkout
-        run: apt-get update -qq && apt-get install -y -qq git python3-venv
+        # The image carries an Apache Arrow apt source whose signing key has
+        # rotated out of the image's keyring, which makes `apt-get update` fail
+        # the whole step with NO_PUBKEY. Nothing installed here comes from that
+        # repo -- git and python3-venv are both in the Ubuntu archives -- so
+        # drop the source rather than chase the key.
+        run: |
+          rm -f /etc/apt/sources.list.d/apache-arrow* \
+                /etc/apt/sources.list.d/*arrow*
+          apt-get update -qq
+          apt-get install -y -qq git python3-venv
 
       - uses: actions/checkout@v4
 
@@ -118,7 +127,14 @@ jobs:
           python -m pip install --upgrade pip
           # The image's osgeo bindings are compiled against NumPy 1.x; letting
           # pip pull NumPy 2 breaks `osgeo.gdal_array` at import time.
-          python -m pip install -e .[raster] "numpy<2"
+          #
+          # `vector` as well as `raster` since plan 13: the vector fixture
+          # generator now writes every baseline format, not just SQLite, so it
+          # needs shapely to read the canonical geometry and geopandas/pyarrow
+          # for the Parquet/Feather/Arrow branches. Without them it exits 2
+          # ("cannot verify") rather than passing silently -- but a gate that
+          # can never run is not a gate.
+          python -m pip install -e .[raster,vector] "numpy<2"
           echo "/venv/bin" >> "$GITHUB_PATH"
       - run: python scripts/build_case_index.py --check
       - run: python scripts/validate_catalog.py

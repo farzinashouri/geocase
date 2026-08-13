@@ -1,0 +1,13 @@
+schema_version: 1
+name: buffer_m
+title: Geodesic buffer in metres
+function: buffer_m
+signature: "buffer_m(geom, distance_m) -> geometry (EPSG:4326 in and out)"
+module: gen_buffer_m.py
+handbook_id: null
+trap_category: antimeridian
+packages: [shapely, pyproj]
+origin: step0
+checks:
+  - {name: 1km_at_lat50, kind: control}
+  - {name: 50km_across_dateline, kind: edge}

@@ -1,0 +1,14 @@
+schema_version: 1
+name: segment_intersection
+title: 2D segment intersection incl. collinear overlap
+function: segment_intersection
+signature: "segment_intersection(a, b) -> None | (x, y) | ((x, y), (x, y))"
+module: gen_segment_intersection.py
+handbook_id: ALG-0028
+trap_category: collinearity
+packages: []
+origin: plan15
+checks:
+  - {name: crossing_segments, kind: control}
+  - {name: disjoint_segments, kind: control}
+  - {name: collinear_overlap, kind: edge}

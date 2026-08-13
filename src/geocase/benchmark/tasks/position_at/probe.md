@@ -1,0 +1,1 @@
+I am about to implement a function that takes a chronologically sorted list of (timestamp, lon, lat) GPS fixes from a ship and a timestamp between the first and last fix, and returns the ship's estimated position at that time. What are the common pitfalls when implementing this? Answer in prose — do not write code.

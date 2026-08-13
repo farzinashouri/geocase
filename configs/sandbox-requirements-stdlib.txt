@@ -1,0 +1,9 @@
+# Sandbox environment for the `stdlib` domain (Plan 16 Phase 1).
+#
+# Deliberately empty of requirements. `pip install -r` on this file succeeds
+# and produces a bare venv in seconds, which makes the prompt's "standard
+# library only" sentence structurally true rather than merely stated: a model
+# that reaches for numpy gets an ImportError, not a silent pass.
+#
+# Adding a package here is a deliberate, attributable event (trap 7) and must
+# be accompanied by an update to the domain's package_blurb in domains.py.

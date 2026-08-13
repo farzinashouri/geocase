@@ -1,0 +1,13 @@
+schema_version: 1
+name: project_line
+title: Project a line preserving its geodesic course
+function: project_line
+signature: "project_line(line, dst_epsg) -> LineString"
+module: gen_project_line.py
+handbook_id: VEC-0029
+trap_category: discretization
+packages: [shapely, pyproj]
+origin: plan15
+checks:
+  - {name: short_line, kind: control}
+  - {name: long_line_follows_geodesic, kind: edge}

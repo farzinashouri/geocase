@@ -1,0 +1,13 @@
+schema_version: 1
+name: geohash_neighbors
+title: The 8 neighbours of a geohash cell
+function: geohash_neighbors
+signature: "geohash_neighbors(gh) -> list[str]"
+module: gen_geohash_neighbors.py
+handbook_id: ALG-0021
+trap_category: discretization
+packages: []
+origin: plan15
+checks:
+  - {name: interior_cell, kind: control}
+  - {name: equator_meridian_corner, kind: edge}

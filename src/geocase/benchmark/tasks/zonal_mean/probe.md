@@ -1,0 +1,1 @@
+I am about to implement a function that opens a single-band GeoTIFF with rasterio and returns the mean of the pixel values whose centres fall inside a given shapely polygon expressed in the raster's CRS. What are the common pitfalls when implementing this? Answer in prose — do not write code.

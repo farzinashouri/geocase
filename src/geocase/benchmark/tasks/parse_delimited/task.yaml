@@ -1,0 +1,15 @@
+schema_version: 1
+name: parse_delimited
+title: Split one CSV record into fields
+function: parse_delimited
+signature: "parse_delimited(line) -> list[str]"
+module: gen_parse_delimited.py
+handbook_id: null
+trap_category: quoting
+packages: []
+origin: plan16
+domain: stdlib
+checks:
+  - {name: plain_fields, kind: control}
+  - {name: empty_fields_preserved, kind: control}
+  - {name: quoted_delimiter, kind: edge}

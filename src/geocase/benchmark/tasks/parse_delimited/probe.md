@@ -1,0 +1,1 @@
+I am about to implement a function that takes one comma-separated record as a string and returns its fields as a list of strings. What are the common pitfalls when implementing this? Answer in prose — do not write code.

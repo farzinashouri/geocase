@@ -1,0 +1,1 @@
+I am about to implement a function that takes a shapely Polygon and returns a shapely Point at which a text label for that polygon can be drawn. What are the common pitfalls when implementing this? Answer in prose — do not write code.

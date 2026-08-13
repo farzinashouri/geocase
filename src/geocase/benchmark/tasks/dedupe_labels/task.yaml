@@ -1,0 +1,15 @@
+schema_version: 1
+name: dedupe_labels
+title: Case- and accent-insensitive label deduplication
+function: dedupe_labels
+signature: "dedupe_labels(labels) -> list[str]"
+module: gen_dedupe_labels.py
+handbook_id: null
+trap_category: normalization
+packages: []
+origin: plan16
+domain: stdlib
+checks:
+  - {name: case_folding, kind: control}
+  - {name: order_preserved, kind: control}
+  - {name: composed_vs_decomposed, kind: edge}

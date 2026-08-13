@@ -71,6 +71,7 @@ Provide a canonical multipolygon encoded as GML so format-specific loader behavi
 ## Files
 
 - Primary: `data.gml`
+- Sidecar: `data.xsd`
 - Notes: notes.md
 
 ## Source and license

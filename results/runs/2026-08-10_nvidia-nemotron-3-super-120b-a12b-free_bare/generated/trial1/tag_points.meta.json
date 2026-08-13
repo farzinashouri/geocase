@@ -1,0 +1,13 @@
+{
+  "task": "tag_points",
+  "model": "nvidia/nemotron-3-super-120b-a12b:free",
+  "trial": 1,
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "status": "api_failure",
+  "error_type": "ChatFailedError",
+  "detail": "ChatFailedError: nvidia/nemotron-3-super-120b-a12b:free: giving up after 7 attempts (last: HTTP 429)",
+  "cost_usd": null,
+  "usage": {},
+  "extracted": false
+}

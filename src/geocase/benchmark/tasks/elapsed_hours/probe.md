@@ -1,0 +1,1 @@
+I am about to implement a function that takes two local ISO 8601 date-time strings and an IANA time zone name, and returns the number of hours that elapse between them. What are the common pitfalls when implementing this? Answer in prose — do not write code.

@@ -1,0 +1,33 @@
+{
+  "task": "voronoi_cells",
+  "model": "openai/gpt-oss-20b:free",
+  "trial": 1,
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "prompt_sha256": "b617bcc8d7883cd0f7e7ee1d738eed33766c4c0737aa3e741d3ff87ed36d03d9",
+  "cost_usd": 0,
+  "usage": {
+    "prompt_tokens": 257,
+    "completion_tokens": 1473,
+    "total_tokens": 1730,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.0001068365,
+      "upstream_inference_prompt_cost": 3.7265e-06,
+      "upstream_inference_completions_cost": 0.00010311
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1024,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "extracted": true
+}

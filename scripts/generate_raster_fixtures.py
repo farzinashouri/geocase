@@ -13,6 +13,12 @@ Usage::
 The generator only writes the ``.tif`` primary files. Case metadata
 (``case.yaml`` / ``notes.md``) is authored alongside and indexed via
 ``scripts/build_case_index.py``.
+
+Plan 18 Phase 1: the four S2/S1 product fixtures are no longer thin
+``RasterSpec`` ramps — they are emitted by ``geocase.synth``, whose constants
+are machine-checked against real granule metadata
+(``tests/synth/test_spec_fidelity.py``). The ``--check`` byte-stability gate
+covers them identically.
 """
 
 from __future__ import annotations
@@ -84,9 +90,6 @@ def _specs() -> list[RasterSpec]:
         _ramp(128).astype("uint8"),
     ]
 
-    # multispectral_s2_like_small — 4-band uint16 (B, G, R, NIR) reflectance.
-    ms = [(_ramp(s) * 40).astype("uint16") for s in (10, 20, 30, 40)]
-
     # water_mask_small — single-band uint8 binary mask (0/1) with nodata 255.
     mask = np.zeros((_SIZE, _SIZE), dtype="uint8")
     mask[4:12, 4:12] = 1
@@ -108,15 +111,7 @@ def _specs() -> list[RasterSpec]:
             band_names=["red", "green", "blue"],
             compression="deflate",
         ),
-        RasterSpec(
-            case_id="multispectral_s2_like_small",
-            primary="multispectral_s2_like_small.tif",
-            bands=ms,
-            dtype="uint16",
-            nodata=0,
-            band_names=["blue", "green", "red", "nir"],
-            compression="deflate",
-        ),
+        # multispectral_s2_like_small moved to _synth_specs() (Plan 18).
         RasterSpec(
             case_id="water_mask_small",
             primary="water_mask_small.tif",
@@ -164,12 +159,8 @@ def _priority_2_4_specs() -> list[RasterSpec]:
     ovr_band = [(_ramp64(7)).astype("uint8")]
 
     # -- Priority 3: SAR + geography --------------------------------------
-    # SAR amplitude-like float32 scenes.
-    sar_vv = [(_ramp(3).astype("float32") / 255.0)]
-    sar_dual = [
-        (_ramp(3).astype("float32") / 255.0),
-        (_ramp(9).astype("float32") / 255.0),
-    ]
+    # SAR scenes moved to _synth_specs() (Plan 18): real GRD is uint16
+    # detected amplitude with a zero border, not clean float32.
     optical = [
         _ramp(0).astype("uint8"),
         _ramp(64).astype("uint8"),
@@ -181,11 +172,8 @@ def _priority_2_4_specs() -> list[RasterSpec]:
     equator_tx = _origin(10.0, 0.16, 0.01, 0.01)  # centred on the equator
 
     # -- Priority 4: mixed resolution / NaN DEM / scaled NDVI / landcover --
-    mixed = [
-        (_ramp(10) * 30).astype("uint16"),
-        (_ramp(20) * 30).astype("uint16"),
-        (_ramp(30) * 30).astype("uint16"),
-    ]
+    # multispectral_mixed_resolution_small moved to _synth_specs() (Plan 18):
+    # the old version resampled all bands to one grid, so no mismatch existed.
     dem_nan = (_ramp(0).astype("float32") * 4.0) + 50.0
     dem_nan[0, 0] = np.nan
     dem_nan[15, 15] = np.nan
@@ -238,22 +226,6 @@ def _priority_2_4_specs() -> list[RasterSpec]:
             external_overviews=True,
         ),
         RasterSpec(
-            case_id="sar_vv_small",
-            primary="sar_vv_small.tif",
-            bands=sar_vv,
-            dtype="float32",
-            band_names=["VV"],
-            compression="deflate",
-        ),
-        RasterSpec(
-            case_id="sar_dualpol_small",
-            primary="sar_dualpol_small.tif",
-            bands=sar_dual,
-            dtype="float32",
-            band_names=["VV", "VH"],
-            compression="deflate",
-        ),
-        RasterSpec(
             case_id="optical_polar_small",
             primary="optical_polar_small.tif",
             bands=optical,
@@ -284,15 +256,6 @@ def _priority_2_4_specs() -> list[RasterSpec]:
             transform=equator_tx,
         ),
         RasterSpec(
-            case_id="multispectral_mixed_resolution_small",
-            primary="multispectral_mixed_resolution_small.tif",
-            bands=mixed,
-            dtype="uint16",
-            nodata=0,
-            band_names=["red_10m", "nir_10m", "swir_20m"],
-            compression="deflate",
-        ),
-        RasterSpec(
             case_id="dem_nan_nodata_small",
             primary="dem_nan_nodata_small.tif",
             bands=[dem_nan],
@@ -320,6 +283,51 @@ def _priority_2_4_specs() -> list[RasterSpec]:
             band_names=["landcover"],
             compression="deflate",
             colormap=landcover_cmap,
+        ),
+    ]
+
+
+@dataclass
+class SynthSpec:
+    """A fixture emitted by ``geocase.synth`` instead of a raw array ramp."""
+
+    case_id: str
+    primary: str
+    build: Any  # Callable[[Path], Any]; typed loosely to keep the CLI light.
+
+
+def _synth_specs() -> list[SynthSpec]:
+    """Product fixtures regenerated from the audited generator (Plan 18)."""
+    from geocase.synth import sentinel1_grd, sentinel2_l2a
+
+    return [
+        # Real L2A radiometry: nodata 0, scale 1e-4 / offset -0.1 on the
+        # bands, BOA_ADD_OFFSET / QUANTIFICATION_VALUE / PROCESSING_BASELINE
+        # tags, band names B02/B03/B04/B08.
+        SynthSpec(
+            case_id="multispectral_s2_like_small",
+            primary="multispectral_s2_like_small.tif",
+            build=lambda p: sentinel2_l2a(p, size=_SIZE),
+        ),
+        # A mismatch that actually exists: B11 is 20 m-native, carried on the
+        # 10 m grid as 2x2 block-replicated values.
+        SynthSpec(
+            case_id="multispectral_mixed_resolution_small",
+            primary="multispectral_mixed_resolution_small.tif",
+            build=lambda p: sentinel2_l2a(p, size=_SIZE, bands=("B04", "B08", "B11")),
+        ),
+        # Real GRD: uint16 detected amplitude, zero border noise, nodata 0.
+        SynthSpec(
+            case_id="sar_vv_small",
+            primary="sar_vv_small.tif",
+            build=lambda p: sentinel1_grd(p, size=_SIZE, pol="VV", border_noise=True),
+        ),
+        SynthSpec(
+            case_id="sar_dualpol_small",
+            primary="sar_dualpol_small.tif",
+            build=lambda p: sentinel1_grd(
+                p, size=_SIZE, pol="VV+VH", border_noise=True
+            ),
         ),
     ]
 
@@ -395,10 +403,18 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _emit(spec: RasterSpec | SynthSpec, dest: Path) -> None:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if isinstance(spec, SynthSpec):
+        spec.build(dest)
+    else:
+        _write_raster(spec, dest)
+
+
 def main() -> int:
     """CLI entrypoint."""
     args = parse_args()
-    specs = _specs()
+    specs: list[RasterSpec | SynthSpec] = [*_specs(), *_synth_specs()]
 
     if args.check:
         import tempfile
@@ -411,7 +427,7 @@ def main() -> int:
                 continue
             with tempfile.TemporaryDirectory() as tmp:
                 candidate = Path(tmp) / spec.primary
-                _write_raster(spec, candidate)
+                _emit(spec, candidate)
                 if candidate.read_bytes() != dest.read_bytes():
                     stale.append(spec.case_id)
         if stale:
@@ -422,7 +438,7 @@ def main() -> int:
 
     for spec in specs:
         dest = args.raster_root / spec.case_id / spec.primary
-        _write_raster(spec, dest)
+        _emit(spec, dest)
         print(f"Wrote {dest.relative_to(REPO_ROOT)}")
     return 0
 

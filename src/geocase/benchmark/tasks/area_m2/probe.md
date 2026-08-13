@@ -1,0 +1,1 @@
+I am about to implement a function that takes a shapely Polygon or MultiPolygon with longitude/latitude coordinates in EPSG:4326 and returns its area in square meters. What are the common pitfalls when implementing this? Answer in prose — do not write code.

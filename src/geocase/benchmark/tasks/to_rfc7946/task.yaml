@@ -1,0 +1,13 @@
+schema_version: 1
+name: to_rfc7946
+title: GeoJSON geometry per RFC 7946
+function: to_rfc7946
+signature: "to_rfc7946(geom, epsg) -> dict"
+module: gen_to_rfc7946.py
+handbook_id: VEC-0008
+trap_category: crs-conformance
+packages: [shapely, pyproj]
+origin: plan15
+checks:
+  - {name: wgs84_polygon, kind: control}
+  - {name: mercator_input_reprojected, kind: edge}

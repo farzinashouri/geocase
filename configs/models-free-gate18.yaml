@@ -1,0 +1,50 @@
+# Plan 18 Phase 0 gate roster: four distinct free families, one model each.
+# openai/gpt-oss-20b is omitted — already run (2 trials, both SILENT).
+# Derived from models-free.yaml; kept separate so that file stays canonical.
+defaults:
+  trials: 1
+  temperature: 0.2
+  exec_timeout_s: 60
+budget:
+  max_usd_total: 0.0
+limits:
+  rpm: 18
+  requests_per_day: 950
+  quota_file: .geocase_quota.json
+retry:
+  max_retry_after: 60
+  honor_long_retry_after: true
+  max_total_seconds: 180
+models:
+- id: nvidia/nemotron-3-ultra-550b-a55b:free
+  label: Nemotron 3 Ultra 550B A55B (free)
+  tracks:
+  - bare
+  supports_tools: true
+  pricing:
+    prompt_usd_per_1m: 0
+    completion_usd_per_1m: 0
+- id: google/gemma-4-31b-it:free
+  label: Gemma 4 31B IT (free)
+  tracks:
+  - bare
+  supports_tools: true
+  pricing:
+    prompt_usd_per_1m: 0
+    completion_usd_per_1m: 0
+- id: cohere/north-mini-code:free
+  label: Cohere North Mini Code (free)
+  tracks:
+  - bare
+  supports_tools: true
+  pricing:
+    prompt_usd_per_1m: 0
+    completion_usd_per_1m: 0
+- id: poolside/laguna-s-2.1:free
+  label: Poolside Laguna S 2.1 (free)
+  tracks:
+  - bare
+  supports_tools: true
+  pricing:
+    prompt_usd_per_1m: 0
+    completion_usd_per_1m: 0

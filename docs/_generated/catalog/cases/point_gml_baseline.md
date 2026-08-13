@@ -72,6 +72,7 @@ Provide a canonical point encoded as GML so XML-driver loading can be compared a
 ## Files
 
 - Primary: `geometry.gml`
+- Sidecar: `geometry.xsd`
 - Notes: notes.md
 
 ## Source and license

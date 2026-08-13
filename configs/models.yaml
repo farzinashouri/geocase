@@ -1,0 +1,119 @@
+# Model roster for the OpenRouter runner (Plan 15 Phase 4).
+# Extend the list freely; every run is bounded by budget.max_usd_total,
+# enforced against OpenRouter's returned usage.cost (hard abort).
+#
+# Ids verified against https://openrouter.ai/api/v1/models on 2026-08-09.
+# The free tier churns: an id that vanishes returns 404 at call time, so
+# re-check this list before a run rather than trusting it indefinitely.
+
+defaults:
+  trials: 3
+  temperature: 0.2
+  max_turns: 12        # agentic track only (not used by the one-off bare runner)
+  exec_timeout_s: 60
+
+budget:
+  max_usd_total: 15.00
+  # Per-model ceiling: without it one long-running reasoning model can eat the
+  # whole budget before the cheap models are ever reached. A model that trips
+  # it is skipped, not fatal to the run.
+  max_usd_per_model: 4.00
+
+# Account-wide pacing (Plan 17 Phase 1). Paid ids are not rate-limited the way
+# `:free` ones are, so rpm is null here and set to 18 in models-free.yaml.
+limits:
+  rpm: null
+  requests_per_day: null
+  quota_file: .geocase_quota.json
+retry:
+  max_retry_after: 60
+  honor_long_retry_after: false
+  max_total_seconds: 180
+
+# `pricing:` below is USD per 1M tokens (prompt/completion), used only to
+# estimate spend before a run — `--dry-run` prints est_usd from it. The hard
+# budget abort is always enforced against OpenRouter's returned usage.cost, so
+# a stale price here can never cause an overspend, only a wrong estimate.
+
+models:
+  # Free tier
+  - id: openai/gpt-oss-20b:free
+    label: GPT-OSS 20B (free)
+    tracks: [bare]
+    supports_tools: false
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}
+  - id: cohere/north-mini-code:free
+    label: North Mini Code (free)
+    tracks: [bare]
+    supports_tools: false
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}
+  - id: nvidia/nemotron-3-super-120b-a12b:free
+    label: Nemotron 3 Super 120B (free)
+    tracks: [bare]
+    supports_tools: false
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}
+  # Paid
+  # NOTE: price not verified against /api/v1/models; estimate only.
+  - id: openai/gpt-5-mini
+    label: GPT-5 mini
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0.25, completion_usd_per_1m: 2.0}
+  # NOTE: price not verified against /api/v1/models; estimate only.
+  - id: google/gemini-2.5-flash
+    label: Gemini 2.5 Flash
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0.3, completion_usd_per_1m: 2.5}
+  # Paid, added 2026-08-10. Prices are USD per 1M tokens (in/out) as
+  # reported by /api/v1/models on that date; ordered cheapest first.
+  - id: qwen/qwen3.7-flash            # $0.03 / $0.13
+    label: Qwen3.7 Flash
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0.03, completion_usd_per_1m: 0.13}
+  - id: qwen/qwen3-coder-next         # $0.12 / $0.80
+    label: Qwen3 Coder Next
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0.12, completion_usd_per_1m: 0.8}
+  - id: deepseek/deepseek-v4-flash    # $0.14 / $0.28
+    label: DeepSeek V4 Flash
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0.14, completion_usd_per_1m: 0.28}
+  - id: minimax/minimax-m3            # $0.30 / $1.20
+    label: MiniMax M3
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0.3, completion_usd_per_1m: 1.2}
+  - id: z-ai/glm-5.2                  # $0.76 / $2.42
+    label: GLM-5.2
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0.76, completion_usd_per_1m: 2.42}
+  - id: google/gemini-3.6-flash       # $1.50 / $7.50
+    label: Gemini 3.6 Flash
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 1.5, completion_usd_per_1m: 7.5}
+  - id: moonshotai/kimi-k3            # $3.00 / $15.00
+    label: Kimi K3
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 3.0, completion_usd_per_1m: 15.0}
+  - id: anthropic/claude-haiku-4.5    # $1.00 / $5.00
+    label: Claude Haiku 4.5
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 1.0, completion_usd_per_1m: 5.0}
+  - id: anthropic/claude-sonnet-5     # $2.00 / $10.00 (intro rate)
+    label: Claude Sonnet 5
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 2.0, completion_usd_per_1m: 10.0}
+  - id: anthropic/claude-opus-5       # $5.00 / $25.00 — most expensive
+    label: Claude Opus 5
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 5.0, completion_usd_per_1m: 25.0}

@@ -1,0 +1,13 @@
+schema_version: 1
+name: fix_geometry
+title: Repair an invalid polygon without losing area
+function: fix_geometry
+signature: "fix_geometry(geom) -> Polygon | MultiPolygon"
+module: gen_fix_geometry.py
+handbook_id: VEC-0014
+trap_category: topology-repair
+packages: [shapely]
+origin: plan15
+checks:
+  - {name: valid_input_unchanged, kind: control}
+  - {name: bowtie_keeps_both_lobes, kind: edge}

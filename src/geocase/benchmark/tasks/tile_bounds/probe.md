@@ -1,0 +1,1 @@
+I am about to implement a function that returns the geographic extent, as (west, south, east, north) in WGS84 degrees, of a Web Mercator map tile addressed by zoom, column and row in the TMS tiling scheme. What are the common pitfalls when implementing this? Answer in prose — do not write code.

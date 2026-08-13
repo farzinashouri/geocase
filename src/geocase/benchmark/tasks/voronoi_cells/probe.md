@@ -1,0 +1,1 @@
+I am about to implement a function that takes a list of distinct planar (x, y) points and a bounding rectangle containing them, and returns the Voronoi cell of each point clipped to that rectangle. What are the common pitfalls when implementing this? Answer in prose — do not write code.

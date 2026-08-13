@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <Document id="root_doc">
+<Schema name="data" id="data">
+	<SimpleField name="id" type="string"></SimpleField>
+</Schema>
 <Folder><name>data</name>
   <Placemark id="data.1">
-	<name>sample_multipolygon</name>
-	<description>A sample multipolygon geometry</description>
+	<name>multipolygon_kml_baseline</name>
 	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
-      <MultiGeometry><Polygon><outerBoundaryIs><LinearRing><coordinates>0,0 1,0 1,1 0,1 0,0</coordinates></LinearRing></outerBoundaryIs></Polygon><Polygon><outerBoundaryIs><LinearRing><coordinates>2,2 3,2 3,3 2,3 2,2</coordinates></LinearRing></outerBoundaryIs></Polygon></MultiGeometry>
+	<ExtendedData><SchemaData schemaUrl="#data">
+		<SimpleData name="id">1</SimpleData>
+	</SchemaData></ExtendedData>
+      <MultiGeometry><Polygon><outerBoundaryIs><LinearRing><coordinates>10,50 10.5,50.0 10.5,50.5 10.0,50.5 10,50</coordinates></LinearRing></outerBoundaryIs></Polygon><Polygon><outerBoundaryIs><LinearRing><coordinates>11,50 11.5,50.0 11.5,50.5 11.0,50.5 11,50</coordinates></LinearRing></outerBoundaryIs></Polygon></MultiGeometry>
   </Placemark>
 </Folder>
 </Document></kml>

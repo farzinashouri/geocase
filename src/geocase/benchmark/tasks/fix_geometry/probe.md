@@ -1,0 +1,1 @@
+I am about to implement a function that takes a possibly invalid shapely Polygon or MultiPolygon and returns a valid one covering the region enclosed by the input's boundary rings. What are the common pitfalls when implementing this? Answer in prose — do not write code.

@@ -1,0 +1,1 @@
+I am about to implement a function that takes a shapely LineString in EPSG:4326 and an EPSG code of a projected CRS, and returns a LineString in that CRS tracing the geodesic course between consecutive input vertices. What are the common pitfalls when implementing this? Answer in prose — do not write code.

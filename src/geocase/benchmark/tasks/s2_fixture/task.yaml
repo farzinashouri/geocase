@@ -1,0 +1,13 @@
+schema_version: 1
+name: s2_fixture
+title: Synthetic Sentinel-2 L2A fixture, baseline 04.00
+function: s2_fixture
+signature: "s2_fixture(path, size=32) -> None"
+module: gen_s2_fixture.py
+handbook_id: null
+trap_category: product-spec
+packages: [rasterio, numpy]
+origin: plan18
+checks:
+  - {name: opens_as_4band_utm_10m, kind: control}
+  - {name: baseline_0400_radiometry, kind: edge}

@@ -1,0 +1,1 @@
+I am about to implement a function that removes duplicates from a list of strings, treating two strings as duplicates when they are the same text differing only in letter case. What are the common pitfalls when implementing this? Answer in prose — do not write code.

@@ -38,6 +38,11 @@ crs: EPSG:4326
 
 files:
   primary: data.gml
+  sidecars:
+    # Written by OGR alongside the .gml and hashed by generate_checksums.py,
+    # but undeclared until plan 13 -- and validate_catalog.py only checks
+    # files a case declares, so a missing schema would have shipped unnoticed.
+    - data.xsd
   notes: notes.md
 
 source:

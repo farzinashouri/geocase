@@ -1,0 +1,33 @@
+{
+  "task": "tag_points",
+  "model": "openai/gpt-oss-20b:free",
+  "trial": 1,
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "prompt_sha256": "cdd8a4e1b186a4dbe0c9922bce4dddc13a44142a152e05f694bbeebf7189e865",
+  "cost_usd": 0,
+  "usage": {
+    "prompt_tokens": 279,
+    "completion_tokens": 1159,
+    "total_tokens": 1438,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 8.51755e-05,
+      "upstream_inference_prompt_cost": 4.0455e-06,
+      "upstream_inference_completions_cost": 8.113e-05
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 799,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "extracted": true
+}

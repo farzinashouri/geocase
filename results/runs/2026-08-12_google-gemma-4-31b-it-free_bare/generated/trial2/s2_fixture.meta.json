@@ -1,0 +1,13 @@
+{
+  "task": "s2_fixture",
+  "model": "google/gemma-4-31b-it:free",
+  "trial": 2,
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "status": "api_failure",
+  "error_type": "ChatFailedError",
+  "detail": "ChatFailedError: google/gemma-4-31b-it:free: giving up after 5 attempt(s) in 39.4s (last: HTTP 429)",
+  "cost_usd": null,
+  "usage": {},
+  "extracted": false
+}
