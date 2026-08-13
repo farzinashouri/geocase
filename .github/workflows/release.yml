@@ -37,8 +37,10 @@ jobs:
           python -m pip install "build==1.2.2" "twine==6.1.0"
           # The verifier imports `geocase.catalog.loader` to read the case
           # index, and compares the artifact version against
-          # `geocase.__version__`.
-          python -m pip install -e . --no-deps
+          # `geocase.__version__`. That import chain reaches `yaml` and
+          # `pydantic`, so the runtime dependencies must be installed too --
+          # `--no-deps` here fails on a clean runner with ModuleNotFoundError.
+          python -m pip install -e .
 
       - name: Build sdist and wheel
         run: python -m build
