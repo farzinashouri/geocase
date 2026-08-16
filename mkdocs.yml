@@ -67,6 +67,7 @@ nav:
       - EO Product Fixtures: plans/18-eo-product-fixtures.md
       - Spec Table as a Separate Package: plans/19-spec-table-separate-repo.md
       - Restart, Spec-First: plans/20-restart-spec-first.md
+      - Adoption Action Plan: plans/21-adoption-action-plan.md
       - Archived Plans: plans/archive/index.md
   - Design:
       - Case Recommendation Service: design/case-recommendation-service.md
