@@ -68,6 +68,9 @@ nav:
       - Spec Table as a Separate Package: plans/19-spec-table-separate-repo.md
       - Restart, Spec-First: plans/20-restart-spec-first.md
       - Adoption Action Plan: plans/21-adoption-action-plan.md
+      - Portfolio Direction: plans/22-portfolio-direction.md
+      - Studies/passify Gap Audit: plans/23-studies-passify-gap-audit.md
+      - Catalog Site on an Owned Domain: plans/24-catalog-site-on-owned-domain.md
       - Archived Plans: plans/archive/index.md
   - Design:
       - Case Recommendation Service: design/case-recommendation-service.md
