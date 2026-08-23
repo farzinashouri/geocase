@@ -1,5 +1,9 @@
 # Plan 14 — Reposition GeoCase as a geospatial correctness library
 
+> **Archived — rejected. Retained as an implementation log.** The Step 0 gate ran 2026-08-09 and hit the Stop row (9/10 operations correct). Salvage path executed by [Plan 15](15-geocase-as-benchmark.md).
+>
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
+
 > **Status: REJECTED — Step 0 ran on 2026-08-09 and hit the Stop row.** Ten fresh coding
 > agents given the neutral prompts got **9 of 10 operations fully correct**, including
 > Svalbard/Norway UTM exceptions, the NoData sentinel, the TMS row flip, the donut label
@@ -23,7 +27,7 @@
 >
 > **Status: proposed, and gated.** This plan proposes a change of product direction. If
 > adopted, it supersedes the catalog-as-product framing in
-> [`development-plan.md`](development-plan.md) and reduces the scope of
+> [`development-plan.md`](../development-plan.md) and reduces the scope of
 > [Plan 13](13-cross-format-canonical-convergence.md); if rejected, both stand unchanged.
 >
 > **Do not begin Step 1 until Step 0 has run and passed.** Step 0 is a one-day experiment

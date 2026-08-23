@@ -96,7 +96,7 @@ https://farzinashouri.github.io/geocase
 
 That URL is already the canonical `site_url` in `mkdocs.yml`, and it is baked into the
 JSON-LD of every generated case page. Publication status is tracked in
-[`docs/plans/12-docs-site-publication.md`](../plans/12-docs-site-publication.md) — until
+[`docs/plans/archive/12-docs-site-publication.md`](../plans/archive/12-docs-site-publication.md) — until
 the GitHub Actions deploy in that plan is in place, the URL will not resolve and Option A
 is the only way to see the schematics.
 

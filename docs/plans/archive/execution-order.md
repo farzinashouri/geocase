@@ -1,11 +1,15 @@
 # Execution Order
 
+> **Archived — complete. Retained as an implementation log.** Batches 1–5 shipped v1.0 "to the upload boundary" on 2026-08-02; the three remaining irreversible steps are owned by [Plan 25](../25-ship-geocase-as-a-package.md). Its sequencing role is folded into the roadmap, so the project has one sequencing document rather than two.
+>
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
+
 The sequencing view of the road to v1.0, merging the v1.0 release strategy with the
 dataset-catalog work.
 
 > **This document owns *order*, not *scope*.** What each step contains is defined once, in
-> [`development-plan.md`](development-plan.md); the detailed rationale is in
-> [`archive/10-v1-release-strategy.md`](archive/10-v1-release-strategy.md)
+> [`development-plan.md`](../development-plan.md); the detailed rationale is in
+> [`archive/10-v1-release-strategy.md`](10-v1-release-strategy.md)
 > and [`dataset-catalog-plan.md`](dataset-catalog-plan.md). If this page and the roadmap
 > ever disagree about *what* a step includes, the roadmap wins. Keeping the split this
 > narrow is deliberate: four documents each claiming to say "what's next" is what made the

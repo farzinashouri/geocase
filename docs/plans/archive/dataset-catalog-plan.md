@@ -1,10 +1,14 @@
 # Dataset Catalog & Geographic Coverage — implementation plan
 
+> **Archived — complete. Retained as an implementation log.** Shipped as [`docs/dataset-catalog.md`](../../dataset-catalog.md).
+>
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
+
 Status: **Approved, scheduled** — see [`execution-order.md`](execution-order.md).
 > **This is a scoped implementation plan for one deliverable, not a roadmap.** The single
-> roadmap is [`development-plan.md`](development-plan.md); adding "what's next" content
+> roadmap is [`development-plan.md`](../development-plan.md); adding "what's next" content
 > here would restart exactly the drift the July 2026 roadmap collapse ended. Active plans
-> live in `docs/plans/`, superseded ones in [`archive/`](archive/index.md).
+> live in `docs/plans/`, superseded ones in [`archive/`](index.md).
 
 **The deliverable is split across two batches**, not implemented in one pass:
 

@@ -1,5 +1,9 @@
 # Release GeoCase 1.0.0 to PyPI, then conda-forge
 
+> **Archived — superseded. Retained as an implementation log.** Superseded by [Plan 25](../25-ship-geocase-as-a-package.md) (2026-08-23), which executes the same upload with a TestPyPI rehearsal and a corrected case-count assertion.
+>
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
+
 ## Context
 
 `docs/plans/execution-order.md` reports Batches 1–5 complete — but only **"to the

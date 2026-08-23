@@ -1,5 +1,9 @@
 # Plan 19: Spec table as a separate, zero-dependency package
 
+> **Archived — superseded. Retained as an implementation log.** Superseded by [Plan 20](../20-restart-spec-first.md): the separate-distribution argument carried forward, the API shape did not.
+>
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
+
 *Written before the rename; `geospatial-spec` is now `geofacts`.*
 
 ## Context

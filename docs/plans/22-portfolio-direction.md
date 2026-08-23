@@ -54,7 +54,7 @@ The common row is the last one.
 
 | Gate | Date | Verdict | Response |
 |---|---|---|---|
-| [Plan 14](14-reposition-as-correctness-library.md) Step 0 | 2026-08-09 | **Stop** — blind agents 9/10 correct; the function library is redundant | Plan 15 written |
+| [Plan 14](archive/14-reposition-as-correctness-library.md) Step 0 | 2026-08-09 | **Stop** — blind agents 9/10 correct; the function library is redundant | Plan 15 written |
 | [Plan 18](18-eo-product-fixtures.md) Phase 0 | 2026-08-12 | **Premise false for frontier models** — −1000 is in their weights | Built on a narrowed claim |
 | [Plan 20](20-restart-spec-first.md) Phase 2 | open | **Not run** — 0 of 5 interviews recorded | Plan 21 written to sequence running it |
 | Fourth evaluation | 2026-08-16 | **Would not adopt as a dependency** | this document |

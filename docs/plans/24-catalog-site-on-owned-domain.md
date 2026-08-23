@@ -3,7 +3,7 @@
 > **Status: proposed 2026-08-17.** A scoped implementation plan for one deliverable.
 > The single roadmap remains [`development-plan.md`](development-plan.md).
 >
-> It **amends [Website Plan](website-plan.md)**, which is largely built, and reverses two of
+> It **amends [Website Plan](archive/website-plan.md)**, which is largely built, and reverses two of
 > its recorded architecture decisions: the rejection of Astro, and the deferral of a custom
 > domain. Both reversals are argued in [Why the ground moved](#why-the-ground-moved) rather
 > than assumed. Nothing else in that plan is superseded — its generator, its drift-control
@@ -20,7 +20,7 @@ content as an Astro site on a domain you own, and publishes it.
 
 ## Measured starting state
 
-Counted 2026-08-17 in this working tree, not inherited from [Website Plan](website-plan.md).
+Counted 2026-08-17 in this working tree, not inherited from [Website Plan](archive/website-plan.md).
 
 | Website Plan deliverable | State |
 |---|---|
@@ -33,7 +33,7 @@ Counted 2026-08-17 in this working tree, not inherited from [Website Plan](websi
 
 So the gap to a live site is hosting and a shell, not content generation.
 
-Two content gaps are also measured, and both are cheaper than [Website Plan](website-plan.md)
+Two content gaps are also measured, and both are cheaper than [Website Plan](archive/website-plan.md)
 assumed:
 
 - **119 `notes.md` files hold 12,176 words of hand-written prose that no page renders.**
@@ -42,13 +42,13 @@ assumed:
   failure modes*. "Common failure modes: latitude/longitude dimension swap, fill value ignored
   during analysis" is a search query; the templated sections around it are not.
 - The generator's own comment concedes the rest: *"Descriptions are written for contributors,
-  not searchers."* [Website Plan](website-plan.md) sized rewriting them at 4–6 hours and called
+  not searchers."* [Website Plan](archive/website-plan.md) sized rewriting them at 4–6 hours and called
   it *"the single largest determinant of whether the SEO argument pays off."* That estimate
   stands, but rendering the notes is the cheaper half of the same fix and should come first.
 
 ## Why the ground moved
 
-[Website Plan](website-plan.md) recorded its Astro rejection so it would not be relitigated.
+[Website Plan](archive/website-plan.md) recorded its Astro rejection so it would not be relitigated.
 Relitigating it anyway requires naming what changed, and three things did.
 
 | Its reasoning then | Why it no longer holds |
@@ -86,7 +86,7 @@ The Astro target emits content-collection entries with typed frontmatter, and th
 templates live in the site repo. This is the split that lets the design change without
 regenerating 188 files.
 
-**URL structure**, which settles [Website Plan](website-plan.md)'s open questions 1 and 2:
+**URL structure**, which settles [Website Plan](archive/website-plan.md)'s open questions 1 and 2:
 
 ```
 /                     landing
@@ -101,7 +101,7 @@ provenance for a docs site and is noise in a public URL.
 
 ### Phase 2 — the site shell
 
-An Astro site with a layout, the landing page [Website Plan](website-plan.md) section B
+An Astro site with a layout, the landing page [Website Plan](archive/website-plan.md) section B
 specifies (problem statement → pytest snippet → what the catalog covers → install → links),
 and the three catalog route templates. `output: 'static'`; no adapter unless a server route
 is later added.
@@ -113,7 +113,7 @@ Ship the first version.
 
 1. Render `notes.md` into the case pages. 12,176 words of existing prose, currently invisible.
 2. Rewrite case descriptions for searchers, not contributors. 4–6 hours, domain expertise,
-   not automatable — [Website Plan](website-plan.md) was right about this and it has not moved.
+   not automatable — [Website Plan](archive/website-plan.md) was right about this and it has not moved.
 
 Phase 3 is not optional polish. 188 pages generated from one template with identical section
 headings is the exact shape Google's helpful-content system demotes; the notes are the only
@@ -164,7 +164,7 @@ precedent and keeping `--check` meaningful.
 
 ## Drift control (unchanged, and non-negotiable)
 
-`--check` must cover the Astro target too. [Website Plan](website-plan.md)'s rule stands
+`--check` must cover the Astro target too. [Website Plan](archive/website-plan.md)'s rule stands
 verbatim: *without this gate the pages silently desynchronize from the catalog on the first
 case edit, and the site starts publishing assertions the code no longer makes.* Prefer a gate
 over a promise.
@@ -204,7 +204,7 @@ résumé. Publishing pages is not users.
 
 1. **The domain.** Blocking for Phase 4 only.
 2. **Site repo or this repo?** A separate repo keeps npm out of a Python project — the one
-   piece of [Website Plan](website-plan.md)'s reasoning that survives on its merits. The cost
+   piece of [Website Plan](archive/website-plan.md)'s reasoning that survives on its merits. The cost
    is that `--check` then spans two repos, which argues for generating into this repo and
    publishing from it. Recommend: **generate here, deploy from here**, and accept the
    `package.json`.

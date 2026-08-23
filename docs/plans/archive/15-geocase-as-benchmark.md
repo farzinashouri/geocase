@@ -1,9 +1,13 @@
 # Plan 15 — GeoCase as a benchmark for silent failures in LLM-generated geospatial code
 
+> **Archived — implemented 2026-08-10. Retained as an implementation log.** Phases 1, 3 and a stripped Phase 4 are built. Superseded as strategy by [Plan 20](../20-restart-spec-first.md), which demotes the benchmark from product to instrument.
+>
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
+
 > **Status: proposed.** This plan executes the salvage path left by
 > [Plan 14](14-reposition-as-correctness-library.md), which its own Step 0 gate rejected.
 > If adopted it supersedes the catalog-as-product framing in
-> [`development-plan.md`](development-plan.md) and retires most of
+> [`development-plan.md`](../development-plan.md) and retires most of
 > [Plan 11](11-distribution-pypi-and-conda.md)'s and [Plan 12](12-docs-site-publication.md)'s
 > catalog-shaped scope; [Plan 13](13-cross-format-canonical-convergence.md) becomes optional
 > rather than a precondition, because the benchmark's oracles are computed from first
@@ -141,7 +145,7 @@ the expansion — hash the prompts into the findings write-up at run time so the
 
 ### Phase 0 — Plan doc and repositioning decisions
 
-**Files:** create this document; modify [`index.md`](index.md) (add plan 15; mark plan 14's
+**Files:** create this document; modify [`index.md`](../index.md) (add plan 15; mark plan 14's
 salvage path as executed by it), [`14-reposition-as-correctness-library.md`](14-reposition-as-correctness-library.md)
 (one status line pointing here), `mkdocs.yml` (nav entry).
 

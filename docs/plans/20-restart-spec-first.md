@@ -16,13 +16,13 @@
 > five interviews), **U18**, **U19**, **U20**, **U21**.
 
 > **Status: proposed 2026-08-13.** Overarching. If adopted it supersedes the product framing
-> in [Plan 15](15-geocase-as-benchmark.md) Phase 7 / Stage 2, replaces
-> [Plan 19](19-spec-table-separate-repo.md) outright, **absorbs**
+> in [Plan 15](archive/15-geocase-as-benchmark.md) Phase 7 / Stage 2, replaces
+> [Plan 19](archive/19-spec-table-separate-repo.md) outright, **absorbs**
 > [Plan 18](18-eo-product-fixtures.md) — whose Phases 0 and 1 are both implemented — and
 > redistributes its output across the two repos (see *Disposition of Plan 18*), and retires
-> [`development-plan.md`](development-plan.md), [Plan 11](11-distribution-pypi-and-conda.md),
-> [Plan 12](12-docs-site-publication.md) and [Plan 13](13-cross-format-canonical-convergence.md)
-> as catalog-era documents. [Plan 16](16-generalize-beyond-geospatial.md) is halted where it
+> [`development-plan.md`](development-plan.md), [Plan 11](archive/11-distribution-pypi-and-conda.md),
+> [Plan 12](archive/12-docs-site-publication.md) and [Plan 13](archive/13-cross-format-canonical-convergence.md)
+> as catalog-era documents. [Plan 16](archive/16-generalize-beyond-geospatial.md) is halted where it
 > stands. [Plan 17](17-throughput-automation-and-corpus-as-input.md) survives intact but is
 > demoted from product work to instrument maintenance.
 
@@ -125,11 +125,11 @@ Measured against the working tree on 2026-08-13, not assumed.
   wrong.
 - **`sentinel2_l2a(size: int = 32)`** — the default is below the ≥224px floor the only adopter
   set as a hard requirement.
-- **[Plan 19](19-spec-table-separate-repo.md) as drafted reproduces the same defect.**
+- **[Plan 19](archive/19-spec-table-separate-repo.md) as drafted reproduces the same defect.**
   `SpecFact` is a frozen dataclass with a public `value` field, exposed through a public
   `FACTS` tuple. `raster.FACTS[0].value` is a bare constant. Plan 19 cannot be implemented as
   written.
-- **[Plan 19](19-spec-table-separate-repo.md)'s stated audience is unvalidated and contradicted.**
+- **[Plan 19](archive/19-spec-table-separate-repo.md)'s stated audience is unvalidated and contradicted.**
   It names "an AI coding agent writing unit tests." All three evaluators are humans asking for
   a guard in *production* code. Rejector C, verbatim: *"Constants that only live in tests can't
   catch a bug in code that has no tests."*
@@ -156,7 +156,7 @@ Measured against the working tree on 2026-08-13, not assumed.
 Zero dependencies, pure stdlib, Python 3.11+. Ships to PyPI **and** as a single vendorable
 file, because the thing it competes with is copy-paste.
 
-This is [Plan 19](19-spec-table-separate-repo.md)'s repo with its API inverted and its audience
+This is [Plan 19](archive/19-spec-table-separate-repo.md)'s repo with its API inverted and its audience
 corrected.
 
 ### Repo 2 — `geocase` (this one, cut to roughly a third)
@@ -178,7 +178,7 @@ entry point, `api/`, catalog `suites`/`selectors`/`manifests`, the one-line asse
 scripts, `docs/design/` (a recommendation-service design for a product that does not exist),
 and the ~128 bundled cases nothing references.
 
-This is [Plan 15](15-geocase-as-benchmark.md) Stage 2, finally executed, plus the corpus that
+This is [Plan 15](archive/15-geocase-as-benchmark.md) Stage 2, finally executed, plus the corpus that
 Stage 2 left undecided. Plan 14 rejected this surface on 2026-08-09. It has been shipping for
 four months since.
 

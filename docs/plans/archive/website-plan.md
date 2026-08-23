@@ -1,9 +1,13 @@
 # Public Website — implementation plan
 
+> **Archived — amended and superseded. Retained as an implementation log.** [Plan 24](../24-catalog-site-on-owned-domain.md) (2026-08-17) reverses this plan's rejection of Astro and its deferral of a domain.
+>
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
+
 Status: **Proposed, unscheduled** — no batch assigned; see [Ordering](#ordering-and-hard-constraints).
 
 > **This is a scoped implementation plan for one deliverable, not a roadmap.** The single
-> roadmap is [`development-plan.md`](development-plan.md) — the same framing as
+> roadmap is [`development-plan.md`](../development-plan.md) — the same framing as
 > [`dataset-catalog-plan.md`](dataset-catalog-plan.md).
 
 ## Context
@@ -176,7 +180,7 @@ rather than assuming it happens.
   strongest organic-traffic lever, and an ongoing commitment rather than a build task.
 - **Jinja2 adoption.** At the third custom HTML page. Zero migration cost — already installed.
 - **Recommendation service UI.** Depends on
-  [`../design/case-recommendation-service.md`](../design/case-recommendation-service.md),
+  [`../design/case-recommendation-service.md`](../../design/case-recommendation-service.md),
   which needs the only server component in the entire plan (FastAPI + Pydantic). Out of
   scope here.
 
