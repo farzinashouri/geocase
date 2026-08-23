@@ -60,8 +60,13 @@ Within that frame, in order:
    `github.io` copy risks being credited as canonical ahead of the owned domain.
 3. **[Plan 21](21-adoption-action-plan.md)'s remaining tracks** — the adoption funnel around
    the release, of which Track A (publish the spec package) is subsumed by Plan 25.
-4. **[Plan 26](26-docs-truth-pass-and-seo-prep.md)** — done except where it defers: see
-   *Deferred work* below.
+4. **[Plan 26](26-docs-truth-pass-and-seo-prep.md)** — **complete 2026-08-23, except its
+   §3.4 `social` plugin**, which is blocked on `libcairo` and tracked in *Deferred work*.
+5. **[Plan 27](27-close-plan-26-findings.md)** — closes what Plan 26 surfaced but did not
+   predict. Its Phase 1.1 is the only item here with real leverage and is worth doing *before*
+   Plan 24 deploys: the README now leads with four failure modes because Plan 24 pre-commits to
+   measuring those four, and two of them have no case in the catalog. Ranking for a query the
+   catalog cannot answer spends a first impression on a miss.
 
 Not on the critical path, kept for when the above clears:
 [Plan 17](17-throughput-automation-and-corpus-as-input.md) (benchmark throughput) and
@@ -89,10 +94,11 @@ Not automatable and not delegable. Each blocks the work named beside it.
 
 Named here so it is not lost, and not started:
 
-- **Searcher-facing case descriptions for the remaining ~115 cases.**
-  [Plan 26](26-docs-truth-pass-and-seo-prep.md) §3.3 rewrote only the cases whose risk types
-  match the queries Plan 24 pre-commits to measuring. The rest still carry descriptions written
-  for contributors.
+- **Searcher-facing case descriptions for the remaining 114 cases** — now owned by
+  [Plan 27](27-close-plan-26-findings.md) §3, which sizes it: 30 of the 114 exceed the 155-char
+  cap and are silently truncated mid-clause in their `<meta name="description">`. Those 30 are a
+  defect and are sequenced first; the other 84 are a preference and should be done
+  opportunistically rather than as a batch.
 - **Open Graph social cards.** `mkdocs.yml` declares an explicit `plugins:` block, but the
   `social` plugin is left out: it needs the native libcairo/libfreetype libraries, absent from
   both the development machine and the CI runner, so enabling it unverified would turn the
@@ -102,12 +108,10 @@ Named here so it is not lost, and not started:
   are discoverable; the data is not fetched.
 - **Coverage gaps in the catalog** — rotated/skewed affine transforms, non-square pixels,
   southern-hemisphere UTM. Enumerated honestly in
-  [`docs/dataset-catalog.md`](../dataset-catalog.md). Plan 26 §3.3 surfaced one more: **no
-  case declares an `axis_order` or `crs_mismatch` risk type.** Both are named in Plan 24's
-  pre-committed Search Console vocabulary, and both are among the four failure modes the
-  README now leads with. The nearest cases (`out_of_bounds_coordinates` for a lat/lon swap,
-  `rasterize_match_wgs84_polygon` and `web_mercator_baseline` for CRS mismatch) exercise the
-  symptom but do not name the risk. Worth a purpose-built case each.
+  [`docs/dataset-catalog.md`](../dataset-catalog.md). Plan 26 §3.3 surfaced one more — **no
+  case declares an `axis_order` or `crs_mismatch` risk type** — which is now
+  [Plan 27](27-close-plan-26-findings.md) §1.1 and is not merely deferred: it should land
+  before Plan 24 deploys, since the README already leads with both terms.
 - **mypy strictness** beyond `geocase.catalog.*` and `geocase.api.*`, ratcheting in v1.1.
 
 ## Decision log

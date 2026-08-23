@@ -4,6 +4,45 @@
 > target from [Plan 24](24-catalog-site-on-owned-domain.md), or the PyPI upload from
 > [Plan 25](25-ship-geocase-as-a-package.md). It makes those cheaper; it does not do them.
 
+> **Implementation status: complete except §3.4's `social` plugin, 2026-08-23.** All four phases
+> executed in six commits
+> (`9bb35c7`, `f657d62`, `cd985a4`, `d63888a`, `2c3c409`, `72180a2`). Every gate green:
+> `build_case_index`, `validate_catalog`, both fixture gates, `generate_checksums`,
+> `generate_catalog_pages`, `mkdocs build --strict`, `ruff`, `mypy`, and `pytest tests -q` at
+> **1701 passed / 37 skipped**. Per-section status is marked inline below.
+>
+> **One deliverable is NOT done: the `social` plugin (§3.4)** — OG card generation. Zero of it
+> landed, and verification step 5 was therefore not run. It is blocked on **`libcairo`**, a
+> *native system library*, not a Python package: `pip install "mkdocs-material[imaging]"`
+> installs cleanly and then fails at import. It is absent from both this machine and the
+> `ubuntu-latest` docs runner, so enabling it unverified would have turned the `docs` gate red —
+> and §3.4 itself says to confirm CI installs the extra *before* relying on it. Deferred by
+> decision rather than omission, with the remaining work spelled out in §3.4's marker and in the
+> roadmap's *Deferred work*. **Everything else in Phases 1–4 is done and verified.**
+>
+> **Three findings this plan did not anticipate**, carried into
+> [Plan 27](27-close-plan-26-findings.md):
+>
+> 1. The plan's own verification grep found **four more stale `134`s** it had not enumerated
+>    (`getting-started.md`, `contributing/workflow.md`, `releasing.md` ×2,
+>    `structure-and-planning.md`), three of them also carrying a stale "780 passing tests"
+>    against an actual 1701. Fixed here; the guard was widened from 3 claims to 7.
+> 2. **`docs/philosophy.md` was structurally broken** — an unclosed code fence meant the whole
+>    page rendered as literal markdown source. It is a named landing candidate in §3.4, so it
+>    was fixed here. Nothing gates for this class of defect.
+> 3. **No case declares an `axis_order` or `crs_mismatch` risk type**, though both are in
+>    Plan 24's pre-committed Search Console vocabulary and both now appear in the README's
+>    opening prose per §1.6. The catalog cannot rank for queries it has no case for.
+>
+> Two of the plan's open questions were answered by measurement:
+>
+> - **The vector coverage matrix's four-month stability is genuine**, not a weak `--check` gate
+>   (§4). Regeneration produced no diff. The raster matrix *did* move by one row, traced to two
+>   §3.3 descriptions using the word "masking" — a false positive in the generator's
+>   product-family keywords, reworded rather than accepted.
+> - **119 `notes.md` files, but 123 cases declare notes** (§3.1), all resolving on disk. The 119
+>   figure counted files literally named `notes.md`; four cases share or differently-name theirs.
+
 ## Context
 
 GeoCase's documentation has drifted from the code in three separate ways, and the drift is now
@@ -53,6 +92,8 @@ PyPI/TestPyPI upload from Plan 25. This plan makes those cheaper, it does not do
 
 ### 1.1 The case count: 134 → 135
 
+> ✅ **Done.** All three corrected. `recipe/meta.yaml`'s was the build-breaking one. `git log -S` confirmed 134 was accurate at 1.0.0, so the historical entry stands and the growth is recorded under `Unreleased`. The suggested guard was built: `validate_catalog.py` now gates **7** documented counts against `len(get_registry())` — the 3 named here plus 4 this plan missed.
+
 Three places, one of which is executable:
 
 - `recipe/meta.yaml:40` — `assert len(geocase.list_cases()) == 134`. **Build-breaking.**
@@ -69,6 +110,8 @@ other generated artifacts rather than re-drifting. (Cheap: the registry is alrea
 
 ### 1.2 Install claims that do not resolve
 
+> ✅ **Done.** conda block hedged; `releasing.md`'s "GitLab-issued JWT" corrected to GitHub Actions OIDC; CHANGELOG's false PyPI publication and GitLab URLs corrected as dated notes rather than rewritten history.
+
 - `README.md:26-36` — the `pip install "geocase[all]"` block is hedged ("When a package release is
   published"), the conda block is **not**. Hedge the conda block identically, or cut it until a
   feedstock exists. Plan 25 §4 flags the same line.
@@ -79,6 +122,8 @@ other generated artifacts rather than re-drifting. (Cheap: the registry is alrea
 
 ### 1.3 `docs/index.md` status contradiction
 
+> ✅ **Done.** Matched to the README (`1.0`, same two-surface compatibility sentence).
+
 `docs/index.md:5` says "Status: alpha"; `pyproject.toml` says `Development Status :: 5 -
 Production/Stable` and `README.md:5` says "Status: **1.0**". Pick one — recommend matching the
 README (`1.0`, with the same two-surface compatibility sentence) so the site home and the repo
@@ -86,6 +131,8 @@ front door agree. This is also the page most likely to be a search landing page,
 getting right in Phase 3 anyway.
 
 ### 1.4 The two renames
+
+> ✅ **Done.** Preset paths verified against the source before writing: `geocase.raster.presets.sentinel1_grd` / `.sentinel2_l2a`. `name: geocase-synthetic` was left alone — a source name, not a module path. Interview template renamed; plans 19/20/21 got the one-line note, no body edits.
 
 **`geocase.synth` → `geocase.raster`** — 5 hits in case metadata, which is what generates the
 published pages:
@@ -121,6 +168,8 @@ For the plan bodies, add a single italic note near the top of Plans 19, 20, and 
 
 ### 1.5 Undocumented surfaces
 
+> ✅ **Done.** `geofacts`, the benchmark and `geocase.raster` are all in the README now, and the bare `contributing/releasing.md` path is fixed to `docs/contributing/releasing.md`.
+
 `README.md` mentions neither `geofacts` (a hard runtime dependency) nor `geocase.raster` nor the
 benchmark. Add `geofacts` to the dependency note; add one line each linking
 `docs/benchmark/quickstart.md` and the raster primitive from "Learn More". Also fix `README.md:90`,
@@ -129,6 +178,8 @@ but 404s on GitHub. Use the full `docs/contributing/releasing.md` path (README i
 far more than on the site, and it is not in the mkdocs nav).
 
 ### 1.6 The README is the only SEO surface that exists today
+
+> ✅ **Done, narrowly as scoped.** Only the false statements were corrected — Plan 25 §8 still owns the rewrite. The failure-mode vocabulary (nodata, antimeridian, CRS mismatch, axis order) is now in the opening prose. That surfaced finding 3 above: two of those four terms have no case behind them.
 
 Per the measurement in [§3.2](#32-make-the-site-url-a-single-input-and-keep-the-catalog-unpublished-until-the-domain-exists):
 the repo page is the **one** GeoCase URL search engines currently index. The docs site is
@@ -153,6 +204,8 @@ prose, not only in the case catalog. Today it appears in neither.
 ## Phase 2 — Plans: archive and re-roadmap
 
 ### 2.1 Correct status headers, then move
+
+> ✅ **Done**, with recommendation (b) on Plan 16 — archived, its U7/U9/U10 carried into the roadmap. `dataset-catalog.md` was checked and had shipped (17 KB), so its plan archived as Complete. `execution-order.md` was archived too (see §2.2), making it **10** active plans, not the 11 predicted.
 
 Move to `docs/plans/archive/` **with a status banner added at the top of each file** (matching the
 existing banner style in `archive/01`–`10`), and confirm `mkdocs.yml`'s existing
@@ -183,6 +236,8 @@ exists) before deciding; if it shipped, archive as Complete.
 
 ### 2.2 Rewrite `development-plan.md`
 
+> ✅ **Done**, ~120 lines. `execution-order.md` was folded in and archived rather than given parallel treatment — leaving it active would have kept two sequencing documents, which is the thing this folder's own rules forbid.
+
 Currently 26 KB of a completed v1.0 roadmap. Replace with a short current-state document:
 
 - **Where the project stands** — 135 cases, v1.0.0rc1, unpublished; the four things measured true
@@ -200,6 +255,8 @@ the roadmap or give it the same treatment; do not leave two stale sequencing doc
 
 ### 2.3 Update `docs/plans/index.md` and `archive/index.md`
 
+> ✅ **Done.** Both tables rebuilt; "Rules for this folder" preserved verbatim.
+
 Rebuild both tables to match the new split. Preserve the existing "Rules for this folder" section
 verbatim — it is the reason this cleanup is happening, and it is correct.
 
@@ -208,6 +265,8 @@ verbatim — it is the reason this cleanup is happening, and it is correct.
 ## Phase 3 — SEO groundwork (host-neutral)
 
 ### 3.1 Render the `notes.md` prose — the highest-value item here
+
+> ✅ **Done.** 123 cases (not 119 — see the status banner) render prose under `## Notes`, placed after the assertions table. Leading H1 dropped, headings demoted one level, fenced code left untouched; the 12 cases without notes render with the section absent. **The budgeted friction did not materialise:** not one notes file contains a relative link, so no link rewriting was needed.
 
 **119 files, ~12,176 words** of hand-written per-case explanation currently reachable only as a
 filename in a bullet (`scripts/generate_catalog_pages.py:369`). This is the only differentiated,
@@ -228,6 +287,8 @@ Cases. Considerations:
 This regenerates all 135 case pages — expect a large, mechanical diff.
 
 ### 3.2 Make the site URL a single input — and keep the catalog unpublished until the domain exists
+
+> ✅ **Done.** `DEFAULT_SITE_URL` reads `GEOCASE_SITE_URL`, value unchanged; `mkdocs.yml:site_url` and `pyproject.toml`'s `Documentation` URL untouched; the 135 committed pages still carry the placeholder. The CI guard is built and verified **both ways** — passes clean, and catches an injected `mkdocs gh-deploy` step.
 
 **Measured state (2026-08-23).** Nothing is at risk yet, and that is the asset this section
 protects:
@@ -271,6 +332,8 @@ and its output is discarded. That is compatible with everything above.
 
 ### 3.3 Descriptions written for searchers
 
+> ✅ **Done, 21 cases.** All under the 155 cap, verified against the generated pages: none truncated. No `axis_order` or `crs_mismatch` case exists to rewrite (finding 3). Two rewrites had to be reworded because "masking" tripped the raster matrix's Mask keyword. Remaining ~114 deferred and noted in the roadmap.
+
 `generate_catalog_pages.py:43-44` carries its own admission: *"Descriptions are written for
 contributors, not searchers."* The `DESCRIPTION_FIELDS` fallback chain
 (`description` → `behavioral_goal` → `title`) is sound; the source strings are the problem, and
@@ -284,6 +347,29 @@ those, rewrite `description` to lead with the failure a searcher would type, sta
 (Editing `case.yaml` again triggers the Phase 4 regeneration — batch this with Phase 1.4.)
 
 ### 3.4 `mkdocs.yml` and hand-written page metadata
+
+> ⚠️ **Partial — 5 of 6 bullets. `social` is NOT done and nothing for it landed.**
+>
+> **Done and verified in the built HTML:** the explicit `plugins:` block with `search` listed
+> (so site search did not silently disappear), `description:` front matter on all seven landing
+> candidates, `docs/assets/` with favicon and logo wired via `theme.favicon`/`theme.logo`, the
+> `repo_name` org fix, the `extra:` social links, and the nav gap — which was real, so
+> `evidence/2026-fixture-interviews/*` is now in `not_in_nav`. One snag the plan did not
+> predict: the descriptions needed **quoting**, because "...case catalog: 135 curated..." has a
+> colon that YAML reads as a mapping.
+>
+> **Not done — the `social` plugin, i.e. OG card generation.** Zero of it landed: it is absent
+> from `plugins:`, and `pillow`/`cairosvg` were deliberately *not* added to the `docs` extra,
+> because shipping dependencies for a plugin that cannot be enabled is dead weight. The blocker
+> is **`libcairo`**, a native system library (not a Python package) absent from both this
+> machine and the `ubuntu-latest` docs runner. `pip install "mkdocs-material[imaging]"` succeeds
+> and then fails at import with `cannot load library 'libcairo.2.dylib'`. Enabling it unverified
+> would turn the `docs` gate red. **Remaining work:** an `apt-get install libcairo2-dev
+> libfreetype6-dev libffi-dev` step in the CI `docs` job, `pillow`/`cairosvg` added to the
+> `docs` extra, then `social` added to `plugins:` — and the plan's own instruction to *"confirm
+> CI's `docs` job installs that extra before relying on it"* is what is being honoured by not
+> doing this blind. Consequently **verification step 5 (social cards) was not run**:
+> `site/assets/images/social/` is not populated and no page carries an `og:image` tag.
 
 - Add an explicit `plugins:` block. Declaring it **disables the implicit default `search`**, so
   `search` must be listed explicitly or site search silently disappears. Then add `social` for OG
@@ -303,6 +389,8 @@ those, rewrite `description` to lead with the failure a searcher would type, sta
 
 ### 3.5 `pyproject.toml` metadata
 
+> ✅ **Done.** Five keywords to twelve; `Documentation` URL left alone.
+
 Keywords are five and thin: `geospatial, testing, gis, pytest, test-cases`. Add the failure-mode
 terms that people actually search — `nodata`, `crs`, `antimeridian`, `raster`, `vector`,
 `fixtures`, `geotiff`. Leave the `Documentation` URL alone (§3.2).
@@ -310,6 +398,8 @@ terms that people actually search — `nodata`, `crs`, `antimeridian`, `raster`,
 ---
 
 ## Phase 4 — Regenerate the gated artifacts
+
+> ✅ **Done.** The watch-item resolved in the plan's favour: `vector-coverage-matrix.md` regenerated with **zero diff** — its four-month stability is genuine, not a weak gate. The *raster* matrix moved one row, traced to §3.3 wording rather than a pre-existing bug, and reworded away.
 
 Any `case.yaml` or generator change makes the CI `catalog` job fail until artifacts are
 regenerated and committed. Run under the **conda `geocase` env** (needs `osgeo`):

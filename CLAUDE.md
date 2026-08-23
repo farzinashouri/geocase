@@ -68,3 +68,14 @@ Core data flow — keep this mental model:
 - mypy strictness is per-module: `geocase.catalog.*` and `geocase.api.*` are strict; the rest ratchets in v1.1. `tests/` is not typechecked.
 - Adding a case: see [docs/adding-a-case.md](docs/adding-a-case.md) — metadata-first, then `build_case_index.py`, then validate.
 - Plans and roadmap live in [docs/plans/](docs/plans/); `development-plan.md` is authoritative on scope.
+
+## Working rules (non-negotiable)
+
+- **Never commit or push.** Do not run `git commit`, `git push`, or merge a PR. Leave the work in the working tree, say what changed, and let the user commit. (Enforced by a PreToolUse deny hook in `.claude/settings.json`.)
+- **Config goes in `.claude/settings.json`,** not `settings.local.json`. Permissions, hooks, and env belong in the committed project file; `settings.local.json` holds only personal overrides.
+- **Deletion always asks.** `rm`, `rmdir`, `git clean`, and `find -delete` require explicit user confirmation, even in auto mode.
+- **TDD, always.** In both plans and implementation: write the failing unit test first, watch it fail, then write the code that makes it pass. A plan phase that ships code without a preceding test is malformed.
+- **Every written plan becomes a doc in [docs/plans/](docs/plans/).** Never leave a plan in the chat only. Use the existing convention: `NN-kebab-title.md` with the next free number, a `> **Status: proposed YYYY-MM-DD.**` blockquote under the H1, `## Phase N` / `### N.M` structure, and a new row in [docs/plans/index.md](docs/plans/index.md). One scoped deliverable per file — `development-plan.md` stays the only document that says "what's next".
+- **Mark progress in the plan doc as you implement it.** Completing a phase or step means updating that plan file in the same change: flip the `Status:` header (`proposed` → `implemented YYYY-MM-DD`, or note the partial — "Phases 1–3 implemented; Phase 4 blocked on ..."), mark the finished `### N.M` sections done, and record anything that turned out differently from the plan. Update the plan's row in `index.md` too. A plan doc that still reads "proposed" after the code landed is a bug.
+- **Docs follow code, same change.** Any code change updates the affected docs in the same pass — `docs/`, docstrings, `CLAUDE.md`, and the generated artifacts (regenerate, don't hand-edit `docs/_generated/*`).
+- **Be concise.** Answers roughly half your usual length: state the result and what it means, skip the recap and the option survey.
