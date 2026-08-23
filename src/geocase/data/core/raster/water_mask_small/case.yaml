@@ -1,9 +1,8 @@
 id: water_mask_small
 title: Water Mask Small
-description: >
-  A tiny single-band uint8 binary water mask (0 = land, 1 = water) with a
-  sentinel NoData value of 255. Exercises mask-style raster handling and
-  nodata-aware logic.
+description: >-
+  A uint8 binary water mask with NoData 255. Code that treats the mask as 0/1 counts NoData
+  pixels as water, inflating every areal statistic.
 category: raster
 format: GeoTIFF
 test_tier: integration

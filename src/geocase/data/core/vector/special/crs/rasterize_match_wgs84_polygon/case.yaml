@@ -1,9 +1,8 @@
 id: rasterize_match_wgs84_polygon
 title: Rasterize Match WGS84 Polygon
-description: >
-  A WGS84 polygon chosen to overlap the bundled UTM boundary raster once
-  reprojected to EPSG:32633. Used to verify that robust rasterization can
-  reproject vector input correctly.
+description: >-
+  A WGS84 polygon that must be reprojected to EPSG:32633 to align with its raster. Exercises
+  the CRS mismatch that makes rasterization silently misalign.
 category: vector
 format: GeoJSON
 test_tier: unit

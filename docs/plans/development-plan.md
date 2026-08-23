@@ -97,7 +97,12 @@ Named here so it is not lost, and not started:
   are discoverable; the data is not fetched.
 - **Coverage gaps in the catalog** — rotated/skewed affine transforms, non-square pixels,
   southern-hemisphere UTM. Enumerated honestly in
-  [`docs/dataset-catalog.md`](../dataset-catalog.md).
+  [`docs/dataset-catalog.md`](../dataset-catalog.md). Plan 26 §3.3 surfaced one more: **no
+  case declares an `axis_order` or `crs_mismatch` risk type.** Both are named in Plan 24's
+  pre-committed Search Console vocabulary, and both are among the four failure modes the
+  README now leads with. The nearest cases (`out_of_bounds_coordinates` for a lat/lon swap,
+  `rasterize_match_wgs84_polygon` and `web_mercator_baseline` for CRS mismatch) exercise the
+  symptom but do not name the risk. Worth a purpose-built case each.
 - **mypy strictness** beyond `geocase.catalog.*` and `geocase.api.*`, ratcheting in v1.1.
 
 ## Decision log

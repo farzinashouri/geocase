@@ -1,9 +1,8 @@
 id: wrapped_longitude_point
 title: Wrapped Longitude Point
-description: >
-  A point encoded with longitude 190 degrees instead of the normalized
-  equivalent -170. Useful for testing normalization logic during
-  geographic identity reprojection.
+description: >-
+  A point stored at longitude 190° instead of the normalized -170°. Exercises longitude
+  normalization that passes validation and misplaces the point.
 category: vector
 format: GeoJSON
 test_tier: unit

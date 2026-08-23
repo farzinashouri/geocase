@@ -1,12 +1,8 @@
 id: north_pole_polygon
 title: North Pole Polygon
-description: >
-  A diamond-shaped polygon encircling the north pole in EPSG:4326.  The
-  ring has vertices at latitudes 84N to 89.5N spanning longitudes -90
-  to 90.  This exercises projection code that must handle polar regions
-  correctly -- simple equirectangular math collapses near the poles and
-  area/perimeter calculations become highly sensitive to the projection
-  chosen.
+description: >-
+  A polygon encircling the north pole in EPSG:4326. Its area and centroid are wrong in any
+  projection treating latitude/longitude as planar coordinates.
 category: vector
 format: GeoJSON
 test_tier: unit

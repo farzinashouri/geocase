@@ -1,9 +1,8 @@
 id: geotiff_nodata_small
 title: GeoTIFF NoData Small
-description: >
-  A small single-band GeoTIFF with an explicit NoData sentinel value.
-  Tests correct masking and propagation of NoData through raster
-  operations.
+description: >-
+  A GeoTIFF with an explicit NoData sentinel. Statistics computed without masking NoData are
+  silently wrong — the most common raster analysis bug.
 category: raster
 format: GeoTIFF
 test_tier: unit

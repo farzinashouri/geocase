@@ -1,8 +1,8 @@
 id: optical_polar_small
 title: Optical Polar Small
-description: >
-  A tiny three-band uint8 RGB scene in a polar stereographic CRS (EPSG:3995).
-  Exercises high-latitude / polar projection handling.
+description: >-
+  An RGB scene in polar stereographic EPSG:3995. Exercises the CRS assumptions that break when
+  code presumes every raster is in EPSG:4326 or UTM.
 category: raster
 format: GeoTIFF
 test_tier: integration

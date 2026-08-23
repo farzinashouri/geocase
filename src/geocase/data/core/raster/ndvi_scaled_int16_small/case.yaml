@@ -1,9 +1,8 @@
 id: ndvi_scaled_int16_small
 title: NDVI Scaled Int16 Small
-description: >
-  A tiny single-band int16 NDVI product where physical NDVI in [-1, 1] is
-  stored as integers with a 0.0001 scale factor. Exercises scaled-integer
-  decoding and scale-factor metadata.
+description: >-
+  An int16 NDVI raster with a 0.0001 scale factor and a NoData value. Reading the raw integers
+  without applying scale_factor yields NDVI in the thousands.
 category: raster
 format: GeoTIFF
 test_tier: integration
