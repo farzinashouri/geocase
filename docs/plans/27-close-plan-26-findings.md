@@ -4,7 +4,10 @@ description: "Close the three findings Plan 26 surfaced: the vocabulary gap behi
 
 # Plan 27 — Close the findings Plan 26 surfaced
 
-> **Proposed 2026-08-23.** Scope is this document; sequencing is owned by
+> **Proposed 2026-08-23; amended 2026-08-23** with three findings from
+> [Plan 25](25-ship-geocase-as-a-package.md) steps 2–4 (see *Added 2026-08-23* below, §2.1a and
+> §2.3). Still proposed — nothing here is implemented.
+> Scope is this document; sequencing is owned by
 > [`development-plan.md`](development-plan.md). Authorises no deployment, no domain, no upload —
 > the constraints from [Plan 24](24-catalog-site-on-owned-domain.md) and
 > [Plan 25](25-ship-geocase-as-a-package.md) are unchanged and this plan does not touch
@@ -35,6 +38,29 @@ which is worse than not ranking, because it spends a first impression on a miss.
 
 Both stale-number and broken-page findings were **fixed in Plan 26** — they appear here only
 because nothing prevents their recurrence, which is the actual deliverable.
+
+### Added 2026-08-23 from Plan 25 steps 2–4
+
+Implementing [Plan 25](25-ship-geocase-as-a-package.md)'s truth-pass steps surfaced three more
+instances of the **same two defect classes this plan already owns**, plus one new class. They are
+recorded here rather than in Plan 25 because §2 is where the prevention work lives.
+
+| Finding | Measurement | Class |
+|---|---|---|
+| A stale figure that was "corrected" in the **wrong direction** | Plan 25 asserted the bundled payload is 4.2 MB on the strength of `du -sh src/geocase/data`, and instructed reverting the 2.1 MB figure. `du` reports *apparent* usage: 572 files in 218 directories, each rounding to a 4 KB block ≈ **1.8 MB of padding that reaches no artifact**. Real payload byte sum **2.1 MB**; whole tree 2.4 MB; `geocase/data/**` in the built wheel **2.3 MB** uncompressed | §2.1 (extends it — see 2.1a) |
+| Phantom infrastructure in `contributing/workflow.md` | Described CI as GitLab pipeline jobs defined in `ci/catalog-validation.yml`, `ci/core-tests.yml`, `ci/extended-tests.yml`. **No `ci/` directory exists or ever did**; CI is GitHub Actions with five jobs in `.github/workflows/ci.yml` | New class — see 2.3 |
+| Release status read as shipped | `CHANGELOG.md`'s `## [1.0.0] — 2026-08-02` and the `Status: **1.0**` blocks in `README.md:5` / `docs/index.md:9` all presented a never-uploaded version as released; the correction existed only in a blockquote *below* the summary line | §2.1 (a claim, not a number) |
+
+All three were fixed in the Plan 25 pass. As with the findings above, the deliverable here is
+that **nothing prevents their recurrence**.
+
+Two of them sharpen this plan's §2 rather than adding to it:
+
+- The MB figure is **derivable and stable** — precisely the profile §2.1 says to *gate*, not
+  delete, and it is currently ungated in three files.
+- The `ci/*.yml` claim is neither a number nor broken markdown, so §2.1 and §2.2 both miss it.
+  It is a **reference to a path that does not exist**, which is mechanically checkable in the
+  same lint §2.2 already proposes.
 
 ---
 
@@ -119,6 +145,37 @@ delete them or point at the source of truth.
 Keep the gate for genuinely stable, meaning-bearing numbers (case count, public-API surface
 size), and prefer deletion for volatile ones.
 
+### 2.1a Gate the bundled-payload size (added 2026-08-23)
+
+The MB figure is the *stable, meaning-bearing* half of 2.1's rule, and it is ungated in three
+files: `README.md:5`, `docs/index.md:9`, `docs/dataset-catalog.md:35`. It is also the figure
+that already drifted **twice, in opposite directions** — which is the argument for gating rather
+than trusting a fourth reader with a shell.
+
+Add a `_SIZE_CLAIMS` check to `scripts/validate_catalog.py` alongside `_COUNT_CLAIMS`, computing
+the payload from the same source the registry uses and comparing to one decimal place.
+
+**The load-bearing detail — do not measure with `du`.** Sum `Path.stat().st_size` over the
+payload files. `du` reports 4 KB-block apparent usage and over-reports this tree by ~2x; that is
+exactly how the wrong figure got published. Which files count also needs settling, since three
+defensible answers exist:
+
+| Basis | Value | Verdict |
+|---|---|---|
+| Payload files only (excl. `case.yaml`, `notes.md`, `checksums.sha256`) | 2.1 MB | **Use this** — it is what the docs mean by "bundled payload" and what the current text says |
+| Whole `data/` tree | 2.4 MB | Reasonable, but changes the published number for no reader benefit |
+| `du -sh` | 4.2 MB | Wrong. Not bytes that ship |
+
+Record the chosen basis in the checker's docstring. A future reader running `du` and finding
+disagreement must be able to see, in the code, why the smaller number is the honest one — the
+comment in `scripts/verify_dist.py:42-49` now carries the same explanation and should stay
+consistent with it.
+
+Note this bounds §2.1's "delete volatile numbers" sweep: wheel/sdist sizes stay in
+`verify_dist.py` (where they are a gate's justification, next to the ceiling they explain), and
+the 2 MB artifact ceiling itself is unaffected — it still has ~4x headroom at wheel 456 KB /
+sdist 272 KB.
+
 ### 2.2 Structurally broken markdown
 
 `mkdocs build --strict` did **not** catch `philosophy.md` — an unclosed fence produces valid
@@ -132,6 +189,36 @@ the check is cheap:
 - One judgement call: **do not** require an H1 on every page or a description on every page.
   Generated pages already have both, and mandating it on every contributing doc is churn with
   no reader benefit.
+
+### 2.3 Repo paths named in prose that do not exist (added 2026-08-23)
+
+`workflow.md` documented three `ci/*.yml` files, a GitLab pipeline, and a job split that never
+existed in this repo. Nothing caught it: it is not a number (§2.1), the markdown is well-formed
+(§2.2), and `mkdocs build --strict` only resolves *documentation* links — a backticked
+`ci/core-tests.yml` is prose to it. So a contributor could follow that section, look for the
+files, and find nothing.
+
+Extend the §2.2 lint with a fourth assertion: **backticked tokens that look like repo paths
+resolve.** Match inline-code spans against a path-shaped pattern (contains `/`, ends in a known
+extension: `.py`, `.yml`, `.yaml`, `.toml`, `.md`, `.json`, or ends in `/`), and fail when the
+path does not exist relative to the repo root.
+
+This needs an allowlist, and getting it right is most of the work — false positives are what
+kill a lint like this. Known categories to exempt:
+
+- Paths inside fenced code blocks (shell examples legitimately name output paths, scratch dirs
+  like `/tmp/gc/bin/activate`, and files created by the command being shown).
+- Illustrative user-side paths — `tests/test_my_thing.py`, `test_data/sample.tif` — which
+  describe the *reader's* repo, not this one.
+- `docs/plans/**` and `docs/evidence/**`, which are historical records: a plan describing a file
+  it proposed and never built is correct as a record. This is the same carve-out
+  [Plan 25 §1](25-ship-geocase-as-a-package.md) already made for stale `geofacts` references.
+
+If the allowlist grows past roughly a dozen entries, **drop the check** rather than maintaining
+it — the defect it catches is real but rare (one instance in the repo's history), and a lint that
+cries wolf gets disabled, which costs more than the bug. Prefer the narrow version: enforce only
+outside fenced blocks, only under `docs/contributing/`, where "this is how the repo works"
+claims actually live.
 
 ---
 
@@ -161,6 +248,8 @@ One generator note: `DESCRIPTION_FIELDS`' fallback chain (`description` → `beh
 ## Out of scope
 
 - Anything Plan 24 or 25 owns: the domain, the Astro target, the PyPI upload, the README rewrite.
+  The Plan 25 findings folded in above are the *prevention* work only — Plan 25 already made
+  those docs true; this plan keeps them from going stale again. The upload itself stays there.
 - The `social` plugin. It is deferred in the roadmap with its own conditions (libcairo on the
   runner) and is not blocked on anything here.
 - Renaming existing risk types. Phase 1.2 produces a report; any rename is a v1.1 decision with
@@ -187,6 +276,23 @@ python scripts/generate_raster_coverage_matrix.py --output docs/_generated/raste
 #   inject an unclosed fence into a scratch page; the lint must fail
 grep -rn '780 passing tests' docs/ README.md        # must return nothing
 
+# Phase 2.1a — the payload size is gated, and measured by bytes not blocks
+python scripts/validate_catalog.py                  # must fail if a doc's MB figure drifts
+python - <<'PY'                                     # the basis, spelled out: expect 2.1 MB
+from pathlib import Path
+root = Path("src/geocase/data")
+skip = {"case.yaml", "notes.md", "checksums.sha256"}
+total = sum(p.stat().st_size for p in root.rglob("*") if p.is_file() and p.name not in skip)
+print(f"{total} bytes = {total / 1048576:.1f} MB")
+PY
+grep -rn -- '4\.2 MB' README.md docs/ src/ scripts/ | grep -v docs/plans/   # only the
+                                                    # verify_dist.py comment explaining why
+
+# Phase 2.3 — no prose names a repo path that does not exist
+ls ci/ 2>&1 | head -1                               # must be "No such file or directory"
+grep -rn 'ci/core-tests\|ci/catalog-validation\|ci/extended-tests' docs/ | grep -v docs/plans/
+                                                    # must return nothing
+
 # Phase 3 — no rendered meta description is truncated
 grep -c '…"' docs/_generated/catalog/cases/*.md | grep -v ':0' | wc -l   # target: 0
 
@@ -203,5 +309,7 @@ src tests`, `mypy src`, `pytest tests -q`.
 1. The two new cases + full artifact regeneration + the seven count claims updated (Phase 1.1).
    Large, mechanical, isolated.
 2. The risk-vocabulary report (Phase 1.2). Analysis only; changes no user-facing behaviour.
-3. Docs lint + hardcoded-number sweep (Phase 2). Small.
-4. The 30 truncated descriptions + regeneration (Phase 3.1).
+3. Docs lint + hardcoded-number sweep (Phase 2, incl. 2.3's path check). Small.
+4. `_SIZE_CLAIMS` payload-size gate (Phase 2.1a). Small and independent of 3 — it touches
+   `validate_catalog.py` only, where `_COUNT_CLAIMS` already establishes the pattern.
+5. The 30 truncated descriptions + regeneration (Phase 3.1).

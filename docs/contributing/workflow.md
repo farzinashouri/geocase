@@ -14,7 +14,7 @@ GeoCase has a complete folder structure, 135 bundled cases, and fully implemente
 - Plugin errors now call out common setup problems directly, including missing markers, unknown suites, empty selections, and ambiguous single-case usage.
 - Plugin-driven examples were added/updated in `examples/` (CRS, dateline, GDAL footprint, real geospatial function).
 - Selector model now supports first-class `geometry_type` filtering end-to-end.
-- GitLab CI job files are now implemented for catalog validation, core unit tests, and extended unit tests (`ci/catalog-validation.yml`, `ci/core-tests.yml`, `ci/extended-tests.yml`).
+- CI jobs are implemented for catalog validation, tests, lint, typecheck, and docs. (This entry originally described GitLab CI files under `ci/`; that layout was never adopted — CI is GitHub Actions in `.github/workflows/`.)
 - Practical docs were added for usage and product direction:
 	- [`docs/testing-your-function-with-geocase.md`](../testing-your-function-with-geocase.md)
 	- [`docs/design/case-recommendation-service.md`](../design/case-recommendation-service.md)
@@ -276,21 +276,21 @@ pytest tests/unit/
 pytest tests/unit/test_case_models.py
 ```
 
-### CI test segmentation
+### CI job segmentation
 
-GitLab pipeline job segmentation currently follows this split:
+CI runs on GitHub Actions. `.github/workflows/ci.yml` fires on push and pull
+request and defines five jobs:
 
-- `catalog_validation`
-	- defined in `ci/catalog-validation.yml`
-	- validates catalog/index integrity via `scripts/build_case_index.py` and `scripts/validate_catalog.py`
-- `core_tests`
-	- defined in `ci/core-tests.yml`
-	- runs on push and merge request pipelines
-	- runs metadata/catalog/plugin-focused unit tests
-- `extended_tests`
-	- defined in `ci/extended-tests.yml`
-	- runs on merge request pipelines and default branch pipelines
-	- runs runtime/loaders/assertions-focused unit tests
+- `tests` — the suite on a Python 3.11/3.14 matrix
+- `lint` — `ruff format --check` and `ruff check` over `src` and `tests`
+- `typecheck` — `mypy src`
+- `docs` — `mkdocs build --strict`
+- `catalog` — catalog integrity: `scripts/build_case_index.py --check`,
+  `scripts/validate_catalog.py`, the fixture and checksum generators, and the
+  generated-page and coverage-matrix drift gates
+
+`.github/workflows/release.yml` handles tagged builds and publishing; see
+[Releasing](releasing.md).
 
 ### Building docs
 

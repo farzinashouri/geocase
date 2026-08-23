@@ -1,5 +1,11 @@
 # Ship GeoCase as an installable package
 
+> **Status: steps 1–4 and 8 implemented 2026-08-23; steps 5–7 and 9 not started.**
+> Steps 5–7 (TestPyPI/PyPI upload) are blocked on the browser-side
+> pending-publisher registrations, which are the user's to do. Step 8 (README
+> rewrite) was taken out of order — it depends on nothing being published. Step 9
+> (plan archive, real-library validation) is untouched.
+
 ## Context
 
 GeoCase is complete as a library — 1701 tests pass, 135 curated cases, a 27-name pinned
@@ -41,7 +47,20 @@ files. The suite passes with it. Commit as-is — no code changes needed.
 Remaining stale references are **docs/plans only** and are historical records, so leave them:
 `docs/plans/{19,20,21,22}.md`, `docs/plans/index.md`, `docs/evidence/.../TEMPLATE.md`.
 
-### 2. Fix the stale case count: 134 → 135
+### 2. Fix the stale case count: 134 → 135 — **done 2026-08-23**
+
+Mostly already fixed before this pass: `recipe/meta.yaml`, `README.md`,
+`docs/dataset-catalog.md`, `docs/index.md` and `docs/contributing/releasing.md` all
+read 135 already, and `scripts/validate_catalog.py:304` now gates the documented
+counts against `len(get_registry())`. Two stale spots remained and were fixed:
+
+- `.github/workflows/release.yml:50` — comment said "all 134 indexed cases";
+  reworded to not name a number, since the script reads the index.
+- `CHANGELOG.md` "Known numbers" (134) — left as-is: it is the historical 1.0.0
+  snapshot and was correct at that release.
+
+`docs/dataset-catalog.md:36`'s "134 are `size_class: tiny`" is **not** a stale count —
+it is 134 tiny + 1 small = 135, confirmed against the registry.
 
 The catalog grew to 135 (`geocase.list_cases()` confirms; `src/geocase/benchmark/fixtures.py:3`
 already says 135) but the number is hardcoded as 134 elsewhere. **`recipe/meta.yaml:40` is a
@@ -54,28 +73,58 @@ Update: `recipe/meta.yaml:40`, `README.md:5`, `CHANGELOG.md:208`,
 `scripts/verify_dist.py` reads `case-index.yaml` dynamically and needs no change — the right
 pattern; prefer it over new hardcoding.
 
-### 3. Resolve the 4.2 MB vs 2.1 MB contradiction
+### 3. Resolve the 4.2 MB vs 2.1 MB contradiction — **done 2026-08-23, plan premise was backwards**
 
-`README.md:5` says 4.2 MB; `docs/dataset-catalog.md:31` and a CHANGELOG "Fixed" entry claim the
-real figure is 2.1 MB. Measured `du -sh src/geocase/data` = **4.2 MB**, so README is correct and
-the "correction" to 2.1 MB is itself wrong. Fix the two places asserting 2.1 MB.
+The plan concluded README's 4.2 MB was right because `du -sh src/geocase/data` reports
+4.2 MB. That was the wrong measurement. Both numbers are real but measure different
+things:
 
-Note: the 2 MB artifact ceiling in `verify_dist.py:47-50` is **not** in conflict — the data
-compresses ~9x (measured wheel 456 KB, sdist 274 KB). Leave it.
+| Measurement | Value |
+|---|---|
+| `du -sh src/geocase/data` (apparent disk usage) | 4.2 MB |
+| Real byte sum of the tree | 2.4 MB |
+| Byte sum of payload files only (no `case.yaml`/`notes.md`/`checksums.sha256`) | **2.1 MB** |
+| `geocase/data/**` inside the built wheel, uncompressed | 2.3 MB |
 
-### 4. Truth-pass the false claims
+`du` is inflated by 4 KB block rounding across **572 files** in 218 directories — that
+padding is ~1.8 MB and reaches no artifact. So **2.1 MB is correct** and the earlier
+"correction" was right. Fixed the places still asserting 4.2 MB:
 
-- `CHANGELOG.md:116` — "the first release published to PyPI" is false today. Reword to
-  present tense / move under Unreleased until the upload lands.
-- `CHANGELOG.md:114` — `## [1.0.0] — 2026-08-02` is a past date for an unreleased version.
-  Correct at real release time.
-- `CHANGELOG.md:170` — "`project.urls` now point at GitLab" is false; they point at GitHub
-  (`pyproject.toml:72-77`), matching `origin`. Fix.
-- `README.md:31` — the unhedged `conda install -c conda-forge geocase` has no feedstock. Hedge
-  it the way the pip line at `README.md:22` already is.
-- `docs/contributing/releasing.md:14` — says "GitLab-issued JWT"; the repo is GitHub Actions.
-  Also `:66-71` describes a `__version__`/`importlib.metadata` check that `verify_dist.py` no
-  longer does (it reads `pyproject.toml`). Fix both.
+- `CHANGELOG.md` "Known numbers" and the "shrank from 36 MB" entry → 2.1 MB.
+- `scripts/verify_dist.py:42` comment — said the tree is 4.2 MB and compresses ~9x;
+  it is 2.1 MB and compresses ~5x. The 2 MB ceiling itself is unchanged and still has
+  ~4x headroom (wheel 456 KB, sdist 272 KB).
+- The CHANGELOG "Fixed" entry now records *why* the two figures differed, so this does
+  not get re-reverted by the next person who runs `du`.
+
+### 4. Truth-pass the false claims — **done 2026-08-23**
+
+Already fixed before this pass: the "first release published to PyPI" claim (a
+correction note was in place), the `project.urls` GitLab claim, the README conda hedge,
+and `releasing.md:14`'s "GitLab-issued JWT" (now reads GitHub Actions).
+
+Fixed here:
+
+- `docs/contributing/releasing.md` — the `__version__`/`importlib.metadata` warning
+  described a check `verify_dist.py` does not do. It reads `project.version` from
+  `pyproject.toml` *deliberately* (see its comment at `:211-216`); the note now says so.
+- `CHANGELOG.md` `## [1.0.0] — 2026-08-02` — kept the date (it is when the feature set
+  was finalised) but the heading and lede now say **not yet released** outright, instead
+  of leaving that to a correction blockquote below the summary line.
+- `README.md:5` / `docs/index.md:9` — "Status: **1.0**" read as released; both now say
+  "1.0, not yet published to PyPI — install from source for now."
+
+**Found beyond the plan** — `docs/contributing/workflow.md` carried two more false CI
+claims: it described GitLab pipeline jobs defined in `ci/catalog-validation.yml`,
+`ci/core-tests.yml` and `ci/extended-tests.yml`. There is no `ci/` directory and never
+was; CI is GitHub Actions. Rewrote the "CI test segmentation" section to describe the
+five real jobs in `.github/workflows/ci.yml` (`tests`, `lint`, `typecheck`, `docs`,
+`catalog`), and corrected the April 2026 log bullet in place.
+
+**Gotcha for future edits:** `scripts/validate_catalog.py:304` regex-matches the literal
+phrase ``N cases in `case-index.yaml` `` in `releasing.md`. Rewording that sentence to
+avoid hardcoding the number breaks three tests. The gate is what keeps the number
+honest, so keep the phrase and let the gate check it.
 
 ### 5. Publish `geofacts` 0.1.1 to TestPyPI, then PyPI
 
@@ -114,7 +163,30 @@ is the one worth protecting.
 Real-PyPI `1.0.0` and the conda-forge staged-recipes PR are the follow-up, once the rehearsal
 is green. Do not cut `v1.0.0` in this pass.
 
-### 8. Rewrite the README opening (highest-leverage change in this plan)
+### 8. Rewrite the README opening (highest-leverage change in this plan) — **done 2026-08-23, ahead of steps 5–7**
+
+Done out of order: nothing here depends on a published artifact, and steps 5–7 are
+blocked on browser-side registrations.
+
+The NoData case won over the CRS-equality one — it needs no explanation and the
+numbers are violent. `geotiff_nodata_small` has 2 NoData pixels (`-9999`) out of
+100; `array.mean()` returns **−152.86 m** where the masked mean is **48.08 m**.
+The example was executed before being written down (verification 8, run against
+the local conda env rather than a clean-venv install, which is not available until
+step 6): the assertion fails with exactly the output quoted in the README, and it
+needs no `import geocase` — the plugin registers via `[project.entry-points.pytest11]`.
+
+Framing landed as planned: failure first, `test_data/sample.tif` named as the honest
+competitor, AI demoted to a parenthetical closing line, status/compatibility block
+moved below the example. "foolproof"/"standardized" were already absent.
+
+**Constraint to preserve:** `scripts/validate_catalog.py:300` regex-matches
+``(\d+) bundled cases`` in `README.md` — the phrase lives in the status block, so the
+block can move but the sentence must not be reworded. Gate re-run green (7 documented
+counts checked), as is `mkdocs build --strict`.
+
+Not touched: `docs/index.md` carries the same status block and old lede. The plan
+scopes this step to `README.md`; the site homepage is a separate call.
 
 Currently the first thing a reader sees is a compatibility promise and a version status block —
 information that matters to *existing* users and means nothing to a newcomer. Nothing shows the
@@ -179,12 +251,17 @@ then run the catalog live against the top one or two targets.
 
 | File | Change |
 |---|---|
-| 9 files with the `geofacts` rename | commit as-is |
-| `recipe/meta.yaml:40` | 134 → 135 (**build-breaker**) |
-| `README.md`, `CHANGELOG.md`, `docs/dataset-catalog.md`, `docs/contributing/releasing.md` | case count, MB figure, truth pass |
+| 9 files with the `geofacts` rename | commit as-is — **done** |
+| `recipe/meta.yaml:40` | 134 → 135 — was already 135; no change needed |
+| `.github/workflows/release.yml:50` | drop the hardcoded 134 from the comment — **done** |
+| `CHANGELOG.md` | 4.2 → 2.1 MB (×2), unreleased-status lede, measurement note — **done** |
+| `scripts/verify_dist.py:42` | 4.2 MB → 2.1 MB, ~9x → ~5x in the ceiling comment — **done** |
+| `docs/contributing/releasing.md` | `__version__` note → `pyproject.toml` — **done** |
+| `README.md:5`, `docs/index.md:9` | status block now says not-yet-published — **done** |
+| `docs/contributing/workflow.md` | replace phantom GitLab `ci/*.yml` jobs with the real GH Actions jobs — **done** |
 | `pyproject.toml:7` | → `1.0.0rc2` |
 | `../geofacts/pyproject.toml` | add sdist target |
-| `README.md` (opening) | lead with a real edge case; demote AI framing; cut "foolproof"/"standardized" |
+| `README.md` (opening) | lead with a real edge case; demote AI framing; status block moved below it — **done** |
 | `docs/plans/*` → `docs/plans/archive/` | move superseded plans |
 
 ## Verification
