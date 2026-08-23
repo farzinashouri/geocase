@@ -1,5 +1,7 @@
 # Plan 21 — Adoption action plan
 
+*Written before the rename; `geospatial-spec` is now `geofacts`.*
+
 > **Status: proposed 2026-08-15.** Execution plan, not a strategy document. It does not
 > supersede [Plan 20](20-restart-spec-first.md); it sequences Plan 20's open user actions
 > (U16, U17) against the concrete release and adoption blockers measured in the working tree

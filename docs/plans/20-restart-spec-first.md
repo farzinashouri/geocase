@@ -1,5 +1,8 @@
 # Plan 20 — Restart, spec-first: split the repo, ship the guard, gate the rest
 
+*Written before the rename; `geospatial-spec` is now `geofacts`, and `geocase.synth` is now
+`geocase.raster`.*
+
 > **Implementation status (2026-08-13).** Phase 1 is **built and green** in the sibling
 > repo `../geospatial-spec` (42 tests, ruff + mypy strict clean, zero dependencies verified by
 > isolated install, 60 KB vendored single file with a `--check` drift gate). Phase 2 is

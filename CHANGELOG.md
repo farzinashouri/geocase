@@ -111,10 +111,21 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   leaves only seven deliberate cases near the origin. The bundled-payload figure is also
   corrected from 4.2 MB to its actual 2.1 MB.
 
+- **The bundled case count is 135, not 134.** The 1.0.0 entry's "134 bundled cases" was
+  correct at that release; the catalog has grown by one since. `README.md`, `docs/index.md`
+  and `recipe/meta.yaml`'s build-time assertion said 134 and now say 135, and
+  `scripts/validate_catalog.py` gates all three against `len(get_registry())` so the number
+  cannot drift again.
+
 ## [1.0.0] — 2026-08-02
 
-First stable release, and the first release published to PyPI. Version `0.1.0` was never
-uploaded.
+First stable release. Version `0.1.0` was never uploaded.
+
+> **Correction (2026-08-23):** this entry originally claimed 1.0.0 was "the first release
+> published to PyPI". It was not — no GeoCase version has ever been uploaded to PyPI or
+> TestPyPI. The release process in
+> [Releasing](contributing/releasing.md) is written and gated but has not yet been run;
+> see [Plan 25](plans/25-ship-geocase-as-a-package.md).
 
 ### The compatibility promise
 
@@ -167,7 +178,9 @@ dishonest.
 - `requires-python` is `>=3.11`, with classifiers for 3.11 through 3.14 — the versions
   actually tested rather than the ones plausibly supported.
 - Development status classifier: `3 - Alpha` → `5 - Production/Stable`.
-- `project.urls` now point at GitLab, where the project actually lives.
+- `project.urls` now point at the canonical repository host. (This entry originally said
+  "GitLab"; the project has always lived on GitHub at
+  <https://github.com/farzinashouri/geocase>, and the URLs point there.)
 - The case schema's `format` enum went from 7 values to 17, and its `assertions` block
   from 6 documented fields to all 16. Both are now pinned to the models by a test.
 

@@ -11,7 +11,8 @@ a permanently broken `1.0.0`. Every gate below exists because of that.
 
 ### Trusted publishing (OIDC)
 
-Uploads authenticate with a short-lived token minted from a GitLab-issued JWT.
+Uploads authenticate with a short-lived token minted from a GitHub Actions
+OIDC JWT — the workflow requests it via `id-token: write`.
 Nothing long-lived is stored in CI variables, so there is no credential to leak
 or rotate.
 

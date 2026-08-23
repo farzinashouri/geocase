@@ -1,5 +1,7 @@
 # Plan 19: Spec table as a separate, zero-dependency package
 
+*Written before the rename; `geospatial-spec` is now `geofacts`.*
+
 ## Context
 
 Three honest-evaluation runs against raster codebases all returned "wouldn't adopt," but all

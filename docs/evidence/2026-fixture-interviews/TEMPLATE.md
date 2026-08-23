@@ -36,7 +36,7 @@ that drove it>
 
 **Confidence:** high | medium | low
 
-## Would geocase/geospatial-spec have helped?
+## Would geocase/geofacts have helped?
 
 <Honest answer, including "no". This is the field most likely to be wishful;
 write it as if the reader is looking for the flaw.>

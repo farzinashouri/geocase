@@ -2,11 +2,11 @@
 
 GeoCase is a geospatial testing toolkit and case catalog for realistic, reproducible `pytest` tests.
 
-> Status: **1.0**. The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 134 bundled cases, 4.2 MB. Remote dataset transport is deferred to v1.1; see the [changelog](CHANGELOG.md).
+> Status: **1.0**. The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 135 bundled cases, 2.1 MB. Remote dataset transport is deferred to v1.1; see the [changelog](CHANGELOG.md).
 
 The main goal is simple: use plain `pytest` with a few GeoCase fixtures and markers to run your geospatial code against curated edge cases.
 
-Instead of hand-picking random sample files, you select packaged cases (vector, raster, NetCDF) and run your function against scenarios such as CRS issues, dateline crossing, topology problems, and NoData behavior.
+Instead of hand-picking random sample files, you select packaged cases (vector, raster, NetCDF) and run your function against the failure modes that actually break geospatial pipelines: **NoData** silently averaged into a statistic, geometry crossing the **antimeridian** (dateline) and coming back as a ring around the globe, a **CRS mismatch** between two layers that overlay perfectly on screen, and EPSG **axis order** flipping latitude and longitude.
 
 ## Quick Start
 
@@ -24,12 +24,18 @@ When a package release is published, install from the package index:
 pip install "geocase[all]"
 ```
 
-Or from conda-forge — note the extras are not packaged there, since bundling
-GDAL would make the conda package far heavier than the PyPI equivalent:
+A conda-forge feedstock does not exist yet. When one does, installing from it
+will not carry the extras, since bundling GDAL would make the conda package far
+heavier than the PyPI equivalent:
 
 ```bash
 conda install -c conda-forge geocase
 ```
+
+GeoCase depends on [`geofacts`](https://github.com/farzinashouri/geofacts) at
+runtime — a zero-dependency table of geospatial product facts (radiometric
+constants, CRS conventions) that the raster presets are machine-checked
+against. Everything else is optional and gated behind extras.
 
 ### 2) Write a test with GeoCase markers
 
@@ -77,7 +83,7 @@ This repository uses GitHub Actions, defined in `.github/workflows/`.
 - `docs` — `mkdocs build --strict`
 
 `release.yml` runs only on `vX.Y.Z` tags; see
-[Releasing](contributing/releasing.md).
+[Releasing](docs/contributing/releasing.md).
 
 Local equivalents:
 
@@ -107,6 +113,8 @@ If a GeoCase marker is missing, resolves no cases, refers to an unknown suite, o
 - [`docs/case-discovery.md`](docs/case-discovery.md)
 - [`docs/assertions-reference.md`](docs/assertions-reference.md)
 - [`docs/examples-index.md`](docs/examples-index.md)
+- [`docs/benchmark/quickstart.md`](docs/benchmark/quickstart.md) — the LLM benchmark built on the catalog
+- [`src/geocase/raster/`](src/geocase/raster/) — `geocase.raster`, a dependency-free raster primitive plus Sentinel-1/2 presets
 - [`docs/plans/development-plan.md`](docs/plans/development-plan.md)
 - [`docs/contributing/workflow.md`](docs/contributing/workflow.md)
 - [`docs/design/case-recommendation-service.md`](docs/design/case-recommendation-service.md)
