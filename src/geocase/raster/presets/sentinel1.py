@@ -23,7 +23,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import numpy as np
-from geospatial_spec.sentinel1 import explain, pixel_spacing_m, pixel_value_convention
+from geofacts.sentinel1 import explain, pixel_spacing_m, pixel_value_convention
 
 from geocase.raster.primitive import DEFAULT_SIZE, FixtureSpec, raster_fixture
 

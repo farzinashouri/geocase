@@ -59,7 +59,7 @@ Core data flow — keep this mental model:
 - `benchmark/` — separate LLM-benchmark subsystem (tasks, prompts, runners, grading). Not part of the library's compatibility promise.
 - Case data lives in `src/geocase/data/core/{vector,raster,netcdf}/<case_id>/` as `case.yaml` + payload + `checksums.sha256` + `notes.md`.
 
-`geospatial-spec` is a hard dependency and the dependency is strictly one-directional: it has zero dependencies, permanently, and must never import from geocase.
+`geofacts` (formerly `geospatial-spec`) is a hard dependency and the dependency is strictly one-directional: it has zero dependencies, permanently, and must never import from geocase.
 
 ## Conventions that bite
 

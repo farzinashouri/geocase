@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
-from geospatial_spec.sentinel2 import boa_offset, quantification, to_reflectance
+from geofacts.sentinel2 import boa_offset, quantification, to_reflectance
 
 from geocase.raster.presets import DEFAULT_SIZE, sentinel1_grd, sentinel2_l2a
 

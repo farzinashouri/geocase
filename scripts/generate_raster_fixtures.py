@@ -17,7 +17,7 @@ The generator only writes the ``.tif`` primary files. Case metadata
 Plan 18 Phase 1: the four S2/S1 product fixtures are no longer thin
 ``RasterSpec`` ramps — they are emitted by ``geocase.raster.presets``, whose facts
 are machine-checked against real granule metadata
-(the geospatial-spec package). The ``--check`` byte-stability gate
+(the geofacts package). The ``--check`` byte-stability gate
 covers them identically.
 """
 

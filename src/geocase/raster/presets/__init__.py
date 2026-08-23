@@ -1,7 +1,7 @@
 """Spec-accurate product presets, built over the primitive.
 
 Presets are a convenience, never the only door. The radiometric facts they
-encode come from ``geospatial-spec``, which machine-checks them against real ESA
+encode come from ``geofacts``, which machine-checks them against real ESA
 product metadata — so the spec table has exactly one home and this package is
 its first consumer.
 

@@ -1,6 +1,6 @@
 """Spec-accurate synthetic Sentinel-2 L2A products, as a preset.
 
-Every radiometric fact here comes from ``geospatial-spec``, reached through its
+Every radiometric fact here comes from ``geofacts``, reached through its
 guard API — so this module cannot encode the offset without stating which
 baseline it is encoding for. That is the same discipline the guard imposes on
 production code, applied to the generator that produces test data.
@@ -18,7 +18,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import numpy as np
-from geospatial_spec.sentinel2 import (
+from geofacts.sentinel2 import (
     baseline_has_offset,
     boa_offset,
     explain,

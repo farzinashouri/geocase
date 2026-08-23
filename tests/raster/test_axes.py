@@ -89,7 +89,7 @@ class TestMetadataAxes:
     def test_epsg_str_vs_int_is_the_identity_trap(self) -> None:
         axes.epsg_str_vs_int()  # fixture builds
         assert 4326 != "EPSG:4326"  # noqa: PLR0133 - the point of the axis
-        from geospatial_spec.common import epsg_equivalent
+        from geofacts.common import epsg_equivalent
 
         assert epsg_equivalent(4326, "EPSG:4326")
 
