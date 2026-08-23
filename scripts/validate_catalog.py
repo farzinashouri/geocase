@@ -299,6 +299,10 @@ def _validate_documented_case_ids(docs_root: Path, registry: CaseRegistry) -> in
 _COUNT_CLAIMS: tuple[tuple[str, str], ...] = (
     ("README.md", r"(\d+) bundled cases"),
     ("docs/index.md", r"(\d+) bundled cases"),
+    ("docs/getting-started.md", r"(\d+) bundled cases"),
+    ("docs/contributing/workflow.md", r"(\d+) bundled cases"),
+    ("docs/contributing/releasing.md", r"(\d+) cases in `case-index\.yaml`"),
+    ("docs/contributing/structure-and-planning.md", r"catalog is \*\*(\d+) cases\*\*"),
     ("recipe/meta.yaml", r"len\(geocase\.list_cases\(\)\) == (\d+)"),
 )
 

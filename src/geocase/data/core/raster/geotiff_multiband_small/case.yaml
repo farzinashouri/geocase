@@ -2,7 +2,7 @@ id: geotiff_multiband_small
 title: GeoTIFF Multi-Band Small
 description: >-
   A three-band GeoTIFF with NoData in every band. Exercises band-order preservation and
-  per-band NoData masking on multiband raster reads.
+  per-band NoData handling on multiband raster reads.
 category: raster
 format: GeoTIFF
 test_tier: unit
