@@ -62,6 +62,10 @@ Confirm that geometry utilities gracefully handle Polygon EMPTY inputs.
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
 
+## Notes
+
+Used for functions that should accept or short-circuit on an empty polygon geometry.
+
 ## Required capabilities
 
 - `load`
@@ -70,7 +74,7 @@ Confirm that geometry utilities gracefully handle Polygon EMPTY inputs.
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

@@ -63,6 +63,10 @@ Confirm that vector geometries in WGS84 can be reprojected to the raster grid CR
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
 
+## Notes
+
+A WGS84 polygon that overlaps the bundled `geotiff_utm_boundary` raster after reprojection to EPSG:32633.
+
 ## Required capabilities
 
 - `load`
@@ -72,7 +76,7 @@ Confirm that vector geometries in WGS84 can be reprojected to the raster grid CR
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

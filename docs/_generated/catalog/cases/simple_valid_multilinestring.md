@@ -62,6 +62,10 @@ Ensure multi-part line geometries are represented in core vector coverage and se
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `MultiLineString` |
 
+## Notes
+
+Baseline MultiLineString case for multi-part line coverage.
+
 ## Required capabilities
 
 - `load`
@@ -71,7 +75,7 @@ Ensure multi-part line geometries are represented in core vector coverage and se
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

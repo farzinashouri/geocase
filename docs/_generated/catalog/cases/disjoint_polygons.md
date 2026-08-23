@@ -63,6 +63,10 @@ Confirm that disjoint features remain separate and do not intersect.
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
 
+## Notes
+
+Two separated polygons for dissolve and intersection tests that should remain non-overlapping.
+
 ## Required capabilities
 
 - `load`
@@ -72,7 +76,7 @@ Confirm that disjoint features remain separate and do not intersect.
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

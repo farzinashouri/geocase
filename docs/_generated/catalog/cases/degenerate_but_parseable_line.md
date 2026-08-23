@@ -64,6 +64,10 @@ Ensure loading succeeds for a degenerate but parseable line while making its zer
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `LineString` |
 
+## Notes
+
+Zero-length LineString that parses successfully but is geometrically degenerate.
+
 ## Required capabilities
 
 - `load`
@@ -73,7 +77,7 @@ Ensure loading succeeds for a degenerate but parseable line while making its zer
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

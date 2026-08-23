@@ -62,6 +62,10 @@ Confirm that a basic point fixture is discoverable and loadable through the cata
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
 
+## Notes
+
+Baseline Point case for selector, loader, and cross-format coverage.
+
 ## Required capabilities
 
 - `load`
@@ -71,7 +75,7 @@ Confirm that a basic point fixture is discoverable and loadable through the cata
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

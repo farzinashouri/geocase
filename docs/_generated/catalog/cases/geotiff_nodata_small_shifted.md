@@ -57,6 +57,13 @@ Expose alignment helpers that require identical extents instead of recognizing r
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
 
+## Notes
+
+This fixture is a one-pixel eastward shift of `geotiff_nodata_small`. It keeps
+resolution, CRS, band count, and nodata settings unchanged, but moves the
+origin by one pixel so alignment logic can distinguish exact-equality checks
+from true pixel-lattice compatibility.
+
 ## Required capabilities
 
 - `load`
@@ -66,7 +73,7 @@ Expose alignment helpers that require identical extents instead of recognizing r
 ## Files
 
 - Primary: `nodata_sample_shifted.tif`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

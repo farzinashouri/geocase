@@ -63,6 +63,10 @@ Ensure vector loading and downstream utilities handle a baseline Web Mercator po
 | `expected_epsg` | `3857` |
 | `expected_geometry_types` | `Point` |
 
+## Notes
+
+Baseline EPSG:3857 point for projected-vector coverage.
+
 ## Required capabilities
 
 - `load`
@@ -72,7 +76,7 @@ Ensure vector loading and downstream utilities handle a baseline Web Mercator po
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

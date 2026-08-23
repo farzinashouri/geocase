@@ -64,6 +64,12 @@ Expose clustering logic that fails to connect a transitive dateline-spanning clu
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
 
+## Notes
+
+This fixture places three points around the antimeridian. Geodesically they
+form one connected component under a `50 km` threshold, but naive projected
+clustering can incorrectly split them into multiple clusters.
+
 ## Required capabilities
 
 - `load`
@@ -73,7 +79,7 @@ Expose clustering logic that fails to connect a transitive dateline-spanning clu
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

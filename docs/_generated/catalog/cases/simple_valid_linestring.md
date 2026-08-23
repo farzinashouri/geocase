@@ -62,6 +62,10 @@ Confirm that a basic LineString fixture is discoverable and loadable through the
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `LineString` |
 
+## Notes
+
+Baseline LineString case for selector and loader coverage.
+
 ## Required capabilities
 
 - `load`
@@ -71,7 +75,7 @@ Confirm that a basic LineString fixture is discoverable and loadable through the
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

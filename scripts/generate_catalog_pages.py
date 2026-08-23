@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from collections import defaultdict
@@ -29,12 +30,23 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
 OUTPUT_ROOT = REPO_ROOT / "docs" / "_generated" / "catalog"
 
-DEFAULT_SITE_URL = "https://farzinashouri.github.io/geocase"
+# PLACEHOLDER, NOT A DEPLOYMENT TARGET. This value is baked into every case
+# page's ``schema.org/Dataset`` JSON-LD, and Google Dataset Search deduplicates
+# on that ``url``. Serving these pages from this host before the owned domain
+# exists is the one thing docs/plans/24-catalog-site-on-owned-domain.md forbids:
+# the github.io copy would be the older and more linked of the two, so Google
+# would likely credit it as canonical, and it is Google that picks -- not us.
+# Override with GEOCASE_SITE_URL (or --site-url) once the domain is chosen, then
+# regenerate; that is one env var rather than an audit of 135 committed pages.
+DEFAULT_SITE_URL = os.environ.get(
+    "GEOCASE_SITE_URL", "https://farzinashouri.github.io/geocase"
+)
 
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from geocase.catalog.registry import get_registry  # noqa: E402
+from geocase.catalog.roots import case_roots_by_id  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -294,8 +306,78 @@ def _json_ld(case: Any, site_url: str) -> list[str]:
     return ['<script type="application/ld+json">', rendered, "</script>", ""]
 
 
+#: Heading levels are shifted by this much when notes are inlined, so the notes'
+#: own ``##`` sections nest under the page's ``## Notes`` rather than competing
+#: with the page's structure.
+_NOTES_HEADING_SHIFT = 1
+
+#: Deepest heading Markdown defines. Anything that would shift past it is left
+#: at ``######`` rather than emitted as invalid syntax.
+_MAX_HEADING_LEVEL = 6
+
+
+def _notes_body(case_dir: Path, notes_name: str) -> list[str]:
+    """Return the case's ``notes.md`` body, ready to nest under ``## Notes``.
+
+    This prose is the only differentiated, non-templated content the catalog
+    has -- 119 hand-written files that the pages previously surfaced as a bare
+    filename. Without it the case pages are boilerplate variants, which is what
+    a search engine calls thin content.
+
+    The leading H1 is dropped so the page keeps exactly one, and every
+    remaining heading is demoted one level so the notes nest correctly.
+    """
+    path = case_dir / notes_name
+    if not path.exists():
+        return []
+
+    raw = path.read_text(encoding="utf-8").strip()
+    if not raw:
+        return []
+
+    out: list[str] = []
+    in_fence = False
+    seen_h1 = False
+    for line in raw.split("\n"):
+        stripped = line.lstrip()
+        if stripped.startswith("```") or stripped.startswith("~~~"):
+            in_fence = not in_fence
+            out.append(line)
+            continue
+        if in_fence:
+            out.append(line)
+            continue
+
+        match = re.match(r"^(#{1,6})(\s+)(.*)$", line)
+        if match is None:
+            out.append(line)
+            continue
+
+        hashes, gap, text = match.groups()
+        # The notes' own title duplicates the page's H1 (the case title), so it
+        # is dropped rather than demoted.
+        if len(hashes) == 1 and not seen_h1:
+            seen_h1 = True
+            continue
+        level = min(len(hashes) + _NOTES_HEADING_SHIFT, _MAX_HEADING_LEVEL)
+        out.append(f"{'#' * level}{gap}{text}")
+
+    while out and not out[0].strip():
+        out.pop(0)
+    while out and not out[-1].strip():
+        out.pop()
+    if not out:
+        return []
+
+    return ["## Notes", "", *out, ""]
+
+
 def _render_case_page(
-    case: Any, all_cases: list[Any], site_url: str, hub_risks: set[str]
+    case: Any,
+    all_cases: list[Any],
+    site_url: str,
+    hub_risks: set[str],
+    case_dir: Path | None = None,
 ) -> str:
     """Render the full markdown page for a single case."""
     lines = _front_matter(case.title, _meta_description(case))
@@ -354,6 +436,12 @@ def _render_case_page(
         lines.extend(_table(("Assertion", "Expected"), assertion_rows))
         lines.append("")
 
+    # The hand-written prose sits high on the page, right after what the case
+    # asserts: it is the part a reader actually reads, and the tables below it
+    # are reference material.
+    if case_dir is not None and getattr(case.files, "notes", None):
+        lines.extend(_notes_body(case_dir, str(case.files.notes)))
+
     if case.expected_capabilities:
         lines.append("## Required capabilities")
         lines.append("")
@@ -367,7 +455,8 @@ def _render_case_page(
     for sidecar in getattr(case.files, "sidecars", []):
         lines.append(f"- Sidecar: `{sidecar}`")
     if getattr(case.files, "notes", None):
-        lines.append(f"- Notes: {_collapse(case.files.notes)}")
+        # Named for completeness only; its body is rendered above under Notes.
+        lines.append(f"- Notes: `{_collapse(str(case.files.notes))}`")
     lines.append("")
 
     source = getattr(case, "source", None)
@@ -538,9 +627,10 @@ def build_pages(cases: list[Any], site_url: str) -> dict[str, str]:
         "index.md": _render_index(cases, by_risk, by_format, hub_risks),
     }
 
+    case_dirs = case_roots_by_id()
     for case in cases:
         pages[f"cases/{case.id}.md"] = _render_case_page(
-            case, cases, site_url, hub_risks
+            case, cases, site_url, hub_risks, case_dirs.get(case.id)
         )
 
     for risk in sorted(hub_risks):

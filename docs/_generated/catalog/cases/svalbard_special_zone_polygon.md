@@ -63,6 +63,10 @@ Confirm that robust UTM-zone logic applies the Svalbard special zone rules.
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
 
+## Notes
+
+A polygon in the Svalbard latitude band used to test special UTM zone logic.
+
 ## Required capabilities
 
 - `load`
@@ -72,7 +76,7 @@ Confirm that robust UTM-zone logic applies the Svalbard special zone rules.
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

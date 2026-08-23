@@ -63,6 +63,10 @@ Ensure point-based utilities handle the south pole without crashing or making in
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
 
+## Notes
+
+Point exactly at the geographic south pole for polar edge-case coverage.
+
 ## Required capabilities
 
 - `load`
@@ -72,7 +76,7 @@ Ensure point-based utilities handle the south pole without crashing or making in
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

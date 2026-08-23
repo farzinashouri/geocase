@@ -64,6 +64,10 @@ Expose workflows that assume all geometry engines agree on polygon validity and 
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
 
+## Notes
+
+Polygon with touching shell/interior ring to capture engine-dependent validity behavior.
+
 ## Required capabilities
 
 - `load`
@@ -73,7 +77,7 @@ Expose workflows that assume all geometry engines agree on polygon validity and 
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

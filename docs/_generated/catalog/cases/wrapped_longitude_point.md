@@ -63,6 +63,12 @@ Expose helpers that preserve wrapped geographic longitudes instead of normalizin
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
 
+## Notes
+
+This fixture stores a valid EPSG:4326 point using a wrapped longitude of `190°`.
+It is useful for helpers that should normalize geographic longitude values back
+into the conventional `[-180, 180]` range.
+
 ## Required capabilities
 
 - `load`
@@ -72,7 +78,7 @@ Expose helpers that preserve wrapped geographic longitudes instead of normalizin
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 
