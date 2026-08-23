@@ -1,3 +1,7 @@
+---
+description: "Run your existing geospatial function against curated edge cases — NoData, dateline crossing, topology errors, CRS issues — with a few pytest fixtures."
+---
+
 # Testing your geospatial function with GeoCase
 
 This guide shows how to test an existing geospatial function using GeoCase cases.

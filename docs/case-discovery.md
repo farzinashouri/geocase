@@ -1,3 +1,7 @@
+---
+description: "Find GeoCase test cases by metadata — category, format, geometry type, risk type, test tier — instead of memorizing individual case IDs."
+---
+
 # Case Discovery
 
 This guide shows how to find GeoCase cases by metadata instead of memorizing individual case IDs.

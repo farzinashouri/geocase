@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="GeoCase">
+  <title>GeoCase</title>
+  <!-- A raster grid with one NoData cell: the catalog's whole subject in one mark. -->
+  <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+    <rect x="3" y="3" width="26" height="26" rx="3"/>
+    <path d="M3 11.667h26M3 20.333h26M11.667 3v26M20.333 3v26"/>
+  </g>
+  <rect x="12.4" y="12.4" width="7.2" height="7.2" fill="currentColor" opacity="0.9"/>
+</svg>

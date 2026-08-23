@@ -1,3 +1,7 @@
+---
+description: "GeoCase is a pytest plugin and case catalog: 135 curated geospatial test cases covering NoData, antimeridian crossing, CRS mismatch and axis order."
+---
+
 # GeoCase
 
 GeoCase is an open geospatial testing toolkit and case catalog for realistic, reproducible, parameterized tests.

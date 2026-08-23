@@ -1,3 +1,7 @@
+---
+description: "Install GeoCase and run your first geospatial test in plain pytest, using the geocase_case fixture and the geocase_suite and geocase_select markers."
+---
+
 # Getting Started
 
 This guide shows the fastest way to start using GeoCase with plain `pytest`.

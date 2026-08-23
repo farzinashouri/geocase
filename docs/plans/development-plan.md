@@ -93,6 +93,11 @@ Named here so it is not lost, and not started:
   [Plan 26](26-docs-truth-pass-and-seo-prep.md) §3.3 rewrote only the cases whose risk types
   match the queries Plan 24 pre-commits to measuring. The rest still carry descriptions written
   for contributors.
+- **Open Graph social cards.** `mkdocs.yml` declares an explicit `plugins:` block, but the
+  `social` plugin is left out: it needs the native libcairo/libfreetype libraries, absent from
+  both the development machine and the CI runner, so enabling it unverified would turn the
+  `docs` gate red. Needs an apt step in the `docs` job plus `pillow`/`cairosvg` in the `docs`
+  extra. Worth doing when the site is actually about to be served.
 - **Remote dataset transport** — deferred from v1.0 to v1.1. Manifests parse and resolve; ids
   are discoverable; the data is not fetched.
 - **Coverage gaps in the catalog** — rotated/skewed affine transforms, non-square pixels,

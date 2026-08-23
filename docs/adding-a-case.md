@@ -1,3 +1,7 @@
+---
+description: "How to add a case to the GeoCase catalog: write the metadata first, regenerate the case index, then validate against the catalog gates."
+---
+
 # Adding a Case
 
 This guide explains how to add a new GeoCase case to the bundled catalog.

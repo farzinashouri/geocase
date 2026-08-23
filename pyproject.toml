@@ -12,7 +12,20 @@ requires-python = ">=3.11"
 authors = [
     { name = "Farzin Ashouri" },
 ]
-keywords = ["geospatial", "testing", "gis", "pytest", "test-cases"]
+keywords = [
+    "geospatial",
+    "testing",
+    "gis",
+    "pytest",
+    "test-cases",
+    "fixtures",
+    "raster",
+    "vector",
+    "geotiff",
+    "crs",
+    "nodata",
+    "antimeridian",
+]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Framework :: Pytest",
