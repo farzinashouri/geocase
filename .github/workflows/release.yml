@@ -39,7 +39,13 @@ jobs:
           python -m pip install --upgrade pip
           # Pinned, like the lint gate: an unpinned build backend would let
           # the artifact change without a code change.
-          python -m pip install "build==1.2.2" "twine==6.1.0"
+          #
+          # twine must be new enough for the Metadata-Version the build
+          # backend emits. Current hatchling writes 2.5, which twine 6.1.0
+          # rejects outright as invalid metadata -- a green local `twine
+          # check` on a newer twine is not evidence this passes here. Bump
+          # this pin whenever the hatchling floor in pyproject.toml moves.
+          python -m pip install "build==1.2.2" "twine==7.0.0"
           # The verifier imports `geocase.catalog.loader` to read the case
           # index, and compares the artifact version against
           # `geocase.__version__`. That import chain reaches `yaml` and
