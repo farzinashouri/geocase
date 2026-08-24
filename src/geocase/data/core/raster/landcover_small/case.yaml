@@ -1,9 +1,8 @@
 id: landcover_small
 title: Land Cover Small
-description: >
-  A tiny single-band uint8 categorical land-cover raster with an attached
-  colormap (0=nodata, 1=water, 2=vegetation, 3=urban). Exercises categorical /
-  colormap handling.
+description: >-
+  A categorical land-cover raster where 0 is NoData, not a class. Resampling or averaging
+  categorical values silently invents classes that do not exist.
 category: raster
 format: GeoTIFF
 test_tier: integration

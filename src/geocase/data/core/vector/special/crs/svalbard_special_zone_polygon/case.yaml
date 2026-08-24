@@ -1,9 +1,8 @@
 id: svalbard_special_zone_polygon
 title: Svalbard Special Zone Polygon
-description: >
-  A WGS84 polygon in Svalbard whose longitude falls in the special UTM 33X
-  band handling range. Used to show the difference between naive UTM zone
-  assignment and the Svalbard exception rules.
+description: >-
+  A Svalbard polygon in the special UTM 33X band. The standard zone-from-longitude formula
+  picks the wrong CRS here, a documented exception code misses.
 category: vector
 format: GeoJSON
 test_tier: unit

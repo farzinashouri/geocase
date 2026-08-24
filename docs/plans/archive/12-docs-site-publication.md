@@ -1,8 +1,12 @@
 # Plan 12 — Publish the docs site to GitHub Pages
 
+> **Archived — reversed. Retained as an implementation log.** Reversed by [Plan 24](../24-catalog-site-on-owned-domain.md) (2026-08-17): GitHub Pages is now explicitly ruled out, because Google Dataset Search dedupes on the JSON-LD `url` and a `github.io` copy risks being credited as canonical ahead of the owned domain.
+>
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
+
 > **Status: proposed.** Scope is this document; order is owned by
 > [`execution-order.md`](execution-order.md) and scope disputes by
-> [`development-plan.md`](development-plan.md).
+> [`development-plan.md`](../development-plan.md).
 
 ## Context
 

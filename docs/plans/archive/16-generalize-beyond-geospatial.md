@@ -1,5 +1,9 @@
 # Plan 16 — Generalize the benchmark beyond geospatial
 
+> **Archived — Phases 0–4 built 2026-08-10. Retained as an implementation log.** Three user actions were still open when this was archived (U7 the probe run, U9 the `stdlib` bare run, U10 the distribution rename); they are carried in the roadmap's **Open user actions** table at [`development-plan.md`](../development-plan.md), which is where open items live.
+>
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
+
 > **Status: Phases 0–4 implemented 2026-08-10** — the domain mechanism, the probe tooling,
 > the six-task `stdlib` slate with oracle pairs, the run-path filters and the docs are built
 > and green. What is *not* done is everything requiring a model or a human: the probe run and

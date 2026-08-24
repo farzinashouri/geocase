@@ -62,6 +62,10 @@ Confirm that nearby local points are grouped into a single cluster.
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
 
+## Notes
+
+Three points close enough to cluster together with a small metric threshold.
+
 ## Required capabilities
 
 - `load`
@@ -71,7 +75,7 @@ Confirm that nearby local points are grouped into a single cluster.
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

@@ -63,6 +63,10 @@ Ensure line-based workflows can process geometries that cross the equator withou
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `LineString` |
 
+## Notes
+
+Simple LineString crossing the equator for geographic boundary coverage.
+
 ## Required capabilities
 
 - `load`
@@ -72,7 +76,7 @@ Ensure line-based workflows can process geometries that cross the equator withou
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

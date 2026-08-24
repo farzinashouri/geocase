@@ -63,6 +63,10 @@ Provide a canonical antimeridian polygon that heuristic crossing checks are expe
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
 
+## Notes
+
+A canonical polygon whose coordinates wrap from +179 to -179 degrees.
+
 ## Required capabilities
 
 - `load`
@@ -72,7 +76,7 @@ Provide a canonical antimeridian polygon that heuristic crossing checks are expe
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

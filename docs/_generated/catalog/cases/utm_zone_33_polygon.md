@@ -62,6 +62,10 @@ Provide a stable WGS84 polygon whose representative point maps to EPSG:32633.
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
 
+## Notes
+
+A baseline WGS84 polygon whose representative point falls in UTM zone 33N.
+
 ## Required capabilities
 
 - `load`
@@ -71,7 +75,7 @@ Provide a stable WGS84 polygon whose representative point maps to EPSG:32633.
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

@@ -57,6 +57,19 @@ Confirm that signed 16-bit integer rasters open with the correct dtype and prese
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
 
+## Notes
+
+### Purpose
+
+Single-band `int16` raster for validating signed integer raster dtype handling.
+
+### What to expect
+
+- CRS is `EPSG:32633`.
+- One band (`int16`).
+- NoData is `-9999`.
+- Pixel values exceed `int8` range to make accidental narrowing visible.
+
 ## Required capabilities
 
 - `load`
@@ -66,7 +79,7 @@ Confirm that signed 16-bit integer rasters open with the correct dtype and prese
 ## Files
 
 - Primary: `int16_sample.tif`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

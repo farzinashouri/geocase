@@ -24,6 +24,7 @@ requirements:
     - python >=3.11
     - pydantic >=2.0
     - pyyaml >=6.0
+    - geofacts >=0.1.2
 
 test:
   imports:
@@ -36,7 +37,7 @@ test:
     # The catalog is the package. An import-only test would pass on a wheel
     # that shipped without `geocase/data/**`, which is the failure mode the
     # whole release process is built to prevent.
-    - python -c "import geocase; assert len(geocase.list_cases()) == 134"
+    - python -c "import geocase; assert len(geocase.list_cases()) == 135"
     - python -c "import geocase; assert geocase.load_case('cog_multispectral_small').primary_path.exists()"
 
 about:

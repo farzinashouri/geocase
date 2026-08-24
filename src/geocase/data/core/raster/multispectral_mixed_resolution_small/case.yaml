@@ -62,7 +62,7 @@ assertions:
 
 params:
   generator: scripts/generate_raster_fixtures.py
-  synth: geocase.synth.sentinel2_l2a
+  synth: geocase.raster.presets.sentinel2_l2a
   processing_baseline: "04.00"
   resolutions:
     B04: 10

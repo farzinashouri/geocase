@@ -64,6 +64,10 @@ Expose logic that treats antimeridian-adjacent points as far apart.
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
 
+## Notes
+
+Two points on either side of the antimeridian that are geographically near each other.
+
 ## Required capabilities
 
 - `load`
@@ -73,7 +77,7 @@ Expose logic that treats antimeridian-adjacent points as far apart.
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

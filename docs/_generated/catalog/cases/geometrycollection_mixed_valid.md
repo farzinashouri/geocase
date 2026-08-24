@@ -62,6 +62,10 @@ Ensure GeometryCollection features can be indexed and loaded without being coerc
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `GeometryCollection` |
 
+## Notes
+
+Valid mixed GeometryCollection case for loader and metadata coverage.
+
 ## Required capabilities
 
 - `load`
@@ -71,7 +75,7 @@ Ensure GeometryCollection features can be indexed and loaded without being coerc
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

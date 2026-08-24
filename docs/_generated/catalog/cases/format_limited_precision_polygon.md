@@ -64,6 +64,10 @@ Expose workflows that silently reduce coordinate precision and thereby invalidat
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
 
+## Notes
+
+Thin polygon that is valid in high-precision formats but vulnerable to rounding-induced collapse.
+
 ## Required capabilities
 
 - `load`
@@ -73,7 +77,7 @@ Expose workflows that silently reduce coordinate precision and thereby invalidat
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

@@ -62,6 +62,10 @@ Ensure MultiPoint fixtures are discoverable and load correctly for selector-driv
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `MultiPoint` |
 
+## Notes
+
+Baseline MultiPoint case for multi-point coverage.
+
 ## Required capabilities
 
 - `load`
@@ -71,7 +75,7 @@ Ensure MultiPoint fixtures are discoverable and load correctly for selector-driv
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

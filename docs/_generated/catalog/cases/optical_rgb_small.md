@@ -66,6 +66,35 @@ Confirm GeoCase can open a small RGB optical raster and preserve its three uint8
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `red`, `green`, `blue` |
 
+## Notes
+
+### Purpose
+
+True-colour optical baseline for validating multi-band uint8 raster handling.
+
+### What to expect
+
+- CRS is `EPSG:32633`.
+- Three `uint8` bands named `red`, `green`, `blue`.
+- 16×16 pixels, DEFLATE compressed.
+- No NoData value.
+
+### Typical checks
+
+- `assert_band_count(src, 3)`
+- `assert_dtype(src, "uint8")`
+- `assert_band_names(src, ["red", "green", "blue"])`
+
+### Common failure modes
+
+- RGB bands collapsed to a single band.
+- Band order swapped during processing.
+- dtype promoted to a wider integer type.
+
+### Regenerate
+
+`python scripts/generate_raster_fixtures.py`
+
 ## Required capabilities
 
 - `load`
@@ -75,7 +104,7 @@ Confirm GeoCase can open a small RGB optical raster and preserve its three uint8
 ## Files
 
 - Primary: `optical_rgb_small.tif`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

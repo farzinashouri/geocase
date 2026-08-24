@@ -1,9 +1,7 @@
-
+---
+description: "Why GeoCase ships curated test cases rather than sample files: realistic enough to reveal real bugs, small enough to run and maintain in CI."
 ---
 
-## `docs/philosophy.md`
-
-```md
 # Philosophy
 
 GeoCase is built around one idea:

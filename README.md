@@ -1,12 +1,49 @@
 # GeoCase
 
-GeoCase is a geospatial testing toolkit and case catalog for realistic, reproducible `pytest` tests.
+**Two pixels out of a hundred are NoData, and your mean elevation is off by 200 metres.**
 
-> Status: **1.0**. The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 134 bundled cases, 4.2 MB. Remote dataset transport is deferred to v1.1; see the [changelog](CHANGELOG.md).
+Here is the code. It looks fine, it passes review, and it is wrong:
 
-The main goal is simple: use plain `pytest` with a few GeoCase fixtures and markers to run your geospatial code against curated edge cases.
+```python
+def mean_elevation(array):
+    return float(array.mean())
+```
 
-Instead of hand-picking random sample files, you select packaged cases (vector, raster, NetCDF) and run your function against scenarios such as CRS issues, dateline crossing, topology problems, and NoData behavior.
+Point it at a GeoCase case that ships with the package:
+
+```python
+import pytest
+
+
+@pytest.mark.geocase_case("geotiff_nodata_small")
+def test_mean_elevation_ignores_nodata(geocase_case):
+    array, _profile, nodata = geocase_case.read(1)
+    valid = array[array != nodata]
+    assert mean_elevation(array) == pytest.approx(float(valid.mean()), rel=0.01)
+```
+
+```
+E   assert -152.8628387451172 == 48.07874298095703 ± 0.480787
+```
+
+The file carries an explicit `-9999` NoData sentinel in 2 of its 100 pixels. `array.mean()`
+averages the sentinel in and reports **−152.9 m** for terrain whose real mean is **48.1 m**.
+Nothing raises and nothing warns — the number is simply wrong, and it stays wrong all the way
+into the report. The only thing that catches it is a test file that actually has NoData in it.
+
+That is what GeoCase is: 135 curated vector, raster and NetCDF files, each one built around a
+failure mode that survives code review. **NoData** averaged into a statistic; geometry crossing
+the **antimeridian** and coming back as a ring around the globe; a **CRS mismatch** between two
+layers that overlay perfectly on screen; EPSG **axis order** flipping latitude and longitude.
+
+The realistic alternative is not "no tests" — it is the `test_data/sample.tif` someone exported
+once and the `numpy` arrays each test improvises. Those pass because they were chosen by the same
+person who wrote the code, so they encode the same assumptions. GeoCase cases were not, and they
+ship as a versioned dependency instead of a folder nobody remembers the provenance of. (They also
+give a coding assistant something to reach for instead of inventing a fixture that agrees with
+the bug.)
+
+> Status: **1.0, not yet published to PyPI** — install from source for now. The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 135 bundled cases, 2.1 MB. Remote dataset transport is deferred to v1.1; see the [changelog](CHANGELOG.md).
 
 ## Quick Start
 
@@ -24,12 +61,18 @@ When a package release is published, install from the package index:
 pip install "geocase[all]"
 ```
 
-Or from conda-forge — note the extras are not packaged there, since bundling
-GDAL would make the conda package far heavier than the PyPI equivalent:
+A conda-forge feedstock does not exist yet. When one does, installing from it
+will not carry the extras, since bundling GDAL would make the conda package far
+heavier than the PyPI equivalent:
 
 ```bash
 conda install -c conda-forge geocase
 ```
+
+GeoCase depends on [`geofacts`](https://github.com/farzinashouri/geofacts) at
+runtime — a zero-dependency table of geospatial product facts (radiometric
+constants, CRS conventions) that the raster presets are machine-checked
+against. Everything else is optional and gated behind extras.
 
 ### 2) Write a test with GeoCase markers
 
@@ -77,7 +120,7 @@ This repository uses GitHub Actions, defined in `.github/workflows/`.
 - `docs` — `mkdocs build --strict`
 
 `release.yml` runs only on `vX.Y.Z` tags; see
-[Releasing](contributing/releasing.md).
+[Releasing](docs/contributing/releasing.md).
 
 Local equivalents:
 
@@ -107,6 +150,8 @@ If a GeoCase marker is missing, resolves no cases, refers to an unknown suite, o
 - [`docs/case-discovery.md`](docs/case-discovery.md)
 - [`docs/assertions-reference.md`](docs/assertions-reference.md)
 - [`docs/examples-index.md`](docs/examples-index.md)
+- [`docs/benchmark/quickstart.md`](docs/benchmark/quickstart.md) — the LLM benchmark built on the catalog
+- [`src/geocase/raster/`](src/geocase/raster/) — `geocase.raster`, a dependency-free raster primitive plus Sentinel-1/2 presets
 - [`docs/plans/development-plan.md`](docs/plans/development-plan.md)
 - [`docs/contributing/workflow.md`](docs/contributing/workflow.md)
 - [`docs/design/case-recommendation-service.md`](docs/design/case-recommendation-service.md)

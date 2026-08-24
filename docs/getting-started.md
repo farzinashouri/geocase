@@ -1,3 +1,7 @@
+---
+description: "Install GeoCase and run your first geospatial test in plain pytest, using the geocase_case fixture and the geocase_suite and geocase_select markers."
+---
+
 # Getting Started
 
 This guide shows the fastest way to start using GeoCase with plain `pytest`.
@@ -193,8 +197,8 @@ Start simple with explicit case IDs. Move to selectors when your test intent is 
 
 ## Current project status
 
-GeoCase 1.0.0 covers the core `pytest` workflow and a small public API, with 780 passing
-tests and 134 bundled cases. The metadata, catalog, runtime, assertions, loader, and
+GeoCase 1.0.0 covers the core `pytest` workflow and a small public API, with 1701 passing
+tests and 135 bundled cases. The metadata, catalog, runtime, assertions, loader, and
 pytest plugin layers are complete.
 
 The v1.0 compatibility promise covers **two surfaces only**: the pytest workflow (markers

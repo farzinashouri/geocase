@@ -293,6 +293,56 @@ def _validate_documented_case_ids(docs_root: Path, registry: CaseRegistry) -> in
     return checked
 
 
+#: Files that state the bundled case count and must agree with the registry.
+#: ``recipe/meta.yaml``'s is an executable assertion -- a stale number there
+#: fails the conda build rather than merely misinforming a reader.
+_COUNT_CLAIMS: tuple[tuple[str, str], ...] = (
+    ("README.md", r"(\d+) bundled cases"),
+    ("docs/index.md", r"(\d+) bundled cases"),
+    ("docs/getting-started.md", r"(\d+) bundled cases"),
+    ("docs/contributing/workflow.md", r"(\d+) bundled cases"),
+    ("docs/contributing/releasing.md", r"(\d+) cases in `case-index\.yaml`"),
+    ("docs/contributing/structure-and-planning.md", r"catalog is \*\*(\d+) cases\*\*"),
+    ("recipe/meta.yaml", r"len\(geocase\.list_cases\(\)\) == (\d+)"),
+)
+
+
+def _validate_case_count_claims(registry: CaseRegistry) -> int:
+    """Fail if a document's stated case count disagrees with the registry.
+
+    The count is derivable, so stating it by hand in three places is drift
+    waiting to happen -- and it did: all three said 134 while the catalog held
+    135. Gating it here makes the number behave like the other generated
+    artifacts. Returns the number of claims checked.
+    """
+    actual = len(registry)
+    problems: list[str] = []
+    checked = 0
+    for relative, pattern in _COUNT_CLAIMS:
+        path = REPO_ROOT / relative
+        if not path.exists():
+            problems.append(f"{relative}: missing (listed in _COUNT_CLAIMS)")
+            continue
+        matches = re.findall(pattern, path.read_text(encoding="utf-8"))
+        if not matches:
+            problems.append(f"{relative}: no case count found (pattern: {pattern})")
+            continue
+        for claimed in matches:
+            checked += 1
+            if int(claimed) != actual:
+                problems.append(
+                    f"{relative}: claims {claimed} cases, registry holds {actual}"
+                )
+
+    if problems:
+        listed = "\n".join(f"  {problem}" for problem in sorted(set(problems)))
+        raise CatalogValidationError(
+            f"Documented case counts disagree with the registry ({actual} cases):\n"
+            f"{listed}"
+        )
+    return checked
+
+
 #: Tag asserting that a case holds the same geometry as another case's.
 _CANONICAL_TAG = "cross_format_canonical"
 
@@ -603,6 +653,7 @@ def main() -> int:
         registry, case_entries = _validate_cases(args.case_index)
         _validate_no_orphan_case_metadata(args.case_index, case_entries)
         canonical_links = _validate_cross_format_canonical(registry)
+        count_claims = _validate_case_count_claims(registry)
         suite_entries: list[str] = []
         manifest_paths: list[Path] = []
         manifest_warnings: list[str] = []
@@ -623,6 +674,7 @@ def main() -> int:
     print(f"- Indexed case metadata files: {len(case_entries)}")
     print(f"- Resolved unique case ids: {len(registry)}")
     print(f"- Cross-format canonical links: {canonical_links}")
+    print(f"- Documented case counts checked: {count_claims}")
     if args.cases_only:
         print("- Suite validation: skipped (--cases-only)")
         print("- Manifest validation: skipped (--cases-only)")

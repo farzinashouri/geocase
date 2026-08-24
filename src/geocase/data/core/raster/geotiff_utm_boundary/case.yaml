@@ -1,9 +1,8 @@
 id: geotiff_utm_boundary
 title: GeoTIFF UTM Boundary
-description: >
-  A GeoTIFF that straddles a UTM zone boundary.  Exercises
-  reprojection and mosaic logic where a single tile spans two
-  coordinate zones.
+description: >-
+  A GeoTIFF straddling a UTM zone boundary. Mosaicking or reprojecting across the seam produces
+  pixel shifts and CRS mismatches between adjacent tiles.
 category: raster
 format: GeoTIFF
 test_tier: unit

@@ -1,10 +1,8 @@
 id: dateline_chain_cluster
 title: Dateline Chain Cluster
-description: >
-  Three points arranged around the antimeridian so that each point is
-  within 50 km of at least one neighbor, forming a single transitive
-  cluster geodesically. Useful for exposing projection-based clustering
-  errors near the dateline.
+description: >-
+  Three points within 50 km of each other across the antimeridian. Clustering that ignores
+  longitude wrapping splits them into separate groups.
 category: vector
 format: GeoJSON
 test_tier: unit

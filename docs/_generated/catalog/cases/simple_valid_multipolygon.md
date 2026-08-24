@@ -62,6 +62,10 @@ Provide baseline multipolygon coverage for loading and geometry-type selector be
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `MultiPolygon` |
 
+## Notes
+
+Baseline MultiPolygon case for multipart polygon coverage.
+
 ## Required capabilities
 
 - `load`
@@ -71,7 +75,7 @@ Provide baseline multipolygon coverage for loading and geometry-type selector be
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

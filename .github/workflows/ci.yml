@@ -87,6 +87,32 @@ jobs:
       # 187 broken links, shipped, because nothing rendered the site in CI.
       - run: mkdocs build --strict
 
+      # The site must stay unpublished until the canonical domain exists.
+      # Every case page's schema.org/Dataset JSON-LD carries a `url`, and
+      # Google Dataset Search dedupes on it, favouring what it saw first -- so
+      # a github.io copy published now would likely be credited as canonical
+      # ahead of the owned domain, and Google picks the canonical, not us.
+      # See docs/plans/24-catalog-site-on-owned-domain.md. The realistic
+      # failure is a slip (someone enabling Pages, a gh-deploy step landing in
+      # a workflow), so this converts a silent, expensive mistake into a build
+      # failure. Delete this step in the same change that sets the real domain.
+      - name: Assert the docs site is not being deployed
+        run: |
+          if git ls-remote --heads origin gh-pages | grep -q gh-pages; then
+            echo "::error::A gh-pages branch exists. Publishing the catalog from" \
+                 "github.io before the owned domain is chosen risks Google" \
+                 "crediting it as the canonical URL. See Plan 24."
+            exit 1
+          fi
+          # Match an actual invocation (`mkdocs gh-deploy`, `run: gh-deploy`),
+          # not the word appearing in a comment -- including this one.
+          if grep -rnE '^[^#]*(mkdocs[[:space:]]+gh-deploy|actions-gh-pages|peaceiris/actions-gh-pages)' \
+               .github/workflows/ --include='*.yml'; then
+            echo "::error::A docs deployment step was added to a workflow. See Plan 24."
+            exit 1
+          fi
+          echo "Docs site is unpublished, as intended."
+
   catalog:
     runs-on: ubuntu-latest
     # Fixture generation needs the GDAL Python bindings (`osgeo`), which are

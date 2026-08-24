@@ -1,8 +1,8 @@
 id: dateline_crossing_polygon
 title: Dateline crossing polygon
-description: >
-  Polygon intended to expose longitude wrapping, bounds assumptions,
-  and antimeridian handling issues.
+description: >-
+  A polygon crossing the dateline. Its bounding box spans the whole planet unless antimeridian
+  wrapping is handled, breaking bbox filters and reprojection.
 category: vector
 format: GeoJSON
 test_tier: unit

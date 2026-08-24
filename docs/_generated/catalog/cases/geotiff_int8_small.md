@@ -57,6 +57,19 @@ Confirm that signed 8-bit integer rasters open with the correct dtype and preser
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
 
+## Notes
+
+### Purpose
+
+Single-band `int8` raster for validating narrow signed integer dtype handling.
+
+### What to expect
+
+- CRS is `EPSG:32633`.
+- One band (`int8`).
+- NoData is `-99`.
+- Pixel values stay within the signed 8-bit range.
+
 ## Required capabilities
 
 - `load`
@@ -66,7 +79,7 @@ Confirm that signed 8-bit integer rasters open with the correct dtype and preser
 ## Files
 
 - Primary: `int8_sample.tif`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

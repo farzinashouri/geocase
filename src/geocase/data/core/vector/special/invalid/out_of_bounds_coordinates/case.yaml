@@ -1,9 +1,8 @@
 id: out_of_bounds_coordinates
 title: Out-of-Bounds / Invalid Coordinates
-description: >
-  A point with latitude exceeding the valid range (100° instead of max 90°).
-  This typically indicates a lat/lon coordinate swap or data entry error.
-  GeoJSON requires [Longitude, Latitude] order, but many systems use [Lat, Lon].
+description: >-
+  A point at latitude 100°, beyond the valid ±90° range — the classic symptom of swapped
+  latitude and longitude (EPSG axis order) in the input.
 category: vector
 format: GeoJSON
 test_tier: unit

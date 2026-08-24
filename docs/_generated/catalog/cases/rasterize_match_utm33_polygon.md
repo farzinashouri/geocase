@@ -62,6 +62,10 @@ Confirm that rasterization works when vector and raster coordinates already matc
 | `expected_epsg` | `32633` |
 | `expected_geometry_types` | `Polygon` |
 
+## Notes
+
+A projected polygon that lies within the bundled `geotiff_utm_boundary` raster extent.
+
 ## Required capabilities
 
 - `load`
@@ -71,7 +75,7 @@ Confirm that rasterization works when vector and raster coordinates already matc
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

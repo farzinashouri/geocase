@@ -22,7 +22,7 @@ then `LOUD`, else `CORRECT`.
 !!! note "Status of this page"
     This documents the Plan 15 *minimum viable one-off* — the task packages,
     the oracles, the grading CLI, and a bare-track OpenRouter runner — plus the
-    [Plan 16](../plans/16-generalize-beyond-geospatial.md) domain mechanism. The
+    [Plan 16](../plans/archive/16-generalize-beyond-geospatial.md) domain mechanism. The
     results store, the leaderboard, and the automated agentic track are not
     built yet. The `stdlib` slate has a full harness but **no committed model
     run yet**, and its tasks remain provisional until the contamination probe

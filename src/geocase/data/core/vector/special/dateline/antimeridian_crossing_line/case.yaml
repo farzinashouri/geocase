@@ -1,9 +1,8 @@
 id: antimeridian_crossing_line
 title: Antimeridian Crossing LineString
-description: >
-  A simple line crossing the 180° longitude line (antimeridian/dateline).
-  Naive renderers will draw a line all the way around the globe instead of
-  the short path across the Pacific.
+description: >-
+  A LineString crossing the antimeridian (180° longitude). Naive code draws it the wrong way
+  around the globe and computes a ~40,000 km length.
 category: vector
 format: GeoJSON
 test_tier: unit

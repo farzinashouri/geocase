@@ -11,7 +11,8 @@ a permanently broken `1.0.0`. Every gate below exists because of that.
 
 ### Trusted publishing (OIDC)
 
-Uploads authenticate with a short-lived token minted from a GitLab-issued JWT.
+Uploads authenticate with a short-lived token minted from a GitHub Actions
+OIDC JWT — the workflow requests it via `id-token: write`.
 Nothing long-lived is stored in CI variables, so there is no credential to leak
 or rotate.
 
@@ -56,19 +57,23 @@ twine check dist/*
 
 `verify_dist.py` fails loudly if:
 
-- any of the 134 cases in `case-index.yaml` is missing from the wheel, or ships
-  metadata with no data payload;
+- any of the 135 cases in `case-index.yaml` is missing from the wheel, or ships
+  metadata with no data payload (`verify_dist.py` reads the count from the index;
+  this figure is gated against the registry by `scripts/validate_catalog.py`);
 - the sdist is missing `src/geocase/data`, `src/geocase/metadata`, or `tests`;
 - either artifact contains `__pycache__`, `*.pyc`, or `.DS_Store`;
 - either artifact exceeds 2 MB (measured at 1.0.0: wheel 456 KB, sdist 272 KB);
-- the tag, the artifact filenames, and `geocase.__version__` disagree.
+- the tag, the artifact filenames, and `project.version` in `pyproject.toml`
+  disagree.
 
-!!! warning "`__version__` reads the *installed* distribution"
+!!! note "The version gate reads `pyproject.toml`, not `geocase.__version__`"
 
-    `geocase.__version__` resolves through `importlib.metadata`, not the source
-    tree. A stale editable install reports its own old version and fails the
-    gate with a confusing mismatch. Fix with `pip install -e . --no-deps`
-    rather than by editing anything.
+    `verify_dist.py` parses `project.version` out of `pyproject.toml`
+    deliberately. `geocase.__version__` resolves through `importlib.metadata`,
+    so it reports whatever is *installed* — a stale editable install would fail
+    the gate with a confusing mismatch, and on a clean CI runner the import
+    fails outright. `pyproject.toml` is the source of truth, so bumping the
+    version there is all a release needs.
 
 The sdist matters as much as the wheel: **conda-forge builds from the sdist**,
 and it carries `tests/` so the recipe can run the suite against the installed
@@ -105,7 +110,7 @@ pip install --index-url https://test.pypi.org/simple/ \
 python -c "import geocase; print(geocase.__version__, len(geocase.__all__))"  # 1.0.0rc1 27
 # bundled data really materialised, not just importable
 python -c "import geocase; c = geocase.load_case('cog_multispectral_small'); print(c.primary_path.exists())"
-python -c "import geocase; print(len(geocase.list_cases()))"   # 134
+python -c "import geocase; print(len(geocase.list_cases()))"   # 135
 pytest --collect-only 2>&1 | head   # plugin registers
 ```
 

@@ -1,8 +1,8 @@
 id: dem_nan_nodata_small
 title: DEM NaN NoData Small
-description: >
-  A tiny single-band float32 DEM that encodes NoData using the NaN convention
-  rather than a sentinel value. Exercises NaN-NoData handling in terrain logic.
+description: >-
+  A float32 DEM that marks NoData with NaN rather than a sentinel value. NaN propagates through
+  means and comparisons instead of being excluded.
 category: raster
 format: GeoTIFF
 test_tier: integration

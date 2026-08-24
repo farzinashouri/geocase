@@ -40,11 +40,13 @@ CASE_INDEX_PATH = PACKAGE_ROOT / "metadata" / "case-index.yaml"
 #: Hard ceiling on each artifact, in bytes.
 #:
 #: Measured at 1.0.0: wheel 456 KB, sdist 272 KB -- both *including* the full
-#: 4.2 MB source data tree, which compresses roughly 9x. The release plan
-#: guessed 8 MB from an assumption that the data sat on top of a 458 KB wheel;
-#: that would have let a 4x regression through unnoticed. 2 MB keeps ~4x
-#: headroom over the real number while still catching an accidental bundling of
-#: uncompressed fixtures or a stray extended-manifest payload.
+#: 2.1 MB source data tree, which compresses roughly 5x. (`du -sh` reports the
+#: tree as 4.2 MB, but that is 4 KB block padding across 572 tiny files, not
+#: bytes that reach an artifact.) The release plan guessed 8 MB from an
+#: assumption that the data sat on top of a 458 KB wheel; that would have let a
+#: 4x regression through unnoticed. 2 MB keeps ~4x headroom over the real number
+#: while still catching an accidental bundling of uncompressed fixtures or a
+#: stray extended-manifest payload.
 _MAX_ARTIFACT_BYTES: dict[str, int] = {
     "wheel": 2 * 1024 * 1024,
     "sdist": 2 * 1024 * 1024,

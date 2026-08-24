@@ -1,3 +1,7 @@
+---
+description: "What data GeoCase ships and why: 135 cases across 16 formats, the geodetic rationale for every coordinate cluster, and an honest list of coverage gaps."
+---
+
 # Dataset Catalog
 
 What data GeoCase actually ships, why those formats were chosen, and where on Earth the

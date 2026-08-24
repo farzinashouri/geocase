@@ -1,13 +1,28 @@
 # Plan 20 — Restart, spec-first: split the repo, ship the guard, gate the rest
 
+*Written before the rename; `geospatial-spec` is now `geofacts`, and `geocase.synth` is now
+`geocase.raster`.*
+
+> **Implementation status (2026-08-13).** Phase 1 is **built and green** in the sibling
+> repo `../geospatial-spec` (42 tests, ruff + mypy strict clean, zero dependencies verified by
+> isolated install, 60 KB vendored single file with a `--check` drift gate). Phase 2 is
+> **scaffolded and open** — `docs/evidence/2026-fixture-interviews/` holds the instrument and
+> the pre-committed decision rule; 0 of 5 interviews recorded, and it blocks everything in
+> Phase 3 except the nodata carve-out. Phase 3's **nodata carve-out is built**: `geocase.raster`
+> (primitive + axes + presets), 46 tests, corpus fixtures still regenerate byte-identically.
+> Phase 4 (the $20 frontier run, U19) and **Phase 5 (the deletion) are not started** — per this
+> plan's own sequencing, deletion follows Phase 1 shipping *and* Phase 2 reporting.
+> Outstanding user actions: **U16** (create the repo / pick the PyPI name), **U17** (run the
+> five interviews), **U18**, **U19**, **U20**, **U21**.
+
 > **Status: proposed 2026-08-13.** Overarching. If adopted it supersedes the product framing
-> in [Plan 15](15-geocase-as-benchmark.md) Phase 7 / Stage 2, replaces
-> [Plan 19](19-spec-table-separate-repo.md) outright, **absorbs**
+> in [Plan 15](archive/15-geocase-as-benchmark.md) Phase 7 / Stage 2, replaces
+> [Plan 19](archive/19-spec-table-separate-repo.md) outright, **absorbs**
 > [Plan 18](18-eo-product-fixtures.md) — whose Phases 0 and 1 are both implemented — and
 > redistributes its output across the two repos (see *Disposition of Plan 18*), and retires
-> [`development-plan.md`](development-plan.md), [Plan 11](11-distribution-pypi-and-conda.md),
-> [Plan 12](12-docs-site-publication.md) and [Plan 13](13-cross-format-canonical-convergence.md)
-> as catalog-era documents. [Plan 16](16-generalize-beyond-geospatial.md) is halted where it
+> [`development-plan.md`](development-plan.md), [Plan 11](archive/11-distribution-pypi-and-conda.md),
+> [Plan 12](archive/12-docs-site-publication.md) and [Plan 13](archive/13-cross-format-canonical-convergence.md)
+> as catalog-era documents. [Plan 16](archive/16-generalize-beyond-geospatial.md) is halted where it
 > stands. [Plan 17](17-throughput-automation-and-corpus-as-input.md) survives intact but is
 > demoted from product work to instrument maintenance.
 
@@ -110,11 +125,11 @@ Measured against the working tree on 2026-08-13, not assumed.
   wrong.
 - **`sentinel2_l2a(size: int = 32)`** — the default is below the ≥224px floor the only adopter
   set as a hard requirement.
-- **[Plan 19](19-spec-table-separate-repo.md) as drafted reproduces the same defect.**
+- **[Plan 19](archive/19-spec-table-separate-repo.md) as drafted reproduces the same defect.**
   `SpecFact` is a frozen dataclass with a public `value` field, exposed through a public
   `FACTS` tuple. `raster.FACTS[0].value` is a bare constant. Plan 19 cannot be implemented as
   written.
-- **[Plan 19](19-spec-table-separate-repo.md)'s stated audience is unvalidated and contradicted.**
+- **[Plan 19](archive/19-spec-table-separate-repo.md)'s stated audience is unvalidated and contradicted.**
   It names "an AI coding agent writing unit tests." All three evaluators are humans asking for
   a guard in *production* code. Rejector C, verbatim: *"Constants that only live in tests can't
   catch a bug in code that has no tests."*
@@ -141,7 +156,7 @@ Measured against the working tree on 2026-08-13, not assumed.
 Zero dependencies, pure stdlib, Python 3.11+. Ships to PyPI **and** as a single vendorable
 file, because the thing it competes with is copy-paste.
 
-This is [Plan 19](19-spec-table-separate-repo.md)'s repo with its API inverted and its audience
+This is [Plan 19](archive/19-spec-table-separate-repo.md)'s repo with its API inverted and its audience
 corrected.
 
 ### Repo 2 — `geocase` (this one, cut to roughly a third)
@@ -163,7 +178,7 @@ entry point, `api/`, catalog `suites`/`selectors`/`manifests`, the one-line asse
 scripts, `docs/design/` (a recommendation-service design for a product that does not exist),
 and the ~128 bundled cases nothing references.
 
-This is [Plan 15](15-geocase-as-benchmark.md) Stage 2, finally executed, plus the corpus that
+This is [Plan 15](archive/15-geocase-as-benchmark.md) Stage 2, finally executed, plus the corpus that
 Stage 2 left undecided. Plan 14 rejected this surface on 2026-08-09. It has been shipping for
 four months since.
 
@@ -336,8 +351,15 @@ one of: **fixture fidelity** · **dependency injection / hardcoded paths** · **
 | Result | Action |
 |---|---|
 | **≥3 of 5 say fixture fidelity or output assertion** | Build Phase 3 as scoped. |
-| **≥3 of 5 say DI / hardcoded paths** | **Do not build the generator.** Ship Phase 1 only, publish the interview finding, and revisit only if an adopter arrives with a fixture-shaped need. Consider whether the honest deliverable is a short piece on testable-raster-code structure rather than a package. |
+| **≥3 of 5 say DI / hardcoded paths** | **Do not build the generator** beyond the nodata carve-out below. Ship Phase 1 plus the nodata fixture only, publish the interview finding, and revisit the rest only if an adopter arrives with a fixture-shaped need. Consider whether the honest deliverable is a short piece on testable-raster-code structure rather than a package. |
 | **Split / environment-dominant** | Build only the nodata fixture (3/3 evidence, standalone value) and stop there pending a second adopter. |
+
+**The nodata fixture is exempt from this gate.** §3.2 Tier 1 rows 1–3 (nodata border, ambiguous
+zero, all-nodata/degenerate stats) carry 3/3 convergence *and* a confirmed live bug in the only
+adopter — bilinear resampling with neither `src_nodata` nor `dst_nodata`, smearing a 4.6M-pixel
+region. That evidence does not become weaker because five maintainers answer a question about a
+different obstacle. Whatever Phase 2 returns, the nodata fixture may be built; every other axis,
+preset, `geocase.vector`, `geocase.granule` and output assertion waits on the result.
 
 This gate can kill roughly two-thirds of the remaining plan for the price of a week of
 calendar time, and the discipline of running it is the thing the adopter singled out as
@@ -432,7 +454,15 @@ pattern to deserve it.
 
 Build after Tier 1 raster lands and only if Phase 2's interviews corroborate.
 
-### 3.5 `geocase.granule` — component 4, reframed to what it can be
+### 3.5 `geocase.granule` — component 4, reframed and gated
+
+**Gated on Phase 2; do not start before the interviews report.** The store framing is re-frozen
+outright — 3/3 killed it, and the adopter's re-freeze was explicit: for a team with its own
+archive it adds ~nothing, and they answered the question it was meant to answer with `unzip -p`.
+What survives below is a *different* component supported by *rejector* evidence only, and the
+honest reading is that a team holding an archive can already crop with `gdal_translate`. It
+therefore does not inherit the store's slot; it competes for Phase 3 priority like any other
+1/3 item and builds only if Phase 2 corroborates a fixture-shaped need.
 
 All three reports killed the storage framing and two proposed the same replacement:
 

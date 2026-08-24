@@ -15,9 +15,9 @@ The generator only writes the ``.tif`` primary files. Case metadata
 ``scripts/build_case_index.py``.
 
 Plan 18 Phase 1: the four S2/S1 product fixtures are no longer thin
-``RasterSpec`` ramps — they are emitted by ``geocase.synth``, whose constants
+``RasterSpec`` ramps — they are emitted by ``geocase.raster.presets``, whose facts
 are machine-checked against real granule metadata
-(``tests/synth/test_spec_fidelity.py``). The ``--check`` byte-stability gate
+(the geofacts package). The ``--check`` byte-stability gate
 covers them identically.
 """
 
@@ -289,7 +289,7 @@ def _priority_2_4_specs() -> list[RasterSpec]:
 
 @dataclass
 class SynthSpec:
-    """A fixture emitted by ``geocase.synth`` instead of a raw array ramp."""
+    """A fixture emitted by ``geocase.raster.presets`` instead of a raw ramp."""
 
     case_id: str
     primary: str
@@ -298,7 +298,7 @@ class SynthSpec:
 
 def _synth_specs() -> list[SynthSpec]:
     """Product fixtures regenerated from the audited generator (Plan 18)."""
-    from geocase.synth import sentinel1_grd, sentinel2_l2a
+    from geocase.raster.presets import sentinel1_grd, sentinel2_l2a
 
     return [
         # Real L2A radiometry: nodata 0, scale 1e-4 / offset -0.1 on the

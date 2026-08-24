@@ -1,8 +1,12 @@
 # Plan 13 — Converge the `*_baseline` vector families onto their declared canonical
 
+> **Archived — implemented 2026-08-09. Retained as an implementation log.** All 60 `*_baseline` fixtures now derive from their declared canonical, gated by `scripts/generate_vector_fixtures.py --check`. The header below still says "proposed"; it was never updated.
+>
+> The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
+
 > **Status: proposed.** Scope is this document; order is owned by
 > [`execution-order.md`](execution-order.md) and scope disputes by
-> [`development-plan.md`](development-plan.md).
+> [`development-plan.md`](../development-plan.md).
 
 ## Context
 

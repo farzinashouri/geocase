@@ -57,6 +57,19 @@ Confirm that signed 32-bit integer rasters open with the correct dtype and prese
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
 
+## Notes
+
+### Purpose
+
+Single-band `int32` raster for validating wide integer raster dtype handling.
+
+### What to expect
+
+- CRS is `EPSG:32633`.
+- One band (`int32`).
+- NoData is `-9999`.
+- Pixel values exceed `int16` range to make accidental narrowing visible.
+
 ## Required capabilities
 
 - `load`
@@ -66,7 +79,7 @@ Confirm that signed 32-bit integer rasters open with the correct dtype and prese
 ## Files
 
 - Primary: `int32_sample.tif`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

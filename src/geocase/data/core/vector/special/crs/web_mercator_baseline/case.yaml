@@ -1,8 +1,8 @@
 id: web_mercator_baseline
 title: Web Mercator Baseline Point
-description: >
-  A valid point encoded in EPSG:3857 for baseline Web Mercator loader
-  and CRS-path handling.
+description: >-
+  A point in EPSG:3857 (Web Mercator). Baseline for the CRS mismatch that arises when projected
+  metre coordinates are treated as degrees.
 category: vector
 format: GeoJSON
 test_tier: unit

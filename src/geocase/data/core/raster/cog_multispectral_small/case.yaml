@@ -1,8 +1,8 @@
 id: cog_multispectral_small
 title: COG Multispectral Small
-description: >
-  A tiny four-band uint16 Cloud-Optimized GeoTIFF (blue, green, red, NIR):
-  internally tiled with one overview level and a sentinel NoData of 0.
+description: >-
+  A four-band Cloud-Optimized GeoTIFF (blue, green, red, NIR) with NoData, internal tiling and
+  one overview level. Exercises COG structure validation.
 category: raster
 format: GeoTIFF
 test_tier: integration

@@ -64,6 +64,12 @@ Expose geometry repair helpers that return mixed geometry collections instead of
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
 
+## Notes
+
+This polygon contains a self-touching spike. `make_valid` typically repairs it
+into a mixed `GeometryCollection` with one polygon and one linear artifact,
+which is useful for testing whether repair helpers keep only polygonal output.
+
 ## Required capabilities
 
 - `load`
@@ -73,7 +79,7 @@ Expose geometry repair helpers that return mixed geometry collections instead of
 ## Files
 
 - Primary: `geometry.geojson`
-- Notes: notes.md
+- Notes: `notes.md`
 
 ## Source and license
 

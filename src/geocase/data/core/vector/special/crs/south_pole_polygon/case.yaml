@@ -1,10 +1,8 @@
 id: south_pole_polygon
 title: South Pole Polygon
-description: >
-  A diamond-shaped polygon encircling the south pole in EPSG:4326.  The
-  ring has vertices at latitudes -84 to -89.5 spanning longitudes -90
-  to 90.  Mirrors the north_pole_polygon case and exercises the same
-  projection and area-distortion challenges in the southern hemisphere.
+description: >-
+  A polygon encircling the south pole in EPSG:4326. Exercises polar projection singularities
+  where area and centroid calculations silently diverge.
 category: vector
 format: GeoJSON
 test_tier: unit

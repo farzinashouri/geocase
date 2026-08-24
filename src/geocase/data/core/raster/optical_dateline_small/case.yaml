@@ -1,8 +1,8 @@
 id: optical_dateline_small
 title: Optical Dateline Small
-description: >
-  A tiny three-band uint8 RGB scene in EPSG:4326 whose bounds straddle the
-  antimeridian (+180 longitude). Exercises dateline-crossing extent handling.
+description: >-
+  An RGB GeoTIFF whose bounds straddle the antimeridian at +180 longitude. Exercises bounds
+  normalization and antimeridian splitting on raster inputs.
 category: raster
 format: GeoTIFF
 test_tier: integration

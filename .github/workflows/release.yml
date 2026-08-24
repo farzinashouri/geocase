@@ -47,7 +47,8 @@ jobs:
 
       # The gate. PyPI artifacts are immutable, so a wheel missing
       # `geocase/data/**` would be a permanently broken release. This checks
-      # all 134 indexed cases are present, that the version matches the tag,
+      # every case indexed in `case-index.yaml` is present, that the version
+      # matches the tag,
       # and that no `__pycache__`/`.pyc`/`.DS_Store` slipped in.
       - name: Verify artifacts
         run: python scripts/verify_dist.py dist/ --expected-version "${GITHUB_REF_NAME}"

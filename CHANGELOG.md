@@ -109,12 +109,29 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `(0, 0)` — colliding with the `null_island_point` sentinel's entire reason for existing —
   while the page claimed they were in Central Europe. Convergence makes the claim true and
   leaves only seven deliberate cases near the origin. The bundled-payload figure is also
-  corrected from 4.2 MB to its actual 2.1 MB.
+  corrected from 4.2 MB to its actual 2.1 MB. The two numbers came from different
+  measurements: `du -sh src/geocase/data` reports 4.2 MB because 572 mostly-tiny files
+  each round up to a 4 KB block, while the payload's real byte sum is 2.1 MB (2.4 MB
+  including `case.yaml`, `notes.md`, and `checksums.sha256`). The wheel carries 2.3 MB
+  uncompressed. 2.1 MB is the figure quoted everywhere; `du` output is not.
 
-## [1.0.0] — 2026-08-02
+- **The bundled case count is 135, not 134.** The 1.0.0 entry's "134 bundled cases" was
+  correct at that release; the catalog has grown by one since. `README.md`, `docs/index.md`
+  and `recipe/meta.yaml`'s build-time assertion said 134 and now say 135, and
+  `scripts/validate_catalog.py` gates all three against `len(get_registry())` so the number
+  cannot drift again.
 
-First stable release, and the first release published to PyPI. Version `0.1.0` was never
-uploaded.
+## [1.0.0] — dated 2026-08-02, **not yet released**
+
+The feature set below was finalised on 2026-08-02, and that date is what the heading
+records. It is not a publication date: **no GeoCase version has ever been uploaded to
+PyPI or TestPyPI.** Version `0.1.0` was never uploaded either. The heading date will be
+corrected to the real one when the upload happens.
+
+> **Correction (2026-08-23):** this entry originally claimed 1.0.0 was "the first release
+> published to PyPI". The release process in
+> [Releasing](contributing/releasing.md) is written and gated but has not yet been run;
+> see [Plan 25](plans/25-ship-geocase-as-a-package.md).
 
 ### The compatibility promise
 
@@ -160,14 +177,16 @@ dishonest.
 
 ### Changed
 
-- **Bundled data shrank from 36 MB to 4.2 MB.** Five SpatiaLite fixtures declared
+- **Bundled data shrank from 36 MB to 2.1 MB.** Five SpatiaLite fixtures declared
   `size_class: tiny` were 6.7 MB each; `size_class` now has enforced byte thresholds.
 - `cases/raster.py` loads through `loaders/rasterio_loader.py`, making it the single
   raster load path.
 - `requires-python` is `>=3.11`, with classifiers for 3.11 through 3.14 — the versions
   actually tested rather than the ones plausibly supported.
 - Development status classifier: `3 - Alpha` → `5 - Production/Stable`.
-- `project.urls` now point at GitLab, where the project actually lives.
+- `project.urls` now point at the canonical repository host. (This entry originally said
+  "GitLab"; the project has always lived on GitHub at
+  <https://github.com/farzinashouri/geocase>, and the URLs point there.)
 - The case schema's `format` enum went from 7 values to 17, and its `assertions` block
   from 6 documented fields to all 16. Both are now pinned to the models by a test.
 
@@ -205,5 +224,5 @@ Stated as decisions, not omissions:
 
 ### Known numbers
 
-134 bundled cases (103 vector, 30 raster, 1 NetCDF) across 16 formats, 4.2 MB of bundled
+134 bundled cases (103 vector, 30 raster, 1 NetCDF) across 16 formats, 2.1 MB of bundled
 data, 780 passing tests, 54% line coverage.
