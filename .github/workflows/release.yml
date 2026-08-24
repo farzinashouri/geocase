@@ -1,4 +1,4 @@
-# Tag-triggered build and publish.
+# Build and publish, triggered by a version tag or run by hand.
 #
 # Uploading uses PyPI's OIDC trusted publishing: GitHub mints a short-lived
 # JWT, PyPI exchanges it for an API token good for ~15 minutes. No API token is
@@ -16,6 +16,11 @@ on:
       # approved.
       - "v[0-9]+.[0-9]+.[0-9]+"
       - "v[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
+  # Manual runs build from whatever ref is selected, so there is no tag to
+  # check the artifact version against -- see the `Verify artifacts` step.
+  # Prefer the tag path for anything reaching real PyPI: the tag is what
+  # records which commit an immutable release was built from.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -50,8 +55,21 @@ jobs:
       # every case indexed in `case-index.yaml` is present, that the version
       # matches the tag,
       # and that no `__pycache__`/`.pyc`/`.DS_Store` slipped in.
+      #
+      # `--expected-version` is only passed on a tag push. On a manual run
+      # GITHUB_REF_NAME is the branch (`main`), which is not a version and
+      # would fail the check. Passing a hand-typed version instead would be
+      # worse than passing none: the verifier always cross-checks the wheel
+      # and sdist against `pyproject.toml`, so that check still runs -- what
+      # a manual run gives up is only the tag/artifact agreement, which is
+      # exactly the thing a manual run has no tag to assert.
       - name: Verify artifacts
-        run: python scripts/verify_dist.py dist/ --expected-version "${GITHUB_REF_NAME}"
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            python scripts/verify_dist.py dist/ --expected-version "${GITHUB_REF_NAME}"
+          else
+            python scripts/verify_dist.py dist/
+          fi
 
       - name: Twine check
         run: twine check dist/*

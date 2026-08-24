@@ -101,6 +101,13 @@ Pushing the tag runs the `build` job automatically. The `publish-testpypi` job
 then waits on the `testpypi` environment — **approve it** from the run's page in
 the Actions tab to upload.
 
+`release.yml` also accepts `workflow_dispatch`, so a rehearsal can be run from
+the Actions tab against any ref without cutting a tag. The trade-off: with no
+tag there is nothing to check the artifact version against, so the run verifies
+the wheel and sdist against `pyproject.toml` only. Prefer the tag for anything
+reaching real PyPI — a PyPI release is immutable, and the tag is what records
+which commit it was built from.
+
 Verify the result in a clean environment:
 
 ```bash
