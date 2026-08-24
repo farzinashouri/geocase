@@ -47,7 +47,7 @@ dependencies = [
     # consumer. The dependency is deliberately one-directional: geofacts
     # has zero dependencies, permanently, and must never import from geocase
     # (Plan 20 trap 6) — that property is its entire adoption argument.
-    "geofacts>=0.1.1",
+    "geofacts>=0.1.2",
 ]
 
 [project.optional-dependencies]

@@ -1,10 +1,12 @@
 # Ship GeoCase as an installable package
 
-> **Status: steps 1–4 and 8 implemented 2026-08-23; steps 5–7 and 9 not started.**
-> Steps 5–7 (TestPyPI/PyPI upload) are blocked on the browser-side
-> pending-publisher registrations, which are the user's to do. Step 8 (README
-> rewrite) was taken out of order — it depends on nothing being published. Step 9
-> (plan archive, real-library validation) is untouched.
+> **Status: steps 1–5 and 8 implemented (5 on 2026-08-24); steps 6–7 and 9 not started.**
+> Step 5 is **done: `geofacts` is on real PyPI**, as `0.1.2` rather than the
+> planned `0.1.1` — see the step for why. That clears the dependency-ordering
+> blocker, so step 6 (the GeoCase TestPyPI rehearsal) is now unblocked; its own
+> pending-publisher registration is still a browser step and is the user's to do.
+> Step 8 (README rewrite) was taken out of order — it depends on nothing being
+> published. Step 9 (plan archive, real-library validation) is untouched.
 
 ## Context
 
@@ -126,17 +128,36 @@ phrase ``N cases in `case-index.yaml` `` in `releasing.md`. Rewording that sente
 avoid hardcoding the number breaks three tests. The gate is what keeps the number
 honest, so keep the phrase and let the gate check it.
 
-### 5. Publish `geofacts` 0.1.1 to TestPyPI, then PyPI
+### 5. Publish `geofacts` to TestPyPI, then PyPI — **done 2026-08-24, as 0.1.2 not 0.1.1**
 
-In `/Users/farzinashouri/projects/GeoCase/geofacts` (separate repo):
+All four sub-steps landed. `geofacts` is on **real PyPI** as `0.1.2` (wheel 36,748 B +
+sdist 79,901 B, `requires_python >=3.11`, no runtime dependencies), and on TestPyPI
+alongside `0.1.0`/`0.1.1`.
 
-1. Add a `[tool.hatch.build.targets.sdist]` section — there is none, and an sdist is needed for
-   conda-forge later and is good practice regardless.
-2. Register pending OIDC publishers on test.pypi.org and pypi.org for repo
-   `farzinashouri/geofacts`, workflow `publish.yml`, environments `testpypi` / `pypi`
-   (this is a **browser step, yours**).
-3. `workflow_dispatch` → `testpypi`, verify a clean-venv install.
-4. Publish a GitHub Release on `v0.1.1` → uploads to real PyPI.
+1. **Added `[tool.hatch.build.targets.sdist]`.** The include list is wider than the
+   obvious `/src` + `/tests`: it also carries `/scripts` and `/vendored`, because
+   `tests/test_vendored.py` regenerates the single-file copy via
+   `scripts/build_vendored.py` and diffs it against `vendored/geofacts.py`. Dropping
+   either turns the drift gate — the thing that makes a vendored copy safe to trust —
+   into a collection error exactly where it matters, the conda-forge build, which runs
+   the suite from the sdist. Verified by unpacking the sdist into a clean Python 3.11
+   venv: 46 tests pass and `build_vendored.py --check` reports current.
+2. Pending OIDC publishers registered on both indexes (browser step, user).
+3. `workflow_dispatch` → `testpypi`, then a GitHub Release → real PyPI.
+
+**Deviation: `0.1.2`, not `0.1.1`.** The sdist section is a source change, so shipping it
+under `0.1.1` would have meant force-moving an already-pushed tag. The `0.1.x` name is
+cheap and nothing consumed `0.1.1` yet, so a clean bump beat a rewritten tag.
+
+**Gotcha for the next release:** the version is hardcoded in **three** independent places
+— `pyproject.toml`, `src/geofacts/__init__.py`, and the template literal inside
+`scripts/build_vendored.py` (which then propagates to `vendored/geofacts.py`, so
+regenerate after bumping). `build_vendored.py --check` gates the template against the
+vendored copy, but **nothing gates `pyproject.toml` against `__init__.py`** — they can
+silently disagree. Worth a single-source refactor or a gate test before 0.2.0.
+
+Downstream in geocase, the floor was raised to `geofacts>=0.1.2` in `pyproject.toml:50`
+and `recipe/meta.yaml:27` so the step 6 rehearsal cannot resolve a pre-sdist wheel.
 
 `geofacts` goes to **real** PyPI in this pass — GeoCase's TestPyPI rehearsal must resolve it,
 and TestPyPI is not a reliable dependency source. Its `0.1.x` name is cheap; GeoCase's `1.0.0`
@@ -260,7 +281,9 @@ then run the catalog live against the top one or two targets.
 | `README.md:5`, `docs/index.md:9` | status block now says not-yet-published — **done** |
 | `docs/contributing/workflow.md` | replace phantom GitLab `ci/*.yml` jobs with the real GH Actions jobs — **done** |
 | `pyproject.toml:7` | → `1.0.0rc2` |
-| `../geofacts/pyproject.toml` | add sdist target |
+| `../geofacts/pyproject.toml` | add sdist target; version → `0.1.2` — **done** |
+| `../geofacts/src/geofacts/__init__.py`, `scripts/build_vendored.py`, `vendored/geofacts.py` | `__version__` → `0.1.2` (three hardcoded copies) — **done** |
+| `pyproject.toml:50`, `recipe/meta.yaml:27` | `geofacts` floor `>=0.1.1` → `>=0.1.2` — **done** |
 | `README.md` (opening) | lead with a real edge case; demote AI framing; status block moved below it — **done** |
 | `docs/plans/*` → `docs/plans/archive/` | move superseded plans |
 
@@ -282,8 +305,9 @@ then run the catalog live against the top one or two targets.
 ## Risks
 
 - **PyPI immutability.** Why `1.0.0` is not spent here. The rc2 rehearsal is the whole point.
-- **Dependency ordering.** GeoCase cannot install anywhere until `geofacts` is on real PyPI.
-  Step 5 strictly precedes step 6.
+- ~~**Dependency ordering.** GeoCase cannot install anywhere until `geofacts` is on real PyPI.
+  Step 5 strictly precedes step 6.~~ **Cleared 2026-08-24** — `geofacts 0.1.2` is on PyPI and
+  `pip install "geofacts>=0.1.2"` resolves from the default index in a clean venv.
 - **OIDC misconfiguration** surfaces as a 403 *after* the tag is cut. TestPyPI runs the
   identical job shape, so it catches this first — for both packages.
 - **Browser steps are yours.** Both pending-publisher registrations need your PyPI account.

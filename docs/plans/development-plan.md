@@ -30,8 +30,9 @@ Four external evaluations — one adopter, three rejectors — have now reported
   more CI gates and planning prose than it has users. GeoCase is the furthest along and still
   has none. ([Plan 22](22-portfolio-direction.md))
 - **Packaging is not the bottleneck.** The library has been release-ready since Plan 11. The
-  one hard blocker is dependency ordering: `geofacts` must reach PyPI before GeoCase can
-  install anywhere. ([Plan 25](25-ship-geocase-as-a-package.md))
+  one hard blocker was dependency ordering — `geofacts` had to reach PyPI before GeoCase could
+  install anywhere — and it **cleared 2026-08-24** with `geofacts 0.1.2` on PyPI. What remains
+  is the GeoCase TestPyPI rehearsal itself. ([Plan 25](25-ship-geocase-as-a-package.md))
 - **Discovery is the bottleneck.** The only GeoCase URL a search engine can index today is the
   repo's README. The catalog — the actual differentiated asset — is invisible.
   ([Plan 24](24-catalog-site-on-owned-domain.md), [Plan 26](26-docs-truth-pass-and-seo-prep.md))
@@ -79,7 +80,7 @@ Not automatable and not delegable. Each blocks the work named beside it.
 | Id | Blocks | Action |
 |---|---|---|
 | — | [Plan 24](24-catalog-site-on-owned-domain.md), entirely | **Nominate or register the canonical domain.** Until it exists the catalog stays unpublished, deliberately. |
-| — | [Plan 25](25-ship-geocase-as-a-package.md), entirely | **Publish `geofacts` 0.1.1 to PyPI.** GeoCase declares it as a hard runtime dependency and cannot install anywhere until it resolves. |
+| — | [Plan 25](25-ship-geocase-as-a-package.md), step 6 | ~~**Publish `geofacts` to PyPI.**~~ **Done 2026-08-24** — shipped as `0.1.2`; GeoCase's floor is now `>=0.1.2`. Remaining user action: register GeoCase's own pending publishers on test.pypi.org/pypi.org so the `1.0.0rc2` rehearsal can upload. |
 | U16 | [Plan 20](20-restart-spec-first.md) Phase 1 | Choose the PyPI name and create the repo. (Largely satisfied by the `geofacts` rename; confirm the name is claimable.) |
 | U17 | [Plan 20](20-restart-spec-first.md) Phase 2, and all of Phase 3 bar the nodata carve-out | **Run the five fixture interviews.** 0 of 5 recorded. The whole gate is judgement about what people actually said. Instrument: [`docs/evidence/2026-fixture-interviews/`](../evidence/2026-fixture-interviews/TEMPLATE.md). |
 | U18 | Nothing — but it is the cheapest signal available | Send the shipped guard to the S2/Prithvi adopter and ask directly whether it goes in. |
