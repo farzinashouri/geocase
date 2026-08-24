@@ -1,5 +1,10 @@
 [build-system]
-requires = ["hatchling"]
+# Floored, not just named: the backend decides the wheel's Metadata-Version,
+# and twine refuses metadata newer than it knows. An unpinned backend let CI
+# resolve a hatchling that emitted 2.5 while the pinned twine 6.1.0 rejected
+# it -- a release-blocking failure with no code change behind it. Moving this
+# floor means checking the twine pin in .github/workflows/release.yml.
+requires = ["hatchling>=1.27,<2"]
 build-backend = "hatchling.build"
 
 [project]
