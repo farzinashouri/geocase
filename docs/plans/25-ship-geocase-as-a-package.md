@@ -1,6 +1,7 @@
 # Ship GeoCase as an installable package
 
-> **Status: steps 1–5 and 8 implemented (5 on 2026-08-24); steps 6–7 and 9 not started.**
+> **Status: steps 1–5 and 8 implemented; step 6 partial (6.1–6.2 done 2026-08-24, local
+> build gate green); steps 6.3–6.5, 7 and 9 open.**
 > Step 5 is **done: `geofacts` is on real PyPI**, as `0.1.2` rather than the
 > planned `0.1.1` — see the step for why. That clears the dependency-ordering
 > blocker, so step 6 (the GeoCase TestPyPI rehearsal) is now unblocked; its own
@@ -163,14 +164,18 @@ and `recipe/meta.yaml:27` so the step 6 rehearsal cannot resolve a pre-sdist whe
 and TestPyPI is not a reliable dependency source. Its `0.1.x` name is cheap; GeoCase's `1.0.0`
 is the one worth protecting.
 
-### 6. Rehearse GeoCase on TestPyPI
+### 6. Rehearse GeoCase on TestPyPI — **6.1–6.2 done 2026-08-24; 6.3–6.5 open**
 
-1. Bump `pyproject.toml:7` to `1.0.0rc2` (`rc1` is already tagged and burned).
+1. Bump `pyproject.toml:7` to `1.0.0rc2` (`rc1` is already tagged and burned). — **done**
 2. Local gate first, per `releasing.md:45-76`:
    `rm -rf dist/ && python -m build && python scripts/verify_dist.py dist/ --expected-version 1.0.0rc2 && twine check dist/*`
    The stale `dist/` from Aug 6 must be cleared — it predates `tests/raster/` and
    `tests/benchmark/`, which is why it appears to ship a truncated 21-file suite.
-   Confirm the rebuilt sdist carries all 41 test files.
+   Confirm the rebuilt sdist carries all 41 test files. — **done, green:**
+   `verify_dist` passed (version `1.0.0rc2`, 135 indexed cases in the wheel), `twine check`
+   passed both artifacts, and the rebuilt sdist carries **41** test files, confirming the
+   21-file count was an artifact of the stale `dist/` and not a packaging bug. Wheel 644,380 B
+   / sdist 425,120 B — both comfortably under the 2 MB ceiling `verify_dist.py:42` documents.
 3. Register the GeoCase pending publishers (browser, yours), same shape as step 5.
 4. Tag `v1.0.0rc2`, push; approve the `publish-testpypi` environment.
 5. Verify in a clean venv:
@@ -280,7 +285,7 @@ then run the catalog live against the top one or two targets.
 | `docs/contributing/releasing.md` | `__version__` note → `pyproject.toml` — **done** |
 | `README.md:5`, `docs/index.md:9` | status block now says not-yet-published — **done** |
 | `docs/contributing/workflow.md` | replace phantom GitLab `ci/*.yml` jobs with the real GH Actions jobs — **done** |
-| `pyproject.toml:7` | → `1.0.0rc2` |
+| `pyproject.toml:7` | → `1.0.0rc2` — **done** |
 | `../geofacts/pyproject.toml` | add sdist target; version → `0.1.2` — **done** |
 | `../geofacts/src/geofacts/__init__.py`, `scripts/build_vendored.py`, `vendored/geofacts.py` | `__version__` → `0.1.2` (three hardcoded copies) — **done** |
 | `pyproject.toml:50`, `recipe/meta.yaml:27` | `geofacts` floor `>=0.1.1` → `>=0.1.2` — **done** |
