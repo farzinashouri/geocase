@@ -18,12 +18,12 @@
 > **Status: proposed 2026-08-13.** Overarching. If adopted it supersedes the product framing
 > in [Plan 15](archive/15-geocase-as-benchmark.md) Phase 7 / Stage 2, replaces
 > [Plan 19](archive/19-spec-table-separate-repo.md) outright, **absorbs**
-> [Plan 18](18-eo-product-fixtures.md) — whose Phases 0 and 1 are both implemented — and
+> [Plan 18](archive/18-eo-product-fixtures.md) — whose Phases 0 and 1 are both implemented — and
 > redistributes its output across the two repos (see *Disposition of Plan 18*), and retires
 > [`development-plan.md`](development-plan.md), [Plan 11](archive/11-distribution-pypi-and-conda.md),
 > [Plan 12](archive/12-docs-site-publication.md) and [Plan 13](archive/13-cross-format-canonical-convergence.md)
 > as catalog-era documents. [Plan 16](archive/16-generalize-beyond-geospatial.md) is halted where it
-> stands. [Plan 17](17-throughput-automation-and-corpus-as-input.md) survives intact but is
+> stands. [Plan 17](archive/17-throughput-automation-and-corpus-as-input.md) survives intact but is
 > demoted from product work to instrument maintenance.
 
 ## Verdict
@@ -103,7 +103,7 @@ Both were load-bearing in earlier plans and both must stop being said:
    (`parse N05xx, assert >= 04.00`). Constants must therefore earn their place on nodata
    conventions and the enforced-invariant framing, not on the offset.
 
-2. **"AI can't build these."** [Plan 18](18-eo-product-fixtures.md)'s own gate refuted it for
+2. **"AI can't build these."** [Plan 18](archive/18-eo-product-fixtures.md)'s own gate refuted it for
    frontier models on 2026-08-12: Opus 5 and Sonnet 5 emitted baseline-04.00 radiometry
    unprompted; −1000 is in their weights. It holds only for small/cheap models. Plan 18 already
    records this honestly; nothing downstream may re-inflate it.
@@ -115,7 +115,7 @@ Both were load-bearing in earlier plans and both must stop being said:
 Measured against the working tree on 2026-08-13, not assumed.
 
 - **130 `case.yaml` files** under `src/geocase/data/` (4.2 MB, bundled in the wheel). The
-  README says 134; [Plan 17](17-throughput-automation-and-corpus-as-input.md) says 135. Three
+  README says 134; [Plan 17](archive/17-throughput-automation-and-corpus-as-input.md) says 135. Three
   numbers, one `find`. **The benchmark references 2 of them** — `classic_antimeridian_polygon`
   and `shapefile_field_truncation`. Plan 17 §3.4 already stated the honest yield and its
   structural reason: no `case.yaml` carries an expected *computed* result.
@@ -134,7 +134,7 @@ Measured against the working tree on 2026-08-13, not assumed.
   a guard in *production* code. Rejector C, verbatim: *"Constants that only live in tests can't
   catch a bug in code that has no tests."*
 - **No frontier bare run exists.** Ten committed runs, all free/small models, all bare, all
-  geo. Six are publishable; four carry `api_failures > 0`. [Plan 17](17-throughput-automation-and-corpus-as-input.md)
+  geo. Six are publishable; four carry `api_failures > 0`. [Plan 17](archive/17-throughput-automation-and-corpus-as-input.md)
   Phase 4 — the run that de-confounds Claude's agentic 9/10 against gpt-oss-20b's bare 12/20 —
   has never been executed. It is blocked on U11: **$20**.
 - **The Step 0 agentic run is not in the results store.** Plan 15 Phase 2's
@@ -184,7 +184,7 @@ four months since.
 
 ### Disposition of Plan 18
 
-[Plan 18](18-eo-product-fixtures.md) is a two-phase plan and **both phases are implemented** —
+[Plan 18](archive/18-eo-product-fixtures.md) is a two-phase plan and **both phases are implemented** —
 there is no unbuilt remainder to schedule. Verified on 2026-08-13: the regenerated
 `multispectral_s2_like_small` carries `scales=(1e-4,)*4`, `offsets=(-0.1,)*4`, `nodata=0` and
 the `BOA_ADD_OFFSET` / `QUANTIFICATION_VALUE` / `PROCESSING_BASELINE` tags (its verification
@@ -527,7 +527,7 @@ Plan 16 Phase 3+ (the `stdlib` run and any domain 3). Plan 16's own Phase 5 gate
 third domain before every existing domain has ≥3 models × k=3; the same logic forbids further
 investment in domain 2 before domain 1 has a single frontier run.
 
-**Kept, in full:** [Plan 17](17-throughput-automation-and-corpus-as-input.md)'s throughput and
+**Kept, in full:** [Plan 17](archive/17-throughput-automation-and-corpus-as-input.md)'s throughput and
 integrity work. `publishable: false` on rate-limit damage is the discipline that keeps the
 instrument trustworthy.
 

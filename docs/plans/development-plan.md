@@ -69,9 +69,14 @@ Within that frame, in order:
    measuring those four, and two of them have no case in the catalog. Ranking for a query the
    catalog cannot answer spends a first impression on a miss.
 
-Not on the critical path, kept for when the above clears:
-[Plan 17](17-throughput-automation-and-corpus-as-input.md) (benchmark throughput) and
-[Plan 18](18-eo-product-fixtures.md) (EO product fixtures, absorbed by Plan 20).
+**Archived 2026-08-24, per [Plan 25](25-ship-geocase-as-a-package.md) §9:**
+[Plan 17](archive/17-throughput-automation-and-corpus-as-input.md) (benchmark throughput) and
+[Plan 18](archive/18-eo-product-fixtures.md) (EO product fixtures, absorbed by Plan 20) were
+both off the critical path, and Plan 18's own gate had already refuted its premise. Keeping
+them in the active set implied pending work that nothing is waiting on.
+[Plan 23](archive/23-studies-passify-gap-audit.md) moved too — a completed audit, not a plan.
+Archived does not mean wrong: Plan 17 in particular survives intact and can be revived if the
+benchmark ever needs the throughput.
 
 ## Open user actions
 

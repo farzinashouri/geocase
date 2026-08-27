@@ -271,6 +271,6 @@ currently untested by any task: rotated affine on `rotated_two_islands.tif` (nai
 b/d terms → 32.6 m error, in-bounds and in the right CRS); non-square pixels on
 `nonsquare_diagonal_sparse.tif` (60×30 m → area exactly 2× wrong); int16 scale/offset on
 `ndvi_scaled_int16_small.tif`. These are cheap tasks and they close the
-`affine_transform_quirk` gap that [`development-plan.md:475`](development-plan.md)
+`affine_transform_quirk` gap that [`development-plan.md:475`](../development-plan.md)
 records as promised-and-never-delivered. They belong to the *silent-failure* thesis, not the
 *fixture-fidelity* thesis, so they are kept separate rather than bundled in to pad this plan.

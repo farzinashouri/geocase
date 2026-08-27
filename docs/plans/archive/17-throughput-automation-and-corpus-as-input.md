@@ -1,7 +1,7 @@
 # Plan 17 — Throughput, automation, and corpus-as-input
 
-> **Status: proposed 2026-08-11.** Extends [Plan 15](archive/15-geocase-as-benchmark.md) and
-> [Plan 16](archive/16-generalize-beyond-geospatial.md) rather than superseding either. Plan 15
+> **Status: proposed 2026-08-11.** Extends [Plan 15](15-geocase-as-benchmark.md) and
+> [Plan 16](16-generalize-beyond-geospatial.md) rather than superseding either. Plan 15
 > stands the benchmark up; Plan 16 generalises it beyond geospatial; this plan makes it
 > *runnable* — the 2026-08-11 probe sweep landed 25 of 160 completions, and two committed
 > runs record rate-limit damage as if it were model behaviour.
@@ -440,7 +440,7 @@ appendix is scheduled**, and it must not be started before the run described bel
 
 ### The question
 
-[Plan 14](archive/14-reposition-as-correctness-library.md) was rejected when its Step 0 gate fired:
+[Plan 14](14-reposition-as-correctness-library.md) was rejected when its Step 0 gate fired:
 blind agents got **9 of 10** operations correct, so per the pre-committed rule the library
 was redundant. That verdict stands on the evidence it had — but note precisely what that
 evidence was: **one frontier model (Claude), on the agentic track, with tools and
@@ -466,7 +466,7 @@ on the bare track, same tasks, same protocol. Until that run exists, "free model
 library" is suggestive, not demonstrated, and must not be asserted.
 
 **The pitch that survives is the weaker one Plan 14 already conceded.** Per
-[14-reposition-as-correctness-library.md:126-129](archive/14-reposition-as-correctness-library.md),
+[14-reposition-as-correctness-library.md:126-129](14-reposition-as-correctness-library.md),
 the framing had already moved from *"you didn't know"* to *"this is settled, verified, and
 identical everywhere"* — a claim that never depended on models being ignorant, and so was
 never touched by Step 0. The 2026-08-11 probe data reinforces it: 11 of 11 replies named
