@@ -66,6 +66,7 @@ nav:
   - Contributing:
       - Workflow: contributing/workflow.md
       - Releasing: contributing/releasing.md
+      - PyPI Publishing Practices: contributing/pypi-publishing-practices.md
       - Viewing Schematics: contributing/viewing-schematics.md
       - Structure & Planning: contributing/structure-and-planning.md
       - Manifests & Storage: contributing/manifests-and-storage.md
@@ -75,12 +76,9 @@ nav:
   - Plans:
       - Overview: plans/index.md
       - Roadmap: plans/development-plan.md
-      - Throughput, Automation & Corpus-as-Input: plans/17-throughput-automation-and-corpus-as-input.md
-      - EO Product Fixtures: plans/18-eo-product-fixtures.md
       - Restart, Spec-First: plans/20-restart-spec-first.md
       - Adoption Action Plan: plans/21-adoption-action-plan.md
       - Portfolio Direction: plans/22-portfolio-direction.md
-      - Studies/passify Gap Audit: plans/23-studies-passify-gap-audit.md
       - Ship GeoCase as a Package: plans/25-ship-geocase-as-a-package.md
       - Catalog Site on an Owned Domain: plans/24-catalog-site-on-owned-domain.md
       - Docs Truth Pass & SEO Prep: plans/26-docs-truth-pass-and-seo-prep.md

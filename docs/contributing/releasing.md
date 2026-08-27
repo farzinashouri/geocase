@@ -1,6 +1,8 @@
 # Releasing
 
-How a GeoCase version reaches PyPI and conda-forge.
+How a GeoCase version reaches PyPI and conda-forge. For the general reasoning
+behind these steps — portable to any Python package — see
+[PyPI publishing practices](pypi-publishing-practices.md).
 
 The governing constraint is that **PyPI artifacts are immutable**. A version
 number, once uploaded, can never be reused — not after a deletion, not after a

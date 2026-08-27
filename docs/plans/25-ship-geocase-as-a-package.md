@@ -1,7 +1,11 @@
 # Ship GeoCase as an installable package
 
-> **Status: steps 1–5 and 8 implemented; step 6 partial (6.1–6.2 done 2026-08-24, local
-> build gate green); steps 6.3–6.5, 7 and 9 open.**
+> **Status: steps 1–6 and 8 implemented (6 on 2026-08-24); step 7 is the deliberate stop;
+> step 9 open.**
+> **The rehearsal is green: `geocase 1.0.0rc2` is on TestPyPI and installs clean.** It paid
+> for itself — it caught a release-blocking `twine`/`hatchling` metadata-version skew that
+> would have hit the immutable real-PyPI `1.0.0` run instead (see 6.4). Per step 7, the
+> release **stops here**: real PyPI and conda-forge are a separate pass.
 > Step 5 is **done: `geofacts` is on real PyPI**, as `0.1.2` rather than the
 > planned `0.1.1` — see the step for why. That clears the dependency-ordering
 > blocker, so step 6 (the GeoCase TestPyPI rehearsal) is now unblocked; its own
@@ -164,7 +168,12 @@ and `recipe/meta.yaml:27` so the step 6 rehearsal cannot resolve a pre-sdist whe
 and TestPyPI is not a reliable dependency source. Its `0.1.x` name is cheap; GeoCase's `1.0.0`
 is the one worth protecting.
 
-### 6. Rehearse GeoCase on TestPyPI — **6.1–6.2 done 2026-08-24; 6.3–6.5 open**
+### 6. Rehearse GeoCase on TestPyPI — **done 2026-08-24, green**
+
+`geocase 1.0.0rc2` is on TestPyPI (wheel 644,380 B + sdist 425,286 B,
+`requires_python >=3.11`, `requires_dist` carrying `geofacts>=0.1.2`), alongside the
+`1.0.0rc1` published in August. All five sub-steps landed; the rehearsal caught one real
+release-blocking bug before it could reach real PyPI, which is precisely what it was for.
 
 1. Bump `pyproject.toml:7` to `1.0.0rc2` (`rc1` is already tagged and burned). — **done**
 2. Local gate first, per `releasing.md:45-76`:
@@ -176,13 +185,46 @@ is the one worth protecting.
    passed both artifacts, and the rebuilt sdist carries **41** test files, confirming the
    21-file count was an artifact of the stale `dist/` and not a packaging bug. Wheel 644,380 B
    / sdist 425,120 B — both comfortably under the 2 MB ceiling `verify_dist.py:42` documents.
-3. Register the GeoCase pending publishers (browser, yours), same shape as step 5.
-4. Tag `v1.0.0rc2`, push; approve the `publish-testpypi` environment.
+3. Register the GeoCase pending publishers (browser, yours), same shape as step 5. — **done**
+4. Tag `v1.0.0rc2`, push; approve the `publish-testpypi` environment. — **done, after one
+   failed run.** The first `v1.0.0rc2` was cut at `29a8fe0` and **failed at `twine check`**:
+   `InvalidDistribution: '2.5' is not a valid metadata version`. Current hatchling emits
+   `Metadata-Version: 2.5`; the pinned `twine==6.1.0` rejects it outright. The artifact was
+   never at fault — only the validator. Two things made this reach CI:
+   - `release.yml` pinned `build` and `twine` but **not** the backend, which came from
+     `[build-system] requires = ["hatchling"]` — unpinned, so the runner resolved a
+     hatchling newer than the twine pin anticipated. Exactly the drift that pin's own
+     comment claims to prevent.
+   - A green **local** `twine check` was not evidence: the local twine was `7.0.0`. Same
+     wheel, different validator. Reproduced both sides in clean venvs to confirm — 6.1.0
+     fails, 7.0.0 passes, on byte-identical artifacts.
+
+   Fixed by pinning `twine==7.0.0` and flooring `hatchling>=1.27,<2` (PR #9). The tag was
+   then deleted and re-cut at `22d56d9`; safe to move because the failed run uploaded
+   nothing, so `1.0.0rc2` was still unspent on the index — same reasoning as the
+   `geofacts` `0.1.1`→`0.1.2` call in step 5.
 5. Verify in a clean venv:
    `pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ geocase`
    then assert `len(geocase.__all__) == 27`, `len(geocase.list_cases()) == 135`,
    `load_case(...)` materializes a bundled case, and `pytest --collect-only` in a scratch dir
-   shows the plugin auto-registered via `[project.entry-points.pytest11]`.
+   shows the plugin auto-registered via `[project.entry-points.pytest11]`. — **done, all four
+   pass:** `__all__` is 27, `list_cases()` is 135, `load_case("geotiff_nodata_small")`
+   resolves `nodata_sample.tif` (778 B) from inside `site-packages`, and pytest's header
+   reads `plugins: geocase-1.0.0rc2` with the `geocase` fixture resolving in a scratch dir
+   holding no `conftest.py`.
+
+   **Verification 7 confirmed for the first time here:** `geofacts 0.1.2` resolved from real
+   PyPI into the clean venv, with no `../geofacts` sibling on the path — the dependency
+   ordering that blocked this plan is genuinely cleared, not just assumed.
+
+   **Verification 8 also closed:** the README's headline example was re-run against this
+   install rather than the local conda env, and reproduces exactly — 2 `-9999` pixels in
+   100, raw mean **−152.86**, masked mean **48.08**.
+
+   **API note for anyone repeating this:** the case object exposes `.id` and
+   `.read()`/`.open()`, not `.case_id`/`.load()`; `.read()` returns a
+   `(ndarray, dict, float)` tuple. The plan's step-6 wording says "`load_case(...)`
+   materializes", which is `load_case()` then `.read()`.
 
 ### 7. Stop the release here
 
@@ -286,6 +328,9 @@ then run the catalog live against the top one or two targets.
 | `README.md:5`, `docs/index.md:9` | status block now says not-yet-published — **done** |
 | `docs/contributing/workflow.md` | replace phantom GitLab `ci/*.yml` jobs with the real GH Actions jobs — **done** |
 | `pyproject.toml:7` | → `1.0.0rc2` — **done** |
+| `pyproject.toml` `[build-system]` | floor the backend `hatchling>=1.27,<2` — unpinned, it moved the wheel's Metadata-Version and broke `twine check` — **done (PR #9)** |
+| `.github/workflows/release.yml` | `twine==6.1.0` → `7.0.0`; add `workflow_dispatch`; skip `--expected-version` when the ref is not a tag — **done** |
+| `docs/contributing/releasing.md` | document the manual-dispatch path and its trade-off — **done** |
 | `../geofacts/pyproject.toml` | add sdist target; version → `0.1.2` — **done** |
 | `../geofacts/src/geofacts/__init__.py`, `scripts/build_vendored.py`, `vendored/geofacts.py` | `__version__` → `0.1.2` (three hardcoded copies) — **done** |
 | `pyproject.toml:50`, `recipe/meta.yaml:27` | `geofacts` floor `>=0.1.1` → `>=0.1.2` — **done** |
@@ -313,8 +358,14 @@ then run the catalog live against the top one or two targets.
 - ~~**Dependency ordering.** GeoCase cannot install anywhere until `geofacts` is on real PyPI.
   Step 5 strictly precedes step 6.~~ **Cleared 2026-08-24** — `geofacts 0.1.2` is on PyPI and
   `pip install "geofacts>=0.1.2"` resolves from the default index in a clean venv.
-- **OIDC misconfiguration** surfaces as a 403 *after* the tag is cut. TestPyPI runs the
-  identical job shape, so it catches this first — for both packages.
+- ~~**OIDC misconfiguration** surfaces as a 403 *after* the tag is cut. TestPyPI runs the
+  identical job shape, so it catches this first — for both packages.~~ **Did not fire
+  2026-08-24** — trusted publishing worked first try on both indexes. What the rehearsal
+  caught instead was a *toolchain* failure (twine vs. hatchling metadata versions, 6.4),
+  which argues the rehearsal's value is broader than the OIDC risk it was written for.
+- **Pinned validators expire.** A pinned `twine` silently ages out of the
+  `Metadata-Version` the build backend emits. Pin the backend alongside it, and treat a
+  green local `twine check` as meaningless unless the local twine matches the CI pin.
 - **Browser steps are yours.** Both pending-publisher registrations need your PyPI account.
 - **Packaging is not the bottleneck.** The realistic odds of sustained adoption are modest
   (~15-25%), and they are set by discovery, not by release mechanics. §8 and §9 are the parts of

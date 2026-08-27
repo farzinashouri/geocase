@@ -55,7 +55,7 @@ The common row is the last one.
 | Gate | Date | Verdict | Response |
 |---|---|---|---|
 | [Plan 14](archive/14-reposition-as-correctness-library.md) Step 0 | 2026-08-09 | **Stop** — blind agents 9/10 correct; the function library is redundant | Plan 15 written |
-| [Plan 18](18-eo-product-fixtures.md) Phase 0 | 2026-08-12 | **Premise false for frontier models** — −1000 is in their weights | Built on a narrowed claim |
+| [Plan 18](archive/18-eo-product-fixtures.md) Phase 0 | 2026-08-12 | **Premise false for frontier models** — −1000 is in their weights | Built on a narrowed claim |
 | [Plan 20](20-restart-spec-first.md) Phase 2 | open | **Not run** — 0 of 5 interviews recorded | Plan 21 written to sequence running it |
 | Fourth evaluation | 2026-08-16 | **Would not adopt as a dependency** | this document |
 
@@ -99,7 +99,7 @@ a small one.
 
 ## The finding: two repos are one product
 
-> **Corrected 2026-08-16 by [Plan 23](23-studies-passify-gap-audit.md).** The section below was
+> **Corrected 2026-08-16 by [Plan 23](archive/23-studies-passify-gap-audit.md).** The section below was
 > written from the two schemas. Running both test suites shows the framing holds for about a
 > seventh of the bank and fails for the rest: passify's content contract has no `coding` type,
 > and 55 of Studies' 65 questions are `coding`. The gap table further down understates the work.

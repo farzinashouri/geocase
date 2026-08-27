@@ -174,7 +174,7 @@ over a promise.
 Recorded plainly so no later document has to discover it.
 
 Publishing does not give geocase a use case. It does not help `passify` or `GeoCase_Studies`
-either — [Plan 23](23-studies-passify-gap-audit.md) established those are two products sharing
+either — [Plan 23](archive/23-studies-passify-gap-audit.md) established those are two products sharing
 a domain, and neither needs a fixture catalog. What publishing does is narrower:
 
 1. **It answers the one objection [Plan 22](22-portfolio-direction.md) marks "correct, and
