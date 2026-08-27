@@ -44,6 +44,16 @@ def test_mixed_encoding_attributes(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Detect loaders that assume a single encoding or silently corrupt non-ASCII attribute values.

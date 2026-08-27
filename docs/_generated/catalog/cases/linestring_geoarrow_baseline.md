@@ -44,6 +44,16 @@ def test_linestring_geoarrow_baseline(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Provide a canonical line encoded as GeoArrow IPC so Arrow-native geometry loading can be compared against Parquet, Feather, and text baselines.

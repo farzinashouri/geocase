@@ -44,6 +44,16 @@ def test_multipoint_wkt_baseline(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Provide a canonical multipoint encoded as WKT so format-specific loader behavior can be compared directly against the GeoJSON baseline.

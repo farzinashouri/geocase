@@ -38,6 +38,16 @@ def test_geotiff_multiband_small(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Confirm that GeoCase can open a small multi-band raster, preserve its declared band count, and expose each band as distinct pixel data.

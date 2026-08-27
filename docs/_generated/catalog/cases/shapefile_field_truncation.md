@@ -44,6 +44,16 @@ def test_shapefile_field_truncation(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose workflows that assume arbitrary field name lengths or fail to detect/handle Shapefile's 10-character field name limit. Detect cases where truncation causes field name collisions.

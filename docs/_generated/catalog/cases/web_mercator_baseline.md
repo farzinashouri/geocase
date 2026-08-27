@@ -44,6 +44,16 @@ def test_web_mercator_baseline(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Ensure vector loading and downstream utilities handle a baseline Web Mercator point with explicit projected CRS metadata.

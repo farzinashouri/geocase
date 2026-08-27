@@ -44,6 +44,16 @@ def test_format_limited_kml_case(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Detect loaders or cross-format converters that assume attribute types (integer, float, boolean) survive a KML round-trip. In KML all ExtendedData SimpleField values are strings, so population "15000" is a string, not an int. Naive downstream code that does arithmetic on these columns without casting will fail silently.

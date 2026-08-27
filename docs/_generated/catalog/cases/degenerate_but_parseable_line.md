@@ -44,6 +44,16 @@ def test_degenerate_but_parseable_line(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Ensure loading succeeds for a degenerate but parseable line while making its zero-length invalidity explicit to validation logic.

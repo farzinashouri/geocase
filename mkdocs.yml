@@ -94,6 +94,7 @@ nav:
       - Vector Coverage Matrix: _generated/vector-coverage-matrix.md
       - Raster Coverage Matrix: _generated/raster-coverage-matrix.md
       - Codebase Summary: reference/codebase-summary.md
+      - Repository Guide: reference/repository-guide.md
 
 # Superseded planning documents, retained as an implementation log rather than
 # published. The single roadmap is plans/development-plan.md; the archive index

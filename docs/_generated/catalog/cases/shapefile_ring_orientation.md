@@ -44,6 +44,16 @@ def test_shapefile_ring_orientation(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose workflows that assume a polygon read from any format keeps the RFC 7946 right-hand rule, or that infer ring role from orientation rather than from ring position. Provide a fixture where topological equality with the GeoJSON reference holds while orientation differs.

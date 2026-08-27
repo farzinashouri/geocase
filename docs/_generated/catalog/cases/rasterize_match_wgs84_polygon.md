@@ -44,6 +44,16 @@ def test_rasterize_match_wgs84_polygon(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Confirm that vector geometries in WGS84 can be reprojected to the raster grid CRS and successfully rasterized.

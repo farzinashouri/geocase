@@ -44,6 +44,16 @@ def test_self_intersecting_polygon(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose code that silently accepts invalid polygons or computes incorrect area/centroid values from self-intersecting rings.

@@ -2,14 +2,14 @@
 
 ## Context
 
-Two external validation runs of `1.0.0rc2` are in [docs/geocase_validate/](docs/geocase_validate/). They reached **opposite verdicts**, and that split is the single most important input to this plan:
+Two external validation runs of `1.0.0rc2` are in [`docs/geocase_validate/`](../geocase_validate/geocase-improvement-report.md). They reached **opposite verdicts**, and that split is the single most important input to this plan:
 
 | Run | Target | Verdict | Bugs from the curated corpus |
 |---|---|---|---|
-| [geocase-improvement-report.md](docs/geocase_validate/geocase-improvement-report.md) | pyogrio / GDAL | **"Worth shipping."** | **2 real** — a `read_dataframe(fid_as_index=True, use_arrow=True)` crash (patched, accepted upstream as a regression test) and a GPKG spatial-filter divergence traced into GDAL's `GetArrowStream` (filed upstream) |
-| [GEOCASE_VALIDATION_REPORT.md](docs/geocase_validate/GEOCASE_VALIDATION_REPORT.md) | rio-tiler | "Don't adopt as a bug-finding tool." | 0 |
+| [geocase-improvement-report.md](../geocase_validate/geocase-improvement-report.md) | pyogrio / GDAL | **"Worth shipping."** | **2 real** — a `read_dataframe(fid_as_index=True, use_arrow=True)` crash (patched, accepted upstream as a regression test) and a GPKG spatial-filter divergence traced into GDAL's `GetArrowStream` (filed upstream) |
+| [GEOCASE_VALIDATION_REPORT.md](../geocase_validate/GEOCASE_VALIDATION_REPORT.md) | rio-tiler | "Don't adopt as a bug-finding tool." | 0 |
 
-The [GEOCASE_RECOMMENDATIONS.md](docs/geocase_validate/GEOCASE_RECOMMENDATIONS.md) "the files are not the moat, pivot to oracles" conclusion is drawn **from the rio-tiler run only**. It is not a verdict on geocase as a whole, and this plan does not treat it as one.
+The [GEOCASE_RECOMMENDATIONS.md](../geocase_validate/GEOCASE_RECOMMENDATIONS.md) "the files are not the moat, pivot to oracles" conclusion is drawn **from the rio-tiler run only**. It is not a verdict on geocase as a whole, and this plan does not treat it as one.
 
 **The honest reading: the corpus works on the vector side and does not yet earn its keep on the raster side.** Both bugs pyogrio found came from cases under `vector/special/` built around a *named failure mode* (`dateline_chain_cluster`, `empty_geometry_gpkg`) — not from the 61 `*_baseline` files. So the corpus is validated where it is curated around failure modes, and thin where it is curated around format coverage.
 
@@ -56,7 +56,7 @@ check_vector_content(case_dir, metadata) -> list[str]
 check_case_content(case_dir, metadata)   -> list[str]   # dispatch on category
 ```
 
-**Reuse is the design.** Checks delegate to the existing helpers in [src/geocase/assertions/raster.py](src/geocase/assertions/raster.py) (`assert_no_nodata_pixels` and `assert_nodata_masked` already exist), `assertions/geometry.py`, `assertions/crs.py`, `assertions/footprint.py`, and `assertions/metadata.py`, catching `AssertionError` into a message list. The gate and the user-facing assertions must be the *same code*, or the gate can pass while a user's identical test fails.
+**Reuse is the design.** Checks delegate to the existing helpers in [src/geocase/assertions/raster.py](https://github.com/farzinashouri/geocase/blob/main/src/geocase/assertions/raster.py) (`assert_no_nodata_pixels` and `assert_nodata_masked` already exist), `assertions/geometry.py`, `assertions/crs.py`, `assertions/footprint.py`, and `assertions/metadata.py`, catching `AssertionError` into a message list. The gate and the user-facing assertions must be the *same code*, or the gate can pass while a user's identical test fails.
 
 It lives in `geocase.catalog.content`, not in `scripts/`, so the pytest job can unit-test it and users can run it against their own manifest cases.
 
@@ -80,15 +80,15 @@ Prose is uncheckable; the vocabulary is not. Keyed on `risk_types`, not on descr
 
 **New:** `scripts/validate_case_content.py` — walks `metadata/case-index.yaml`, calls `check_case_content`, prints a per-case report, exits non-zero on any error. Flags: `--only <id>`, `--category`, `--json`.
 
-**Where it runs — the `catalog` job.** [.github/workflows/ci.yml](.github/workflows/ci.yml)'s catalog job already installs `.[raster,vector]` inside `ghcr.io/osgeo/gdal:ubuntu-full-3.10.0`, so it has GDAL, rasterio, geopandas, shapely and pyarrow. The `tests` job on plain `ubuntu-latest` lacks `osgeo` and the Arrow/Parquet driver plugins — a gate there would skip exactly the cases most likely to drift.
+**Where it runs — the `catalog` job.** [.github/workflows/ci.yml](https://github.com/farzinashouri/geocase/blob/main/.github/workflows/ci.yml)'s catalog job already installs `.[raster,vector]` inside `ghcr.io/osgeo/gdal:ubuntu-full-3.10.0`, so it has GDAL, rasterio, geopandas, shapely and pyarrow. The `tests` job on plain `ubuntu-latest` lacks `osgeo` and the Arrow/Parquet driver plugins — a gate there would skip exactly the cases most likely to drift.
 
 `validate_catalog.py` stays reader-dependency-free (it only imports `geocase.catalog.*`) so it keeps running in the `tests` job and in a contributor's `.venv`. Two gates, two dependency profiles.
 
-**Edits:** one line in the catalog job after `validate_catalog.py`; the "Catalog gates" block in [CLAUDE.md](CLAUDE.md).
+**Edits:** one line in the catalog job after `validate_catalog.py`; the "Catalog gates" block in [CLAUDE.md](https://github.com/farzinashouri/geocase/blob/main/CLAUDE.md).
 
 ### 1.5 Fix the defects the gate turns red
 
-- **`hole_center_nodata`** — the real fix is structural: it is hand-committed and sits *outside* the only regeneration gate, which is why it drifted. Bring `footprint_edge_cases` under [scripts/generate_raster_fixtures.py](scripts/generate_raster_fixtures.py) as a `_footprint_edge_specs()` that emits the raster **and** its `_footprint.geojson` from the same array, so the footprint is derived by construction and cannot drift again. Build the interior void the case has always claimed.
+- **`hole_center_nodata`** — the real fix is structural: it is hand-committed and sits *outside* the only regeneration gate, which is why it drifted. Bring `footprint_edge_cases` under [scripts/generate_raster_fixtures.py](https://github.com/farzinashouri/geocase/blob/main/scripts/generate_raster_fixtures.py) as a `_footprint_edge_specs()` that emits the raster **and** its `_footprint.geojson` from the same array, so the footprint is derived by construction and cannot drift again. Build the interior void the case has always claimed.
 - **`landcover_small`** (`nodata=0`) — **drop the declaration** rather than inject fake nodata. A landcover class of 0 is legitimate; 0 as both a class and a nodata sentinel is the `ambiguous_zero` risk and deserves its own explicit case, not a silent one.
 - **`ndvi_scaled_int16_small`, `cog_multispectral_small`, `multispectral_s2_like_small`, `multispectral_mixed_resolution_small`** — inject real nodata pixels in the generator specs. These cases exist to exercise nodata handling and are inert without it.
 - **`all_valid_rectangular`** — audit; "all valid" is the point, so it should not declare nodata.
@@ -109,7 +109,7 @@ Everything here is a direct ask from the run that said "worth shipping".
 
 **Failing test** in `tests/unit/test_public_api.py`: cases whose format is Parquet/Arrow/GeoArrow/Feather expose a checkable driver requirement; WKB/WKT cases declare they are not OGR-openable.
 
-Add `required_drivers: list[str] = []` to `AssertionHints` in [src/geocase/catalog/models.py](src/geocase/catalog/models.py) (additive pydantic field with a default — safe), populated by a metadata pass. A consumer checks it against `pyogrio.list_drivers()` / `fiona.supported_drivers` before reading.
+Add `required_drivers: list[str] = []` to `AssertionHints` in [src/geocase/catalog/models.py](https://github.com/farzinashouri/geocase/blob/main/src/geocase/catalog/models.py) (additive pydantic field with a default — safe), populated by a metadata pass. A consumer checks it against `pyogrio.list_drivers()` / `fiona.supported_drivers` before reading.
 
 **Also needed, because `loader_hint` cannot do this job:** the 12 WKB/WKT cases are bare geometry blobs no OGR tool can open, and `loader_hint` marks all 104 vector cases `geopandas`. Either correct those 12 to a `shapely`-shaped hint or express it via `required_drivers` — decide during implementation, but the filter must actually separate them, which today it does not.
 
@@ -119,7 +119,7 @@ Additive `loader_hint: LoaderHint | None = None` on `SuiteSelection`, `matches_s
 
 ### 2.3 `format="vector"` redirecting error
 
-**Failing test:** `list_cases(format="vector")` raises an error whose message says `category='vector'`. A pre-check in [src/geocase/api/public.py](src/geocase/api/public.py) intercepts the `Category` literals before pydantic sees them. **Do not rename `format` to `file_format`** — a v1.0 break for a message problem. ~10 lines removes the library's worst first impression.
+**Failing test:** `list_cases(format="vector")` raises an error whose message says `category='vector'`. A pre-check in [src/geocase/api/public.py](https://github.com/farzinashouri/geocase/blob/main/src/geocase/api/public.py) intercepts the `Category` literals before pydantic sees them. **Do not rename `format` to `file_format`** — a v1.0 break for a message problem. ~10 lines removes the library's worst first impression.
 
 ### 2.4 Expected-error taxonomy — make failure *mode* assertable
 
@@ -133,7 +133,7 @@ Also document the `expect_loadable` × `expect_valid_geometry` pair as a matrix 
 
 `empty_geometry_gpkg` will diverge between pyogrio's two paths for every user until GDAL fixes it. Without somewhere to record that, the next person re-investigates from scratch and cannot tell a new bug from the catalogued one.
 
-`KnownDivergence(consumer, version_range, description, upstream_url)`; `CaseMetadata.known_divergences: list[KnownDivergence] = []`. Seed it with the `empty_geometry_gpkg` / pyogrio-Arrow finding and the GDAL issue from [gdal-issue-draft.md](docs/geocase_validate/gdal-issue-draft.md).
+`KnownDivergence(consumer, version_range, description, upstream_url)`; `CaseMetadata.known_divergences: list[KnownDivergence] = []`. Seed it with the `empty_geometry_gpkg` / pyogrio-Arrow finding and the GDAL issue from [gdal-issue-draft.md](../geocase_validate/gdal-issue-draft.md).
 
 ### 2.6 Ship the differential-harness recipe
 
@@ -162,12 +162,12 @@ These must be **generated by a script under the regeneration gate**, not hand-co
 The rio-tiler run's recommendations are sound *for raster* and stay sequenced behind the validated vector work. Recorded here so they are not lost:
 
 - `geocase.oracles` — adapter protocol (`RasterReaderAdapter` with a `supports` capability set so unsupported ops skip rather than fail), a rasterio reference adapter, and the 8 metamorphic properties: query purity, band-permutation equivariance, translation equivariance (**geocase already ships the `geotiff_nodata_small` / `_shifted` pair and has never used it as an oracle**), rotation equivariance, `part(full) == read()`, tile-mosaic z+1 consistency, nodata relabelling, overview ≈ decimated.
-- Generator parameters on [src/geocase/raster/primitive.py](src/geocase/raster/primitive.py): `tiled`/`blocksize` (51 of 55 payloads are striped, which makes the entire COG/range-request surface unreachable), `overviews`, mask kind, per-band nodata.
-- New axes in [src/geocase/raster/axes.py](src/geocase/raster/axes.py): `south_up_transform`, `x_flipped_transform`, parameterised `sheared_transform(angle=)`, `interior_hole`, `nodata_equals_valid_value`, `per_band_nodata`.
+- Generator parameters on [src/geocase/raster/primitive.py](https://github.com/farzinashouri/geocase/blob/main/src/geocase/raster/primitive.py): `tiled`/`blocksize` (51 of 55 payloads are striped, which makes the entire COG/range-request surface unreachable), `overviews`, mask kind, per-band nodata.
+- New axes in [src/geocase/raster/axes.py](https://github.com/farzinashouri/geocase/blob/main/src/geocase/raster/axes.py): `south_up_transform`, `x_flipped_transform`, parameterised `sheared_transform(angle=)`, `interior_hole`, `nodata_equals_valid_value`, `per_band_nodata`.
 
 **Entry condition:** start Phase 4 when a raster consumer reports value, or when Phase 1's gate is green and Phases 2–3 have shipped. Do not start it on the strength of one negative report.
 
-**Cut outright:** the cross-version differential matrix ("the moat"). It is a *service* — scheduled workflow, results store, pinned environments — not a library feature. Build it only once the shipped differential helper has found a defect in a library not maintained here. Building it before that is the four-gates-zero-users pattern [22-portfolio-direction.md](docs/plans/22-portfolio-direction.md) already named.
+**Cut outright:** the cross-version differential matrix ("the moat"). It is a *service* — scheduled workflow, results store, pinned environments — not a library feature. Build it only once the shipped differential helper has found a defect in a library not maintained here. Building it before that is the four-gates-zero-users pattern [22-portfolio-direction.md](22-portfolio-direction.md) already named.
 
 ---
 
@@ -176,7 +176,7 @@ The rio-tiler run's recommendations are sound *for raster* and stay sequenced be
 **Reframe; do not retire.** The declared-assertion mode found real bugs in pyogrio and GDAL, and after Phase 1 it does genuine work catching drift.
 
 - State the split honestly in docs: the corpus's demonstrated yield is on **failure-mode cases** (`vector/special/`), not on baselines or on the current raster set. That is a sharper and more defensible claim than either report's headline.
-- Add `docs/validation-findings.md` summarising both runs and linking [docs/geocase_validate/](docs/geocase_validate/), including the rio-tiler negative result. An honest README beats a defensive one.
+- Add `docs/validation-findings.md` summarising both runs and linking [`docs/geocase_validate/`](../geocase_validate/geocase-improvement-report.md), including the rio-tiler negative result. An honest README beats a defensive one.
 - The README's existing pitch already shows the *user* writing a differential check (`mean_elevation(array)` vs `valid.mean()`) rather than trusting a declared assertion — that framing survives both reports and should be kept.
 - **Zero code impact.** Fixtures, all four markers, `assertions/`, and the 27-name `__all__` are untouched.
 
@@ -195,7 +195,7 @@ The rio-tiler run's recommendations are sound *for raster* and stay sequenced be
 | `landcover_small` loses `nodata=0`; 4 cases gain real nodata pixels | **Behavioural** — checksums change; regenerate catalog pages |
 | Fixtures, markers, `__all__` | **Untouched** |
 
-Nothing removes a case id, fixture, marker, or `__all__` entry. **The shipped corpus is not deleted or shrunk** — that would break every `include_ids`, suite, catalog page and checksum for zero benefit. (Note: [U21](docs/plans/development-plan.md) separately contemplates deleting ~128 unreferenced cases; that decision is out of scope here and this plan assumes they stay.)
+Nothing removes a case id, fixture, marker, or `__all__` entry. **The shipped corpus is not deleted or shrunk** — that would break every `include_ids`, suite, catalog page and checksum for zero benefit. (Note: [U21](development-plan.md) separately contemplates deleting ~128 unreferenced cases; that decision is out of scope here and this plan assumes they stay.)
 
 ---
 
@@ -238,7 +238,7 @@ mkdocs build --strict
 ## Plan-doc obligations (per CLAUDE.md)
 
 - Write this as `docs/plans/28-vector-first-corpus-trust.md` (28 is the next free number) with the `> **Status: proposed 2026-08-27.**` blockquote and `## Phase N` / `### N.M` structure.
-- Add a row to [docs/plans/index.md](docs/plans/index.md).
-- Add Plan 28 to the **Active sequence** in [docs/plans/development-plan.md](docs/plans/development-plan.md), ahead of Plan 24 — a catalog site should not deploy on top of a corpus with a known false-passing case.
-- Add one row to [27-close-plan-26-findings.md](docs/plans/27-close-plan-26-findings.md), which already owns the `risk_types` vocabulary problem: each vocabulary entry gains a field naming the content-gate check that enforces it. Do **not** fork that work into this plan.
+- Add a row to [docs/plans/index.md](index.md).
+- Add Plan 28 to the **Active sequence** in [docs/plans/development-plan.md](development-plan.md), ahead of the catalog deployment — a catalog site should not deploy on top of a corpus with a known false-passing case.
+- Add one row to [27-close-plan-26-findings.md](27-close-plan-26-findings.md), which already owns the `risk_types` vocabulary problem: each vocabulary entry gains a field naming the content-gate check that enforces it. Do **not** fork that work into this plan.
 - Mark progress in the plan doc as each phase lands.

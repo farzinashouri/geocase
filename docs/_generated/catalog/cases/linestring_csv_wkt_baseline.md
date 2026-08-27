@@ -44,6 +44,16 @@ def test_linestring_csv_wkt_baseline(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Provide a canonical line encoded as CSV_WKT so text-based vector serialization can be compared against file-driver-backed formats.

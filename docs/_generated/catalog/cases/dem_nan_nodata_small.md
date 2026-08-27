@@ -43,6 +43,16 @@ def test_dem_nan_nodata_small(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Confirm GeoCase detects NaN-encoded NoData in a float DEM rather than treating NaN as valid elevation.

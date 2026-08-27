@@ -44,6 +44,16 @@ def test_wrapped_longitude_point(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose helpers that preserve wrapped geographic longitudes instead of normalizing them back into the usual [-180, 180] interval.

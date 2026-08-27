@@ -54,7 +54,7 @@ python -m mkdocs serve
 Watch for the line reporting the address, usually:
 
 ```
-INFO - [12:00:00] Serving on http://127.0.0.1:8000/
+INFO - [12:00:00] Serving on http://127.0.0.1:8000/geocase/
 ```
 
 ### 3. Open a case page
@@ -62,7 +62,7 @@ INFO - [12:00:00] Serving on http://127.0.0.1:8000/
 Navigate to a case with a distinctive shape, for example:
 
 ```
-http://127.0.0.1:8000/_generated/catalog/cases/dateline_crossing_polygon/
+http://127.0.0.1:8000/geocase/_generated/catalog/cases/dateline_crossing_polygon/
 ```
 
 Or browse **Case Catalog** in the site navigation and pick any case.
@@ -88,17 +88,16 @@ refresh.
 
 ## Option B — view them on the published site
 
-Once Plan 12 is complete, the same pages are served at:
+Once GitHub Pages is enabled for the repository, the same pages are served at:
 
 ```
 https://farzinashouri.github.io/geocase
 ```
 
-That URL is already the canonical `site_url` in `mkdocs.yml`, and it is baked into the
-JSON-LD of every generated case page. Publication status is tracked in
-[`docs/plans/archive/12-docs-site-publication.md`](../plans/archive/12-docs-site-publication.md) — until
-the GitHub Actions deploy in that plan is in place, the URL will not resolve and Option A
-is the only way to see the schematics.
+That URL is the canonical `site_url` in `mkdocs.yml`, and it is baked into the JSON-LD of
+every generated case page. The GitHub Actions deployment workflow publishes the same strict
+MkDocs build used in CI. Until GitHub Pages is enabled in the repository settings, Option A
+is the way to see the schematics.
 
 ## Producing a static copy
 

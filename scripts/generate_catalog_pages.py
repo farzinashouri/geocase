@@ -30,14 +30,9 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
 OUTPUT_ROOT = REPO_ROOT / "docs" / "_generated" / "catalog"
 
-# PLACEHOLDER, NOT A DEPLOYMENT TARGET. This value is baked into every case
-# page's ``schema.org/Dataset`` JSON-LD, and Google Dataset Search deduplicates
-# on that ``url``. Serving these pages from this host before the owned domain
-# exists is the one thing docs/plans/24-catalog-site-on-owned-domain.md forbids:
-# the github.io copy would be the older and more linked of the two, so Google
-# would likely credit it as canonical, and it is Google that picks -- not us.
-# Override with GEOCASE_SITE_URL (or --site-url) once the domain is chosen, then
-# regenerate; that is one env var rather than an audit of 135 committed pages.
+# The GitHub Pages project URL is the catalog's single public, canonical home.
+# Override with GEOCASE_SITE_URL (or --site-url) only as part of a deliberate
+# migration, then regenerate so every JSON-LD URL changes together.
 DEFAULT_SITE_URL = os.environ.get(
     "GEOCASE_SITE_URL", "https://farzinashouri.github.io/geocase"
 )
@@ -372,6 +367,22 @@ def _notes_body(case_dir: Path, notes_name: str) -> list[str]:
     return ["## Notes", "", *out, ""]
 
 
+def _install_cta() -> list[str]:
+    """Return the consistent conversion path from a catalog page to PyPI."""
+    return [
+        "## Use GeoCase in your tests",
+        "",
+        "Install the complete set of vector, raster, and NetCDF dependencies:",
+        "",
+        "```bash",
+        'pip install "geocase[all]"',
+        "```",
+        "",
+        "[View GeoCase on PyPI](https://pypi.org/project/geocase/).",
+        "",
+    ]
+
+
 def _render_case_page(
     case: Any,
     all_cases: list[Any],
@@ -410,6 +421,7 @@ def _render_case_page(
     lines.append("    assert data is not None")
     lines.append("```")
     lines.append("")
+    lines.extend(_install_cta())
 
     if case.behavioral_goal:
         lines.append("## What this case checks")
@@ -506,6 +518,7 @@ def _render_hub_page(
     lines.append("")
     lines.append(intro)
     lines.append("")
+    lines.extend(_install_cta())
 
     # The grid first, then the table. Someone landing on a risk hub is asking
     # "what kind of data trips this?" -- the schematics answer that before the
@@ -548,6 +561,7 @@ def _render_index(
         "Every case is addressable by ID from a plain `pytest` test."
     )
     lines.append("")
+    lines.extend(_install_cta())
 
     lines.append("## Reading the schematics")
     lines.append("")

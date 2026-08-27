@@ -9,6 +9,16 @@ description: "5 GeoCase test cases that exercise the format specific failure mod
 
 These 5 cases exercise the `format_specific` failure mode. Run your function against all of them to check how it behaves.
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 <div class="gc-grid">
 <a class="gc-card" href="../../cases/empty_geometry_gpkg/">
 <svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>

@@ -44,6 +44,16 @@ def test_point_gml_baseline(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Provide a canonical point encoded as GML so XML-driver loading can be compared against simpler baseline vector formats.

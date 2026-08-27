@@ -42,7 +42,7 @@ pip install -e ".[dev]"
 
 ### Installed package usage
 
-When a published package release is available, install it with extras appropriate for your data types:
+To install the latest published release with all data-type extras:
 
 ```bash
 pip install "geocase[all]"
@@ -212,4 +212,3 @@ Deferred to v1.1, by decision rather than omission:
 
 See [`docs/plans/development-plan.md`](plans/development-plan.md) for the
 current roadmap.
-

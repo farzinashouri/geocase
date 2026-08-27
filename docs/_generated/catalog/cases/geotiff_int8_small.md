@@ -38,6 +38,16 @@ def test_geotiff_int8_small(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Confirm that signed 8-bit integer rasters open with the correct dtype and preserve their declared numeric storage type through simple reads.

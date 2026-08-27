@@ -44,6 +44,16 @@ def test_precision_loss_geojson_roundtrip(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose precision loss during GeoJSON text serialization. Detect workflows where coordinates drift after multiple read/write cycles due to decimal precision limits. Compare against binary formats that preserve full IEEE 754 double precision.

@@ -44,6 +44,16 @@ def test_format_limited_precision_polygon(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose workflows that silently reduce coordinate precision and thereby invalidate geometries that are only safe in high-precision formats.

@@ -9,6 +9,16 @@ description: "5 GeoCase test cases that exercise the footprint generation error 
 
 These 5 cases exercise the `footprint_generation_error` failure mode. Run your function against all of them to check how it behaves.
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 | Case | Category | Format | Geometry |
 |---|---|---|---|
 | [All Valid Rectangular Raster](../cases/all_valid_rectangular.md) | raster | GeoTIFF | -- |

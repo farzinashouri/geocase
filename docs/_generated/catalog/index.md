@@ -9,6 +9,16 @@ description: "Browse all 135 curated GeoCase test cases by category, format, and
 
 GeoCase ships 135 curated geospatial test cases. Every case is addressable by ID from a plain `pytest` test.
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## Reading the schematics
 
 Each case page carries a diagram of the case's *structure*: the geometry type for vector cases, and the band stack, pixel grid, and NoData marker for raster cases.

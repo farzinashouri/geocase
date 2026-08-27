@@ -44,6 +44,16 @@ def test_ambiguous_engine_dependent_polygon(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose workflows that assume all geometry engines agree on polygon validity and repair output for touching-ring topologies.

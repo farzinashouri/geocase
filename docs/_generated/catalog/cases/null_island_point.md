@@ -44,6 +44,16 @@ def test_null_island_point(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose pipelines that fail to flag or filter (0, 0) coordinates, which usually indicate failed geocoding rather than a real location. Data quality checks should treat Null Island as suspicious.

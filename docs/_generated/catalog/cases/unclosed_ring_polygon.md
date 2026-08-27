@@ -44,6 +44,16 @@ def test_unclosed_ring_polygon(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose loaders or validators that silently accept unclosed polygon rings, which can cause downstream geometry operations to fail unpredictably. Note: Many parsers (Shapely, GeoPandas) auto-close rings on load, so this primarily tests raw JSON validation or strict-mode parsers.

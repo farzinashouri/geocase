@@ -44,6 +44,16 @@ def test_empty_geometry_gpkg(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose loaders that incorrectly handle EMPTY geometries in GeoPackage format. Detect confusion between SQL NULL and WKB EMPTY geometry representations. Test filtering and query behavior with empty geometries.

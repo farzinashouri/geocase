@@ -9,6 +9,16 @@ description: "4 GeoCase test cases that exercise the dtype coercion failure mode
 
 These 4 cases exercise the `dtype_coercion` failure mode. Run your function against all of them to check how it behaves.
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 | Case | Category | Format | Geometry |
 |---|---|---|---|
 | [GeoTIFF Float64 Small](../cases/geotiff_float64_small.md) | raster | GeoTIFF | -- |

@@ -44,6 +44,16 @@ def test_parquet_mixed_schema_attributes(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Detect loaders that silently downcast Parquet nullable integer columns to float64 (losing the int/null distinction), drop nullable boolean columns, or fail to round-trip mixed-type attribute schemas through GeoParquet.

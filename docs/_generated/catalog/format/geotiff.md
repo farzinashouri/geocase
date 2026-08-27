@@ -9,6 +9,16 @@ description: "30 GeoCase test cases available in GeoTIFF format."
 
 These 30 cases are packaged as GeoTIFF.
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 <div class="gc-grid">
 <a class="gc-card" href="../../cases/cog_multispectral_small/">
 <svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 4 bands, 64x64" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 4 bands, 64x64</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="40.0" y="14.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="34.0" y="20.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="28.0" y="26.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="22.0" y="32.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="36.5" y1="32.0" x2="36.5" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="51.0" y1="32.0" x2="51.0" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="65.5" y1="32.0" x2="65.5" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="22.0" y1="43.3" x2="80.0" y2="43.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="22.0" y1="54.7" x2="80.0" y2="54.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="23.0" y="55.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg>

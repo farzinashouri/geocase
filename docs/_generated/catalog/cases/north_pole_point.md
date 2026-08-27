@@ -44,6 +44,16 @@ def test_north_pole_point(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Ensure point-based utilities handle the north pole without crashing or making incorrect longitude assumptions.

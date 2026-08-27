@@ -9,6 +9,16 @@ description: "1 GeoCase test cases available in NetCDF format."
 
 These 1 cases are packaged as NetCDF.
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 | Case | Category | Format | Geometry |
 |---|---|---|---|
 | [Lat/Lon Small NetCDF](../cases/latlon_small.md) | netcdf | NetCDF | -- |

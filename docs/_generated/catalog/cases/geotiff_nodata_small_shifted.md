@@ -38,6 +38,16 @@ def test_geotiff_nodata_small_shifted(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose alignment helpers that require identical extents instead of recognizing rasters that share the same pixel lattice with an integer-pixel offset.

@@ -17,10 +17,10 @@ collapsed. Sequencing that used to live in `execution-order.md` is folded in bel
 
 | | |
 |---|---|
-| Version | `1.0.0rc1` — **never uploaded**. No GeoCase release exists on PyPI or TestPyPI. |
+| Version | `1.0.0rc2` in this repository; `1.0.0rc1` is published on [PyPI](https://pypi.org/project/geocase/). |
 | Catalog | **135 cases** (vector, raster, NetCDF), 2.1 MB bundled, gated in CI. |
 | Gates | `catalog`, `tests` (3.11 + 3.14), `lint`, `typecheck`, `docs` — all green. |
-| Docs site | 188 generated pages with `schema.org/Dataset` JSON-LD, **built in CI and discarded**. Never served anywhere. |
+| Docs site | 188 generated pages with `schema.org/Dataset` JSON-LD. GitHub Pages deployment is configured; enable Pages in repository settings to serve it. |
 | Users | Zero confirmed adopters. One prospective adopter (S2/Prithvi change detection) identified but not yet asked. |
 
 Four external evaluations — one adopter, three rejectors — have now reported. Plans 22, 23 and
@@ -33,9 +33,9 @@ Four external evaluations — one adopter, three rejectors — have now reported
   one hard blocker was dependency ordering — `geofacts` had to reach PyPI before GeoCase could
   install anywhere — and it **cleared 2026-08-24** with `geofacts 0.1.2` on PyPI. What remains
   is the GeoCase TestPyPI rehearsal itself. ([Plan 25](25-ship-geocase-as-a-package.md))
-- **Discovery is the bottleneck.** The only GeoCase URL a search engine can index today is the
-  repo's README. The catalog — the actual differentiated asset — is invisible.
-  ([Plan 24](24-catalog-site-on-owned-domain.md), [Plan 26](26-docs-truth-pass-and-seo-prep.md))
+- **Discovery is the bottleneck.** The catalog is the differentiated asset, and GitHub Pages is
+  now its chosen single public URL. Enable the deployment and make the catalog indexable before
+  adding further promotional surfaces.
 - **The defensible product is the scope guard, not the catalog.** 3 of 3 evaluations named the
   constants-with-scope-guards as the thing worth having; the catalog-as-product framing was
   rejected by [Plan 14](archive/14-reposition-as-correctness-library.md)'s own gate.
@@ -55,10 +55,10 @@ Within that frame, in order:
    rather than spending the immutable `1.0.0`. Includes the README rewrite that leads with a
    concrete failing edge case — which is SEO work, not just persuasion work, because the README
    is the one indexable page GeoCase has.
-2. **[Plan 24](24-catalog-site-on-owned-domain.md) — the catalog site on an owned domain.**
-   Blocked on the domain nomination. Publishing on `github.io` first is explicitly ruled out:
-   Google Dataset Search dedupes on the JSON-LD `url`, and it favours what it saw first, so a
-   `github.io` copy risks being credited as canonical ahead of the owned domain.
+2. **Publish the catalog on GitHub Pages.** The existing MkDocs site is the one canonical public
+   home at `https://farzinashouri.github.io/geocase/`; enable GitHub Pages with GitHub Actions
+   in repository settings. [Plan 24](24-catalog-site-on-owned-domain.md)'s Astro/Netlify route
+   is superseded.
 3. **[Plan 21](21-adoption-action-plan.md)'s remaining tracks** — the adoption funnel around
    the release, of which Track A (publish the spec package) is subsumed by Plan 25.
 4. **[Plan 26](26-docs-truth-pass-and-seo-prep.md)** — **complete 2026-08-23, except its
@@ -84,7 +84,6 @@ Not automatable and not delegable. Each blocks the work named beside it.
 
 | Id | Blocks | Action |
 |---|---|---|
-| — | [Plan 24](24-catalog-site-on-owned-domain.md), entirely | **Nominate or register the canonical domain.** Until it exists the catalog stays unpublished, deliberately. |
 | — | [Plan 25](25-ship-geocase-as-a-package.md), step 6 | ~~**Publish `geofacts` to PyPI.**~~ **Done 2026-08-24** — shipped as `0.1.2`; GeoCase's floor is now `>=0.1.2`. Remaining user action: register GeoCase's own pending publishers on test.pypi.org/pypi.org so the `1.0.0rc2` rehearsal can upload. |
 | U16 | [Plan 20](20-restart-spec-first.md) Phase 1 | Choose the PyPI name and create the repo. (Largely satisfied by the `geofacts` rename; confirm the name is claimable.) |
 | U17 | [Plan 20](20-restart-spec-first.md) Phase 2, and all of Phase 3 bar the nodata carve-out | **Run the five fixture interviews.** 0 of 5 recorded. The whole gate is judgement about what people actually said. Instrument: [`docs/evidence/2026-fixture-interviews/`](../evidence/2026-fixture-interviews/TEMPLATE.md). |

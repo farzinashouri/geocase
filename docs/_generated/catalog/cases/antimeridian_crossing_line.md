@@ -44,6 +44,16 @@ def test_antimeridian_crossing_line(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose code that naively interpolates across the Prime Meridian (0°) instead of correctly crossing the Antimeridian (±180°).

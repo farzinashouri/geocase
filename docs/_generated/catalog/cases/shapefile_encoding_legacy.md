@@ -44,6 +44,16 @@ def test_shapefile_encoding_legacy(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose loaders that assume UTF-8 encoding for Shapefile attributes. Detect mojibake or character corruption when reading legacy code page encoded text. Test encoding detection and .cpg file handling.

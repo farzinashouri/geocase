@@ -44,6 +44,16 @@ def test_simple_valid_multilinestring(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Ensure multi-part line geometries are represented in core vector coverage and selectable by geometry type.

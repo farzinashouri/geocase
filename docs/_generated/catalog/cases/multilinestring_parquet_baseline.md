@@ -44,6 +44,16 @@ def test_multilinestring_parquet_baseline(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Provide a canonical multiline encoded as GeoParquet so multipart columnar line loading can be compared against GeoJSON and Arrow-backed baselines.
