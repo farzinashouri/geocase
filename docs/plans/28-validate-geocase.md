@@ -1,5 +1,7 @@
 # Plan 28 — Vector-First: Trust the Corpus, Then Sharpen It
 
+> **Status: Phase 1 implemented 2026-08-28; Phases 2–5 proposed.**
+
 ## Context
 
 Two external validation runs of `1.0.0rc2` are in [`docs/geocase_validate/`](../geocase_validate/geocase-improvement-report.md). They reached **opposite verdicts**, and that split is the single most important input to this plan:
@@ -40,11 +42,11 @@ All of these reproduce:
 
 ---
 
-## Phase 1 — Credibility: the content gate (blocking)
+## Phase 1 — Credibility: the content gate (blocking) — **implemented 2026-08-28**
 
 Nothing else ships first. This is the phase that fixes the trust problem.
 
-### 1.1 The checker module (TDD)
+### 1.1 The checker module (TDD) — done
 
 **Failing test first:** `tests/unit/test_case_content.py` — build a GeoTIFF via `geocase.raster.raster_fixture(...).write(tmp_path)` declaring `nodata=-9999` with **zero** matching pixels, hand it a `CaseMetadata` with `expect_nodata: true`, assert the checker returns one error naming the case id and `expect_nodata`. Watch it fail (module absent).
 
@@ -60,7 +62,7 @@ check_case_content(case_dir, metadata)   -> list[str]   # dispatch on category
 
 It lives in `geocase.catalog.content`, not in `scripts/`, so the pytest job can unit-test it and users can run it against their own manifest cases.
 
-### 1.2 The check matrix — one failing test each, in this order
+### 1.2 The check matrix — one failing test each, in this order — done
 
 1. `expect_nodata: true` ⇒ nodata tag is set **and** ≥1 pixel matches it (NaN-aware). *Catches all 6 phantom-nodata cases.*
 2. `expected_nodata_value` set ⇒ same, against the declared value.
@@ -69,14 +71,14 @@ It lives in `geocase.catalog.content`, not in `scripts/`, so the pytest job can 
 5. `expect_loadable: false` ⇒ the case **must** actually raise. An expected-failure that silently stops failing is a corpus defect too.
 6. `params.expected_footprint` ⇒ the declared footprint GeoJSON is compared against a footprint derived from the **actual mask**, including hole count. This is the check that catches `hole_center_nodata`.
 
-### 1.3 Risk-type as contract
+### 1.3 Risk-type as contract — done
 
 Prose is uncheckable; the vocabulary is not. Keyed on `risk_types`, not on description text:
 
 - any case declaring `nodata_ignored` must contain ≥1 nodata pixel;
 - any case declaring `footprint_generation_error` with a declared footprint must have matching hole counts.
 
-### 1.4 Script + CI wiring
+### 1.4 Script + CI wiring — done
 
 **New:** `scripts/validate_case_content.py` — walks `metadata/case-index.yaml`, calls `check_case_content`, prints a per-case report, exits non-zero on any error. Flags: `--only <id>`, `--category`, `--json`.
 
@@ -86,13 +88,80 @@ Prose is uncheckable; the vocabulary is not. Keyed on `risk_types`, not on descr
 
 **Edits:** one line in the catalog job after `validate_catalog.py`; the "Catalog gates" block in [CLAUDE.md](https://github.com/farzinashouri/geocase/blob/main/CLAUDE.md).
 
-### 1.5 Fix the defects the gate turns red
+### 1.5 Fix the defects the gate turns red — done
 
 - **`hole_center_nodata`** — the real fix is structural: it is hand-committed and sits *outside* the only regeneration gate, which is why it drifted. Bring `footprint_edge_cases` under [scripts/generate_raster_fixtures.py](https://github.com/farzinashouri/geocase/blob/main/scripts/generate_raster_fixtures.py) as a `_footprint_edge_specs()` that emits the raster **and** its `_footprint.geojson` from the same array, so the footprint is derived by construction and cannot drift again. Build the interior void the case has always claimed.
 - **`landcover_small`** (`nodata=0`) — **drop the declaration** rather than inject fake nodata. A landcover class of 0 is legitimate; 0 as both a class and a nodata sentinel is the `ambiguous_zero` risk and deserves its own explicit case, not a silent one.
 - **`ndvi_scaled_int16_small`, `cog_multispectral_small`, `multispectral_s2_like_small`, `multispectral_mixed_resolution_small`** — inject real nodata pixels in the generator specs. These cases exist to exercise nodata handling and are inert without it.
 - **`all_valid_rectangular`** — audit; "all valid" is the point, so it should not declare nodata.
 - Regenerate and commit all gated artifacts: checksums, catalog pages, both coverage matrices, `case-index.yaml`.
+
+### Phase 1 outcome (recorded 2026-08-28)
+
+The gate was observed **red on exactly the 6 predicted cases**, then green after
+1.5. Full sequence: 34 findings on first run → 10 after two checker bugs were
+fixed → 6 (the plan's own list) → 0.
+
+What differed from the plan:
+
+- **`hole_center_nodata` was not caught by the footprint hole-count check
+  (1.2.6).** Its committed footprint had been regenerated *from the drifted
+  raster*, so declaration and mask agreed — both hole-free — and only the
+  description disagreed. Comparing two declarations to each other cannot see
+  this. What catches it is the **1.3 risk-type contract**: a case declaring
+  `footprint_generation_error` whose nodata is a pure outer-border collar
+  cannot exercise the risk it advertises, because cropping to the valid extent
+  yields the same polygon either way. This is a stronger check than planned and
+  the one that should be extended in Phase 4.
+- **Two checker bugs had to be fixed before any case data was touched**, both
+  false positives that would have caused real damage if acted on:
+  1. Reading vector cases with `geopandas.read_file` failed 19 cases (WKB/WKT/
+     CSV_WKT/Parquet/Arrow). The gate now loads through `VectorCase.load()` —
+     the same path a user takes. This also means Phase 2.1's `required_drivers`
+     is about *consumer* discoverability, not about geocase being unable to
+     read its own cases.
+  2. `expect_valid_geometry: false` is enforced in **neither** direction. Four
+     shipped cases (`null_island_point`, `out_of_bounds_coordinates`,
+     `ambiguous_engine_dependent_polygon`, `empty_geometry_gpkg`) are
+     OGC-*valid* but semantically suspect, so `assert_invalid_geometry` fails
+     them for the schema limitation 1.6 explicitly declined to fix. Only the
+     `True` direction is checked; Phase 2.4's documented matrix is the fix.
+  Also: NULL geometries report `geom_type` NaN, so the geometry-type check now
+  skips them (this is what `empty_geometry_gpkg` exists to carry).
+- **`all_valid_rectangular` needed no change.** It declares no nodata
+  expectation; the file carries a nodata *tag* with zero matching pixels, which
+  is correct for an all-valid scene. The audit resolves as no-op.
+- **`landcover_small` also lost `nodata_ignored`** from `risk_types` (and
+  `nodata-check` from `expected_capabilities`) — dropping the declaration
+  without dropping the risk type would just move the lie.
+- **The `footprint_edge_cases` restructure was scoped down.** All five cases
+  now come from `_footprint_edge_specs()` under the regeneration gate, but only
+  `hole_center_nodata` emits its footprint from its own mask. The other four
+  committed footprints record `gdal_footprint`'s *simplified/hull* output —
+  `rotated_two_islands`, for instance, is a single polygon spanning the gap
+  between two disjoint islands — so regenerating them mask-exact would have
+  silently changed what `examples/test_gdal_footprint.py` asserts. Their
+  rasters regenerate byte-identically; their footprints are left alone and the
+  discrepancy is documented in the folder's `notes.md`.
+- **The fix made a real divergence observable.** With the interior void
+  restored, `gdal_footprint` fills it — returning 129600 m² solid instead of
+  the 115200 m² ring. That is precisely the `nodata_ignored` /
+  `footprint_generation_error` behaviour the case advertised and could never
+  demonstrate. `examples/test_gdal_footprint.py` gained
+  `test_gdal_footprint_fills_interior_nodata_void` asserting it, and
+  `hole_center_nodata` was removed from the parametrized test that asserts the
+  expected footprint has no holes.
+- **Vector feature counts** are keyed on `params.expected_feature_count` (the
+  key actually used by the 6 cases that declare one), not a new field.
+
+**End-to-end proof (required by Verification):** reverting
+`hole_center_nodata.tif` to its committed bytes makes
+`validate_case_content.py --only hole_center_nodata` exit 1 naming both the
+footprint and the risk-type check. Restored byte-identical afterwards.
+
+**Gates green:** all six catalog `--check` gates, `pytest tests` (1726 passed),
+`pytest examples` (1179 passed), `ruff format`/`ruff check`, `mypy src`,
+`mkdocs build --strict`.
 
 ### 1.6 Cut from Phase 1
 

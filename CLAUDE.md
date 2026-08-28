@@ -33,6 +33,7 @@ Catalog gates (the `catalog` CI job; needs `osgeo`, so run under conda). All are
 ```bash
 python scripts/build_case_index.py --check
 python scripts/validate_catalog.py
+python scripts/validate_case_content.py   # declared assertions vs. real bytes
 python scripts/generate_raster_fixtures.py --check
 python scripts/generate_vector_fixtures.py --check
 python scripts/generate_checksums.py --check
@@ -51,6 +52,7 @@ Core data flow — keep this mental model:
 
 - `metadata/case-index.yaml` lists every bundled case's `case.yaml` path; `metadata/suite-index.yaml` + `catalog/suites/*.yaml` define named suites. These indices are **generated** — edit cases, then regenerate.
 - `catalog/` — `loader.py` (YAML→model), `models.py` (Pydantic `CaseMetadata`), `registry.py` (in-memory lookup, cached; `reset_registry()` clears), `selectors.py` (filtering), `suites.py`, `manifests.py` (external/remote catalogs layered in via `GEOCASE_MANIFESTS`; ids become *known* without being materialized — missing data raises `RemoteCaseUnavailableError`).
+- `catalog/content.py` — the **content gate**: compares each case's declared assertions against its actual pixels/features, delegating to `assertions/` so the gate and the user-facing checks are the same code. `validate_catalog.py` opens no data file (schema/existence/size only, so it runs anywhere); `validate_case_content.py` opens it and therefore runs only in the `catalog` CI job.
 - `catalog/roots.py` — maps case id → on-disk directory and builds the runtime case. Deliberately **not** re-exported from `geocase.catalog`: it is the one catalog module importing `geocase.cases`, and `cases.base` imports `catalog.models`, so eager re-export makes the packages circular. Import it directly.
 - `cases/` — `BaseCase` subclasses (`vector`, `raster`, `netcdf`) built by `factory.py`; `loaders/` holds the optional-dependency readers (geopandas / rasterio / xarray).
 - `api/public.py` + `api/types.py` — the pinned public surface re-exported from `geocase/__init__.py`. `list_cases`/`get_case` return `CaseMetadata`; `load_case` and the fixtures return `BaseCase`.

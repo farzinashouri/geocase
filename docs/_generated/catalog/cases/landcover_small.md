@@ -14,8 +14,8 @@ description: "A categorical land-cover raster where 0 is NoData, not a class. Re
 A categorical land-cover raster where 0 is NoData, not a class. Resampling or averaging categorical values silently invents classes that do not exist.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="32.0" y="46.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg>
-<figcaption>Schematic: 1 band, 16x16 px, uint8, sentinel NoData. Drawn from metadata, not from the pixels.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg>
+<figcaption>Schematic: 1 band, 16x16 px, uint8. Drawn from metadata, not from the pixels.</figcaption>
 </figure>
 
 | Property | Value |
@@ -55,13 +55,12 @@ pip install "geocase[all]"
 
 ## What this case checks
 
-Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its NoData class.
+Confirm GeoCase preserves a categorical land-cover raster and its colormap. Every pixel is classified: the raster declares no NoData, because 0 doubling as both a class and a sentinel is the ``ambiguous_zero`` risk and deserves an explicit case of its own rather than a silent declaration here (Plan 28).
 
 ## Risk types covered
 
 - `category_misread`
 - `colormap_dropped`
-- [`nodata_ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -70,12 +69,9 @@ Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its
 | `expect_loadable` | yes |
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
-| `expect_nodata` | yes |
 | `expected_band_count` | `1` |
 | `expected_dtype` | `uint8` |
 | `expected_shape` | `[16, 16]` |
-| `expected_nodata_value` | `0` |
-| `nodata_convention` | `sentinel` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `landcover` |
 | `expected_colormap_present` | yes |
@@ -84,7 +80,6 @@ Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its
 
 - `load`
 - `colormap-check`
-- `nodata-check`
 
 ## Files
 
@@ -105,7 +100,7 @@ Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its
 - [DEM Small](dem_small.md) -- `dem_small`
 - [Multispectral Sentinel-2-like Small](multispectral_s2_like_small.md) -- `multispectral_s2_like_small`
 - [NDVI Scaled Int16 Small](ndvi_scaled_int16_small.md) -- `ndvi_scaled_int16_small`
-- [Water Mask Small](water_mask_small.md) -- `water_mask_small`
+- [NDVI Small](ndvi_small.md) -- `ndvi_small`
 
 <script type="application/ld+json">
 {
@@ -128,7 +123,6 @@ Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its
     "geography:utm",
     "geotiff",
     "landcover",
-    "nodata_ignored",
     "product:landcover",
     "raster"
   ],

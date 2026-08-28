@@ -99,10 +99,10 @@ Confirm GeoCase detects NaN-encoded NoData in a float DEM rather than treating N
 ## Related cases
 
 - [DEM Small](dem_small.md) -- `dem_small`
-- [Land Cover Small](landcover_small.md) -- `landcover_small`
 - [Multispectral Sentinel-2-like Small](multispectral_s2_like_small.md) -- `multispectral_s2_like_small`
 - [NDVI Scaled Int16 Small](ndvi_scaled_int16_small.md) -- `ndvi_scaled_int16_small`
 - [Water Mask Small](water_mask_small.md) -- `water_mask_small`
+- [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
 
 <script type="application/ld+json">
 {

@@ -138,6 +138,12 @@ jobs:
           echo "/venv/bin" >> "$GITHUB_PATH"
       - run: python scripts/build_case_index.py --check
       - run: python scripts/validate_catalog.py
+      # The content gate opens the data, so it belongs here rather than in the
+      # `tests` job: plain ubuntu-latest has no osgeo and no Arrow/Parquet
+      # driver plugins, so a gate there would skip exactly the cases most
+      # likely to drift. `validate_catalog.py` above stays reader-dependency-
+      # free and keeps running in both. See docs/plans/28-validate-geocase.md.
+      - run: python scripts/validate_case_content.py
       - run: python scripts/generate_raster_fixtures.py --check
       - run: python scripts/generate_vector_fixtures.py --check
       # Checksums cover the whole bundled catalog, not just raster: the vector

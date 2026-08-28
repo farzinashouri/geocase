@@ -24,16 +24,16 @@ tags:
 risk_types:
   - colormap_dropped
   - category_misread
-  - nodata_ignored
 
 behavioral_goal: >
-  Confirm GeoCase preserves a categorical land-cover raster, its colormap, and
-  its NoData class.
+  Confirm GeoCase preserves a categorical land-cover raster and its colormap.
+  Every pixel is classified: the raster declares no NoData, because 0 doubling
+  as both a class and a sentinel is the ``ambiguous_zero`` risk and deserves an
+  explicit case of its own rather than a silent declaration here (Plan 28).
 
 expected_capabilities:
   - load
   - colormap-check
-  - nodata-check
 
 loader_hint: rasterio
 crs: EPSG:32633
@@ -49,9 +49,6 @@ assertions:
   expect_loadable: true
   expect_crs: true
   expected_epsg: 32633
-  expect_nodata: true
-  expected_nodata_value: 0
-  nodata_convention: sentinel
   expected_band_count: 1
   expected_dtype: uint8
   expected_shape: [16, 16]

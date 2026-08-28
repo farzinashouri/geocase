@@ -59,7 +59,7 @@ Start here if you know the failure mode you want to test against.
 | [`mixed_geometry_output`](risk/mixed-geometry-output.md) | 2 |
 | [`mojibake`](risk/mojibake.md) | 2 |
 | [`nan_mishandled`](risk/nan-mishandled.md) | 2 |
-| [`nodata_ignored`](risk/nodata-ignored.md) | 15 |
+| [`nodata_ignored`](risk/nodata-ignored.md) | 14 |
 | [`none`](risk/none.md) | 6 |
 | [`not_tiled`](risk/not-tiled.md) | 2 |
 | [`overviews_missing`](risk/overviews-missing.md) | 3 |
@@ -124,7 +124,7 @@ A further 75 risk types apply to a single case and are listed against each case 
 | [GeoTIFF NoData Small Shifted](cases/geotiff_nodata_small_shifted.md) | GeoTIFF | -- | `alignment_too_strict`, `pixel_lattice_misclassification`, `shifted_origin` |
 | [GeoTIFF UTM Boundary](cases/geotiff_utm_boundary.md) | GeoTIFF | -- | `pixel_shift`, `reprojection_error`, `zone_boundary_artifact` |
 | [Hole Center NoData Raster](cases/hole_center_nodata.md) | GeoTIFF | -- | `footprint_generation_error`, `nodata_ignored` |
-| [Land Cover Small](cases/landcover_small.md) | GeoTIFF | -- | `category_misread`, `colormap_dropped`, `nodata_ignored` |
+| [Land Cover Small](cases/landcover_small.md) | GeoTIFF | -- | `category_misread`, `colormap_dropped` |
 | [Multispectral Mixed Resolution Small](cases/multispectral_mixed_resolution_small.md) | GeoTIFF | -- | `band_loss`, `resampling_assumptions`, `resolution_mismatch` |
 | [Multispectral Sentinel-2-like Small](cases/multispectral_s2_like_small.md) | GeoTIFF | -- | `band_loss`, `dtype_drift`, `incorrect_band_order`, `nodata_ignored` |
 | [NDVI Scaled Int16 Small](cases/ndvi_scaled_int16_small.md) | GeoTIFF | -- | `dtype_drift`, `nodata_ignored`, `scale_factor_ignored` |

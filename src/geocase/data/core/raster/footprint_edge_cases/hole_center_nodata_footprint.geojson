@@ -1,47 +1,67 @@
 {
-  "type": "FeatureCollection",
-  "name": "footprint",
   "crs": {
-    "type": "name",
     "properties": {
-      "name": "urn:ogc:def:crs:EPSG::32633"
-    }
+      "name": "EPSG:32633"
+    },
+    "type": "name"
   },
   "features": [
     {
-      "type": "Feature",
-      "properties": {
-        "location": "src/geocase/data/core/raster/footprint_edge_cases/hole_center_nodata.tif"
-      },
       "geometry": {
-        "type": "MultiPolygon",
         "coordinates": [
           [
             [
-              [
-                400030.0,
-                4299670.0
-              ],
-              [
-                400030.0,
-                4299970.0
-              ],
-              [
-                400330.0,
-                4299970.0
-              ],
-              [
-                400330.0,
-                4299670.0
-              ],
-              [
-                400030.0,
-                4299670.0
-              ]
+              400000.0,
+              4300000.0
+            ],
+            [
+              400000.0,
+              4299640.0
+            ],
+            [
+              400360.0,
+              4299640.0
+            ],
+            [
+              400360.0,
+              4300000.0
+            ],
+            [
+              400000.0,
+              4300000.0
+            ]
+          ],
+          [
+            [
+              400120.0,
+              4299880.0
+            ],
+            [
+              400240.0,
+              4299880.0
+            ],
+            [
+              400240.0,
+              4299760.0
+            ],
+            [
+              400120.0,
+              4299760.0
+            ],
+            [
+              400120.0,
+              4299880.0
             ]
           ]
-        ]
-      }
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "case_id": "hole_center_nodata"
+      },
+      "type": "Feature"
     }
-  ]
+  ],
+  "name": "hole_center_nodata_footprint",
+  "type": "FeatureCollection"
 }

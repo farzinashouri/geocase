@@ -114,7 +114,6 @@ def test_gdal_footprint_core_cases_match_expected_convex_hull(
 
 @geocase_case(
     "all_valid_rectangular",
-    "hole_center_nodata",
     "rotated_two_islands",
     "nonsquare_diagonal_sparse",
     "thin_corridor_shape",
@@ -147,6 +146,50 @@ def test_gdal_footprint_edge_cases_against_real_expected_data(
     # Use a case-specific threshold from metadata because some edge scenes are
     # intentionally non-rectangular while still having a correct expected footprint.
     assert_footprint_rectangularity(actual, min_ratio=min_rect_ratio)
+
+
+@geocase_case("hole_center_nodata")
+def test_gdal_footprint_fills_interior_nodata_void(
+    geocase: Any,
+    tmp_path: Path,
+) -> None:
+    """``gdal_footprint`` ignores an interior NoData void and returns it solid.
+
+    This is the divergence the case advertises via its ``nodata_ignored`` /
+    ``footprint_generation_error`` risk types, and it was unobservable until
+    Plan 28 Phase 1: the fixture had drifted into the *inverse* of its own
+    description -- NoData on the outer border, interior fully valid -- so
+    footprint extraction had no interior hole to drop and the case passed a
+    ``no holes`` assertion that could never have failed.
+
+    Split out from the parametrized test above because that test asserts the
+    expected footprint has no holes, which is true of every edge case *except*
+    this one.
+    """
+    def hole_count(geom: Any) -> int:
+        if geom.geom_type == "MultiPolygon":
+            return sum(len(part.interiors) for part in geom.geoms)
+        return len(geom.interiors)
+
+    tif_path = geocase.primary_path
+    expected_path = geocase.root_dir / str(geocase.params["expected_footprint"])
+    out_path = tmp_path / f"{geocase.id}_footprint.geojson"
+    geotiff_footprint_to_geojson(tif_path, out_path)
+
+    actual = unary_union(list(gpd.read_file(out_path).geometry))
+    expected = unary_union(list(gpd.read_file(expected_path).geometry))
+
+    # The ground-truth footprint, derived from the raster's own mask, is a ring.
+    assert hole_count(expected) == 1, "expected footprint should retain the void"
+
+    # gdal_footprint returns it solid: the hole is silently filled in.
+    assert hole_count(actual) == 0
+    assert actual.area > expected.area
+
+    # The difference is exactly the void, so a consumer trusting this footprint
+    # would treat NoData pixels as valid data.
+    void_area = actual.difference(expected).area
+    assert void_area == pytest.approx(actual.area - expected.area)
 
 
 @geocase_case(
