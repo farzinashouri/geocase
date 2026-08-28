@@ -112,40 +112,105 @@ def test_gdal_footprint_core_cases_match_expected_convex_hull(
     assert bottom - tolerance <= maxy <= top + tolerance
 
 
+#: The three edge cases whose ``gdal_footprint`` output is a strictly larger
+#: hull than the raster's real valid-pixel mask, with the number of disjoint
+#: parts the mask-exact truth has. ``all_valid_rectangular`` is deliberately
+#: absent: a full rectangle *is* its own convex hull, so GDAL matches truth
+#: there. That control is what shows the divergence below is a property of
+#: these shapes and not of the harness (Plan 32 Phase 1.4).
+_HULL_INFLATED = {
+    "rotated_two_islands": 2,
+    "nonsquare_diagonal_sparse": 8,
+    "thin_corridor_shape": 1,
+}
+
+
 @geocase_case(
     "all_valid_rectangular",
     "rotated_two_islands",
     "nonsquare_diagonal_sparse",
     "thin_corridor_shape",
 )
-def test_gdal_footprint_edge_cases_against_real_expected_data(
+def test_gdal_footprint_diverges_from_the_real_valid_pixel_mask(
     geocase: Any,
     tmp_path: Path,
 ) -> None:
+    """What a footprint consumer gets wrong, and by how much.
+
+    This test used to compare ``gdal_footprint``'s output against a file that
+    *was* ``gdal_footprint``'s output, at ``max_diff_ratio=1e-10`` -- a
+    regression check on GDAL against itself, which could not fail for the
+    reason these cases were written. Plan 32 split the two meanings apart:
+
+    - ``params.expected_footprint`` -> ``<case>_footprint_truth.geojson``, the
+      mask-exact geometry emitted from the same array as the raster;
+    - ``params.recorded_gdal_footprint`` -> ``<case>_footprint_gdal_hull.geojson``,
+      the recorded GDAL answer, kept so a behaviour change stays visible.
+
+    So the assertions below are: GDAL still reproduces its own recording
+    (exact), and GDAL's answer is a strict superset of the truth wherever the
+    valid pixels are not already a rectangle.
+    """
     case_id = geocase.id
     tif_path = geocase.primary_path
-    expected_name = str(geocase.params["expected_footprint"])
     min_rect_ratio = float(geocase.params["min_rect_ratio"])
-    expected_path = geocase.root_dir / expected_name
+
+    truth_path = geocase.root_dir / str(geocase.params["expected_footprint"])
+    assert truth_path.exists(), f"Missing truth footprint fixture: {truth_path}"
+
     out_path = tmp_path / f"{case_id}_footprint.geojson"
     geotiff_footprint_to_geojson(tif_path, out_path)
 
-    assert expected_path.exists(), f"Missing expected footprint fixture: {expected_path}"
+    actual_gdf = gpd.read_file(out_path)
+    truth_gdf = gpd.read_file(truth_path)
+    actual = unary_union(list(actual_gdf.geometry))
+    truth = unary_union(list(truth_gdf.geometry))
 
-    actual = gpd.read_file(out_path)
-    expected = gpd.read_file(expected_path)
+    assert_footprint_no_holes(actual_gdf)
 
-    assert_footprint_no_holes(actual)
-    assert_footprint_no_holes(expected)
-    assert_footprint_similar_to_expected(
-        actual,
-        expected,
-        max_diff_ratio=1e-10,
-    )
+    # 1. The recorded-behaviour baseline, where one exists: GDAL must still
+    #    produce byte-for-byte what it produced when the fixture was taken.
+    hull_name = geocase.params.get("recorded_gdal_footprint")
+    if hull_name is not None:
+        hull_path = geocase.root_dir / str(hull_name)
+        assert hull_path.exists(), f"Missing recorded GDAL footprint: {hull_path}"
+        assert_footprint_similar_to_expected(
+            actual_gdf,
+            gpd.read_file(hull_path),
+            max_diff_ratio=1e-10,
+        )
 
-    # Use a case-specific threshold from metadata because some edge scenes are
-    # intentionally non-rectangular while still having a correct expected footprint.
-    assert_footprint_rectangularity(actual, min_ratio=min_rect_ratio)
+    if case_id not in _HULL_INFLATED:
+        # 2a. The control: every pixel is valid, so the hull *is* the mask and
+        #     GDAL agrees with ground truth exactly.
+        assert_footprint_similar_to_expected(actual_gdf, truth_gdf, max_diff_ratio=1e-10)
+        assert_footprint_rectangularity(truth_gdf, min_ratio=min_rect_ratio)
+        return
+
+    # 2b. The divergence, asserted in the direction observed: GDAL's footprint
+    #     covers the truth, is strictly larger, and where the truth is a
+    #     MultiPolygon it has merged the disjoint parts into one.
+    assert actual.covers(truth), "GDAL's footprint should be a superset of the truth"
+    assert actual.area > truth.area
+
+    def part_count(geom: Any) -> int:
+        return len(geom.geoms) if geom.geom_type.startswith("Multi") else 1
+
+    expected_parts = _HULL_INFLATED[case_id]
+    assert part_count(truth) == expected_parts
+    if expected_parts > 1:
+        assert part_count(actual) == 1, (
+            "GDAL merges the disjoint valid regions into a single polygon"
+        )
+
+    # The threshold in metadata describes the *truth* geometry, which is
+    # genuinely non-rectangular. GDAL's hull is near-rectangular by
+    # construction, so it clears the same bar trivially -- which is exactly why
+    # asserting rectangularity against the hull asserted nothing.
+    assert_footprint_rectangularity(truth_gdf, min_ratio=min_rect_ratio)
+    truth_ratio = truth.area / truth.minimum_rotated_rectangle.area
+    actual_ratio = actual.area / actual.minimum_rotated_rectangle.area
+    assert actual_ratio > truth_ratio
 
 
 @geocase_case("hole_center_nodata")

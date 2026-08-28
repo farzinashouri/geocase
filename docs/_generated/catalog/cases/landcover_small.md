@@ -56,11 +56,11 @@ pip install "geocase[all]"
 
 ## What this case checks
 
-Confirm GeoCase preserves a categorical land-cover raster and its colormap. Every pixel is classified: the raster declares no NoData, because 0 doubling as both a class and a sentinel is the ``ambiguous_zero`` risk and deserves an explicit case of its own rather than a silent declaration here (Plan 28).
+Confirm GeoCase preserves a categorical land-cover raster and its colormap. Every pixel is classified and the raster declares no NoData, because 0 doubling as both a class and a sentinel is a distinct risk that belongs in a case of its own rather than in a silent declaration here. That case is ``landcover_ambiguous_zero_small``: the same scene with the ambiguity put back, so the pair isolates the collision (Plan 28, Plan 32).
 
 ## Risk types covered
 
-- `category_misread`
+- [`category_misread`](../risk/category-misread.md)
 - `colormap_dropped`
 
 ## Expected behavior
@@ -97,11 +97,11 @@ Confirm GeoCase preserves a categorical land-cover raster and its colormap. Ever
 
 ## Related cases
 
+- [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
 - [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
 - [DEM Small](dem_small.md) -- `dem_small`
 - [Multispectral Sentinel-2-like Small](multispectral_s2_like_small.md) -- `multispectral_s2_like_small`
 - [NDVI Scaled Int16 Small](ndvi_scaled_int16_small.md) -- `ndvi_scaled_int16_small`
-- [NDVI Small](ndvi_small.md) -- `ndvi_small`
 
 <script type="application/ld+json">
 {

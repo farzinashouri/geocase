@@ -482,17 +482,21 @@ class TestAssertMatchesRasterHints:
 class TestFootprintAssertions:
     def test_no_holes_passes_on_expected_footprint(self):
         """Accepts an expected footprint polygon without holes."""
-        expected = gpd.read_file(_EDGE / "all_valid_rectangular_footprint.geojson")
+        expected = gpd.read_file(
+            _EDGE / "all_valid_rectangular_footprint_truth.geojson"
+        )
         assert_footprint_no_holes(expected)
 
     def test_rectangularity_strict_can_fail_on_complex_shape(self):
         """Raises when a complex footprint fails a strict rectangularity threshold."""
-        complex_fp = gpd.read_file(_EDGE / "rotated_two_islands_footprint.geojson")
+        complex_fp = gpd.read_file(
+            _EDGE / "rotated_two_islands_footprint_truth.geojson"
+        )
         with pytest.raises(AssertionError, match="rectangularity ratio"):
             assert_footprint_rectangularity(complex_fp, min_ratio=0.999)
 
     def test_similarity_against_expected_fixture(self):
         """Accepts identical footprint fixtures with zero allowed difference."""
-        expected = gpd.read_file(_EDGE / "hole_center_nodata_footprint.geojson")
-        actual = gpd.read_file(_EDGE / "hole_center_nodata_footprint.geojson")
+        expected = gpd.read_file(_EDGE / "hole_center_nodata_footprint_truth.geojson")
+        actual = gpd.read_file(_EDGE / "hole_center_nodata_footprint_truth.geojson")
         assert_footprint_similar_to_expected(actual, expected, max_diff_ratio=0.0)

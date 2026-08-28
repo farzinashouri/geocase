@@ -59,5 +59,8 @@ assertions:
   expected_shape: [8, 8]
 
 params:
-  expected_footprint: rotated_two_islands_footprint.geojson
-  min_rect_ratio: 0.74
+  expected_footprint: rotated_two_islands_footprint_truth.geojson
+  # A recording of ``gdal_footprint``'s own hull output, not truth.
+  recorded_gdal_footprint: rotated_two_islands_footprint_gdal_hull.geojson
+  # Measured on the mask-exact truth footprint: 0.375.
+  min_rect_ratio: 0.35

@@ -19,6 +19,7 @@ cases:
 - path: data/core/raster/geotiff_nodata_small/case.yaml
 - path: data/core/raster/geotiff_nodata_small_shifted/case.yaml
 - path: data/core/raster/geotiff_utm_boundary/case.yaml
+- path: data/core/raster/landcover_ambiguous_zero_small/case.yaml
 - path: data/core/raster/landcover_small/case.yaml
 - path: data/core/raster/multispectral_mixed_resolution_small/case.yaml
 - path: data/core/raster/multispectral_s2_like_small/case.yaml

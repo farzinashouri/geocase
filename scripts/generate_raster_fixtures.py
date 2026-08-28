@@ -57,8 +57,9 @@ class RasterSpec:
     # Folder holding the fixture, when it is not ``<raster_root>/<case_id>``.
     # The footprint edge cases share one directory (see _footprint_edge_specs).
     case_dir: str | None = None
-    # Emit ``<stem>_footprint.geojson`` derived from this fixture's own nodata
-    # mask, so the footprint cannot drift away from the pixels it describes.
+    # Emit ``<stem>_footprint_truth.geojson`` derived from this fixture's own
+    # nodata mask, so the footprint cannot drift away from the pixels it
+    # describes.
     emit_footprint: bool = False
     # CRS / transform overrides for geography-specific scenes.
     crs: str = _CRS
@@ -202,8 +203,8 @@ def _priority_2_4_specs() -> list[RasterSpec]:
     ndvi_int16[0, 0] = -32768
     # Categorical land cover: 1=water, 2=veg, 3=urban. Deliberately *no*
     # nodata: every pixel is classified, and 0 doubling as both a class and a
-    # sentinel is the ``ambiguous_zero`` risk, which deserves its own explicit
-    # case rather than a silent declaration here (Plan 28 Phase 1.5).
+    # sentinel is the ``ambiguous_zero`` risk, which gets its own explicit case
+    # below rather than a silent declaration here (Plan 28 Phase 1.5).
     landcover = np.zeros((_SIZE, _SIZE), dtype="uint8")
     landcover[:8, :8] = 1
     landcover[:8, 8:] = 2
@@ -215,6 +216,16 @@ def _priority_2_4_specs() -> list[RasterSpec]:
         2: (0, 200, 0, 255),
         3: (128, 128, 128, 255),
     }
+
+    # landcover_ambiguous_zero_small -- the sibling scene, with the ambiguity
+    # put back deliberately (Plan 32 Phase 2). Same three classes, plus class 0
+    # ("unclassified / bare") occupying a real region, and ``nodata=0``
+    # declared on top of it. Nothing in the file distinguishes the two
+    # meanings: a consumer masking ``data == nodata`` deletes every class-0
+    # pixel, and a consumer ignoring nodata treats sentinel pixels as a class.
+    # That indistinguishability *is* the case.
+    landcover_ambiguous = landcover.copy()
+    landcover_ambiguous[4:12, 4:12] = 0
 
     return [
         RasterSpec(
@@ -306,6 +317,16 @@ def _priority_2_4_specs() -> list[RasterSpec]:
             compression="deflate",
             colormap=landcover_cmap,
         ),
+        RasterSpec(
+            case_id="landcover_ambiguous_zero_small",
+            primary="landcover_ambiguous_zero_small.tif",
+            bands=[landcover_ambiguous],
+            dtype="uint8",
+            nodata=0,
+            band_names=["landcover"],
+            compression="deflate",
+            colormap=landcover_cmap,
+        ),
     ]
 
 
@@ -378,13 +399,16 @@ def _footprint_edge_specs() -> list[RasterSpec]:
             emit_footprint=emit_footprint,
         )
 
-    # Only ``hole_center_nodata`` regenerates its footprint here. The committed
-    # footprints for the other four are *not* pixel-exact masks -- they record
-    # ``gdal_footprint``'s simplified/convex-hull answer, which for
-    # ``rotated_two_islands`` is a single polygon spanning the gap between two
-    # disjoint islands. Replacing them with mask-exact geometry would change
-    # what the ``examples/test_gdal_footprint.py`` demo asserts, which is a
-    # separate question from the drift this phase exists to fix (Plan 28 1.5).
+    # Every case emits its own mask-exact ``_footprint_truth.geojson`` (Plan 32
+    # Phase 1.2). The hand-committed files these replace were recordings of
+    # ``gdal_footprint``'s simplified/convex-hull answer -- for
+    # ``rotated_two_islands`` a single polygon spanning the gap between two
+    # disjoint islands, 1.98x the true area. Those recordings survive, renamed
+    # to ``_footprint_gdal_hull.geojson`` and pointed at by
+    # ``params.recorded_gdal_footprint``, so GDAL's behaviour stays under a
+    # regression check without being mistaken for truth. ``all_valid_rectangular``
+    # gets no hull file: a full rectangle *is* its own convex hull, so the two
+    # would be byte-identical and the second file would carry no information.
     return [
         _spec(
             "hole_center_nodata",
@@ -396,28 +420,40 @@ def _footprint_edge_specs() -> list[RasterSpec]:
             "all_valid_rectangular",
             all_valid,
             from_origin(500000.0, 4200000.0, 30.0, 30.0),
+            emit_footprint=True,
         ),
         _spec(
             "nonsquare_diagonal_sparse",
             diagonal,
             from_origin(250000.0, 4600000.0, 60.0, 30.0),
+            emit_footprint=True,
         ),
         # A genuinely rotated affine: the b/d terms are non-zero.
         _spec(
             "rotated_two_islands",
             islands,
             Affine(20.0, 5.0, 1000.0, -5.0, -20.0, 2000.0),
+            emit_footprint=True,
         ),
         _spec(
             "thin_corridor_shape",
             corridor,
             from_origin(700000.0, 5100000.0, 25.0, 25.0),
+            emit_footprint=True,
         ),
     ]
 
 
 def _write_footprint(spec: RasterSpec, raster_path: Path) -> Path:
-    """Derive ``<stem>_footprint.geojson`` from *raster_path*'s own valid mask."""
+    """Derive ``<stem>_footprint_truth.geojson`` from the raster's valid mask.
+
+    The ``_truth`` suffix is load-bearing (Plan 32 Phase 1.2). The folder also
+    ships ``<stem>_footprint_gdal_hull.geojson`` for three of these cases: a
+    *recording of ``gdal_footprint``'s own simplified/hull output*, kept so a
+    change in GDAL's behaviour stays detectable but never mistaken for ground
+    truth. Only this file is mask-exact, and only this file is what
+    ``params.expected_footprint`` points at.
+    """
     import json
 
     import rasterio.features
@@ -436,10 +472,10 @@ def _write_footprint(spec: RasterSpec, raster_path: Path) -> Path:
         ]
 
     merged = unary_union(polygons)
-    dest = raster_path.with_name(f"{raster_path.stem}_footprint.geojson")
+    dest = raster_path.with_name(f"{raster_path.stem}_footprint_truth.geojson")
     payload = {
         "type": "FeatureCollection",
-        "name": f"{spec.case_id}_footprint",
+        "name": f"{spec.case_id}_footprint_truth",
         "crs": {
             "type": "name",
             "properties": {"name": crs.to_string()},

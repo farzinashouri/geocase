@@ -223,32 +223,51 @@ def check_raster_content(case_dir: Path, metadata: CaseMetadata) -> list[str]:
     return errors
 
 
-def _mask_hole_count(src: Any) -> int:
-    """Count interior voids in the valid-data mask of an open raster.
+def _mask_geometry(src: Any) -> Any:
+    """The mask-exact footprint of an open raster, or ``None`` if fully invalid.
 
-    Derived from the actual mask rather than from the declared GeoJSON — the
-    point of the check is that the two can disagree.
+    Derived from the actual valid-data mask rather than from the declared
+    GeoJSON — the point of the check is that the two can disagree. This is the
+    ground truth every footprint declaration is measured against.
     """
-    import numpy as np
     import rasterio.features
     from shapely.geometry import shape
     from shapely.ops import unary_union
 
-    from geocase.assertions.footprint import _hole_count
-
     mask = src.dataset_mask()
-    shapes = [
+    parts = [
         shape(geom)
         for geom, value in rasterio.features.shapes(
             mask, mask=mask.astype(bool), transform=src.transform
         )
         if value != 0
     ]
-    if not shapes:
+    if not parts:
+        return None
+    return unary_union(parts)
+
+
+def _part_count(geom: Any) -> int:
+    """Number of disjoint polygons in *geom*."""
+    if geom is None:
         return 0
-    merged = unary_union(shapes)
-    assert np is not None
+    return len(geom.geoms) if geom.geom_type.startswith("Multi") else 1
+
+
+def _mask_hole_count(src: Any) -> int:
+    """Count interior voids in the valid-data mask of an open raster."""
+    from geocase.assertions.footprint import _hole_count
+
+    merged = _mask_geometry(src)
+    if merged is None:
+        return 0
     return _hole_count(merged)
+
+
+#: Symmetric-difference-over-truth-area tolerance for a declared footprint.
+#: Ground truth is emitted from the same mask the gate re-derives, so the only
+#: legitimate divergence is float round-tripping through GeoJSON.
+_FOOTPRINT_AREA_TOLERANCE = 1e-6
 
 
 def _check_footprint(case_dir: Path, metadata: CaseMetadata, src: Any) -> list[str]:
@@ -273,11 +292,16 @@ def _check_footprint(case_dir: Path, metadata: CaseMetadata, src: Any) -> list[s
 
     import geopandas as gpd
 
-    from geocase.assertions.footprint import _hole_count
+    from geocase.assertions.footprint import (
+        _hole_count,
+        _merged_geometry,
+        assert_footprint_similar_to_expected,
+    )
 
     declared = gpd.read_file(declared_path)
     declared_holes = sum(_hole_count(geom) for geom in declared.geometry)
-    actual_holes = _mask_hole_count(src)
+    truth = _mask_geometry(src)
+    actual_holes = 0 if truth is None else _hole_count(truth)
 
     errors: list[str] = []
     if declared_holes != actual_holes:
@@ -288,6 +312,41 @@ def _check_footprint(case_dir: Path, metadata: CaseMetadata, src: Any) -> list[s
                 f"declared footprint has {declared_holes} hole(s) but the "
                 f"actual nodata mask yields {actual_holes}",
             )
+        )
+
+    # Plan 32 1.1 — hole count alone was the right check for
+    # ``hole_center_nodata`` and is not sufficient in general: a convex hull
+    # over two disjoint islands has zero holes, exactly like the truth, while
+    # merging the islands and nearly doubling the area. Part count and area
+    # are what separate ground truth from a recorded consumer's answer.
+    if truth is not None:
+        declared_geom = _merged_geometry(declared)
+        declared_parts = _part_count(declared_geom)
+        truth_parts = _part_count(truth)
+        if declared_parts != truth_parts:
+            errors.append(
+                _err(
+                    metadata,
+                    "expected_footprint",
+                    f"declared footprint has {declared_parts} part(s) "
+                    f"({declared_geom.geom_type}) but the actual nodata mask "
+                    f"yields {truth_parts} ({truth.geom_type})",
+                )
+            )
+        _collect(
+            errors,
+            metadata,
+            "expected_footprint",
+            lambda: assert_footprint_similar_to_expected(
+                declared,
+                gpd.GeoDataFrame(geometry=[truth], crs=declared.crs),
+                max_diff_ratio=_FOOTPRINT_AREA_TOLERANCE,
+                msg=(
+                    f"declared footprint area {declared_geom.area:.4f} diverges "
+                    f"from the mask-exact area {truth.area:.4f} by more than "
+                    f"{_FOOTPRINT_AREA_TOLERANCE:.0e}"
+                ),
+            ),
         )
 
     # 1.3 — ``footprint_generation_error`` is the vocabulary entry for "a

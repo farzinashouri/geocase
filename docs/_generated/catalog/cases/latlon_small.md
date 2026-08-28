@@ -118,9 +118,9 @@ primary data variable (`temperature`).
 
 - [GeoTIFF NoData Small](geotiff_nodata_small.md) -- `geotiff_nodata_small`
 - [Hole Center NoData Raster](hole_center_nodata.md) -- `hole_center_nodata`
+- [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
 - [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
-- [DEM Small](dem_small.md) -- `dem_small`
 
 <script type="application/ld+json">
 {

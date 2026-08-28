@@ -58,5 +58,8 @@ assertions:
   expected_shape: [14, 14]
 
 params:
-  expected_footprint: thin_corridor_shape_footprint.geojson
-  min_rect_ratio: 0.76
+  expected_footprint: thin_corridor_shape_footprint_truth.geojson
+  # A recording of ``gdal_footprint``'s own hull output, not truth.
+  recorded_gdal_footprint: thin_corridor_shape_footprint_gdal_hull.geojson
+  # Measured on the mask-exact truth footprint: 0.275.
+  min_rect_ratio: 0.25

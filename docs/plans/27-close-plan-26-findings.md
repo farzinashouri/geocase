@@ -123,6 +123,23 @@ apparent synonymy, and decide per-cluster whether to (a) leave it, (b) add an al
 consolidate in a v1.1 with a deprecation shim. Scope this phase to the *report*, not the
 change.
 
+### 1.3 Vocabulary entries arriving from other plans (added 2026-08-28)
+
+This phase owns the `risk_types` vocabulary, so terms introduced elsewhere register here
+rather than floating free. Each row must name the check that enforces it, per §1.2's rule that
+a vocabulary entry nothing gates is indistinguishable from a typo.
+
+| Term | Introduced by | Cases | Enforcing check |
+|---|---|---|---|
+| `ambiguous_zero` | [Plan 32](32-footprint-truth-and-ambiguous-zero.md) Phase 2 | `landcover_ambiguous_zero_small` | **Owed.** Today the term is carried by `nodata_ignored` on the same case, which `_check_footprint`'s sibling in `catalog/content.py` does gate (the raster must declare a nodata value and contain pixels at it). A check specific to `ambiguous_zero` — the declared sentinel must also be a *meaningful value elsewhere in the scene*, not merely present — belongs in this phase. |
+
+`ambiguous_zero` is a singleton term, which §1.2 otherwise warns against adding. It is justified
+because the term was **already referenced** in `landcover_small`'s `behavioral_goal` before any
+case carried it, and because zero-as-sentinel is a common real failure mode rather than a
+long-tail curiosity. Note it also names an existing generator axis,
+`geocase.raster.axes.ambiguous_zero`, which frames the same collision for multiband reflectance
+— worth deciding in §1.2 whether one term should cover both framings.
+
 ---
 
 ## Phase 2 — Gate the two defect classes that recurred

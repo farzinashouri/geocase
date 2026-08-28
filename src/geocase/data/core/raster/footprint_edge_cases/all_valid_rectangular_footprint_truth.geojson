@@ -1,0 +1,45 @@
+{
+  "crs": {
+    "properties": {
+      "name": "EPSG:32633"
+    },
+    "type": "name"
+  },
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              500000.0,
+              4200000.0
+            ],
+            [
+              500000.0,
+              4199640.0
+            ],
+            [
+              500360.0,
+              4199640.0
+            ],
+            [
+              500360.0,
+              4200000.0
+            ],
+            [
+              500000.0,
+              4200000.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "case_id": "all_valid_rectangular"
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "all_valid_rectangular_footprint_truth",
+  "type": "FeatureCollection"
+}

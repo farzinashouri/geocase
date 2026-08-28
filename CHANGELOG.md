@@ -72,7 +72,50 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **CI: the `catalog` job installs `.[raster,vector]`** rather than `.[raster]`. The
   fixture generator now needs shapely, geopandas and pyarrow.
 
+- **(data) The `footprint_edge_cases` footprint sidecars are renamed, and three of them
+  now hold different geometry.** Each `<case>_footprint.geojson` recorded one of two
+  incompatible things under one name: for `hole_center_nodata` and
+  `all_valid_rectangular` it was ground truth derived from the raster's NoData mask, and
+  for the other three it was a recording of the GDAL footprint utility's own
+  simplified/hull output — inflated **1.98× / 1.88× / 2.80×** over the real valid-pixel
+  mask, with `rotated_two_islands` and `nonsquare_diagonal_sparse` collapsing genuinely
+  disjoint regions into a single polygon.
+
+  The two meanings are now separate files, named for what they are:
+
+  | Old | New | Meaning |
+  |---|---|---|
+  | `<case>_footprint.geojson` | `<case>_footprint_truth.geojson` | Mask-exact ground truth, regenerated from the same array as the raster. What `params.expected_footprint` points at. |
+  | — | `<case>_footprint_gdal_hull.geojson` | The previously committed GDAL output, kept as a recorded-behaviour baseline. Pointed at by the new `params.recorded_gdal_footprint`. |
+
+  `all_valid_rectangular` has no `_gdal_hull` file: every pixel is valid, so the hull
+  *is* the mask. No case id, `files.primary`, fixture, marker or `__all__` entry changed;
+  if you read these sidecars by filename, update the path and expect real geometry.
+
+- **(data) `params.min_rect_ratio` re-derived from the truth geometry** for all five
+  footprint edge cases. The old values (0.74 / 0.93 / 0.76 / 0.98) had been fitted to the
+  near-rectangular hulls and so asserted almost nothing; the real shapes score
+  0.375 / 0.500 / 0.275 / 0.889.
+
+- **The content gate checks footprint shape, not just hole count.**
+  `geocase.catalog.content._check_footprint` now also compares **part count** and **area**
+  against a freshly re-derived mask. A declared footprint that merges disjoint regions, or
+  that is a hull rather than a mask, fails `scripts/validate_case_content.py`. This is
+  stricter than before and may turn cases in external manifests red.
+
+- **`landcover_small`'s `behavioral_goal` now names `landcover_ambiguous_zero_small`**
+  instead of referring to a case that did not exist.
+
 ### Added
+
+- **`landcover_ambiguous_zero_small`** — a new raster case where 0 is simultaneously a
+  valid land-cover class and the declared NoData sentinel. A consumer masking
+  `data == nodata` silently deletes a legitimate class covering 25% of the scene; one
+  ignoring NoData treats sentinel pixels as data. Nothing in the file distinguishes the
+  two, and that indistinguishability is the case. It is the sibling of `landcover_small`
+  — the same scene with the ambiguity removed — so the pair isolates the collision from
+  every other property. Declares `risk_types: [ambiguous_zero, nodata_ignored,
+  category_misread]`. **The bundled catalog is now 136 cases.**
 
 - **`shapefile_ring_orientation`** — a new `special/encoding/` case preserving the
   pre-convergence `polygon_shapefile_baseline` bytes: the same square as

@@ -409,6 +409,91 @@ def test_interior_void_satisfies_footprint_generation_error(tmp_path):
     assert check_case_content(tmp_path, meta) == []
 
 
+def _two_island_raster(tmp_path):
+    """A raster with two disjoint valid blobs."""
+    import numpy as np
+
+    from geocase.raster import raster_fixture
+
+    values = np.full((1, 8, 8), -9999.0, dtype="float32")
+    values[0, 0:3, 0:3] = 1.0
+    values[0, 5:8, 5:8] = 1.0
+    spec = raster_fixture(dtype="float32", size=(8, 8), nodata=-9999, values=values)
+    spec.write(tmp_path / "r.tif")
+    return tmp_path / "r.tif"
+
+
+def _write_declared_footprint(tmp_path, geometry):
+    (tmp_path / "footprint.geojson").write_text(
+        json.dumps(
+            {
+                "type": "FeatureCollection",
+                "features": [
+                    {"type": "Feature", "properties": {}, "geometry": geometry}
+                ],
+            }
+        )
+    )
+
+
+def _mask_geometry(path):
+    import rasterio.features
+    from shapely.geometry import shape
+    from shapely.ops import unary_union
+
+    with rasterio.open(path) as src:
+        mask = src.dataset_mask()
+        parts = [
+            shape(geom)
+            for geom, value in rasterio.features.shapes(
+                mask, mask=mask.astype(bool), transform=src.transform
+            )
+            if value != 0
+        ]
+    return unary_union(parts)
+
+
+def test_declared_footprint_part_count_must_match_the_mask(tmp_path):
+    """Plan 32 1.1 -- a convex hull over two islands is not the footprint.
+
+    The hull is one polygon with no holes, so the hole-count check on its own
+    is satisfied while the declaration merges two disjoint regions into one
+    and nearly doubles the area. This is ``rotated_two_islands``.
+    """
+    pytest.importorskip("geopandas")
+
+    from shapely.geometry import mapping
+
+    from geocase.catalog.content import check_case_content
+
+    raster = _two_island_raster(tmp_path)
+    _write_declared_footprint(tmp_path, mapping(_mask_geometry(raster).convex_hull))
+
+    meta = _raster_metadata("hull_over_islands", "r.tif", expect_nodata=True)
+    meta.params["expected_footprint"] = "footprint.geojson"
+    errors = check_case_content(tmp_path, meta)
+
+    assert any("expected_footprint" in e for e in errors), errors
+    assert any("part" in e for e in errors), errors
+    assert any("area" in e for e in errors), errors
+
+
+def test_mask_exact_declared_footprint_passes(tmp_path):
+    """The control: the mask-derived geometry itself must be accepted."""
+    pytest.importorskip("geopandas")
+
+    from shapely.geometry import mapping
+
+    from geocase.catalog.content import check_case_content
+
+    raster = _two_island_raster(tmp_path)
+    _write_declared_footprint(tmp_path, mapping(_mask_geometry(raster)))
+
+    meta = _raster_metadata("islands_truth", "r.tif", expect_nodata=True)
+    meta.params["expected_footprint"] = "footprint.geojson"
+    assert check_case_content(tmp_path, meta) == []
+
+
 # --- 1.3: risk_types as contract ------------------------------------------
 
 

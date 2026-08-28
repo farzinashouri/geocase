@@ -101,7 +101,7 @@ Confirm GeoCase reads external ``.ovr`` overviews transparently and treats the s
 - [COG Single-Band Small](cog_singleband_small.md) -- `cog_singleband_small`
 - [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
 - [DEM Small](dem_small.md) -- `dem_small`
-- [Land Cover Small](landcover_small.md) -- `landcover_small`
+- [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
 
 <script type="application/ld+json">
 {

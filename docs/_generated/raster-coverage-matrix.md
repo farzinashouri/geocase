@@ -1,7 +1,7 @@
 ### Raster coverage matrix (current vs target)
 
-Total bundled raster cases scanned: **30**.
-Cases declaring typed band-count expectations: **17/30**.
+Total bundled raster cases scanned: **31**.
+Cases declaring typed band-count expectations: **18/31**.
 
 #### A) Product families
 
@@ -9,7 +9,7 @@ Cases declaring typed band-count expectations: **17/30**.
 |---|---:|---:|
 | Optical / RGB | ✅ 4 case(s) | ✅ required |
 | Multispectral | ✅ 3 case(s) | ✅ required |
-| Mask | ✅ 3 case(s) | ✅ required |
+| Mask | ✅ 4 case(s) | ✅ required |
 | DEM / Terrain | ✅ 2 case(s) | ✅ required |
 | Derived index (NDVI) | ✅ 2 case(s) | ✅ required |
 | SAR / Radar | ✅ 2 case(s) | ✅ required |

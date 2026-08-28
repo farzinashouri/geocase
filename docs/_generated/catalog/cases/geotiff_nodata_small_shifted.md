@@ -105,9 +105,9 @@ from true pixel-lattice compatibility.
 
 - [GeoTIFF NoData Small](geotiff_nodata_small.md) -- `geotiff_nodata_small`
 - [Hole Center NoData Raster](hole_center_nodata.md) -- `hole_center_nodata`
+- [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
 - [All Valid Rectangular Raster](all_valid_rectangular.md) -- `all_valid_rectangular`
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
-- [COG Single-Band Small](cog_singleband_small.md) -- `cog_singleband_small`
 
 <script type="application/ld+json">
 {

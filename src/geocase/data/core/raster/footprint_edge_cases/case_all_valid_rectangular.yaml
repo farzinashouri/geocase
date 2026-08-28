@@ -58,5 +58,6 @@ assertions:
   expected_shape: [12, 12]
 
 params:
-  expected_footprint: all_valid_rectangular_footprint.geojson
+  expected_footprint: all_valid_rectangular_footprint_truth.geojson
+  # Measured on the mask-exact truth footprint: 1.0.
   min_rect_ratio: 0.99

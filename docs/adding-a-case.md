@@ -246,9 +246,28 @@ Example:
 
 ```yaml
 params:
-  expected_footprint: all_valid_rectangular.geojson
-  min_rect_ratio: 0.98
+  expected_footprint: all_valid_rectangular_footprint_truth.geojson
+  min_rect_ratio: 0.99
 ```
+
+`expected_footprint` must name **ground truth** — geometry derived from the
+raster's own valid-pixel mask, not a recording of what some tool returned for
+it. The content gate reads this key and checks the declared geometry against a
+freshly re-derived mask on part count, area and hole count, so a hull or a
+simplified polygon fails there. If you also want to pin one consumer's answer as
+a regression baseline, put it in a separate file and name it for what it is:
+
+```yaml
+params:
+  expected_footprint: rotated_two_islands_footprint_truth.geojson
+  recorded_gdal_footprint: rotated_two_islands_footprint_gdal_hull.geojson
+  min_rect_ratio: 0.35
+```
+
+Derive `min_rect_ratio` from the truth geometry too. Fitting it to a hull makes
+it pass trivially — a convex hull is near-rectangular by construction — which is
+how three cases came to assert thresholds their real shapes did not meet. See
+[docs/plans/32-footprint-truth-and-ambiguous-zero.md](https://github.com/farzinashouri/geocase/blob/main/docs/plans/32-footprint-truth-and-ambiguous-zero.md).
 
 ---
 

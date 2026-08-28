@@ -60,5 +60,6 @@ assertions:
   expected_shape: [12, 12]
 
 params:
-  expected_footprint: hole_center_nodata_footprint.geojson
-  min_rect_ratio: 0.98
+  expected_footprint: hole_center_nodata_footprint_truth.geojson
+  # Measured on the mask-exact truth footprint: 0.8889.
+  min_rect_ratio: 0.85

@@ -59,5 +59,8 @@ assertions:
   expected_shape: [8, 8]
 
 params:
-  expected_footprint: nonsquare_diagonal_sparse_footprint.geojson
-  min_rect_ratio: 0.93
+  expected_footprint: nonsquare_diagonal_sparse_footprint_truth.geojson
+  # A recording of ``gdal_footprint``'s own hull output, not truth.
+  recorded_gdal_footprint: nonsquare_diagonal_sparse_footprint_gdal_hull.geojson
+  # Measured on the mask-exact truth footprint: 0.5.
+  min_rect_ratio: 0.45
