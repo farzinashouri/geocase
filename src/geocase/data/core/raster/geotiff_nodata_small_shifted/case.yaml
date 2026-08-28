@@ -51,6 +51,7 @@ assertions:
   expect_crs: true
   expected_epsg: 32633
   expect_nodata: true
+  expected_shape: [10, 10]
 
 params:
   aligned_with_case: geotiff_nodata_small

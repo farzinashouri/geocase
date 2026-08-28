@@ -49,6 +49,7 @@ assertions:
   expect_loadable: true
   expect_crs: true
   expected_epsg: 32633
+  expected_shape: [20, 20]
 
 params:
   spans_utm_zones: true

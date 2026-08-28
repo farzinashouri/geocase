@@ -49,6 +49,7 @@ assertions:
   expect_crs: true
   expected_epsg: 32633
   expect_nodata: true
+  expected_shape: [10, 10]
 
 params:
   nodata_value: -9999

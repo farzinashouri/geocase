@@ -25,6 +25,11 @@ pip install "geocase[all]"
 <span class="gc-card-title">COG Multispectral Small</span>
 <span class="gc-card-meta">GeoTIFF</span>
 </a>
+<a class="gc-card" href="../../cases/geotiff_multiband_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_multiband_small.png" alt="Pixels of geotiff_multiband_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Multi-Band Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
 <a class="gc-card" href="../../cases/multispectral_mixed_resolution_small/">
 <img class="gc-diagram gc-preview" src="../../previews/multispectral_mixed_resolution_small.png" alt="Pixels of multispectral_mixed_resolution_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
 <span class="gc-card-title">Multispectral Mixed Resolution Small</span>

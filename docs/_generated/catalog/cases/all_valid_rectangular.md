@@ -13,6 +13,11 @@ description: "Raster with fully valid rectangular coverage used as a baseline fo
 
 Raster with fully valid rectangular coverage used as a baseline footprint edge-case fixture.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/all_valid_rectangular.png" alt="Pixels of all_valid_rectangular, a 12x12 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>12x12 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `all_valid_rectangular` |
@@ -61,6 +66,7 @@ Confirm footprint generation returns a clean geometry for a fully valid rectangu
 |---|---|
 | `expect_loadable` | yes |
 | `expect_crs` | yes |
+| `expected_shape` | `[12, 12]` |
 
 ## Notes
 

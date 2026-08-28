@@ -49,7 +49,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">coordinate_order, dimension_mismatch, nodata_ignored</td>
 </tr>
 <tr data-case-id="all_valid_rectangular" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="all_valid_rectangular all valid rectangular raster footprint_generation_error">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/all_valid_rectangular.png" alt="Pixels of all_valid_rectangular, a 12x12 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/all_valid_rectangular/">All Valid Rectangular Raster</a><br><code class="gc-compare-id">all_valid_rectangular</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
@@ -103,7 +103,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">overviews_missing, sidecar_dropped</td>
 </tr>
 <tr data-case-id="geotiff_float64_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_float64_small geotiff float64 small dtype_coercion nodata_ignored precision_loss">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/geotiff_float64_small.png" alt="Pixels of geotiff_float64_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/geotiff_float64_small/">GeoTIFF Float64 Small</a><br><code class="gc-compare-id">geotiff_float64_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
@@ -112,7 +112,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">dtype_coercion, nodata_ignored, precision_loss</td>
 </tr>
 <tr data-case-id="geotiff_int16_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_int16_small geotiff int16 small dtype_coercion nodata_ignored range_assumption">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/geotiff_int16_small.png" alt="Pixels of geotiff_int16_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/geotiff_int16_small/">GeoTIFF Int16 Small</a><br><code class="gc-compare-id">geotiff_int16_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
@@ -121,7 +121,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">dtype_coercion, nodata_ignored, range_assumption</td>
 </tr>
 <tr data-case-id="geotiff_int32_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_int32_small geotiff int32 small dtype_coercion nodata_ignored range_truncation">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/geotiff_int32_small.png" alt="Pixels of geotiff_int32_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/geotiff_int32_small/">GeoTIFF Int32 Small</a><br><code class="gc-compare-id">geotiff_int32_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
@@ -130,7 +130,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">dtype_coercion, nodata_ignored, range_truncation</td>
 </tr>
 <tr data-case-id="geotiff_int8_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_int8_small geotiff int8 small dtype_coercion nodata_ignored overflow_assumption">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/geotiff_int8_small.png" alt="Pixels of geotiff_int8_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/geotiff_int8_small/">GeoTIFF Int8 Small</a><br><code class="gc-compare-id">geotiff_int8_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
@@ -139,7 +139,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">dtype_coercion, nodata_ignored, overflow_assumption</td>
 </tr>
 <tr data-case-id="geotiff_multiband_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_multiband_small geotiff multi-band small band_loss incorrect_band_order nodata_ignored">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/geotiff_multiband_small.png" alt="Pixels of geotiff_multiband_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/geotiff_multiband_small/">GeoTIFF Multi-Band Small</a><br><code class="gc-compare-id">geotiff_multiband_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
@@ -148,7 +148,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">band_loss, incorrect_band_order, nodata_ignored</td>
 </tr>
 <tr data-case-id="geotiff_nodata_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_nodata_small geotiff nodata small incorrect_statistics nan_propagation nodata_ignored">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/geotiff_nodata_small.png" alt="Pixels of geotiff_nodata_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/geotiff_nodata_small/">GeoTIFF NoData Small</a><br><code class="gc-compare-id">geotiff_nodata_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
@@ -157,7 +157,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">incorrect_statistics, nan_propagation, nodata_ignored</td>
 </tr>
 <tr data-case-id="geotiff_nodata_small_shifted" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_nodata_small_shifted geotiff nodata small shifted alignment_too_strict pixel_lattice_misclassification shifted_origin">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/geotiff_nodata_small_shifted.png" alt="Pixels of geotiff_nodata_small_shifted, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/geotiff_nodata_small_shifted/">GeoTIFF NoData Small Shifted</a><br><code class="gc-compare-id">geotiff_nodata_small_shifted</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
@@ -166,7 +166,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">alignment_too_strict, pixel_lattice_misclassification, shifted_origin</td>
 </tr>
 <tr data-case-id="geotiff_utm_boundary" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_utm_boundary geotiff utm boundary pixel_shift reprojection_error zone_boundary_artifact">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/geotiff_utm_boundary.png" alt="Pixels of geotiff_utm_boundary, a 20x20 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/geotiff_utm_boundary/">GeoTIFF UTM Boundary</a><br><code class="gc-compare-id">geotiff_utm_boundary</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
@@ -175,7 +175,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">pixel_shift, reprojection_error, zone_boundary_artifact</td>
 </tr>
 <tr data-case-id="hole_center_nodata" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="hole_center_nodata hole center nodata raster footprint_generation_error nodata_ignored">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/hole_center_nodata.png" alt="Pixels of hole_center_nodata, a 12x12 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/hole_center_nodata/">Hole Center NoData Raster</a><br><code class="gc-compare-id">hole_center_nodata</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
@@ -229,7 +229,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">dtype_drift, value_range_violation</td>
 </tr>
 <tr data-case-id="nonsquare_diagonal_sparse" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="nonsquare_diagonal_sparse nonsquare diagonal sparse raster footprint_generation_error pixel_shape_assumption">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/nonsquare_diagonal_sparse.png" alt="Pixels of nonsquare_diagonal_sparse, a 8x8 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/nonsquare_diagonal_sparse/">Nonsquare Diagonal Sparse Raster</a><br><code class="gc-compare-id">nonsquare_diagonal_sparse</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
@@ -274,7 +274,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">band_loss, dtype_drift, incorrect_band_order</td>
 </tr>
 <tr data-case-id="rotated_two_islands" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="rotated_two_islands rotated two islands raster affine_transform_bug footprint_generation_error">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/rotated_two_islands.png" alt="Pixels of rotated_two_islands, a 8x8 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/rotated_two_islands/">Rotated Two Islands Raster</a><br><code class="gc-compare-id">rotated_two_islands</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
@@ -301,7 +301,7 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">band_loss, dtype_drift</td>
 </tr>
 <tr data-case-id="thin_corridor_shape" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="thin_corridor_shape thin corridor shape raster footprint_generation_error geometry_simplification_loss">
-<td class="gc-compare-preview">&mdash;</td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/thin_corridor_shape.png" alt="Pixels of thin_corridor_shape, a 14x14 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
 <td><a class="gc-compare-link" href="../cases/thin_corridor_shape/">Thin Corridor Shape Raster</a><br><code class="gc-compare-id">thin_corridor_shape</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>

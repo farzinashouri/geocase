@@ -46,6 +46,7 @@ assertions:
   expect_loadable: true
   expect_crs: true
   expect_nodata: true
+  expected_shape: [12, 12]
 
 params:
   expected_footprint: hole_center_nodata_footprint.geojson

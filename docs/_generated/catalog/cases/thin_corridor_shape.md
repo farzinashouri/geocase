@@ -13,6 +13,11 @@ description: "Raster whose valid region forms a thin corridor geometry, sensitiv
 
 Raster whose valid region forms a thin corridor geometry, sensitive to simplification and footprint stability assumptions.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/thin_corridor_shape.png" alt="Pixels of thin_corridor_shape, a 14x14 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>14x14 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `thin_corridor_shape` |
@@ -62,6 +67,7 @@ Verify footprint generation preserves narrow valid structures and remains close 
 |---|---|
 | `expect_loadable` | yes |
 | `expect_crs` | yes |
+| `expected_shape` | `[14, 14]` |
 
 ## Notes
 

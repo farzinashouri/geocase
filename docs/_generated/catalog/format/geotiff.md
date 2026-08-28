@@ -20,6 +20,11 @@ pip install "geocase[all]"
 [View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 <div class="gc-grid">
+<a class="gc-card" href="../../cases/all_valid_rectangular/">
+<img class="gc-diagram gc-preview" src="../../previews/all_valid_rectangular.png" alt="Pixels of all_valid_rectangular, a 12x12 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">All Valid Rectangular Raster</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
 <a class="gc-card" href="../../cases/cog_multispectral_small/">
 <img class="gc-diagram gc-preview" src="../../previews/cog_multispectral_small.png" alt="Pixels of cog_multispectral_small, a 64x64 raster, with NoData in magenta" loading="lazy" decoding="async">
 <span class="gc-card-title">COG Multispectral Small</span>
@@ -43,6 +48,51 @@ pip install "geocase[all]"
 <a class="gc-card" href="../../cases/geotiff_external_overviews_small/">
 <img class="gc-diagram gc-preview" src="../../previews/geotiff_external_overviews_small.png" alt="Pixels of geotiff_external_overviews_small, a 64x64 raster, with NoData in magenta" loading="lazy" decoding="async">
 <span class="gc-card-title">GeoTIFF External Overviews Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_float64_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_float64_small.png" alt="Pixels of geotiff_float64_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Float64 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_int16_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_int16_small.png" alt="Pixels of geotiff_int16_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Int16 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_int32_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_int32_small.png" alt="Pixels of geotiff_int32_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Int32 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_int8_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_int8_small.png" alt="Pixels of geotiff_int8_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Int8 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_multiband_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_multiband_small.png" alt="Pixels of geotiff_multiband_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Multi-Band Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_nodata_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_nodata_small.png" alt="Pixels of geotiff_nodata_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF NoData Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_nodata_small_shifted/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_nodata_small_shifted.png" alt="Pixels of geotiff_nodata_small_shifted, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF NoData Small Shifted</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_utm_boundary/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_utm_boundary.png" alt="Pixels of geotiff_utm_boundary, a 20x20 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF UTM Boundary</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/hole_center_nodata/">
+<img class="gc-diagram gc-preview" src="../../previews/hole_center_nodata.png" alt="Pixels of hole_center_nodata, a 12x12 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">Hole Center NoData Raster</span>
 <span class="gc-card-meta">GeoTIFF</span>
 </a>
 <a class="gc-card" href="../../cases/landcover_small/">
@@ -70,6 +120,11 @@ pip install "geocase[all]"
 <span class="gc-card-title">NDVI Small</span>
 <span class="gc-card-meta">GeoTIFF</span>
 </a>
+<a class="gc-card" href="../../cases/nonsquare_diagonal_sparse/">
+<img class="gc-diagram gc-preview" src="../../previews/nonsquare_diagonal_sparse.png" alt="Pixels of nonsquare_diagonal_sparse, a 8x8 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">Nonsquare Diagonal Sparse Raster</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
 <a class="gc-card" href="../../cases/optical_dateline_small/">
 <img class="gc-diagram gc-preview" src="../../previews/optical_dateline_small.png" alt="Pixels of optical_dateline_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
 <span class="gc-card-title">Optical Dateline Small</span>
@@ -90,6 +145,11 @@ pip install "geocase[all]"
 <span class="gc-card-title">Optical RGB Small</span>
 <span class="gc-card-meta">GeoTIFF</span>
 </a>
+<a class="gc-card" href="../../cases/rotated_two_islands/">
+<img class="gc-diagram gc-preview" src="../../previews/rotated_two_islands.png" alt="Pixels of rotated_two_islands, a 8x8 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">Rotated Two Islands Raster</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
 <a class="gc-card" href="../../cases/sar_dualpol_small/">
 <img class="gc-diagram gc-preview" src="../../previews/sar_dualpol_small.png" alt="Pixels of sar_dualpol_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
 <span class="gc-card-title">SAR Dual-Pol Small</span>
@@ -98,6 +158,11 @@ pip install "geocase[all]"
 <a class="gc-card" href="../../cases/sar_vv_small/">
 <img class="gc-diagram gc-preview" src="../../previews/sar_vv_small.png" alt="Pixels of sar_vv_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
 <span class="gc-card-title">SAR VV Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/thin_corridor_shape/">
+<img class="gc-diagram gc-preview" src="../../previews/thin_corridor_shape.png" alt="Pixels of thin_corridor_shape, a 14x14 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">Thin Corridor Shape Raster</span>
 <span class="gc-card-meta">GeoTIFF</span>
 </a>
 <a class="gc-card" href="../../cases/water_mask_small/">

@@ -13,6 +13,11 @@ description: "A GeoTIFF straddling a UTM zone boundary. Mosaicking or reprojecti
 
 A GeoTIFF straddling a UTM zone boundary. Mosaicking or reprojecting across the seam produces pixel shifts and CRS mismatches between adjacent tiles.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_utm_boundary.png" alt="Pixels of geotiff_utm_boundary, a 20x20 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>20x20 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `geotiff_utm_boundary` |
@@ -65,6 +70,7 @@ Detect raster code that assumes the entire tile lives in a single UTM zone, caus
 | `expect_loadable` | yes |
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
+| `expected_shape` | `[20, 20]` |
 
 ## Notes
 

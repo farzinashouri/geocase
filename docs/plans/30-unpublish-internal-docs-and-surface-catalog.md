@@ -4,7 +4,7 @@ description: Remove the planning log and internal reports from the published doc
 
 # Unpublish Internal Docs and Surface the Catalog
 
-> **Status: proposed 2026-08-28.**
+> **Status: implemented 2026-08-28.**
 
 The GitHub Pages site at `https://farzinashouri.github.io/geocase` publishes **all 260 markdown
 files** under `docs/`. There is no exclusion mechanism in the build: `mkdocs.yml` carries only
@@ -46,7 +46,7 @@ plugin and no change to the `[docs]` extra** in `pyproject.toml` — which matte
 `.github/workflows/pages.yml` installs `.[docs]` and any unlisted plugin turns the deploy red.
 Unlike `not_in_nav`, `exclude_docs` removes files from the build, so they are served at no URL.
 
-### 1.1 Add `exclude_docs` to `mkdocs.yml`
+### 1.1 Add `exclude_docs` to `mkdocs.yml` — done
 
 Replace the `not_in_nav` block (`mkdocs.yml:106-122`) with an `exclude_docs` block for the three
 unpublished trees, plus a trimmed `not_in_nav` for the generated pages, which must stay published
@@ -75,12 +75,12 @@ not_in_nav: |
   /_generated/catalog/format/*.md
 ```
 
-### 1.2 Remove the Plans tab from the nav
+### 1.2 Remove the Plans tab from the nav — done
 
 Delete the `- Plans:` section (`mkdocs.yml:82-92`). Leaving it with `exclude_docs` active makes
 `mkdocs build --strict` fail on nine missing nav targets.
 
-### 1.3 Fix inbound links from pages that stay published
+### 1.3 Fix inbound links from pages that stay published — done
 
 **The step that breaks the build if skipped.** `--strict` errors on a link to an excluded file.
 Eight published pages link into `plans/`. `geocase_validate/` and `evidence/` are linked *only* from
@@ -110,14 +110,14 @@ grep -rn "](.*\(geocase_validate\|fixture-interviews\)" docs --include="*.md" \
   | grep -v "^docs/geocase_validate/\|^docs/evidence/"
 ```
 
-### 1.4 Correct the stale rule in this folder's index
+### 1.4 Correct the stale rule in this folder's index — done
 
 [`index.md`](index.md) ends with "**Active plans are in the nav.** Only `archive/*` is excluded via
 `not_in_nav`." Rewrite: the whole `plans/` tree is excluded from the published site via
 `exclude_docs` and is read on GitHub. (Pre-existing gap worth closing in the same pass: plan 28 has
 no row in the index table.)
 
-### 1.5 Record the policy in `CLAUDE.md`
+### 1.5 Record the policy in `CLAUDE.md` — done
 
 One line under "Conventions that bite": `docs/plans/`, `docs/geocase_validate/`, and
 `docs/evidence/` are excluded from the published site via `exclude_docs`; a published page must not
@@ -125,7 +125,7 @@ link to them with a relative path or `mkdocs build --strict` fails.
 
 ## Phase 2 — Promote the catalog
 
-### 2.1 Give the catalog its own top-level tab
+### 2.1 Give the catalog its own top-level tab — done
 
 `navigation.tabs` is enabled, so a top-level nav key renders as a header tab. Move the two catalog
 entries out of **Reference** into a new **Catalog** section placed directly after `Philosophy`:
@@ -146,14 +146,14 @@ entries out of **Reference** into a new **Catalog** section placed directly afte
 The coverage matrices move too — they are catalog views, not API reference. **Reference** is then
 left holding only the two codebase documents, which is what it should always have been.
 
-### 2.2 Link the catalog from the landing page
+### 2.2 Link the catalog from the landing page — done
 
 `docs/index.md` should carry an early, explicit link to `_generated/catalog/index.md` ("Browse all
 135 cases"). This is the highest-leverage discoverability change in the plan — most visitors never
 open a nav tab. Optionally add the same link to the intros of `docs/getting-started.md` and
 `docs/case-discovery.md`.
 
-### 2.3 Do not hand-edit the generated pages
+### 2.3 Do not hand-edit the generated pages — done
 
 `scripts/generate_catalog_pages.py` **unlinks every `*.md` under `docs/_generated/catalog/` before
 writing**, and `--check` reports any unexpected file as `stale:`. Wording changes to the hub pages
@@ -193,3 +193,20 @@ python scripts/generate_catalog_pages.py --check
 a green deploy. After merge to `main`, spot-check that
 `https://farzinashouri.github.io/geocase/plans/development-plan/` 404s and that
 `.../_generated/catalog/cases/dateline_crossing_polygon/` still resolves.
+
+## Outcome (2026-08-28)
+
+All of Phases 1 and 2 landed as written. Notes on what differed:
+
+- **1.3** — the link sweep found **16** relative links into `plans/` across the eight predicted
+  files, rewritten mechanically to `https://github.com/farzinashouri/geocase/blob/main/docs/plans/…`.
+  `docs/adding-a-case.md:456` was, as the plan suspected, plain text in a "Related docs" list, not a
+  link, so it needed no change. No published page linked into `geocase_validate/` or `evidence/`.
+- **1.4** — already correct on disk: `docs/plans/index.md` carried the `exclude_docs` rule and rows
+  for both plan 28 and plan 30, so this step was a no-op.
+- **2.2** — the catalog link was added to `docs/index.md` (first item under "Start here"),
+  `docs/getting-started.md`, and `docs/case-discovery.md`; the two optional additions were taken.
+
+Verification: `mkdocs build --strict` is clean; `site/plans`, `site/geocase_validate`, and
+`site/evidence` do not exist; `site/_generated/catalog/cases` holds 135 pages plus the 17 raster
+previews; `scripts/generate_catalog_pages.py --check` reports up to date (189 files, 135 cases).

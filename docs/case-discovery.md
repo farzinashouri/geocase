@@ -6,6 +6,8 @@ description: "Find GeoCase test cases by metadata — category, format, geometry
 
 This guide shows how to find GeoCase cases by metadata instead of memorizing individual case IDs.
 
+To discover cases by eye instead, [browse all 135 cases](_generated/catalog/index.md).
+
 GeoCase cases are designed to be discovered by intent:
 
 - what data type you need,

@@ -13,6 +13,11 @@ description: "Raster with rotated/skewed transform and disconnected valid region
 
 Raster with rotated/skewed transform and disconnected valid regions, designed to stress convex-hull style footprint generation.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/rotated_two_islands.png" alt="Pixels of rotated_two_islands, a 8x8 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>8x8 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `rotated_two_islands` |
@@ -62,6 +67,7 @@ Validate footprint extraction under rotated transform and disconnected valid pix
 |---|---|
 | `expect_loadable` | yes |
 | `expect_crs` | yes |
+| `expected_shape` | `[8, 8]` |
 
 ## Notes
 

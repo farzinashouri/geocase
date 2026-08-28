@@ -13,6 +13,11 @@ description: "Raster with non-square cells and sparse diagonal valid pixels to s
 
 Raster with non-square cells and sparse diagonal valid pixels to surface edge behavior in footprint generation.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/nonsquare_diagonal_sparse.png" alt="Pixels of nonsquare_diagonal_sparse, a 8x8 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>8x8 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `nonsquare_diagonal_sparse` |
@@ -62,6 +67,7 @@ Ensure footprint extraction remains robust for sparse and anisotropic raster sam
 |---|---|
 | `expect_loadable` | yes |
 | `expect_crs` | yes |
+| `expected_shape` | `[8, 8]` |
 
 ## Notes
 

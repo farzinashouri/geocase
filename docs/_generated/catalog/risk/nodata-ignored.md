@@ -35,6 +35,41 @@ pip install "geocase[all]"
 <span class="gc-card-title">DEM Small</span>
 <span class="gc-card-meta">GeoTIFF</span>
 </a>
+<a class="gc-card" href="../../cases/geotiff_float64_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_float64_small.png" alt="Pixels of geotiff_float64_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Float64 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_int16_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_int16_small.png" alt="Pixels of geotiff_int16_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Int16 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_int32_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_int32_small.png" alt="Pixels of geotiff_int32_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Int32 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_int8_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_int8_small.png" alt="Pixels of geotiff_int8_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Int8 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_multiband_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_multiband_small.png" alt="Pixels of geotiff_multiband_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Multi-Band Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_nodata_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_nodata_small.png" alt="Pixels of geotiff_nodata_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF NoData Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/hole_center_nodata/">
+<img class="gc-diagram gc-preview" src="../../previews/hole_center_nodata.png" alt="Pixels of hole_center_nodata, a 12x12 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">Hole Center NoData Raster</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
 <a class="gc-card" href="../../cases/multispectral_s2_like_small/">
 <img class="gc-diagram gc-preview" src="../../previews/multispectral_s2_like_small.png" alt="Pixels of multispectral_s2_like_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
 <span class="gc-card-title">Multispectral Sentinel-2-like Small</span>

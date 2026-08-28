@@ -44,6 +44,7 @@ source:
 assertions:
   expect_loadable: true
   expect_crs: true
+  expected_shape: [12, 12]
 
 params:
   expected_footprint: all_valid_rectangular_footprint.geojson

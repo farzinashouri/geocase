@@ -25,6 +25,11 @@ pip install "geocase[all]"
 <span class="gc-card-title">Dateline crossing polygon</span>
 <span class="gc-card-meta">GeoJSON &middot; Polygon</span>
 </a>
+<a class="gc-card" href="../../cases/geotiff_utm_boundary/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_utm_boundary.png" alt="Pixels of geotiff_utm_boundary, a 20x20 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF UTM Boundary</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
 <a class="gc-card" href="../../cases/rasterize_match_wgs84_polygon/">
 <svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of rasterize_match_wgs84_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of rasterize_match_wgs84_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 70 L 110 70 L 110 10 L 10 10 L 10 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
 <span class="gc-card-title">Rasterize Match WGS84 Polygon</span>

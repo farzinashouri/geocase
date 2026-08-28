@@ -13,6 +13,11 @@ description: "A small single-band GeoTIFF stored as signed 16-bit integers. Test
 
 A small single-band GeoTIFF stored as signed 16-bit integers. Tests that raster loaders and downstream code preserve medium-range integer dtype semantics without silently widening or converting values.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_int16_small.png" alt="Pixels of geotiff_int16_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>10x10 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `geotiff_int16_small` |
@@ -66,6 +71,7 @@ Confirm that signed 16-bit integer rasters open with the correct dtype and prese
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
+| `expected_shape` | `[10, 10]` |
 
 ## Notes
 

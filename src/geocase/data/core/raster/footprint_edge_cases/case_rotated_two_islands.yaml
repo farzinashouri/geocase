@@ -45,6 +45,7 @@ source:
 assertions:
   expect_loadable: true
   expect_crs: true
+  expected_shape: [8, 8]
 
 params:
   expected_footprint: rotated_two_islands_footprint.geojson

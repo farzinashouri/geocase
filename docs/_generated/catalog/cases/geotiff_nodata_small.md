@@ -13,6 +13,11 @@ description: "A GeoTIFF with an explicit NoData sentinel. Statistics computed ov
 
 A GeoTIFF with an explicit NoData sentinel. Statistics computed over the raw array rather than the valid pixels are silently wrong — a classic raster bug.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_nodata_small.png" alt="Pixels of geotiff_nodata_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>10x10 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `geotiff_nodata_small` |
@@ -66,6 +71,7 @@ Confirm that NoData pixels are correctly masked and excluded from statistical co
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
+| `expected_shape` | `[10, 10]` |
 
 ## Notes
 

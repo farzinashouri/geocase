@@ -13,6 +13,11 @@ description: "A copy of the small NoData GeoTIFF shifted exactly one pixel east 
 
 A copy of the small NoData GeoTIFF shifted exactly one pixel east while preserving CRS, resolution, band structure, and pixel values. Useful for testing whether raster alignment logic recognizes grids that are aligned on the same pixel lattice but have different extents.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_nodata_small_shifted.png" alt="Pixels of geotiff_nodata_small_shifted, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>10x10 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `geotiff_nodata_small_shifted` |
@@ -66,6 +71,7 @@ Expose alignment helpers that require identical extents instead of recognizing r
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
+| `expected_shape` | `[10, 10]` |
 
 ## Notes
 

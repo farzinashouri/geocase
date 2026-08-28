@@ -26,6 +26,7 @@ Most spatial tests use overly simple geometries or ad hoc local files. GeoCase p
 
 ## Start here
 
+- **[Browse all 135 cases](_generated/catalog/index.md)** — the case catalog, filterable by category, risk type, and format
 - New users: [`getting-started.md`](getting-started.md)
 - Testing a real function: [`testing-your-function-with-geocase.md`](testing-your-function-with-geocase.md)
 - Finding cases by metadata: [`case-discovery.md`](case-discovery.md)
@@ -39,7 +40,7 @@ Each folder under `docs/` holds one kind of document:
 
 - User guides at the top level explain how to select cases, write tests, and use GeoCase day to day.
 - `docs/contributing/` — how to work on GeoCase: workflow, conventions, and maintainer practices.
-- `docs/plans/` — what is planned and in what order, including the [roadmap](plans/development-plan.md). Superseded plans stay in `docs/plans/archive/` as an implementation log.
+- `docs/plans/` — what is planned and in what order, including the [roadmap](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md). Superseded plans stay in `docs/plans/archive/` as an implementation log.
 - `docs/design/` — future-facing designs that are not part of the core workflow.
 - `docs/reference/` — descriptive maps of the project as it exists today, such as the [codebase summary](reference/codebase-summary.md).
 - `docs/_generated/` — pages built by scripts and gated in CI; never edit them by hand.

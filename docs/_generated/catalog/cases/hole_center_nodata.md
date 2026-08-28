@@ -13,6 +13,11 @@ description: "A raster whose valid pixels ring a central NoData void. Footprint 
 
 A raster whose valid pixels ring a central NoData void. Footprint extraction that ignores NoData returns a solid polygon covering the hole.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/hole_center_nodata.png" alt="Pixels of hole_center_nodata, a 12x12 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>12x12 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `hole_center_nodata` |
@@ -63,6 +68,7 @@ Ensure footprint generation handles interior NoData correctly and stays close to
 | `expect_loadable` | yes |
 | `expect_crs` | yes |
 | `expect_nodata` | yes |
+| `expected_shape` | `[12, 12]` |
 
 ## Notes
 

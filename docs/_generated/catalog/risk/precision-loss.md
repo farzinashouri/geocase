@@ -20,6 +20,11 @@ pip install "geocase[all]"
 [View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 <div class="gc-grid">
+<a class="gc-card" href="../../cases/geotiff_float64_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_float64_small.png" alt="Pixels of geotiff_float64_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Float64 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
 <a class="gc-card" href="../../cases/precision_loss_geojson_roundtrip/">
 <svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of precision_loss_geojson_roundtrip, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of precision_loss_geojson_roundtrip, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="110" cy="20.77" r="3" fill="var(--gc-diagram-accent)"/><circle cx="10" cy="30.73" r="3" fill="var(--gc-diagram-accent)"/><circle cx="102.36" cy="59.23" r="3" fill="var(--gc-diagram-accent)"/></svg>
 <span class="gc-card-title">GeoJSON Precision Loss Roundtrip</span>

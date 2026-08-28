@@ -19,6 +19,29 @@ pip install "geocase[all]"
 
 [View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
+<div class="gc-grid">
+<a class="gc-card" href="../../cases/geotiff_float64_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_float64_small.png" alt="Pixels of geotiff_float64_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Float64 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_int16_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_int16_small.png" alt="Pixels of geotiff_int16_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Int16 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_int32_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_int32_small.png" alt="Pixels of geotiff_int32_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Int32 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/geotiff_int8_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_int8_small.png" alt="Pixels of geotiff_int8_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Int8 Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+</div>
+
 | Case | Category | Format | Geometry |
 |---|---|---|---|
 | [GeoTIFF Float64 Small](../cases/geotiff_float64_small.md) | raster | GeoTIFF | -- |

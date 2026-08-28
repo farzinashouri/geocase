@@ -13,6 +13,11 @@ description: "A three-band GeoTIFF with NoData in every band. Exercises band-ord
 
 A three-band GeoTIFF with NoData in every band. Exercises band-order preservation and per-band NoData handling on multiband raster reads.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_multiband_small.png" alt="Pixels of geotiff_multiband_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>10x10 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `geotiff_multiband_small` |
@@ -66,6 +71,7 @@ Confirm that GeoCase can open a small multi-band raster, preserve its declared b
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
+| `expected_shape` | `[10, 10]` |
 
 ## Notes
 

@@ -13,7 +13,9 @@ GeoCase is built around a simple workflow:
 3. write a normal `pytest` test,
 4. let GeoCase provide realistic geospatial inputs.
 
-If you want to understand the broader roadmap, see [`docs/plans/development-plan.md`](plans/development-plan.md).
+To see what ships in the box, [browse all 135 cases](_generated/catalog/index.md).
+
+If you want to understand the broader roadmap, see [`docs/plans/development-plan.md`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md).
 
 ---
 
@@ -210,5 +212,5 @@ Deferred to v1.1, by decision rather than omission:
 - Rotated/skewed affine transforms and southern-hemisphere UTM coverage
 - A command-line interface
 
-See [`docs/plans/development-plan.md`](plans/development-plan.md) for the
+See [`docs/plans/development-plan.md`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md) for the
 current roadmap.

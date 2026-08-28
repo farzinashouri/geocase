@@ -71,6 +71,7 @@ Core data flow — keep this mental model:
 - mypy strictness is per-module: `geocase.catalog.*` and `geocase.api.*` are strict; the rest ratchets in v1.1. `tests/` is not typechecked.
 - Adding a case: see [docs/adding-a-case.md](docs/adding-a-case.md) — metadata-first, then `build_case_index.py`, then validate.
 - Plans and roadmap live in [docs/plans/](docs/plans/); `development-plan.md` is authoritative on scope.
+- **`docs/plans/`, `docs/geocase_validate/`, and `docs/evidence/` are not published.** They are excluded from the site via `exclude_docs` in `mkdocs.yml`; a published page must link to them by GitHub URL, never a relative path, or `mkdocs build --strict` fails.
 
 ## Working rules (non-negotiable)
 

@@ -20,6 +20,11 @@ pip install "geocase[all]"
 [View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 <div class="gc-grid">
+<a class="gc-card" href="../../cases/geotiff_multiband_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_multiband_small.png" alt="Pixels of geotiff_multiband_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Multi-Band Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
 <a class="gc-card" href="../../cases/multispectral_s2_like_small/">
 <img class="gc-diagram gc-preview" src="../../previews/multispectral_s2_like_small.png" alt="Pixels of multispectral_s2_like_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
 <span class="gc-card-title">Multispectral Sentinel-2-like Small</span>

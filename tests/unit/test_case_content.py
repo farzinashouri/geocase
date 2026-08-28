@@ -435,3 +435,26 @@ def test_missing_primary_file_is_reported_not_raised(tmp_path):
 
     assert len(errors) == 1
     assert "absent.tif" in errors[0]
+
+
+# --- shape coverage across the bundled raster catalog ----------------------
+
+
+def test_every_bundled_raster_case_declares_expected_shape():
+    """A bundled raster whose pixels we ship should say what shape they are.
+
+    ``expected_shape`` is also the selector that earns a case a pixel preview
+    (see ``scripts/catalog_raster.preview_cases``), so an undeclared shape
+    costs the catalog page its preview as well as the content check.
+    """
+    from geocase.catalog.registry import get_registry
+
+    missing = sorted(
+        case.id
+        for case in get_registry().list_cases()
+        if str(getattr(case.category, "value", case.category)) == "raster"
+        and str(getattr(case.storage_class, "value", case.storage_class)) == "bundled"
+        and (case.assertions is None or case.assertions.expected_shape is None)
+    )
+
+    assert missing == [], f"bundled raster cases with no expected_shape: {missing}"

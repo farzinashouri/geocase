@@ -44,6 +44,7 @@ source:
 assertions:
   expect_loadable: true
   expect_crs: true
+  expected_shape: [14, 14]
 
 params:
   expected_footprint: thin_corridor_shape_footprint.geojson

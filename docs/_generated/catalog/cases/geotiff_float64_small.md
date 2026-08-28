@@ -13,6 +13,11 @@ description: "A small single-band GeoTIFF stored as 64-bit floating-point values
 
 A small single-band GeoTIFF stored as 64-bit floating-point values. Tests that raster loaders and downstream code preserve high-precision floating dtype semantics rather than narrowing to `float32` implicitly.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_float64_small.png" alt="Pixels of geotiff_float64_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>10x10 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `geotiff_float64_small` |
@@ -66,6 +71,7 @@ Confirm that 64-bit floating-point rasters open with the correct dtype and prese
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
+| `expected_shape` | `[10, 10]` |
 
 ## Notes
 
