@@ -14,8 +14,8 @@ description: "An RGB GeoTIFF whose bounds straddle the antimeridian at +180 long
 An RGB GeoTIFF whose bounds straddle the antimeridian at +180 longitude. Exercises bounds normalization and antimeridian splitting on raster inputs.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 3 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 3 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="37.0" y="17.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="25.0" y="29.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="39.5" y1="29.0" x2="39.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="54.0" y1="29.0" x2="54.0" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="68.5" y1="29.0" x2="68.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="40.3" x2="83.0" y2="40.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="51.7" x2="83.0" y2="51.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg>
-<figcaption>Schematic: 3 bands, 16x16 px, uint8. Drawn from metadata, not from the pixels.</figcaption>
+<img class="gc-diagram gc-preview" src="../../previews/optical_dateline_small.png" alt="Pixels of optical_dateline_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>3 bands, 16x16 px, uint8. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
 </figure>
 
 | Property | Value |

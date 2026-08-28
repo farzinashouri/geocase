@@ -29,7 +29,7 @@ Vector case pages render the case's **actual geometry**, projected to fit a fixe
 
     **Vector previews are real coordinates, but scale is not comparable.** Each is fitted to the viewport independently, so a continent-sized polygon and a metre-sized one can look identical. A handful of cases are deliberately malformed and cannot be loaded at all; those fall back to a generic shape for their geometry type and say so in the caption.
 
-    **Raster and NetCDF diagrams are never pictures of the pixels.** A raster grid shows *that* there are pixels, not their values. Load the case to see the actual data.
+    **Raster previews are real pixels, but contrast-stretched.** Brightness is relative to each case's own range, so it carries no absolute value; NoData is painted magenta, a colour no valid pixel can take. A raster that declares no pixel shape gets a band-structure schematic instead, which shows *that* there are pixels and not their values. NetCDF cases have no diagram at all. Load the case to see the actual data.
 
 ## Browse by risk type
 

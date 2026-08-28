@@ -7,7 +7,7 @@ description: "Filter and sort all 135 GeoCase test cases in one table, with a pr
 
 # Compare All Cases
 
-Every one of the 135 bundled cases in one table, sorted by category and geometry type so related shapes sit together. Vector previews are drawn from each case's real coordinates; raster previews are schematics of band structure, and NetCDF cases have no drawable diagram.
+Every one of the 135 bundled cases in one table, sorted by category and geometry type so related shapes sit together. Vector previews are drawn from each case's real coordinates and raster previews from its real pixels, with NoData in magenta; a raster that declares no pixel shape shows a band-structure schematic instead, and NetCDF cases have no drawable diagram.
 
 ## Use GeoCase in your tests
 
@@ -41,7 +41,7 @@ pip install "geocase[all]"
 <tbody>
 <tr data-case-id="latlon_small" data-category="netcdf" data-format="NetCDF" data-geometry="--" data-search="latlon_small lat/lon small netcdf coordinate_order dimension_mismatch nodata_ignored">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/latlon_small/">Lat/Lon Small NetCDF</a><br><code class="gc-compare-id">latlon_small</code></td>
+<td><a class="gc-compare-link" href="../cases/latlon_small/">Lat/Lon Small NetCDF</a><br><code class="gc-compare-id">latlon_small</code></td>
 <td>netcdf</td>
 <td>NetCDF</td>
 <td>--</td>
@@ -50,7 +50,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="all_valid_rectangular" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="all_valid_rectangular all valid rectangular raster footprint_generation_error">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/all_valid_rectangular/">All Valid Rectangular Raster</a><br><code class="gc-compare-id">all_valid_rectangular</code></td>
+<td><a class="gc-compare-link" href="../cases/all_valid_rectangular/">All Valid Rectangular Raster</a><br><code class="gc-compare-id">all_valid_rectangular</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -58,8 +58,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">footprint_generation_error</td>
 </tr>
 <tr data-case-id="cog_multispectral_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="cog_multispectral_small cog multispectral small band_loss nodata_ignored not_tiled overviews_missing">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 4 bands, 64x64" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 4 bands, 64x64</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="40.0" y="14.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="34.0" y="20.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="28.0" y="26.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="22.0" y="32.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="36.5" y1="32.0" x2="36.5" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="51.0" y1="32.0" x2="51.0" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="65.5" y1="32.0" x2="65.5" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="22.0" y1="43.3" x2="80.0" y2="43.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="22.0" y1="54.7" x2="80.0" y2="54.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="23.0" y="55.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg></td>
-<td><a class="gc-compare-link" href="cases/cog_multispectral_small/">COG Multispectral Small</a><br><code class="gc-compare-id">cog_multispectral_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/cog_multispectral_small.png" alt="Pixels of cog_multispectral_small, a 64x64 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/cog_multispectral_small/">COG Multispectral Small</a><br><code class="gc-compare-id">cog_multispectral_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -67,8 +67,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">band_loss, nodata_ignored, not_tiled, overviews_missing</td>
 </tr>
 <tr data-case-id="cog_singleband_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="cog_singleband_small cog single-band small dtype_drift not_tiled overviews_missing">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 64x64" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 64x64</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg></td>
-<td><a class="gc-compare-link" href="cases/cog_singleband_small/">COG Single-Band Small</a><br><code class="gc-compare-id">cog_singleband_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/cog_singleband_small.png" alt="Pixels of cog_singleband_small, a 64x64 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/cog_singleband_small/">COG Single-Band Small</a><br><code class="gc-compare-id">cog_singleband_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -76,8 +76,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">dtype_drift, not_tiled, overviews_missing</td>
 </tr>
 <tr data-case-id="dem_nan_nodata_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="dem_nan_nodata_small dem nan nodata small nan_mishandled nodata_ignored">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="32.0" y="46.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg></td>
-<td><a class="gc-compare-link" href="cases/dem_nan_nodata_small/">DEM NaN NoData Small</a><br><code class="gc-compare-id">dem_nan_nodata_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/dem_nan_nodata_small.png" alt="Pixels of dem_nan_nodata_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/dem_nan_nodata_small/">DEM NaN NoData Small</a><br><code class="gc-compare-id">dem_nan_nodata_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -85,8 +85,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">nan_mishandled, nodata_ignored</td>
 </tr>
 <tr data-case-id="dem_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="dem_small dem small dtype_drift nan_mishandled nodata_ignored">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="32.0" y="46.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg></td>
-<td><a class="gc-compare-link" href="cases/dem_small/">DEM Small</a><br><code class="gc-compare-id">dem_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/dem_small.png" alt="Pixels of dem_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/dem_small/">DEM Small</a><br><code class="gc-compare-id">dem_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -94,8 +94,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">dtype_drift, nan_mishandled, nodata_ignored</td>
 </tr>
 <tr data-case-id="geotiff_external_overviews_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_external_overviews_small geotiff external overviews small overviews_missing sidecar_dropped">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 64x64" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 64x64</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg></td>
-<td><a class="gc-compare-link" href="cases/geotiff_external_overviews_small/">GeoTIFF External Overviews Small</a><br><code class="gc-compare-id">geotiff_external_overviews_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/geotiff_external_overviews_small.png" alt="Pixels of geotiff_external_overviews_small, a 64x64 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/geotiff_external_overviews_small/">GeoTIFF External Overviews Small</a><br><code class="gc-compare-id">geotiff_external_overviews_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -104,7 +104,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="geotiff_float64_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_float64_small geotiff float64 small dtype_coercion nodata_ignored precision_loss">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/geotiff_float64_small/">GeoTIFF Float64 Small</a><br><code class="gc-compare-id">geotiff_float64_small</code></td>
+<td><a class="gc-compare-link" href="../cases/geotiff_float64_small/">GeoTIFF Float64 Small</a><br><code class="gc-compare-id">geotiff_float64_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -113,7 +113,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="geotiff_int16_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_int16_small geotiff int16 small dtype_coercion nodata_ignored range_assumption">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/geotiff_int16_small/">GeoTIFF Int16 Small</a><br><code class="gc-compare-id">geotiff_int16_small</code></td>
+<td><a class="gc-compare-link" href="../cases/geotiff_int16_small/">GeoTIFF Int16 Small</a><br><code class="gc-compare-id">geotiff_int16_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -122,7 +122,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="geotiff_int32_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_int32_small geotiff int32 small dtype_coercion nodata_ignored range_truncation">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/geotiff_int32_small/">GeoTIFF Int32 Small</a><br><code class="gc-compare-id">geotiff_int32_small</code></td>
+<td><a class="gc-compare-link" href="../cases/geotiff_int32_small/">GeoTIFF Int32 Small</a><br><code class="gc-compare-id">geotiff_int32_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -131,7 +131,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="geotiff_int8_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_int8_small geotiff int8 small dtype_coercion nodata_ignored overflow_assumption">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/geotiff_int8_small/">GeoTIFF Int8 Small</a><br><code class="gc-compare-id">geotiff_int8_small</code></td>
+<td><a class="gc-compare-link" href="../cases/geotiff_int8_small/">GeoTIFF Int8 Small</a><br><code class="gc-compare-id">geotiff_int8_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -140,7 +140,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="geotiff_multiband_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_multiband_small geotiff multi-band small band_loss incorrect_band_order nodata_ignored">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/geotiff_multiband_small/">GeoTIFF Multi-Band Small</a><br><code class="gc-compare-id">geotiff_multiband_small</code></td>
+<td><a class="gc-compare-link" href="../cases/geotiff_multiband_small/">GeoTIFF Multi-Band Small</a><br><code class="gc-compare-id">geotiff_multiband_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -149,7 +149,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="geotiff_nodata_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_nodata_small geotiff nodata small incorrect_statistics nan_propagation nodata_ignored">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/geotiff_nodata_small/">GeoTIFF NoData Small</a><br><code class="gc-compare-id">geotiff_nodata_small</code></td>
+<td><a class="gc-compare-link" href="../cases/geotiff_nodata_small/">GeoTIFF NoData Small</a><br><code class="gc-compare-id">geotiff_nodata_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -158,7 +158,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="geotiff_nodata_small_shifted" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_nodata_small_shifted geotiff nodata small shifted alignment_too_strict pixel_lattice_misclassification shifted_origin">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/geotiff_nodata_small_shifted/">GeoTIFF NoData Small Shifted</a><br><code class="gc-compare-id">geotiff_nodata_small_shifted</code></td>
+<td><a class="gc-compare-link" href="../cases/geotiff_nodata_small_shifted/">GeoTIFF NoData Small Shifted</a><br><code class="gc-compare-id">geotiff_nodata_small_shifted</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -167,7 +167,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="geotiff_utm_boundary" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="geotiff_utm_boundary geotiff utm boundary pixel_shift reprojection_error zone_boundary_artifact">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/geotiff_utm_boundary/">GeoTIFF UTM Boundary</a><br><code class="gc-compare-id">geotiff_utm_boundary</code></td>
+<td><a class="gc-compare-link" href="../cases/geotiff_utm_boundary/">GeoTIFF UTM Boundary</a><br><code class="gc-compare-id">geotiff_utm_boundary</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -176,7 +176,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="hole_center_nodata" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="hole_center_nodata hole center nodata raster footprint_generation_error nodata_ignored">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/hole_center_nodata/">Hole Center NoData Raster</a><br><code class="gc-compare-id">hole_center_nodata</code></td>
+<td><a class="gc-compare-link" href="../cases/hole_center_nodata/">Hole Center NoData Raster</a><br><code class="gc-compare-id">hole_center_nodata</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -184,8 +184,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">footprint_generation_error, nodata_ignored</td>
 </tr>
 <tr data-case-id="landcover_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="landcover_small land cover small category_misread colormap_dropped">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg></td>
-<td><a class="gc-compare-link" href="cases/landcover_small/">Land Cover Small</a><br><code class="gc-compare-id">landcover_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/landcover_small.png" alt="Pixels of landcover_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/landcover_small/">Land Cover Small</a><br><code class="gc-compare-id">landcover_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -193,8 +193,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">category_misread, colormap_dropped</td>
 </tr>
 <tr data-case-id="multispectral_mixed_resolution_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="multispectral_mixed_resolution_small multispectral mixed resolution small band_loss resampling_assumptions resolution_mismatch">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 3 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 3 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="37.0" y="17.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="25.0" y="29.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="39.5" y1="29.0" x2="39.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="54.0" y1="29.0" x2="54.0" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="68.5" y1="29.0" x2="68.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="40.3" x2="83.0" y2="40.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="51.7" x2="83.0" y2="51.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="26.0" y="52.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multispectral_mixed_resolution_small/">Multispectral Mixed Resolution Small</a><br><code class="gc-compare-id">multispectral_mixed_resolution_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/multispectral_mixed_resolution_small.png" alt="Pixels of multispectral_mixed_resolution_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/multispectral_mixed_resolution_small/">Multispectral Mixed Resolution Small</a><br><code class="gc-compare-id">multispectral_mixed_resolution_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -202,8 +202,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">band_loss, resampling_assumptions, resolution_mismatch</td>
 </tr>
 <tr data-case-id="multispectral_s2_like_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="multispectral_s2_like_small multispectral sentinel-2-like small band_loss dtype_drift incorrect_band_order nodata_ignored">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 4 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 4 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="40.0" y="14.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="34.0" y="20.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="28.0" y="26.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="22.0" y="32.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="36.5" y1="32.0" x2="36.5" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="51.0" y1="32.0" x2="51.0" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="65.5" y1="32.0" x2="65.5" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="22.0" y1="43.3" x2="80.0" y2="43.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="22.0" y1="54.7" x2="80.0" y2="54.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="23.0" y="55.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multispectral_s2_like_small/">Multispectral Sentinel-2-like Small</a><br><code class="gc-compare-id">multispectral_s2_like_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/multispectral_s2_like_small.png" alt="Pixels of multispectral_s2_like_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/multispectral_s2_like_small/">Multispectral Sentinel-2-like Small</a><br><code class="gc-compare-id">multispectral_s2_like_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -211,8 +211,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">band_loss, dtype_drift, incorrect_band_order, nodata_ignored</td>
 </tr>
 <tr data-case-id="ndvi_scaled_int16_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="ndvi_scaled_int16_small ndvi scaled int16 small dtype_drift nodata_ignored scale_factor_ignored">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="32.0" y="46.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg></td>
-<td><a class="gc-compare-link" href="cases/ndvi_scaled_int16_small/">NDVI Scaled Int16 Small</a><br><code class="gc-compare-id">ndvi_scaled_int16_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/ndvi_scaled_int16_small.png" alt="Pixels of ndvi_scaled_int16_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/ndvi_scaled_int16_small/">NDVI Scaled Int16 Small</a><br><code class="gc-compare-id">ndvi_scaled_int16_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -220,8 +220,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">dtype_drift, nodata_ignored, scale_factor_ignored</td>
 </tr>
 <tr data-case-id="ndvi_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="ndvi_small ndvi small dtype_drift value_range_violation">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg></td>
-<td><a class="gc-compare-link" href="cases/ndvi_small/">NDVI Small</a><br><code class="gc-compare-id">ndvi_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/ndvi_small.png" alt="Pixels of ndvi_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/ndvi_small/">NDVI Small</a><br><code class="gc-compare-id">ndvi_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -230,7 +230,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="nonsquare_diagonal_sparse" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="nonsquare_diagonal_sparse nonsquare diagonal sparse raster footprint_generation_error pixel_shape_assumption">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/nonsquare_diagonal_sparse/">Nonsquare Diagonal Sparse Raster</a><br><code class="gc-compare-id">nonsquare_diagonal_sparse</code></td>
+<td><a class="gc-compare-link" href="../cases/nonsquare_diagonal_sparse/">Nonsquare Diagonal Sparse Raster</a><br><code class="gc-compare-id">nonsquare_diagonal_sparse</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -238,8 +238,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">footprint_generation_error, pixel_shape_assumption</td>
 </tr>
 <tr data-case-id="optical_dateline_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="optical_dateline_small optical dateline small antimeridian_split bounds_normalization">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 3 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 3 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="37.0" y="17.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="25.0" y="29.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="39.5" y1="29.0" x2="39.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="54.0" y1="29.0" x2="54.0" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="68.5" y1="29.0" x2="68.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="40.3" x2="83.0" y2="40.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="51.7" x2="83.0" y2="51.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg></td>
-<td><a class="gc-compare-link" href="cases/optical_dateline_small/">Optical Dateline Small</a><br><code class="gc-compare-id">optical_dateline_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/optical_dateline_small.png" alt="Pixels of optical_dateline_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/optical_dateline_small/">Optical Dateline Small</a><br><code class="gc-compare-id">optical_dateline_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -247,8 +247,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">antimeridian_split, bounds_normalization</td>
 </tr>
 <tr data-case-id="optical_equator_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="optical_equator_small optical equator small crs_mishandled">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 3 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 3 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="37.0" y="17.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="25.0" y="29.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="39.5" y1="29.0" x2="39.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="54.0" y1="29.0" x2="54.0" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="68.5" y1="29.0" x2="68.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="40.3" x2="83.0" y2="40.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="51.7" x2="83.0" y2="51.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg></td>
-<td><a class="gc-compare-link" href="cases/optical_equator_small/">Optical Equator Small</a><br><code class="gc-compare-id">optical_equator_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/optical_equator_small.png" alt="Pixels of optical_equator_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/optical_equator_small/">Optical Equator Small</a><br><code class="gc-compare-id">optical_equator_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -256,8 +256,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">crs_mishandled</td>
 </tr>
 <tr data-case-id="optical_polar_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="optical_polar_small optical polar small crs_mishandled projection_assumptions">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 3 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 3 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="37.0" y="17.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="25.0" y="29.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="39.5" y1="29.0" x2="39.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="54.0" y1="29.0" x2="54.0" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="68.5" y1="29.0" x2="68.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="40.3" x2="83.0" y2="40.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="51.7" x2="83.0" y2="51.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg></td>
-<td><a class="gc-compare-link" href="cases/optical_polar_small/">Optical Polar Small</a><br><code class="gc-compare-id">optical_polar_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/optical_polar_small.png" alt="Pixels of optical_polar_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/optical_polar_small/">Optical Polar Small</a><br><code class="gc-compare-id">optical_polar_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -265,8 +265,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">crs_mishandled, projection_assumptions</td>
 </tr>
 <tr data-case-id="optical_rgb_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="optical_rgb_small optical rgb small band_loss dtype_drift incorrect_band_order">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 3 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 3 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="37.0" y="17.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="25.0" y="29.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="39.5" y1="29.0" x2="39.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="54.0" y1="29.0" x2="54.0" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="68.5" y1="29.0" x2="68.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="40.3" x2="83.0" y2="40.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="51.7" x2="83.0" y2="51.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg></td>
-<td><a class="gc-compare-link" href="cases/optical_rgb_small/">Optical RGB Small</a><br><code class="gc-compare-id">optical_rgb_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/optical_rgb_small.png" alt="Pixels of optical_rgb_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/optical_rgb_small/">Optical RGB Small</a><br><code class="gc-compare-id">optical_rgb_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -275,7 +275,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="rotated_two_islands" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="rotated_two_islands rotated two islands raster affine_transform_bug footprint_generation_error">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/rotated_two_islands/">Rotated Two Islands Raster</a><br><code class="gc-compare-id">rotated_two_islands</code></td>
+<td><a class="gc-compare-link" href="../cases/rotated_two_islands/">Rotated Two Islands Raster</a><br><code class="gc-compare-id">rotated_two_islands</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -283,8 +283,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">affine_transform_bug, footprint_generation_error</td>
 </tr>
 <tr data-case-id="sar_dualpol_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="sar_dualpol_small sar dual-pol small band_loss dtype_drift incorrect_band_order">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 2 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 2 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="34.0" y="20.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="28.0" y="26.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="42.5" y1="26.0" x2="42.5" y2="60.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="57.0" y1="26.0" x2="57.0" y2="60.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="71.5" y1="26.0" x2="71.5" y2="60.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="28.0" y1="37.3" x2="86.0" y2="37.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="28.0" y1="48.7" x2="86.0" y2="48.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="29.0" y="49.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg></td>
-<td><a class="gc-compare-link" href="cases/sar_dualpol_small/">SAR Dual-Pol Small</a><br><code class="gc-compare-id">sar_dualpol_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/sar_dualpol_small.png" alt="Pixels of sar_dualpol_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/sar_dualpol_small/">SAR Dual-Pol Small</a><br><code class="gc-compare-id">sar_dualpol_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -292,8 +292,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">band_loss, dtype_drift, incorrect_band_order</td>
 </tr>
 <tr data-case-id="sar_vv_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="sar_vv_small sar vv small band_loss dtype_drift">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="32.0" y="46.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg></td>
-<td><a class="gc-compare-link" href="cases/sar_vv_small/">SAR VV Small</a><br><code class="gc-compare-id">sar_vv_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/sar_vv_small.png" alt="Pixels of sar_vv_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/sar_vv_small/">SAR VV Small</a><br><code class="gc-compare-id">sar_vv_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -302,7 +302,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="thin_corridor_shape" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="thin_corridor_shape thin corridor shape raster footprint_generation_error geometry_simplification_loss">
 <td class="gc-compare-preview">&mdash;</td>
-<td><a class="gc-compare-link" href="cases/thin_corridor_shape/">Thin Corridor Shape Raster</a><br><code class="gc-compare-id">thin_corridor_shape</code></td>
+<td><a class="gc-compare-link" href="../cases/thin_corridor_shape/">Thin Corridor Shape Raster</a><br><code class="gc-compare-id">thin_corridor_shape</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -310,8 +310,8 @@ pip install "geocase[all]"
 <td class="gc-compare-risks">footprint_generation_error, geometry_simplification_loss</td>
 </tr>
 <tr data-case-id="water_mask_small" data-category="raster" data-format="GeoTIFF" data-geometry="--" data-search="water_mask_small water mask small dtype_drift mask_misread nodata_ignored">
-<td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="32.0" y="46.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg></td>
-<td><a class="gc-compare-link" href="cases/water_mask_small/">Water Mask Small</a><br><code class="gc-compare-id">water_mask_small</code></td>
+<td class="gc-compare-preview"><img class="gc-diagram gc-preview" src="../previews/water_mask_small.png" alt="Pixels of water_mask_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async"></td>
+<td><a class="gc-compare-link" href="../cases/water_mask_small/">Water Mask Small</a><br><code class="gc-compare-id">water_mask_small</code></td>
 <td>raster</td>
 <td>GeoTIFF</td>
 <td>--</td>
@@ -320,7 +320,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="geometrycollection_mixed_valid" data-category="vector" data-format="GeoJSON" data-geometry="GeometryCollection" data-search="geometrycollection_mixed_valid geometrycollection mixed valid mixed_geometry_output">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="GeometryCollection geometry of geometrycollection_mixed_valid, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>GeometryCollection geometry of geometrycollection_mixed_valid, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="70" r="3" fill="var(--gc-diagram-accent)"/><path d="M 10 70 L 60 50 L 110 60" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 30 50 L 70 50 L 70 10 L 30 10 L 30 50 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/geometrycollection_mixed_valid/">GeometryCollection Mixed Valid</a><br><code class="gc-compare-id">geometrycollection_mixed_valid</code></td>
+<td><a class="gc-compare-link" href="../cases/geometrycollection_mixed_valid/">GeometryCollection Mixed Valid</a><br><code class="gc-compare-id">geometrycollection_mixed_valid</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>GeometryCollection</td>
@@ -329,7 +329,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="antimeridian_crossing_line" data-category="vector" data-format="GeoJSON" data-geometry="LineString" data-search="antimeridian_crossing_line antimeridian crossing linestring antimeridian_wrapping distance_calculation_error incorrect_rendering">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of antimeridian_crossing_line, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of antimeridian_crossing_line, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 110 40.14 L 10 40.14" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/antimeridian_crossing_line/">Antimeridian Crossing LineString</a><br><code class="gc-compare-id">antimeridian_crossing_line</code></td>
+<td><a class="gc-compare-link" href="../cases/antimeridian_crossing_line/">Antimeridian Crossing LineString</a><br><code class="gc-compare-id">antimeridian_crossing_line</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>LineString</td>
@@ -338,7 +338,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="degenerate_but_parseable_line" data-category="vector" data-format="GeoJSON" data-geometry="LineString" data-search="degenerate_but_parseable_line degenerate but parseable line degenerate_but_parseable invalid_measurement zero_length_geometry">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of degenerate_but_parseable_line, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of degenerate_but_parseable_line, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 30 70" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/degenerate_but_parseable_line/">Degenerate but Parseable Line</a><br><code class="gc-compare-id">degenerate_but_parseable_line</code></td>
+<td><a class="gc-compare-link" href="../cases/degenerate_but_parseable_line/">Degenerate but Parseable Line</a><br><code class="gc-compare-id">degenerate_but_parseable_line</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>LineString</td>
@@ -347,7 +347,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="equator_crossing_line" data-category="vector" data-format="GeoJSON" data-geometry="LineString" data-search="equator_crossing_line equator crossing line coordinate_sign_assumption equatorial_boundary_case">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of equator_crossing_line, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of equator_crossing_line, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 41.67 L 60 40 L 110 38.33" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/equator_crossing_line/">Equator Crossing Line</a><br><code class="gc-compare-id">equator_crossing_line</code></td>
+<td><a class="gc-compare-link" href="../cases/equator_crossing_line/">Equator Crossing Line</a><br><code class="gc-compare-id">equator_crossing_line</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>LineString</td>
@@ -356,7 +356,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="linestring_csv_wkt_baseline" data-category="vector" data-format="CSV_WKT" data-geometry="LineString" data-search="linestring_csv_wkt_baseline linestring csv_wkt baseline format_comparison text_geometry_parsing">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of linestring_csv_wkt_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of linestring_csv_wkt_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/linestring_csv_wkt_baseline/">LineString CSV_WKT Baseline</a><br><code class="gc-compare-id">linestring_csv_wkt_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/linestring_csv_wkt_baseline/">LineString CSV_WKT Baseline</a><br><code class="gc-compare-id">linestring_csv_wkt_baseline</code></td>
 <td>vector</td>
 <td>CSV_WKT</td>
 <td>LineString</td>
@@ -365,7 +365,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="linestring_flatgeobuf_baseline" data-category="vector" data-format="FlatGeobuf" data-geometry="LineString" data-search="linestring_flatgeobuf_baseline linestring flatgeobuf baseline driver_behavior format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of linestring_flatgeobuf_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of linestring_flatgeobuf_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/linestring_flatgeobuf_baseline/">LineString FlatGeobuf Baseline</a><br><code class="gc-compare-id">linestring_flatgeobuf_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/linestring_flatgeobuf_baseline/">LineString FlatGeobuf Baseline</a><br><code class="gc-compare-id">linestring_flatgeobuf_baseline</code></td>
 <td>vector</td>
 <td>FlatGeobuf</td>
 <td>LineString</td>
@@ -374,7 +374,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="linestring_geoarrow_baseline" data-category="vector" data-format="GeoArrow" data-geometry="LineString" data-search="linestring_geoarrow_baseline linestring geoarrow baseline arrow_ipc_behavior format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of linestring_geoarrow_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of linestring_geoarrow_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/linestring_geoarrow_baseline/">LineString GeoArrow Baseline</a><br><code class="gc-compare-id">linestring_geoarrow_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/linestring_geoarrow_baseline/">LineString GeoArrow Baseline</a><br><code class="gc-compare-id">linestring_geoarrow_baseline</code></td>
 <td>vector</td>
 <td>GeoArrow</td>
 <td>LineString</td>
@@ -383,7 +383,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="linestring_geopackage_baseline" data-category="vector" data-format="GPKG" data-geometry="LineString" data-search="linestring_geopackage_baseline linestring geopackage baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of linestring_geopackage_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of linestring_geopackage_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/linestring_geopackage_baseline/">LineString GeoPackage Baseline</a><br><code class="gc-compare-id">linestring_geopackage_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/linestring_geopackage_baseline/">LineString GeoPackage Baseline</a><br><code class="gc-compare-id">linestring_geopackage_baseline</code></td>
 <td>vector</td>
 <td>GPKG</td>
 <td>LineString</td>
@@ -392,7 +392,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="linestring_gml_baseline" data-category="vector" data-format="GML" data-geometry="LineString" data-search="linestring_gml_baseline linestring gml baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of linestring_gml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of linestring_gml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/linestring_gml_baseline/">LineString GML Baseline</a><br><code class="gc-compare-id">linestring_gml_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/linestring_gml_baseline/">LineString GML Baseline</a><br><code class="gc-compare-id">linestring_gml_baseline</code></td>
 <td>vector</td>
 <td>GML</td>
 <td>LineString</td>
@@ -401,7 +401,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="linestring_kml_baseline" data-category="vector" data-format="KML" data-geometry="LineString" data-search="linestring_kml_baseline linestring kml baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of linestring_kml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of linestring_kml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/linestring_kml_baseline/">LineString KML Baseline</a><br><code class="gc-compare-id">linestring_kml_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/linestring_kml_baseline/">LineString KML Baseline</a><br><code class="gc-compare-id">linestring_kml_baseline</code></td>
 <td>vector</td>
 <td>KML</td>
 <td>LineString</td>
@@ -410,7 +410,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="linestring_shapefile_baseline" data-category="vector" data-format="Shapefile" data-geometry="LineString" data-search="linestring_shapefile_baseline linestring shapefile baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of linestring_shapefile_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of linestring_shapefile_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/linestring_shapefile_baseline/">LineString Shapefile Baseline</a><br><code class="gc-compare-id">linestring_shapefile_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/linestring_shapefile_baseline/">LineString Shapefile Baseline</a><br><code class="gc-compare-id">linestring_shapefile_baseline</code></td>
 <td>vector</td>
 <td>Shapefile</td>
 <td>LineString</td>
@@ -419,7 +419,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="linestring_sqlite_baseline" data-category="vector" data-format="SQLite" data-geometry="LineString" data-search="linestring_sqlite_baseline linestring sqlite baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of linestring_sqlite_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of linestring_sqlite_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/linestring_sqlite_baseline/">LineString SQLite Baseline</a><br><code class="gc-compare-id">linestring_sqlite_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/linestring_sqlite_baseline/">LineString SQLite Baseline</a><br><code class="gc-compare-id">linestring_sqlite_baseline</code></td>
 <td>vector</td>
 <td>SQLite</td>
 <td>LineString</td>
@@ -428,7 +428,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="linestring_wkb_baseline" data-category="vector" data-format="WKB" data-geometry="LineString" data-search="linestring_wkb_baseline linestring wkb baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of linestring_wkb_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of linestring_wkb_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/linestring_wkb_baseline/">LineString WKB Baseline</a><br><code class="gc-compare-id">linestring_wkb_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/linestring_wkb_baseline/">LineString WKB Baseline</a><br><code class="gc-compare-id">linestring_wkb_baseline</code></td>
 <td>vector</td>
 <td>WKB</td>
 <td>LineString</td>
@@ -437,7 +437,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="linestring_wkt_baseline" data-category="vector" data-format="WKT" data-geometry="LineString" data-search="linestring_wkt_baseline linestring wkt baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of linestring_wkt_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of linestring_wkt_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/linestring_wkt_baseline/">LineString WKT Baseline</a><br><code class="gc-compare-id">linestring_wkt_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/linestring_wkt_baseline/">LineString WKT Baseline</a><br><code class="gc-compare-id">linestring_wkt_baseline</code></td>
 <td>vector</td>
 <td>WKT</td>
 <td>LineString</td>
@@ -446,7 +446,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="simple_valid_linestring" data-category="vector" data-format="GeoJSON" data-geometry="LineString" data-search="simple_valid_linestring simple valid linestring none">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of simple_valid_linestring, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of simple_valid_linestring, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/simple_valid_linestring/">Simple Valid LineString</a><br><code class="gc-compare-id">simple_valid_linestring</code></td>
+<td><a class="gc-compare-link" href="../cases/simple_valid_linestring/">Simple Valid LineString</a><br><code class="gc-compare-id">simple_valid_linestring</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>LineString</td>
@@ -455,7 +455,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multilinestring_csv_wkt_baseline" data-category="vector" data-format="CSV_WKT" data-geometry="MultiLineString" data-search="multilinestring_csv_wkt_baseline multilinestring csv wkt baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of multilinestring_csv_wkt_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of multilinestring_csv_wkt_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multilinestring_csv_wkt_baseline/">MultiLineString CSV WKT Baseline</a><br><code class="gc-compare-id">multilinestring_csv_wkt_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multilinestring_csv_wkt_baseline/">MultiLineString CSV WKT Baseline</a><br><code class="gc-compare-id">multilinestring_csv_wkt_baseline</code></td>
 <td>vector</td>
 <td>CSV_WKT</td>
 <td>MultiLineString</td>
@@ -464,7 +464,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multilinestring_flatgeobuf_baseline" data-category="vector" data-format="FlatGeobuf" data-geometry="MultiLineString" data-search="multilinestring_flatgeobuf_baseline multilinestring flatgeobuf baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of multilinestring_flatgeobuf_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of multilinestring_flatgeobuf_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multilinestring_flatgeobuf_baseline/">MultiLineString FlatGeobuf Baseline</a><br><code class="gc-compare-id">multilinestring_flatgeobuf_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multilinestring_flatgeobuf_baseline/">MultiLineString FlatGeobuf Baseline</a><br><code class="gc-compare-id">multilinestring_flatgeobuf_baseline</code></td>
 <td>vector</td>
 <td>FlatGeobuf</td>
 <td>MultiLineString</td>
@@ -473,7 +473,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multilinestring_geopackage_baseline" data-category="vector" data-format="GPKG" data-geometry="MultiLineString" data-search="multilinestring_geopackage_baseline multilinestring geopackage baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of multilinestring_geopackage_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of multilinestring_geopackage_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multilinestring_geopackage_baseline/">MultiLineString GeoPackage Baseline</a><br><code class="gc-compare-id">multilinestring_geopackage_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multilinestring_geopackage_baseline/">MultiLineString GeoPackage Baseline</a><br><code class="gc-compare-id">multilinestring_geopackage_baseline</code></td>
 <td>vector</td>
 <td>GPKG</td>
 <td>MultiLineString</td>
@@ -482,7 +482,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multilinestring_gml_baseline" data-category="vector" data-format="GML" data-geometry="MultiLineString" data-search="multilinestring_gml_baseline multilinestring gml baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of multilinestring_gml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of multilinestring_gml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multilinestring_gml_baseline/">MultiLineString GML Baseline</a><br><code class="gc-compare-id">multilinestring_gml_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multilinestring_gml_baseline/">MultiLineString GML Baseline</a><br><code class="gc-compare-id">multilinestring_gml_baseline</code></td>
 <td>vector</td>
 <td>GML</td>
 <td>MultiLineString</td>
@@ -491,7 +491,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multilinestring_kml_baseline" data-category="vector" data-format="KML" data-geometry="MultiLineString" data-search="multilinestring_kml_baseline multilinestring kml baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of multilinestring_kml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of multilinestring_kml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multilinestring_kml_baseline/">MultiLineString KML Baseline</a><br><code class="gc-compare-id">multilinestring_kml_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multilinestring_kml_baseline/">MultiLineString KML Baseline</a><br><code class="gc-compare-id">multilinestring_kml_baseline</code></td>
 <td>vector</td>
 <td>KML</td>
 <td>MultiLineString</td>
@@ -500,7 +500,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multilinestring_parquet_baseline" data-category="vector" data-format="Parquet" data-geometry="MultiLineString" data-search="multilinestring_parquet_baseline multilinestring parquet baseline columnar_storage_behavior format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of multilinestring_parquet_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of multilinestring_parquet_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multilinestring_parquet_baseline/">MultiLineString Parquet Baseline</a><br><code class="gc-compare-id">multilinestring_parquet_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multilinestring_parquet_baseline/">MultiLineString Parquet Baseline</a><br><code class="gc-compare-id">multilinestring_parquet_baseline</code></td>
 <td>vector</td>
 <td>Parquet</td>
 <td>MultiLineString</td>
@@ -509,7 +509,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multilinestring_shapefile_baseline" data-category="vector" data-format="Shapefile" data-geometry="MultiLineString" data-search="multilinestring_shapefile_baseline multilinestring shapefile baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of multilinestring_shapefile_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of multilinestring_shapefile_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multilinestring_shapefile_baseline/">MultiLineString Shapefile Baseline</a><br><code class="gc-compare-id">multilinestring_shapefile_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multilinestring_shapefile_baseline/">MultiLineString Shapefile Baseline</a><br><code class="gc-compare-id">multilinestring_shapefile_baseline</code></td>
 <td>vector</td>
 <td>Shapefile</td>
 <td>MultiLineString</td>
@@ -518,7 +518,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multilinestring_sqlite_baseline" data-category="vector" data-format="SQLite" data-geometry="MultiLineString" data-search="multilinestring_sqlite_baseline multilinestring sqlite baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of multilinestring_sqlite_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of multilinestring_sqlite_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multilinestring_sqlite_baseline/">MultiLineString SQLite Baseline</a><br><code class="gc-compare-id">multilinestring_sqlite_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multilinestring_sqlite_baseline/">MultiLineString SQLite Baseline</a><br><code class="gc-compare-id">multilinestring_sqlite_baseline</code></td>
 <td>vector</td>
 <td>SQLite</td>
 <td>MultiLineString</td>
@@ -527,7 +527,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multilinestring_wkb_baseline" data-category="vector" data-format="WKB" data-geometry="MultiLineString" data-search="multilinestring_wkb_baseline multilinestring wkb baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of multilinestring_wkb_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of multilinestring_wkb_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multilinestring_wkb_baseline/">MultiLineString WKB Baseline</a><br><code class="gc-compare-id">multilinestring_wkb_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multilinestring_wkb_baseline/">MultiLineString WKB Baseline</a><br><code class="gc-compare-id">multilinestring_wkb_baseline</code></td>
 <td>vector</td>
 <td>WKB</td>
 <td>MultiLineString</td>
@@ -536,7 +536,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multilinestring_wkt_baseline" data-category="vector" data-format="WKT" data-geometry="MultiLineString" data-search="multilinestring_wkt_baseline multilinestring wkt baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of multilinestring_wkt_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of multilinestring_wkt_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multilinestring_wkt_baseline/">MultiLineString WKT Baseline</a><br><code class="gc-compare-id">multilinestring_wkt_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multilinestring_wkt_baseline/">MultiLineString WKT Baseline</a><br><code class="gc-compare-id">multilinestring_wkt_baseline</code></td>
 <td>vector</td>
 <td>WKT</td>
 <td>MultiLineString</td>
@@ -545,7 +545,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="simple_valid_multilinestring" data-category="vector" data-format="GeoJSON" data-geometry="MultiLineString" data-search="simple_valid_multilinestring simple valid multilinestring none">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of simple_valid_multilinestring, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of simple_valid_multilinestring, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/simple_valid_multilinestring/">Simple Valid MultiLineString</a><br><code class="gc-compare-id">simple_valid_multilinestring</code></td>
+<td><a class="gc-compare-link" href="../cases/simple_valid_multilinestring/">Simple Valid MultiLineString</a><br><code class="gc-compare-id">simple_valid_multilinestring</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>MultiLineString</td>
@@ -554,7 +554,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipoint_csv_wkt_baseline" data-category="vector" data-format="CSV_WKT" data-geometry="MultiPoint" data-search="multipoint_csv_wkt_baseline multipoint csv wkt baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of multipoint_csv_wkt_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of multipoint_csv_wkt_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipoint_csv_wkt_baseline/">MultiPoint CSV WKT Baseline</a><br><code class="gc-compare-id">multipoint_csv_wkt_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipoint_csv_wkt_baseline/">MultiPoint CSV WKT Baseline</a><br><code class="gc-compare-id">multipoint_csv_wkt_baseline</code></td>
 <td>vector</td>
 <td>CSV_WKT</td>
 <td>MultiPoint</td>
@@ -563,7 +563,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipoint_feather_baseline" data-category="vector" data-format="Feather" data-geometry="MultiPoint" data-search="multipoint_feather_baseline multipoint feather baseline columnar_storage_behavior format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of multipoint_feather_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of multipoint_feather_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipoint_feather_baseline/">MultiPoint Feather Baseline</a><br><code class="gc-compare-id">multipoint_feather_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipoint_feather_baseline/">MultiPoint Feather Baseline</a><br><code class="gc-compare-id">multipoint_feather_baseline</code></td>
 <td>vector</td>
 <td>Feather</td>
 <td>MultiPoint</td>
@@ -572,7 +572,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipoint_flatgeobuf_baseline" data-category="vector" data-format="FlatGeobuf" data-geometry="MultiPoint" data-search="multipoint_flatgeobuf_baseline multipoint flatgeobuf baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of multipoint_flatgeobuf_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of multipoint_flatgeobuf_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipoint_flatgeobuf_baseline/">MultiPoint FlatGeobuf Baseline</a><br><code class="gc-compare-id">multipoint_flatgeobuf_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipoint_flatgeobuf_baseline/">MultiPoint FlatGeobuf Baseline</a><br><code class="gc-compare-id">multipoint_flatgeobuf_baseline</code></td>
 <td>vector</td>
 <td>FlatGeobuf</td>
 <td>MultiPoint</td>
@@ -581,7 +581,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipoint_geopackage_baseline" data-category="vector" data-format="GPKG" data-geometry="MultiPoint" data-search="multipoint_geopackage_baseline multipoint geopackage baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of multipoint_geopackage_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of multipoint_geopackage_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipoint_geopackage_baseline/">MultiPoint GeoPackage Baseline</a><br><code class="gc-compare-id">multipoint_geopackage_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipoint_geopackage_baseline/">MultiPoint GeoPackage Baseline</a><br><code class="gc-compare-id">multipoint_geopackage_baseline</code></td>
 <td>vector</td>
 <td>GPKG</td>
 <td>MultiPoint</td>
@@ -590,7 +590,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipoint_gml_baseline" data-category="vector" data-format="GML" data-geometry="MultiPoint" data-search="multipoint_gml_baseline multipoint gml baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of multipoint_gml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of multipoint_gml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipoint_gml_baseline/">MultiPoint GML Baseline</a><br><code class="gc-compare-id">multipoint_gml_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipoint_gml_baseline/">MultiPoint GML Baseline</a><br><code class="gc-compare-id">multipoint_gml_baseline</code></td>
 <td>vector</td>
 <td>GML</td>
 <td>MultiPoint</td>
@@ -599,7 +599,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipoint_kml_baseline" data-category="vector" data-format="KML" data-geometry="MultiPoint" data-search="multipoint_kml_baseline multipoint kml baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of multipoint_kml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of multipoint_kml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipoint_kml_baseline/">MultiPoint KML Baseline</a><br><code class="gc-compare-id">multipoint_kml_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipoint_kml_baseline/">MultiPoint KML Baseline</a><br><code class="gc-compare-id">multipoint_kml_baseline</code></td>
 <td>vector</td>
 <td>KML</td>
 <td>MultiPoint</td>
@@ -608,7 +608,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipoint_shapefile_baseline" data-category="vector" data-format="Shapefile" data-geometry="MultiPoint" data-search="multipoint_shapefile_baseline multipoint shapefile baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of multipoint_shapefile_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of multipoint_shapefile_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipoint_shapefile_baseline/">MultiPoint Shapefile Baseline</a><br><code class="gc-compare-id">multipoint_shapefile_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipoint_shapefile_baseline/">MultiPoint Shapefile Baseline</a><br><code class="gc-compare-id">multipoint_shapefile_baseline</code></td>
 <td>vector</td>
 <td>Shapefile</td>
 <td>MultiPoint</td>
@@ -617,7 +617,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipoint_sqlite_baseline" data-category="vector" data-format="SQLite" data-geometry="MultiPoint" data-search="multipoint_sqlite_baseline multipoint sqlite baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of multipoint_sqlite_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of multipoint_sqlite_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipoint_sqlite_baseline/">MultiPoint SQLite Baseline</a><br><code class="gc-compare-id">multipoint_sqlite_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipoint_sqlite_baseline/">MultiPoint SQLite Baseline</a><br><code class="gc-compare-id">multipoint_sqlite_baseline</code></td>
 <td>vector</td>
 <td>SQLite</td>
 <td>MultiPoint</td>
@@ -626,7 +626,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipoint_wkb_baseline" data-category="vector" data-format="WKB" data-geometry="MultiPoint" data-search="multipoint_wkb_baseline multipoint wkb baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of multipoint_wkb_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of multipoint_wkb_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipoint_wkb_baseline/">MultiPoint WKB Baseline</a><br><code class="gc-compare-id">multipoint_wkb_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipoint_wkb_baseline/">MultiPoint WKB Baseline</a><br><code class="gc-compare-id">multipoint_wkb_baseline</code></td>
 <td>vector</td>
 <td>WKB</td>
 <td>MultiPoint</td>
@@ -635,7 +635,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipoint_wkt_baseline" data-category="vector" data-format="WKT" data-geometry="MultiPoint" data-search="multipoint_wkt_baseline multipoint wkt baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of multipoint_wkt_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of multipoint_wkt_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipoint_wkt_baseline/">MultiPoint WKT Baseline</a><br><code class="gc-compare-id">multipoint_wkt_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipoint_wkt_baseline/">MultiPoint WKT Baseline</a><br><code class="gc-compare-id">multipoint_wkt_baseline</code></td>
 <td>vector</td>
 <td>WKT</td>
 <td>MultiPoint</td>
@@ -644,7 +644,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="simple_valid_multipoint" data-category="vector" data-format="GeoJSON" data-geometry="MultiPoint" data-search="simple_valid_multipoint simple valid multipoint none">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of simple_valid_multipoint, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of simple_valid_multipoint, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/simple_valid_multipoint/">Simple Valid MultiPoint</a><br><code class="gc-compare-id">simple_valid_multipoint</code></td>
+<td><a class="gc-compare-link" href="../cases/simple_valid_multipoint/">Simple Valid MultiPoint</a><br><code class="gc-compare-id">simple_valid_multipoint</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>MultiPoint</td>
@@ -653,7 +653,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipolygon_csv_wkt_baseline" data-category="vector" data-format="CSV_WKT" data-geometry="MultiPolygon" data-search="multipolygon_csv_wkt_baseline multipolygon csv wkt baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of multipolygon_csv_wkt_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of multipolygon_csv_wkt_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 43.33 56.67 L 43.33 23.33 L 10 23.33 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 110 56.67 L 110 23.33 L 76.67 23.33 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipolygon_csv_wkt_baseline/">MultiPolygon CSV WKT Baseline</a><br><code class="gc-compare-id">multipolygon_csv_wkt_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipolygon_csv_wkt_baseline/">MultiPolygon CSV WKT Baseline</a><br><code class="gc-compare-id">multipolygon_csv_wkt_baseline</code></td>
 <td>vector</td>
 <td>CSV_WKT</td>
 <td>MultiPolygon</td>
@@ -662,7 +662,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipolygon_flatgeobuf_baseline" data-category="vector" data-format="FlatGeobuf" data-geometry="MultiPolygon" data-search="multipolygon_flatgeobuf_baseline multipolygon flatgeobuf baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of multipolygon_flatgeobuf_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of multipolygon_flatgeobuf_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 43.33 56.67 L 43.33 23.33 L 10 23.33 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 110 56.67 L 110 23.33 L 76.67 23.33 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipolygon_flatgeobuf_baseline/">MultiPolygon FlatGeobuf Baseline</a><br><code class="gc-compare-id">multipolygon_flatgeobuf_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipolygon_flatgeobuf_baseline/">MultiPolygon FlatGeobuf Baseline</a><br><code class="gc-compare-id">multipolygon_flatgeobuf_baseline</code></td>
 <td>vector</td>
 <td>FlatGeobuf</td>
 <td>MultiPolygon</td>
@@ -671,7 +671,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipolygon_geopackage_baseline" data-category="vector" data-format="GPKG" data-geometry="MultiPolygon" data-search="multipolygon_geopackage_baseline multipolygon geopackage baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of multipolygon_geopackage_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of multipolygon_geopackage_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 43.33 56.67 L 43.33 23.33 L 10 23.33 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 110 56.67 L 110 23.33 L 76.67 23.33 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipolygon_geopackage_baseline/">MultiPolygon GeoPackage Baseline</a><br><code class="gc-compare-id">multipolygon_geopackage_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipolygon_geopackage_baseline/">MultiPolygon GeoPackage Baseline</a><br><code class="gc-compare-id">multipolygon_geopackage_baseline</code></td>
 <td>vector</td>
 <td>GPKG</td>
 <td>MultiPolygon</td>
@@ -680,7 +680,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipolygon_gml_baseline" data-category="vector" data-format="GML" data-geometry="MultiPolygon" data-search="multipolygon_gml_baseline multipolygon gml baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of multipolygon_gml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of multipolygon_gml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 43.33 56.67 L 43.33 23.33 L 10 23.33 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 110 56.67 L 110 23.33 L 76.67 23.33 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipolygon_gml_baseline/">MultiPolygon GML Baseline</a><br><code class="gc-compare-id">multipolygon_gml_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipolygon_gml_baseline/">MultiPolygon GML Baseline</a><br><code class="gc-compare-id">multipolygon_gml_baseline</code></td>
 <td>vector</td>
 <td>GML</td>
 <td>MultiPolygon</td>
@@ -689,7 +689,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipolygon_kml_baseline" data-category="vector" data-format="KML" data-geometry="MultiPolygon" data-search="multipolygon_kml_baseline multipolygon kml baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of multipolygon_kml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of multipolygon_kml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 43.33 56.67 L 43.33 23.33 L 10 23.33 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 110 56.67 L 110 23.33 L 76.67 23.33 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipolygon_kml_baseline/">MultiPolygon KML Baseline</a><br><code class="gc-compare-id">multipolygon_kml_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipolygon_kml_baseline/">MultiPolygon KML Baseline</a><br><code class="gc-compare-id">multipolygon_kml_baseline</code></td>
 <td>vector</td>
 <td>KML</td>
 <td>MultiPolygon</td>
@@ -698,7 +698,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipolygon_shapefile_baseline" data-category="vector" data-format="Shapefile" data-geometry="MultiPolygon" data-search="multipolygon_shapefile_baseline multipolygon shapefile baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of multipolygon_shapefile_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of multipolygon_shapefile_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 10 23.33 L 43.33 23.33 L 43.33 56.67 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 76.67 23.33 L 110 23.33 L 110 56.67 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipolygon_shapefile_baseline/">MultiPolygon Shapefile Baseline</a><br><code class="gc-compare-id">multipolygon_shapefile_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipolygon_shapefile_baseline/">MultiPolygon Shapefile Baseline</a><br><code class="gc-compare-id">multipolygon_shapefile_baseline</code></td>
 <td>vector</td>
 <td>Shapefile</td>
 <td>MultiPolygon</td>
@@ -707,7 +707,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipolygon_sqlite_baseline" data-category="vector" data-format="SQLite" data-geometry="MultiPolygon" data-search="multipolygon_sqlite_baseline multipolygon sqlite baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of multipolygon_sqlite_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of multipolygon_sqlite_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 43.33 56.67 L 43.33 23.33 L 10 23.33 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 110 56.67 L 110 23.33 L 76.67 23.33 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipolygon_sqlite_baseline/">MultiPolygon SQLite Baseline</a><br><code class="gc-compare-id">multipolygon_sqlite_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipolygon_sqlite_baseline/">MultiPolygon SQLite Baseline</a><br><code class="gc-compare-id">multipolygon_sqlite_baseline</code></td>
 <td>vector</td>
 <td>SQLite</td>
 <td>MultiPolygon</td>
@@ -716,7 +716,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipolygon_wkb_baseline" data-category="vector" data-format="WKB" data-geometry="MultiPolygon" data-search="multipolygon_wkb_baseline multipolygon wkb baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of multipolygon_wkb_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of multipolygon_wkb_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 43.33 56.67 L 43.33 23.33 L 10 23.33 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 110 56.67 L 110 23.33 L 76.67 23.33 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipolygon_wkb_baseline/">MultiPolygon WKB Baseline</a><br><code class="gc-compare-id">multipolygon_wkb_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipolygon_wkb_baseline/">MultiPolygon WKB Baseline</a><br><code class="gc-compare-id">multipolygon_wkb_baseline</code></td>
 <td>vector</td>
 <td>WKB</td>
 <td>MultiPolygon</td>
@@ -725,7 +725,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="multipolygon_wkt_baseline" data-category="vector" data-format="WKT" data-geometry="MultiPolygon" data-search="multipolygon_wkt_baseline multipolygon wkt baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of multipolygon_wkt_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of multipolygon_wkt_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 43.33 56.67 L 43.33 23.33 L 10 23.33 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 110 56.67 L 110 23.33 L 76.67 23.33 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/multipolygon_wkt_baseline/">MultiPolygon WKT Baseline</a><br><code class="gc-compare-id">multipolygon_wkt_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/multipolygon_wkt_baseline/">MultiPolygon WKT Baseline</a><br><code class="gc-compare-id">multipolygon_wkt_baseline</code></td>
 <td>vector</td>
 <td>WKT</td>
 <td>MultiPolygon</td>
@@ -734,7 +734,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="simple_valid_multipolygon" data-category="vector" data-format="GeoJSON" data-geometry="MultiPolygon" data-search="simple_valid_multipolygon simple valid multipolygon none">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of simple_valid_multipolygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of simple_valid_multipolygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 43.33 56.67 L 43.33 23.33 L 10 23.33 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 110 56.67 L 110 23.33 L 76.67 23.33 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/simple_valid_multipolygon/">Simple Valid MultiPolygon</a><br><code class="gc-compare-id">simple_valid_multipolygon</code></td>
+<td><a class="gc-compare-link" href="../cases/simple_valid_multipolygon/">Simple Valid MultiPolygon</a><br><code class="gc-compare-id">simple_valid_multipolygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>MultiPolygon</td>
@@ -743,7 +743,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="dateline_chain_cluster" data-category="vector" data-format="GeoJSON" data-geometry="Point" data-search="dateline_chain_cluster dateline chain cluster coordinate_wrapping local_projection_distortion transitive_cluster_split">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of dateline_chain_cluster, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of dateline_chain_cluster, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="110" cy="40.06" r="3" fill="var(--gc-diagram-accent)"/><circle cx="10" cy="40.06" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="39.94" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/dateline_chain_cluster/">Dateline Chain Cluster</a><br><code class="gc-compare-id">dateline_chain_cluster</code></td>
+<td><a class="gc-compare-link" href="../cases/dateline_chain_cluster/">Dateline Chain Cluster</a><br><code class="gc-compare-id">dateline_chain_cluster</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Point</td>
@@ -752,7 +752,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="dateline_points_pair" data-category="vector" data-format="GeoJSON" data-geometry="Point" data-search="dateline_points_pair dateline points pair coordinate_wrapping distance_threshold_error zone_selection">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of dateline_points_pair, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of dateline_points_pair, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="110" cy="40.14" r="3" fill="var(--gc-diagram-accent)"/><circle cx="10" cy="40.14" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/dateline_points_pair/">Dateline Points Pair</a><br><code class="gc-compare-id">dateline_points_pair</code></td>
+<td><a class="gc-compare-link" href="../cases/dateline_points_pair/">Dateline Points Pair</a><br><code class="gc-compare-id">dateline_points_pair</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Point</td>
@@ -761,7 +761,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="empty_geometry_gpkg" data-category="vector" data-format="GPKG" data-geometry="Point" data-search="empty_geometry_gpkg empty geometry in geopackage empty_geometry_handling format_specific null_empty_conflation">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of empty_geometry_gpkg, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of empty_geometry_gpkg, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/><circle cx="90" cy="10" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/empty_geometry_gpkg/">Empty Geometry in GeoPackage</a><br><code class="gc-compare-id">empty_geometry_gpkg</code></td>
+<td><a class="gc-compare-link" href="../cases/empty_geometry_gpkg/">Empty Geometry in GeoPackage</a><br><code class="gc-compare-id">empty_geometry_gpkg</code></td>
 <td>vector</td>
 <td>GPKG</td>
 <td>Point</td>
@@ -770,7 +770,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="mixed_encoding_attributes" data-category="vector" data-format="GPKG" data-geometry="Point" data-search="mixed_encoding_attributes mixed encoding attributes attribute_loss encoding_error mojibake">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of mixed_encoding_attributes, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of mixed_encoding_attributes, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="90" cy="10" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/mixed_encoding_attributes/">Mixed Encoding Attributes</a><br><code class="gc-compare-id">mixed_encoding_attributes</code></td>
+<td><a class="gc-compare-link" href="../cases/mixed_encoding_attributes/">Mixed Encoding Attributes</a><br><code class="gc-compare-id">mixed_encoding_attributes</code></td>
 <td>vector</td>
 <td>GPKG</td>
 <td>Point</td>
@@ -779,7 +779,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="nearby_points_cluster" data-category="vector" data-format="GeoJSON" data-geometry="Point" data-search="nearby_points_cluster nearby points cluster distance_threshold_error">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of nearby_points_cluster, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of nearby_points_cluster, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="15" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/nearby_points_cluster/">Nearby Points Cluster</a><br><code class="gc-compare-id">nearby_points_cluster</code></td>
+<td><a class="gc-compare-link" href="../cases/nearby_points_cluster/">Nearby Points Cluster</a><br><code class="gc-compare-id">nearby_points_cluster</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Point</td>
@@ -788,7 +788,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="north_pole_point" data-category="vector" data-format="GeoJSON" data-geometry="Point" data-search="north_pole_point north pole point coordinate_edge_case polar_projection_singularity">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of north_pole_point, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of north_pole_point, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/north_pole_point/">North Pole Point</a><br><code class="gc-compare-id">north_pole_point</code></td>
+<td><a class="gc-compare-link" href="../cases/north_pole_point/">North Pole Point</a><br><code class="gc-compare-id">north_pole_point</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Point</td>
@@ -797,7 +797,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="null_island_point" data-category="vector" data-format="GeoJSON" data-geometry="Point" data-search="null_island_point null island point data_quality default_value_sink geocoding_failure silent_bad_data">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of null_island_point, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of null_island_point, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/null_island_point/">Null Island Point</a><br><code class="gc-compare-id">null_island_point</code></td>
+<td><a class="gc-compare-link" href="../cases/null_island_point/">Null Island Point</a><br><code class="gc-compare-id">null_island_point</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Point</td>
@@ -806,7 +806,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="out_of_bounds_coordinates" data-category="vector" data-format="GeoJSON" data-geometry="Point" data-search="out_of_bounds_coordinates out-of-bounds / invalid coordinates coordinate_range_error lat_lon_swap projection_failure silent_invalid_geometry spatial_index_failure">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of out_of_bounds_coordinates, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of out_of_bounds_coordinates, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/out_of_bounds_coordinates/">Out-of-Bounds / Invalid Coordinates</a><br><code class="gc-compare-id">out_of_bounds_coordinates</code></td>
+<td><a class="gc-compare-link" href="../cases/out_of_bounds_coordinates/">Out-of-Bounds / Invalid Coordinates</a><br><code class="gc-compare-id">out_of_bounds_coordinates</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Point</td>
@@ -815,7 +815,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="parquet_mixed_schema_attributes" data-category="vector" data-format="Parquet" data-geometry="Point" data-search="parquet_mixed_schema_attributes parquet mixed schema attributes attribute_loss columnar_storage_behavior nullable_type_coercion schema_mismatch">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of parquet_mixed_schema_attributes, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of parquet_mixed_schema_attributes, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/><circle cx="50" cy="50" r="3" fill="var(--gc-diagram-accent)"/><circle cx="70" cy="30" r="3" fill="var(--gc-diagram-accent)"/><circle cx="90" cy="10" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/parquet_mixed_schema_attributes/">Parquet Mixed Schema Attributes</a><br><code class="gc-compare-id">parquet_mixed_schema_attributes</code></td>
+<td><a class="gc-compare-link" href="../cases/parquet_mixed_schema_attributes/">Parquet Mixed Schema Attributes</a><br><code class="gc-compare-id">parquet_mixed_schema_attributes</code></td>
 <td>vector</td>
 <td>Parquet</td>
 <td>Point</td>
@@ -824,7 +824,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="point_arrow_baseline" data-category="vector" data-format="Arrow" data-geometry="Point" data-search="point_arrow_baseline point arrow baseline arrow_ipc_behavior format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_arrow_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_arrow_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/point_arrow_baseline/">Point Arrow Baseline</a><br><code class="gc-compare-id">point_arrow_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/point_arrow_baseline/">Point Arrow Baseline</a><br><code class="gc-compare-id">point_arrow_baseline</code></td>
 <td>vector</td>
 <td>Arrow</td>
 <td>Point</td>
@@ -833,7 +833,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="point_csv_wkt_baseline" data-category="vector" data-format="CSV_WKT" data-geometry="Point" data-search="point_csv_wkt_baseline point csv wkt baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_csv_wkt_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_csv_wkt_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/point_csv_wkt_baseline/">Point CSV WKT Baseline</a><br><code class="gc-compare-id">point_csv_wkt_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/point_csv_wkt_baseline/">Point CSV WKT Baseline</a><br><code class="gc-compare-id">point_csv_wkt_baseline</code></td>
 <td>vector</td>
 <td>CSV_WKT</td>
 <td>Point</td>
@@ -842,7 +842,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="point_feather_baseline" data-category="vector" data-format="Feather" data-geometry="Point" data-search="point_feather_baseline point feather baseline columnar_storage_behavior format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_feather_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_feather_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/point_feather_baseline/">Point Feather Baseline</a><br><code class="gc-compare-id">point_feather_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/point_feather_baseline/">Point Feather Baseline</a><br><code class="gc-compare-id">point_feather_baseline</code></td>
 <td>vector</td>
 <td>Feather</td>
 <td>Point</td>
@@ -851,7 +851,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="point_flatgeobuf_baseline" data-category="vector" data-format="FlatGeobuf" data-geometry="Point" data-search="point_flatgeobuf_baseline point flatgeobuf baseline driver_behavior format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_flatgeobuf_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_flatgeobuf_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/point_flatgeobuf_baseline/">Point FlatGeobuf Baseline</a><br><code class="gc-compare-id">point_flatgeobuf_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/point_flatgeobuf_baseline/">Point FlatGeobuf Baseline</a><br><code class="gc-compare-id">point_flatgeobuf_baseline</code></td>
 <td>vector</td>
 <td>FlatGeobuf</td>
 <td>Point</td>
@@ -860,7 +860,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="point_geopackage_baseline" data-category="vector" data-format="GPKG" data-geometry="Point" data-search="point_geopackage_baseline point geopackage baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_geopackage_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_geopackage_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/point_geopackage_baseline/">Point GeoPackage Baseline</a><br><code class="gc-compare-id">point_geopackage_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/point_geopackage_baseline/">Point GeoPackage Baseline</a><br><code class="gc-compare-id">point_geopackage_baseline</code></td>
 <td>vector</td>
 <td>GPKG</td>
 <td>Point</td>
@@ -869,7 +869,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="point_gml_baseline" data-category="vector" data-format="GML" data-geometry="Point" data-search="point_gml_baseline point gml baseline format_comparison xml_driver_behavior">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_gml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_gml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/point_gml_baseline/">Point GML Baseline</a><br><code class="gc-compare-id">point_gml_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/point_gml_baseline/">Point GML Baseline</a><br><code class="gc-compare-id">point_gml_baseline</code></td>
 <td>vector</td>
 <td>GML</td>
 <td>Point</td>
@@ -878,7 +878,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="point_kml_baseline" data-category="vector" data-format="KML" data-geometry="Point" data-search="point_kml_baseline point kml baseline format_comparison xml_driver_behavior">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_kml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_kml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/point_kml_baseline/">Point KML Baseline</a><br><code class="gc-compare-id">point_kml_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/point_kml_baseline/">Point KML Baseline</a><br><code class="gc-compare-id">point_kml_baseline</code></td>
 <td>vector</td>
 <td>KML</td>
 <td>Point</td>
@@ -887,7 +887,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="point_shapefile_baseline" data-category="vector" data-format="Shapefile" data-geometry="Point" data-search="point_shapefile_baseline point shapefile baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_shapefile_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_shapefile_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/point_shapefile_baseline/">Point Shapefile Baseline</a><br><code class="gc-compare-id">point_shapefile_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/point_shapefile_baseline/">Point Shapefile Baseline</a><br><code class="gc-compare-id">point_shapefile_baseline</code></td>
 <td>vector</td>
 <td>Shapefile</td>
 <td>Point</td>
@@ -896,7 +896,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="point_sqlite_baseline" data-category="vector" data-format="SQLite" data-geometry="Point" data-search="point_sqlite_baseline point sqlite baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_sqlite_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_sqlite_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/point_sqlite_baseline/">Point SQLite Baseline</a><br><code class="gc-compare-id">point_sqlite_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/point_sqlite_baseline/">Point SQLite Baseline</a><br><code class="gc-compare-id">point_sqlite_baseline</code></td>
 <td>vector</td>
 <td>SQLite</td>
 <td>Point</td>
@@ -905,7 +905,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="point_wkb_baseline" data-category="vector" data-format="WKB" data-geometry="Point" data-search="point_wkb_baseline point wkb baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_wkb_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_wkb_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/point_wkb_baseline/">Point WKB Baseline</a><br><code class="gc-compare-id">point_wkb_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/point_wkb_baseline/">Point WKB Baseline</a><br><code class="gc-compare-id">point_wkb_baseline</code></td>
 <td>vector</td>
 <td>WKB</td>
 <td>Point</td>
@@ -914,7 +914,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="point_wkt_baseline" data-category="vector" data-format="WKT" data-geometry="Point" data-search="point_wkt_baseline point wkt baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_wkt_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_wkt_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/point_wkt_baseline/">Point WKT Baseline</a><br><code class="gc-compare-id">point_wkt_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/point_wkt_baseline/">Point WKT Baseline</a><br><code class="gc-compare-id">point_wkt_baseline</code></td>
 <td>vector</td>
 <td>WKT</td>
 <td>Point</td>
@@ -923,7 +923,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="precision_loss_geojson_roundtrip" data-category="vector" data-format="GeoJSON" data-geometry="Point" data-search="precision_loss_geojson_roundtrip geojson precision loss roundtrip coordinate_drift format_specific precision_loss roundtrip_degradation">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of precision_loss_geojson_roundtrip, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of precision_loss_geojson_roundtrip, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="110" cy="20.77" r="3" fill="var(--gc-diagram-accent)"/><circle cx="10" cy="30.73" r="3" fill="var(--gc-diagram-accent)"/><circle cx="102.36" cy="59.23" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/precision_loss_geojson_roundtrip/">GeoJSON Precision Loss Roundtrip</a><br><code class="gc-compare-id">precision_loss_geojson_roundtrip</code></td>
+<td><a class="gc-compare-link" href="../cases/precision_loss_geojson_roundtrip/">GeoJSON Precision Loss Roundtrip</a><br><code class="gc-compare-id">precision_loss_geojson_roundtrip</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Point</td>
@@ -932,7 +932,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="shapefile_encoding_legacy" data-category="vector" data-format="Shapefile" data-geometry="Point" data-search="shapefile_encoding_legacy shapefile legacy dbf encoding attribute_corruption encoding_error format_specific mojibake">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of shapefile_encoding_legacy, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of shapefile_encoding_legacy, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="79.22" cy="16.24" r="3" fill="var(--gc-diagram-accent)"/><circle cx="78.02" cy="13.54" r="3" fill="var(--gc-diagram-accent)"/><circle cx="82.6" cy="10" r="3" fill="var(--gc-diagram-accent)"/><circle cx="37.4" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/shapefile_encoding_legacy/">Shapefile Legacy DBF Encoding</a><br><code class="gc-compare-id">shapefile_encoding_legacy</code></td>
+<td><a class="gc-compare-link" href="../cases/shapefile_encoding_legacy/">Shapefile Legacy DBF Encoding</a><br><code class="gc-compare-id">shapefile_encoding_legacy</code></td>
 <td>vector</td>
 <td>Shapefile</td>
 <td>Point</td>
@@ -941,7 +941,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="shapefile_field_truncation" data-category="vector" data-format="Shapefile" data-geometry="Point" data-search="shapefile_field_truncation shapefile field name truncation attribute_loss field_name_truncation format_specific schema_mismatch">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of shapefile_field_truncation, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of shapefile_field_truncation, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="90" cy="10" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/shapefile_field_truncation/">Shapefile Field Name Truncation</a><br><code class="gc-compare-id">shapefile_field_truncation</code></td>
+<td><a class="gc-compare-link" href="../cases/shapefile_field_truncation/">Shapefile Field Name Truncation</a><br><code class="gc-compare-id">shapefile_field_truncation</code></td>
 <td>vector</td>
 <td>Shapefile</td>
 <td>Point</td>
@@ -950,7 +950,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="simple_valid_point" data-category="vector" data-format="GeoJSON" data-geometry="Point" data-search="simple_valid_point simple valid point none">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of simple_valid_point, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of simple_valid_point, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/simple_valid_point/">Simple Valid Point</a><br><code class="gc-compare-id">simple_valid_point</code></td>
+<td><a class="gc-compare-link" href="../cases/simple_valid_point/">Simple Valid Point</a><br><code class="gc-compare-id">simple_valid_point</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Point</td>
@@ -959,7 +959,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="south_pole_point" data-category="vector" data-format="GeoJSON" data-geometry="Point" data-search="south_pole_point south pole point coordinate_edge_case polar_projection_singularity">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of south_pole_point, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of south_pole_point, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/south_pole_point/">South Pole Point</a><br><code class="gc-compare-id">south_pole_point</code></td>
+<td><a class="gc-compare-link" href="../cases/south_pole_point/">South Pole Point</a><br><code class="gc-compare-id">south_pole_point</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Point</td>
@@ -968,7 +968,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="web_mercator_baseline" data-category="vector" data-format="GeoJSON" data-geometry="Point" data-search="web_mercator_baseline web mercator baseline point projected_coordinate_assumption reprojection_error">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of web_mercator_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of web_mercator_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/web_mercator_baseline/">Web Mercator Baseline Point</a><br><code class="gc-compare-id">web_mercator_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/web_mercator_baseline/">Web Mercator Baseline Point</a><br><code class="gc-compare-id">web_mercator_baseline</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Point</td>
@@ -977,7 +977,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="wrapped_longitude_point" data-category="vector" data-format="GeoJSON" data-geometry="Point" data-search="wrapped_longitude_point wrapped longitude point longitude_not_normalized wrapped_coordinate_retention">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of wrapped_longitude_point, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of wrapped_longitude_point, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg></td>
-<td><a class="gc-compare-link" href="cases/wrapped_longitude_point/">Wrapped Longitude Point</a><br><code class="gc-compare-id">wrapped_longitude_point</code></td>
+<td><a class="gc-compare-link" href="../cases/wrapped_longitude_point/">Wrapped Longitude Point</a><br><code class="gc-compare-id">wrapped_longitude_point</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Point</td>
@@ -986,7 +986,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="ambiguous_engine_dependent_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="ambiguous_engine_dependent_polygon ambiguous engine-dependent polygon ambiguous_engine_dependent repair_variability topology_error">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of ambiguous_engine_dependent_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of ambiguous_engine_dependent_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z M 60 70 L 80 50 L 60 30 L 40 50 L 60 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/ambiguous_engine_dependent_polygon/">Ambiguous Engine-dependent Polygon</a><br><code class="gc-compare-id">ambiguous_engine_dependent_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/ambiguous_engine_dependent_polygon/">Ambiguous Engine-dependent Polygon</a><br><code class="gc-compare-id">ambiguous_engine_dependent_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -995,7 +995,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="classic_antimeridian_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="classic_antimeridian_polygon classic antimeridian polygon bbox_misinterpretation coordinate_wrapping">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of classic_antimeridian_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of classic_antimeridian_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 110 40.14 L 10 40.14 L 10 39.86 L 110 39.86 L 110 40.14 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/classic_antimeridian_polygon/">Classic Antimeridian Polygon</a><br><code class="gc-compare-id">classic_antimeridian_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/classic_antimeridian_polygon/">Classic Antimeridian Polygon</a><br><code class="gc-compare-id">classic_antimeridian_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1004,7 +1004,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="dateline_crossing_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="dateline_crossing_polygon dateline crossing polygon bbox_misinterpretation coordinate_wrapping reprojection_error">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of dateline_crossing_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of dateline_crossing_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 65 L 110 65 L 110 15 L 10 15 L 10 65 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/dateline_crossing_polygon/">Dateline crossing polygon</a><br><code class="gc-compare-id">dateline_crossing_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/dateline_crossing_polygon/">Dateline crossing polygon</a><br><code class="gc-compare-id">dateline_crossing_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1013,7 +1013,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="disjoint_polygons" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="disjoint_polygons disjoint polygons false_positive_intersection overaggressive_dissolve">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of disjoint_polygons, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of disjoint_polygons, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 52.5 L 35 52.5 L 35 27.5 L 10 27.5 L 10 52.5 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 85 52.5 L 110 52.5 L 110 27.5 L 85 27.5 L 85 52.5 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/disjoint_polygons/">Disjoint Polygons</a><br><code class="gc-compare-id">disjoint_polygons</code></td>
+<td><a class="gc-compare-link" href="../cases/disjoint_polygons/">Disjoint Polygons</a><br><code class="gc-compare-id">disjoint_polygons</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1022,7 +1022,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="empty_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="empty_polygon empty polygon empty_geometry">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/empty_polygon/">Empty Polygon</a><br><code class="gc-compare-id">empty_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/empty_polygon/">Empty Polygon</a><br><code class="gc-compare-id">empty_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1031,7 +1031,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="equator_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="equator_polygon equator-crossing polygon hemisphere_boundary utm_zone_ambiguity">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of equator_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of equator_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 65 L 110 65 L 110 15 L 10 15 L 10 65 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/equator_polygon/">Equator-Crossing Polygon</a><br><code class="gc-compare-id">equator_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/equator_polygon/">Equator-Crossing Polygon</a><br><code class="gc-compare-id">equator_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1040,7 +1040,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="format_limited_kml_case" data-category="vector" data-format="KML" data-geometry="Polygon" data-search="format_limited_kml_case format-limited kml case attribute_loss format_limitation schema_mismatch type_coercion">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of format_limited_kml_case, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of format_limited_kml_case, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 32.61 70 L 32.61 67.39 L 30 67.39 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 56.09 43.91 L 61.3 43.91 L 61.3 38.7 L 56.09 38.7 L 56.09 43.91 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 82.17 17.83 L 90 17.83 L 90 10 L 82.17 10 L 82.17 17.83 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/format_limited_kml_case/">Format-Limited KML Case</a><br><code class="gc-compare-id">format_limited_kml_case</code></td>
+<td><a class="gc-compare-link" href="../cases/format_limited_kml_case/">Format-Limited KML Case</a><br><code class="gc-compare-id">format_limited_kml_case</code></td>
 <td>vector</td>
 <td>KML</td>
 <td>Polygon</td>
@@ -1049,7 +1049,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="format_limited_precision_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="format_limited_precision_polygon format-limited precision polygon driver_specific_precision_loss format_limited precision_rounding">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of format_limited_precision_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of format_limited_precision_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 110 40 L 110 40 L 10 40 L 10 40 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/format_limited_precision_polygon/">Format-limited Precision Polygon</a><br><code class="gc-compare-id">format_limited_precision_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/format_limited_precision_polygon/">Format-limited Precision Polygon</a><br><code class="gc-compare-id">format_limited_precision_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1058,7 +1058,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="north_pole_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="north_pole_polygon north pole polygon area_distortion polar_projection_singularity">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of north_pole_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of north_pole_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 60 41.53 L 110 39.86 L 60 38.47 L 10 39.86 L 60 41.53 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/north_pole_polygon/">North Pole Polygon</a><br><code class="gc-compare-id">north_pole_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/north_pole_polygon/">North Pole Polygon</a><br><code class="gc-compare-id">north_pole_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1067,7 +1067,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="polygon_csv_wkt_baseline" data-category="vector" data-format="CSV_WKT" data-geometry="Polygon" data-search="polygon_csv_wkt_baseline polygon csv wkt baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_csv_wkt_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_csv_wkt_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/polygon_csv_wkt_baseline/">Polygon CSV WKT Baseline</a><br><code class="gc-compare-id">polygon_csv_wkt_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/polygon_csv_wkt_baseline/">Polygon CSV WKT Baseline</a><br><code class="gc-compare-id">polygon_csv_wkt_baseline</code></td>
 <td>vector</td>
 <td>CSV_WKT</td>
 <td>Polygon</td>
@@ -1076,7 +1076,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="polygon_flatgeobuf_baseline" data-category="vector" data-format="FlatGeobuf" data-geometry="Polygon" data-search="polygon_flatgeobuf_baseline polygon flatgeobuf baseline driver_behavior format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_flatgeobuf_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_flatgeobuf_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/polygon_flatgeobuf_baseline/">Polygon FlatGeobuf Baseline</a><br><code class="gc-compare-id">polygon_flatgeobuf_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/polygon_flatgeobuf_baseline/">Polygon FlatGeobuf Baseline</a><br><code class="gc-compare-id">polygon_flatgeobuf_baseline</code></td>
 <td>vector</td>
 <td>FlatGeobuf</td>
 <td>Polygon</td>
@@ -1085,7 +1085,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="polygon_geopackage_baseline" data-category="vector" data-format="GPKG" data-geometry="Polygon" data-search="polygon_geopackage_baseline polygon geopackage baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_geopackage_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_geopackage_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/polygon_geopackage_baseline/">Polygon GeoPackage Baseline</a><br><code class="gc-compare-id">polygon_geopackage_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/polygon_geopackage_baseline/">Polygon GeoPackage Baseline</a><br><code class="gc-compare-id">polygon_geopackage_baseline</code></td>
 <td>vector</td>
 <td>GPKG</td>
 <td>Polygon</td>
@@ -1094,7 +1094,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="polygon_gml_baseline" data-category="vector" data-format="GML" data-geometry="Polygon" data-search="polygon_gml_baseline polygon gml baseline format_comparison xml_driver_behavior">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_gml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_gml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/polygon_gml_baseline/">Polygon GML Baseline</a><br><code class="gc-compare-id">polygon_gml_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/polygon_gml_baseline/">Polygon GML Baseline</a><br><code class="gc-compare-id">polygon_gml_baseline</code></td>
 <td>vector</td>
 <td>GML</td>
 <td>Polygon</td>
@@ -1103,7 +1103,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="polygon_kml_baseline" data-category="vector" data-format="KML" data-geometry="Polygon" data-search="polygon_kml_baseline polygon kml baseline format_comparison xml_driver_behavior">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_kml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_kml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/polygon_kml_baseline/">Polygon KML Baseline</a><br><code class="gc-compare-id">polygon_kml_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/polygon_kml_baseline/">Polygon KML Baseline</a><br><code class="gc-compare-id">polygon_kml_baseline</code></td>
 <td>vector</td>
 <td>KML</td>
 <td>Polygon</td>
@@ -1112,7 +1112,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="polygon_parquet_baseline" data-category="vector" data-format="Parquet" data-geometry="Polygon" data-search="polygon_parquet_baseline polygon parquet baseline columnar_storage_behavior format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_parquet_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_parquet_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/polygon_parquet_baseline/">Polygon Parquet Baseline</a><br><code class="gc-compare-id">polygon_parquet_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/polygon_parquet_baseline/">Polygon Parquet Baseline</a><br><code class="gc-compare-id">polygon_parquet_baseline</code></td>
 <td>vector</td>
 <td>Parquet</td>
 <td>Polygon</td>
@@ -1121,7 +1121,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="polygon_shapefile_baseline" data-category="vector" data-format="Shapefile" data-geometry="Polygon" data-search="polygon_shapefile_baseline polygon shapefile baseline format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_shapefile_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_shapefile_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 30 10 L 90 10 L 90 70 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/polygon_shapefile_baseline/">Polygon Shapefile Baseline</a><br><code class="gc-compare-id">polygon_shapefile_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/polygon_shapefile_baseline/">Polygon Shapefile Baseline</a><br><code class="gc-compare-id">polygon_shapefile_baseline</code></td>
 <td>vector</td>
 <td>Shapefile</td>
 <td>Polygon</td>
@@ -1130,7 +1130,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="polygon_sqlite_baseline" data-category="vector" data-format="SQLite" data-geometry="Polygon" data-search="polygon_sqlite_baseline polygon sqlite baseline format_comparison sqlite_driver_behavior">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_sqlite_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_sqlite_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/polygon_sqlite_baseline/">Polygon SQLite Baseline</a><br><code class="gc-compare-id">polygon_sqlite_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/polygon_sqlite_baseline/">Polygon SQLite Baseline</a><br><code class="gc-compare-id">polygon_sqlite_baseline</code></td>
 <td>vector</td>
 <td>SQLite</td>
 <td>Polygon</td>
@@ -1139,7 +1139,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="polygon_with_hole" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="polygon_with_hole polygon with hole incorrect_area ring_ordering">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_with_hole, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_with_hole, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z M 42 58 L 42 22 L 78 22 L 78 58 L 42 58 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/polygon_with_hole/">Polygon with Hole</a><br><code class="gc-compare-id">polygon_with_hole</code></td>
+<td><a class="gc-compare-link" href="../cases/polygon_with_hole/">Polygon with Hole</a><br><code class="gc-compare-id">polygon_with_hole</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1148,7 +1148,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="polygon_wkb_baseline" data-category="vector" data-format="WKB" data-geometry="Polygon" data-search="polygon_wkb_baseline polygon wkb baseline binary_geometry_parsing format_comparison">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_wkb_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_wkb_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/polygon_wkb_baseline/">Polygon WKB Baseline</a><br><code class="gc-compare-id">polygon_wkb_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/polygon_wkb_baseline/">Polygon WKB Baseline</a><br><code class="gc-compare-id">polygon_wkb_baseline</code></td>
 <td>vector</td>
 <td>WKB</td>
 <td>Polygon</td>
@@ -1157,7 +1157,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="polygon_wkt_baseline" data-category="vector" data-format="WKT" data-geometry="Polygon" data-search="polygon_wkt_baseline polygon wkt baseline format_comparison text_geometry_parsing">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_wkt_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_wkt_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/polygon_wkt_baseline/">Polygon WKT Baseline</a><br><code class="gc-compare-id">polygon_wkt_baseline</code></td>
+<td><a class="gc-compare-link" href="../cases/polygon_wkt_baseline/">Polygon WKT Baseline</a><br><code class="gc-compare-id">polygon_wkt_baseline</code></td>
 <td>vector</td>
 <td>WKT</td>
 <td>Polygon</td>
@@ -1166,7 +1166,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="rasterize_match_utm33_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="rasterize_match_utm33_polygon rasterize match utm33 polygon rasterization_alignment">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of rasterize_match_utm33_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of rasterize_match_utm33_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/rasterize_match_utm33_polygon/">Rasterize Match UTM33 Polygon</a><br><code class="gc-compare-id">rasterize_match_utm33_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/rasterize_match_utm33_polygon/">Rasterize Match UTM33 Polygon</a><br><code class="gc-compare-id">rasterize_match_utm33_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1175,7 +1175,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="rasterize_match_wgs84_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="rasterize_match_wgs84_polygon rasterize match wgs84 polygon rasterization_alignment reprojection_error">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of rasterize_match_wgs84_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of rasterize_match_wgs84_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 70 L 110 70 L 110 10 L 10 10 L 10 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/rasterize_match_wgs84_polygon/">Rasterize Match WGS84 Polygon</a><br><code class="gc-compare-id">rasterize_match_wgs84_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/rasterize_match_wgs84_polygon/">Rasterize Match WGS84 Polygon</a><br><code class="gc-compare-id">rasterize_match_wgs84_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1184,7 +1184,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="self_intersecting_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="self_intersecting_polygon self-intersecting polygon incorrect_area silent_invalid_geometry topology_error">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of self_intersecting_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of self_intersecting_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 10 L 90 70 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/self_intersecting_polygon/">Self-Intersecting Polygon</a><br><code class="gc-compare-id">self_intersecting_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/self_intersecting_polygon/">Self-Intersecting Polygon</a><br><code class="gc-compare-id">self_intersecting_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1193,7 +1193,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="shapefile_ring_orientation" data-category="vector" data-format="Shapefile" data-geometry="Polygon" data-search="shapefile_ring_orientation shapefile ring orientation reversal format_specific ring_orientation">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of shapefile_ring_orientation, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of shapefile_ring_orientation, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 30 10 L 90 10 L 90 70 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/shapefile_ring_orientation/">Shapefile Ring Orientation Reversal</a><br><code class="gc-compare-id">shapefile_ring_orientation</code></td>
+<td><a class="gc-compare-link" href="../cases/shapefile_ring_orientation/">Shapefile Ring Orientation Reversal</a><br><code class="gc-compare-id">shapefile_ring_orientation</code></td>
 <td>vector</td>
 <td>Shapefile</td>
 <td>Polygon</td>
@@ -1202,7 +1202,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="simple_valid_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="simple_valid_polygon simple valid polygon none">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of simple_valid_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of simple_valid_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/simple_valid_polygon/">Simple Valid Polygon</a><br><code class="gc-compare-id">simple_valid_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/simple_valid_polygon/">Simple Valid Polygon</a><br><code class="gc-compare-id">simple_valid_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1211,7 +1211,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="south_pole_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="south_pole_polygon south pole polygon area_distortion polar_projection_singularity">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of south_pole_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of south_pole_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 60 38.47 L 10 40.14 L 60 41.53 L 110 40.14 L 60 38.47 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/south_pole_polygon/">South Pole Polygon</a><br><code class="gc-compare-id">south_pole_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/south_pole_polygon/">South Pole Polygon</a><br><code class="gc-compare-id">south_pole_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1220,7 +1220,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="spike_invalid_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="spike_invalid_polygon spike invalid polygon linear_artifacts_after_repair mixed_geometry_output repair_returns_geometrycollection">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of spike_invalid_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of spike_invalid_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 60 10 L 60 40 L 60 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/spike_invalid_polygon/">Spike Invalid Polygon</a><br><code class="gc-compare-id">spike_invalid_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/spike_invalid_polygon/">Spike Invalid Polygon</a><br><code class="gc-compare-id">spike_invalid_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1229,7 +1229,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="svalbard_special_zone_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="svalbard_special_zone_polygon svalbard special zone polygon polar_projection_edge_case zone_selection">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of svalbard_special_zone_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of svalbard_special_zone_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/svalbard_special_zone_polygon/">Svalbard Special Zone Polygon</a><br><code class="gc-compare-id">svalbard_special_zone_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/svalbard_special_zone_polygon/">Svalbard Special Zone Polygon</a><br><code class="gc-compare-id">svalbard_special_zone_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1238,7 +1238,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="unclosed_ring_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="unclosed_ring_polygon unclosed ring polygon parse_exception ring_closure_error silent_invalid_geometry topology_error">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/unclosed_ring_polygon/">Unclosed Ring Polygon</a><br><code class="gc-compare-id">unclosed_ring_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/unclosed_ring_polygon/">Unclosed Ring Polygon</a><br><code class="gc-compare-id">unclosed_ring_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>
@@ -1247,7 +1247,7 @@ pip install "geocase[all]"
 </tr>
 <tr data-case-id="utm_zone_33_polygon" data-category="vector" data-format="GeoJSON" data-geometry="Polygon" data-search="utm_zone_33_polygon utm zone 33 polygon zone_selection">
 <td class="gc-compare-preview"><svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of utm_zone_33_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of utm_zone_33_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg></td>
-<td><a class="gc-compare-link" href="cases/utm_zone_33_polygon/">UTM Zone 33 Polygon</a><br><code class="gc-compare-id">utm_zone_33_polygon</code></td>
+<td><a class="gc-compare-link" href="../cases/utm_zone_33_polygon/">UTM Zone 33 Polygon</a><br><code class="gc-compare-id">utm_zone_33_polygon</code></td>
 <td>vector</td>
 <td>GeoJSON</td>
 <td>Polygon</td>

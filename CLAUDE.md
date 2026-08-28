@@ -38,6 +38,7 @@ python scripts/generate_raster_fixtures.py --check
 python scripts/generate_vector_fixtures.py --check
 python scripts/generate_checksums.py --check
 python scripts/generate_catalog_pages.py --check
+python scripts/generate_raster_previews.py --check
 python scripts/generate_vector_coverage_matrix.py --output docs/_generated/vector-coverage-matrix.md
 python scripts/generate_raster_coverage_matrix.py --output docs/_generated/raster-coverage-matrix.md
 ```

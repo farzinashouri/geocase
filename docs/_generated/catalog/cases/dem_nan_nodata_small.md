@@ -14,8 +14,8 @@ description: "A float32 DEM that marks NoData with NaN rather than a sentinel va
 A float32 DEM that marks NoData with NaN rather than a sentinel value. NaN propagates through means and comparisons instead of being excluded.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="32.0" y="46.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg>
-<figcaption>Schematic: 1 band, 16x16 px, float32, nan NoData. Drawn from metadata, not from the pixels.</figcaption>
+<img class="gc-diagram gc-preview" src="../../previews/dem_nan_nodata_small.png" alt="Pixels of dem_nan_nodata_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>1 band, 16x16 px, float32, nan NoData. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
 </figure>
 
 | Property | Value |

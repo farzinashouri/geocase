@@ -171,6 +171,15 @@ def test_compare_page_links_resolve() -> None:
     offenders = [href for href in hrefs if ".md" in href]
     assert offenders == [], f"compare links must not use .md targets: {offenders}"
 
+    # compare.md is served at /catalog/compare/, its own directory, so a href
+    # is resolved against that -- not against the catalog root the source file
+    # sits in. Checking only the basename would have passed the ``cases/<id>/``
+    # links that actually resolved to /catalog/compare/cases/<id>/.
+    wrong_depth = [href for href in hrefs if not href.startswith("../cases/")]
+    assert wrong_depth == [], (
+        f"compare links must be relative to /catalog/compare/: {wrong_depth}"
+    )
+
     case_dir = GENERATED / "cases"
     broken = [
         href
@@ -178,6 +187,80 @@ def test_compare_page_links_resolve() -> None:
         if not (case_dir / f"{href.rstrip('/').rsplit('/', 1)[-1]}.md").exists()
     ]
     assert broken == [], f"compare links with no target page: {broken}"
+
+
+def test_compare_page_previews_resolve() -> None:
+    """Preview ``<img>`` sources are raw HTML too, so they need the same gate."""
+    page = GENERATED / "compare.md"
+    text = page.read_text(encoding="utf-8")
+
+    sources = re.findall(r'class="gc-diagram gc-preview" src="([^"]+)"', text)
+    assert sources, "compare page has no raster previews"
+
+    previews = GENERATED / "previews"
+    broken = [
+        src
+        for src in sources
+        if not src.startswith("../previews/")
+        or not (previews / src.rsplit("/", 1)[-1]).exists()
+    ]
+    assert broken == [], f"compare previews with no target file: {broken}"
+
+
+def test_case_page_previews_resolve() -> None:
+    """Case pages render two levels below the catalog root; their srcs must say so."""
+    previews = GENERATED / "previews"
+    broken: list[str] = []
+    for page in (GENERATED / "cases").glob("*.md"):
+        for src in re.findall(
+            r'class="gc-diagram gc-preview" src="([^"]+)"',
+            page.read_text(encoding="utf-8"),
+        ):
+            if (
+                not src.startswith("../../previews/")
+                or not (previews / src.rsplit("/", 1)[-1]).exists()
+            ):
+                broken.append(f"{page.name} -> {src}")
+    assert broken == [], "case-page previews with no target file:\n" + "\n".join(broken)
+
+
+def _preview_url(case_id: str) -> str:
+    """A preview-URL provider matching the one the generator wires in."""
+    return f"previews/{case_id}.png"
+
+
+def test_raster_pages_embed_the_pixel_preview() -> None:
+    """A shaped raster case must show its pixels, not only the band schematic."""
+    case = get_registry().get("optical_rgb_small")
+    figure = "".join(case_diagram(case, preview_url_provider=_preview_url))
+    assert 'src="previews/optical_rgb_small.png"' in figure
+    assert "actual pixels" in figure
+
+
+def test_unshaped_raster_gets_no_preview(cases: list) -> None:
+    """No declared shape means no preview, whatever the provider answers.
+
+    The provider here answers for *every* id, which is the failure mode this
+    guards: the diagram must select on the case's own metadata rather than
+    trusting a URL to exist, or a page ends up with a broken image.
+    """
+    unshaped = [
+        case
+        for case in cases
+        if _category(case) == "raster"
+        and not getattr(case.assertions, "expected_shape", None)
+    ]
+    assert unshaped, "expected at least one raster case with no declared shape"
+    for case in unshaped:
+        figure = "".join(case_diagram(case, preview_url_provider=_preview_url))
+        assert "<img" not in figure, case.id
+
+
+def test_raster_preview_is_labelled() -> None:
+    """The image carries information, so it needs alt text like the SVGs do."""
+    case = get_registry().get("optical_rgb_small")
+    rendered = case_thumbnail(case, preview_url_provider=_preview_url)
+    assert "alt=" in rendered and 'alt=""' not in rendered
 
 
 def test_generated_card_links_have_no_markdown_targets() -> None:

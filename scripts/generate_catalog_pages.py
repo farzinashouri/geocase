@@ -68,6 +68,27 @@ def _build_geometry_provider() -> Any:
 #: draw it.
 GEOMETRY_PROVIDER = _build_geometry_provider()
 
+#: Directory the raster pixel previews are generated into, relative to
+#: ``OUTPUT_ROOT``. ``generate_raster_previews.py`` writes it; this module only
+#: links at it, so a missing preview shows up as the gate failing there rather
+#: than as a silently image-less page here.
+PREVIEW_DIR = "previews"
+
+
+def _preview_urls(prefix: str) -> Any:
+    """Return a preview-URL provider for pages sitting at ``prefix`` levels up.
+
+    The URL must be relative to the *rendered* page, not to the markdown file:
+    mkdocs serves ``cases/foo.md`` at ``/catalog/cases/foo/``, so a case page
+    is two levels below the catalog root even though its source file is one.
+    """
+
+    def provide(case_id: str) -> str | None:
+        return f"{prefix}{PREVIEW_DIR}/{case_id}.png"
+
+    return provide
+
+
 #: Vector cases that cannot be loaded fall back to an archetype, which is
 #: correct for the few deliberately-malformed fixtures but catastrophic if it
 #: happens to all of them. A run without geopandas would degrade *every* vector
@@ -185,7 +206,7 @@ def _badges(case: Any) -> list[str]:
     return ['<div class="gc-badges">', chips, "</div>", ""]
 
 
-def _case_card(case: Any, href: str) -> list[str]:
+def _case_card(case: Any, href: str, preview_urls: Any) -> list[str]:
     """Render one case as a thumbnail card for a grid listing."""
     meta = _value(case.format)
     geom = _value(case.geometry_type)
@@ -193,14 +214,14 @@ def _case_card(case: Any, href: str) -> list[str]:
         meta = f"{meta} &middot; {geom}"
     return [
         f'<a class="gc-card" href="{href}">',
-        case_thumbnail(case, GEOMETRY_PROVIDER),
+        case_thumbnail(case, GEOMETRY_PROVIDER, preview_urls),
         f'<span class="gc-card-title">{case.title}</span>',
         f'<span class="gc-card-meta">{meta}</span>',
         "</a>",
     ]
 
 
-def _case_grid(cases: list[Any], href_prefix: str) -> list[str]:
+def _case_grid(cases: list[Any], href_prefix: str, preview_prefix: str) -> list[str]:
     """Render a grid of case cards, skipping cases with no drawable schematic.
 
     ``href_prefix`` must be a *resolved* URL prefix, not a Markdown path.
@@ -208,11 +229,12 @@ def _case_grid(cases: list[Any], href_prefix: str) -> list[str]:
     inside them the way it does for Markdown links -- emitting ``foo.md`` here
     ships a broken link that ``mkdocs build --strict`` will not catch.
     """
+    preview_urls = _preview_urls(preview_prefix)
     cards: list[str] = []
     for case in cases:
-        if not case_thumbnail(case, GEOMETRY_PROVIDER):
+        if not case_thumbnail(case, GEOMETRY_PROVIDER, preview_urls):
             continue
-        cards.extend(_case_card(case, f"{href_prefix}{case.id}/"))
+        cards.extend(_case_card(case, f"{href_prefix}{case.id}/", preview_urls))
     if not cards:
         return []
     return ['<div class="gc-grid">', *cards, "</div>", ""]
@@ -432,7 +454,9 @@ def _render_case_page(
 
     # The schematic sits above the tables: it answers "what shape of thing is
     # this?" in one glance, which is the question the tables answer slowly.
-    lines.extend(case_diagram(case, GEOMETRY_PROVIDER))
+    # Case pages render at /catalog/cases/<id>/ -- two levels below the
+    # catalog root, where the previews directory sits.
+    lines.extend(case_diagram(case, GEOMETRY_PROVIDER, _preview_urls("../../")))
 
     lines.extend(_table(("Property", "Value"), _attribute_rows(case)))
     lines.append("")
@@ -552,6 +576,10 @@ def _render_compare_page(cases: list[Any]) -> str:
     progressive enhancement, and the page is fully readable without it.
     """
     ordered = sorted(cases, key=_compare_sort_key)
+    # compare.md is served at /catalog/compare/, a directory of its own, so
+    # every relative target here is one level below the catalog root. A bare
+    # ``cases/<id>/`` would resolve to /catalog/compare/cases/<id>/.
+    preview_urls = _preview_urls("../")
 
     lines = _front_matter(
         "Compare All Cases",
@@ -564,8 +592,10 @@ def _render_compare_page(cases: list[Any]) -> str:
     lines.append(
         f"Every one of the {len(ordered)} bundled cases in one table, sorted by "
         "category and geometry type so related shapes sit together. Vector previews "
-        "are drawn from each case's real coordinates; raster previews are schematics "
-        "of band structure, and NetCDF cases have no drawable diagram."
+        "are drawn from each case's real coordinates and raster previews from its "
+        "real pixels, with NoData in magenta; a raster that declares no pixel shape "
+        "shows a band-structure schematic instead, and NetCDF cases have no drawable "
+        "diagram."
     )
     lines.append("")
     lines.extend(_install_cta())
@@ -624,7 +654,7 @@ def _render_compare_page(cases: list[Any]) -> str:
         risks = sorted(case.risk_types)
         risk_text = ", ".join(risks) if risks else "--"
         crs = case.crs or "--"
-        thumb = case_thumbnail(case, GEOMETRY_PROVIDER) or "&mdash;"
+        thumb = case_thumbnail(case, GEOMETRY_PROVIDER, preview_urls) or "&mdash;"
         haystack = " ".join([case.id, str(case.title), *risks]).lower()
         lines.append(
             f'<tr data-case-id="{case.id}" '
@@ -635,7 +665,7 @@ def _render_compare_page(cases: list[Any]) -> str:
         )
         lines.append(f'<td class="gc-compare-preview">{thumb}</td>')
         lines.append(
-            f'<td><a class="gc-compare-link" href="cases/{case.id}/">'
+            f'<td><a class="gc-compare-link" href="../cases/{case.id}/">'
             f"{_html_escape(case.title)}</a>"
             f'<br><code class="gc-compare-id">{case.id}</code></td>'
         )
@@ -685,7 +715,9 @@ def _render_hub_page(
     # "what kind of data trips this?" -- the schematics answer that before the
     # table's names do.
     # Hub pages render at /catalog/<facet>/<slug>/, so cases sit two levels up.
-    lines.extend(_case_grid(sorted(cases, key=lambda item: item.id), "../../cases/"))
+    lines.extend(
+        _case_grid(sorted(cases, key=lambda item: item.id), "../../cases/", "../../")
+    )
 
     lines.append("| Case | Category | Format | Geometry |")
     lines.append("|---|---|---|---|")
@@ -748,9 +780,12 @@ def _render_index(
     )
     lines.append("")
     lines.append(
-        "    **Raster and NetCDF diagrams are never pictures of the pixels.** A raster "
-        "grid shows *that* there are pixels, not their values. Load the case to see "
-        "the actual data."
+        "    **Raster previews are real pixels, but contrast-stretched.** Brightness "
+        "is relative to each case's own range, so it carries no absolute value; "
+        "NoData is painted magenta, a colour no valid pixel can take. A raster that "
+        "declares no pixel shape gets a band-structure schematic instead, which shows "
+        "*that* there are pixels and not their values. NetCDF cases have no diagram "
+        "at all. Load the case to see the actual data."
     )
     lines.append("")
 

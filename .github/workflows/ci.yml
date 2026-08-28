@@ -168,3 +168,8 @@ jobs:
       # in the repository. They were already stale by 127 files when this gate
       # was added.
       - run: python scripts/generate_catalog_pages.py --check
+      # The raster previews are real pixels, so a fixture regenerating with
+      # different values silently changes what the docs claim about it. Files
+      # rather than inlined base64 exactly so this gate names the case that
+      # drifted instead of reporting "some bytes changed".
+      - run: python scripts/generate_raster_previews.py --check

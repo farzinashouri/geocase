@@ -1,6 +1,6 @@
 # Plan 29 — Real Geometry Previews and a Single Compare Page
 
-> **Status: Phases 1–2 implemented 2026-08-28; Phase 3 proposed.**
+> **Status: implemented 2026-08-28** (all three phases).
 
 ## Context
 
@@ -144,28 +144,89 @@ Constraints: no external library, and **the table must be fully readable with JS
 
 ---
 
-## Phase 3 — Raster previews (deferrable)
+## Phase 3 — Raster previews — **implemented 2026-08-28**
 
-Independent of Phases 1–2, and explicitly droppable without stranding them.
+Independent of Phases 1–2, and explicitly droppable without stranding them. It
+was not dropped.
 
-### 3.1 Decide the encoding first
+**What differed from the plan as written:**
+
+- **Neither encoding option needed Pillow.** The PNG writer in
+  `scripts/catalog_raster.py` is ~30 lines of `struct` + `zlib` from the
+  standard library. The `catalog` CI job installs `.[raster,vector]` and
+  nothing else, so this phase, like Phase 1, needed **no dependency change** —
+  only the new `--check` step in the job.
+- **The selector is `expected_shape`, and it covers 17 of the 30 raster
+  cases.** The other 13 declare no shape, band count or dtype at all, so they
+  had no band-stack schematic to begin with and now still have none. A case
+  with metadata but no preview keeps the schematic; the two paths are
+  captioned differently, exactly as Phase 1 does for vector.
+- **`dem_nan_nodata_small` is not entirely NaN** — 2 of its 256 pixels are.
+  That is a better test than the plan assumed: it forces the gate to assert
+  the flagged pixels are *distinguishable from* the ramp rather than merely
+  present, which is the property that matters.
+- **Per-band stretching had to go for the RGB path.** Stretching each of the
+  first three bands to its own range rendered `optical_rgb_small` — three
+  identical gradients offset by a constant — as pure grayscale, normalizing
+  away the exact relative-brightness signal that `incorrect_band_order` cases
+  turn on. The three channels now share one span. Single-band previews still
+  stretch to their own range, and the caption says "contrast-stretched" rather
+  than claiming absolute values.
+- **Pre-existing, fixed in passing:** Phase 2's compare-page case links were
+  broken. `compare.md` is served at `/catalog/compare/`, its own directory, so
+  `href="cases/<id>/"` resolved to `/catalog/compare/cases/<id>/`. The Phase 2
+  test only checked that a page with that *basename* existed, so it passed on
+  all 135 broken links. Links are now `../cases/<id>/` and
+  `test_compare_page_links_resolve` gates the depth, not just the basename.
+
+### 3.1 Decide the encoding first — done, separate PNG files
 
 Real pixels cannot be text. Two options, to be settled before any code:
 
 - **Embedded PNG data-URI in the markdown.** Self-contained, but base64 blobs in a generated file make `--check` diffs unreviewable — the gate degrades to "some bytes changed".
 - **PNG files under `docs/_generated/catalog/previews/` referenced by path.** Diffs stay readable (a binary file changed, by name), reviewable per case, and the existing `generate_checksums.py` pattern extends to cover them.
 
-**Recommendation: separate PNG files.** It preserves the reviewability property that motivated the text-only constraint originally.
+**Settled: separate PNG files**, one per case, written by
+`scripts/generate_raster_previews.py`. It preserves the reviewability property
+that motivated the text-only constraint originally: a failing `--check` names
+the case whose pixels moved. Determinism is what makes that gate meaningful, so
+the encoder pins its zlib level and uses filter type 0 on every scanline — a
+library default changing underneath us cannot silently rewrite all 17 files.
 
-### 3.2 Failing test, then render
+### 3.2 Failing test, then render — done
 
-- Assert a preview exists for every raster case declaring `expected_shape`, and that a known-nodata case's preview marks nodata distinctly from valid pixels.
-- Render via the existing dependency-free `geocase.raster` primitive where possible; grayscale ramp for single-band, RGB composite for 3+ band, nodata in a flagged colour that is not on the ramp.
-- Upscale small rasters with nearest-neighbour — many payloads are 64px or smaller and must not be shown blurred.
+Tests in `tests/unit/test_catalog_raster_previews.py`, all watched failing
+first (the module did not exist, so collection errored):
 
-### 3.3 Gate the artifacts
+- `test_every_shaped_raster_case_has_a_preview` and
+  `test_no_previews_for_unshaped_cases` — coverage in both directions, so a
+  removed case leaves no orphan PNG behind.
+- `test_nodata_renders_off_the_ramp` / `test_valid_pixels_are_not_the_nodata_colour`
+  — NoData is magenta, every valid pixel is clamped one step away from the
+  channel extremes so real data can never land on it, and the rest of a
+  single-band preview stays strictly grayscale.
+- `test_small_rasters_are_upscaled_without_blending` — nearest-neighbour by an
+  *integer* factor, so no source pixel ends up wider than its neighbours.
+- `test_stored_previews_match_a_fresh_render` — the determinism property the
+  `--check` gate rests on, asserted in the test suite too rather than only in CI.
 
-Extend the catalog CI job to regenerate previews and fail on drift, matching how the coverage matrices are gated.
+Rendering reads through `case.open()` (rasterio) rather than the
+`geocase.raster` primitive: the primitive *writes* fixtures, it does not read
+the catalog's existing GeoTIFFs. Grayscale ramp lifted off pure black for
+single-band, first-three-bands composite for 3+, NoData flagged.
+
+`scripts/catalog_svg.py` gained a `preview_url_provider` mirroring Phase 1's
+`geometry_provider`, so raster cases render an `<img>` at their preview when
+one exists and fall back to the band-stack schematic when it does not. It
+re-checks `expected_shape` itself rather than trusting the provider's URL to
+exist — a broken image on a page is worse than an honest schematic.
+
+### 3.3 Gate the artifacts — done
+
+`python scripts/generate_raster_previews.py --check` runs in the `catalog` CI
+job right after the catalog-pages gate. `docs/stylesheets/catalog.css` sets
+`image-rendering: pixelated` on `.gc-preview` so the browser cannot undo the
+nearest-neighbour upscaling with a smooth resample.
 
 ---
 
@@ -177,10 +238,27 @@ Extend the catalog CI job to regenerate previews and fail on drift, matching how
 4. `ruff format --check scripts tests && ruff check scripts tests` and `mypy src`.
 5. **By eye:** `dateline_crossing_polygon`, `self_intersecting_bowtie`, and `simple_valid_polygon` must be visibly different from one another, and each must look like what its title says. This is the check that actually decides whether the plan worked — the automated tests can only prove the drawings differ, not that they are *right*.
 6. Confirm `unclosed_ring_polygon` renders its fallback with the honest caption rather than breaking the build.
+7. `python scripts/generate_raster_previews.py --check` — clean after regeneration.
+8. **By eye, for Phase 3:** a NoData case must show magenta where the fixture has fill, and a
+   multi-band case must not render grayscale. Both were checked by tiling the generated PNGs
+   into one image; the grayscale check is what caught the per-band-stretch bug.
+
+**Run 2026-08-28 (conda `geocase`):** `pytest tests -q` 1738 passed / 37 skipped;
+both `--check` gates clean; `mkdocs build --strict` clean; `mypy src` clean;
+`ruff format --check` and `ruff check` clean on every file this plan touched.
+Four pre-existing `ruff` findings remain in `scripts/` (two `I001`, two `E501`,
+in `catalog_svg.py` and `validate_case_content.py`) — outside the repo's lint
+gate, which covers `src tests`, and untouched here.
 
 ## Risks
 
 - **Preview churn on regeneration.** Mitigated by fixed 2-decimal rounding in 1.2; if diffs still churn, the rounding is the first thing to tighten.
 - **Generator runtime.** 103 case loads on every docs regeneration. Acceptable at this size; if it bites, cache keyed on the payload checksums that `generate_checksums.py` already maintains.
 - **A preview could mislead more than an archetype.** A fit-to-viewport transform normalizes away real scale, so a continent-sized and a metre-sized polygon can render identically. The caption must not overclaim: it says the geometry is real, not that the scale is comparable across cases.
-- **Phase 3 weakens the `--check` gate** whichever encoding wins. That is the main reason it is sequenced last and kept droppable.
+- ~~**Phase 3 weakens the `--check` gate** whichever encoding wins.~~ Resolved by the
+  separate-files encoding plus a deterministic encoder: the gate now reports drift *by case
+  id*, which is arguably a sharper signal than a line diff inside one large generated file.
+  The residual weakness is that a reviewer cannot read what changed without opening the PNG.
+- **Raster previews drift with their fixtures.** `generate_raster_fixtures.py` and
+  `generate_raster_previews.py` must be regenerated together; the CI job runs both `--check`
+  gates, so a mismatch fails rather than shipping a preview of pixels that no longer exist.

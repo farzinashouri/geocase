@@ -11,9 +11,14 @@ callable taking a case id and returning that case's loaded GeoDataFrame (or
 archetype of its geometry type. ``generate_catalog_pages.py`` supplies one; the
 projection itself lives in :mod:`catalog_geometry`.
 
-The two paths are captioned differently, and that distinction is not cosmetic:
-a page that claims to show real geometry while drawing an archetype is lying
-about its own provenance. Rasters and NetCDF remain metadata-only either way.
+A caller can likewise pass a ``preview_url_provider``: a callable taking a
+case id and returning the URL of that case's stored pixel preview (generated
+by ``generate_raster_previews.py``), or ``None``. Raster cases then show their
+real pixels instead of the band-stack schematic. NetCDF stays undrawable.
+
+The real and metadata paths are captioned differently, and that distinction is
+not cosmetic: a page that claims to show real data while drawing an archetype
+is lying about its own provenance.
 
 Colours are CSS custom properties defined in ``docs/stylesheets/catalog.css``
 so the diagrams follow the Material light/dark toggle. Nothing here hard-codes
@@ -179,6 +184,43 @@ def _vector_render(
 # --- raster schematics -------------------------------------------------------
 
 
+#: A raster case id maps to the URL of its stored pixel preview, or ``None``
+#: when that case has no preview (no declared shape, or an unreadable payload).
+#: The URL is relative to the page being rendered, so the provider the
+#: generator supplies is page-specific -- see ``generate_catalog_pages.py``.
+PreviewUrlProvider = Callable[[str], str | None]
+
+
+def _raster_preview(case: Any, provider: PreviewUrlProvider) -> str | None:
+    """Reference the case's stored pixel preview, or ``None`` to fall back.
+
+    An ``<img>`` rather than an inlined data-URI: the previews are files
+    precisely so the ``--check`` diff names the case whose pixels moved, and
+    inlining them here would put the base64 back into the markdown it was
+    kept out of.
+    """
+    # ``expected_shape`` is the same selector ``catalog_raster.preview_cases``
+    # uses. Checking it here too means a provider that answers for every id
+    # cannot put an ``<img>`` on a page whose case has no preview file.
+    shape = getattr(getattr(case, "assertions", None), "expected_shape", None)
+    if not shape:
+        return None
+
+    try:
+        url = provider(case.id)
+    except Exception:
+        return None
+    if not url:
+        return None
+
+    dims = "x".join(str(dim) for dim in shape)
+    label = f"Pixels of {case.id}, a {dims} raster, with NoData in magenta"
+    return (
+        f'<img class="gc-diagram gc-preview" src="{url}" alt="{label}" '
+        'loading="lazy" decoding="async">'
+    )
+
+
 def _raster_svg(case: Any) -> str | None:
     """Draw a band stack, with grid density hinting at the pixel shape.
 
@@ -265,9 +307,10 @@ def _raster_svg(case: Any) -> str | None:
 def _caption(case: Any, is_real: bool = False) -> str:
     """One line naming what the diagram is asserting, so it is falsifiable.
 
-    ``is_real`` distinguishes the two vector paths. It must track what was
-    actually drawn: the caption is the only thing on the page telling a reader
-    whether they are looking at this case's coordinates or at an archetype.
+    ``is_real`` distinguishes the real-data path from the metadata one, for
+    both vector and raster. It must track what was actually drawn: the caption
+    is the only thing on the page telling a reader whether they are looking at
+    this case's own bytes or at a drawing of its metadata.
     """
     category = str(getattr(case.category, "value", case.category))
     assertions = getattr(case, "assertions", None)
@@ -298,20 +341,38 @@ def _caption(case: Any, is_real: bool = False) -> str:
         if assertions.nodata_convention and assertions.nodata_convention != "none":
             bits.append(f"{assertions.nodata_convention} NoData")
     detail = ", ".join(bits)
+    if is_real:
+        # Same honesty constraint as the vector preview caption: the pixels are
+        # this case's own, but the display is contrast-stretched to 0-255, so
+        # brightness carries no absolute meaning.
+        return (
+            f"{detail}. Rendered from the case's actual pixels, contrast-stretched "
+            "for display; NoData is shown in magenta."
+        )
     return f"Schematic: {detail}. Drawn from metadata, not from the pixels."
 
 
-def _render(case: Any, provider: GeometryProvider | None) -> tuple[str | None, bool]:
+def _render(
+    case: Any,
+    provider: GeometryProvider | None,
+    preview_url_provider: PreviewUrlProvider | None = None,
+) -> tuple[str | None, bool]:
     category = str(getattr(case.category, "value", case.category))
     if category == "vector":
         return _vector_render(case, provider)
     if category == "raster":
+        if preview_url_provider is not None:
+            preview = _raster_preview(case, preview_url_provider)
+            if preview is not None:
+                return preview, True
         return _raster_svg(case), False
     return None, False
 
 
 def case_diagram(
-    case: Any, geometry_provider: GeometryProvider | None = None
+    case: Any,
+    geometry_provider: GeometryProvider | None = None,
+    preview_url_provider: PreviewUrlProvider | None = None,
 ) -> list[str]:
     """Return the markdown lines for a case's diagram, or [] if undrawable.
 
@@ -320,10 +381,11 @@ def case_diagram(
     band count) is intentional -- a placeholder box would assert structure the
     metadata does not actually have.
 
-    Pass ``geometry_provider`` to draw vector cases from their real geometry;
-    without it every diagram is metadata-only.
+    Pass ``geometry_provider`` to draw vector cases from their real geometry
+    and ``preview_url_provider`` to show raster cases' real pixels; without
+    either, every diagram is metadata-only.
     """
-    svg, is_real = _render(case, geometry_provider)
+    svg, is_real = _render(case, geometry_provider, preview_url_provider)
     if svg is None:
         return []
 
@@ -336,7 +398,11 @@ def case_diagram(
     ]
 
 
-def case_thumbnail(case: Any, geometry_provider: GeometryProvider | None = None) -> str:
-    """Return a bare inline SVG for grid/listing use, or "" if undrawable."""
-    svg, _ = _render(case, geometry_provider)
+def case_thumbnail(
+    case: Any,
+    geometry_provider: GeometryProvider | None = None,
+    preview_url_provider: PreviewUrlProvider | None = None,
+) -> str:
+    """Return a bare inline SVG or preview ``<img>``, or "" if undrawable."""
+    svg, _ = _render(case, geometry_provider, preview_url_provider)
     return svg or ""
