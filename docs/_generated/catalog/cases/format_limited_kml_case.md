@@ -25,6 +25,7 @@ A KML file demonstrating inherent format limitations: all extended-data attribut
 | Format | KML |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Copenhagen, Denmark (synthetic) &mdash; 10.00&deg;E, 52.00&deg;N &rarr; 12.30&deg;E, 54.30&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -195,7 +196,12 @@ Three simple WGS 84 polygons (rectangular zones) across northern Europe.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "52.0 10.0 54.3 12.3"
+    },
+    "name": "Copenhagen, Denmark (synthetic)"
   }
 }
 </script>

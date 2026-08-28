@@ -24,6 +24,7 @@ A four-band Cloud-Optimized GeoTIFF (blue, green, red, NIR) with NoData, interna
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Southern Italy / Sicily (synthetic, UTM 33N) &mdash; 15.00&deg;E, 40.65&deg;N &rarr; 15.01&deg;E, 40.65&deg;N |
 | Test tier | integration |
 | Size class | tiny |
 | Storage class | bundled |
@@ -154,7 +155,12 @@ Confirm GeoCase recognises a tiled, overview-bearing multispectral GeoTIFF as CO
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "40.645091 15.0 40.650857 15.00757"
+    },
+    "name": "Southern Italy / Sicily (synthetic, UTM 33N)"
   }
 }
 </script>

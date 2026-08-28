@@ -24,6 +24,7 @@ A small single-band GeoTIFF stored as 64-bit floating-point values. Tests that r
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Equator, Gulf of Guinea (synthetic) &mdash; 15.00&deg;E, 0.01&deg;N &rarr; 15.00&deg;E, 0.01&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -154,7 +155,12 @@ Single-band `float64` raster for validating high-precision floating-point dtype 
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.008143 15.0 0.009047 15.000899"
+    },
+    "name": "Equator, Gulf of Guinea (synthetic)"
   }
 }
 </script>

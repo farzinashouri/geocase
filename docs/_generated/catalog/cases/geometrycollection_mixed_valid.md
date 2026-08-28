@@ -25,6 +25,7 @@ A valid GeometryCollection fixture containing a point, line, and polygon to supp
 | Format | GeoJSON |
 | Geometry type | GeometryCollection |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 11.00&deg;E, 50.60&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -142,7 +143,12 @@ Valid mixed GeometryCollection case for loader and metadata coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.0 10.0 50.6 11.0"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

@@ -144,6 +144,11 @@ jobs:
       # likely to drift. `validate_catalog.py` above stays reader-dependency-
       # free and keeps running in both. See docs/plans/28-validate-geocase.md.
       - run: python scripts/validate_case_content.py
+      # Extents are computed from the real bytes, so a fixture that moves
+      # without a regeneration would otherwise ship a Location row and a world
+      # map marker pointing at the wrong place. Same reader dependencies as
+      # the content gate above, hence the same job.
+      - run: python scripts/catalog_extent.py --check
       - run: python scripts/generate_raster_fixtures.py --check
       - run: python scripts/generate_vector_fixtures.py --check
       # Checksums cover the whole bundled catalog, not just raster: the vector

@@ -25,6 +25,7 @@ Canonical baseline multipoint stored as a GeoPackage for cross-format comparison
 | Format | GPKG |
 | Geometry type | MultiPoint |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 10.40&deg;E, 50.20&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -164,7 +165,12 @@ geometry is derived from `params.canonical_source_case_id`
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.0 10.0 50.2 10.4"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

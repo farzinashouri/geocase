@@ -25,6 +25,7 @@ A vector dataset whose attribute table contains text in multiple character encod
 | Format | GPKG |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Western Europe (synthetic) &mdash; 1.00&deg;E, 51.00&deg;N &rarr; 3.00&deg;E, 53.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -167,7 +168,12 @@ robustness (`UTF-8`, `Latin-1`, `Windows-1252` style content).
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "51.0 1.0 53.0 3.0"
+    },
+    "name": "Western Europe (synthetic)"
   }
 }
 </script>

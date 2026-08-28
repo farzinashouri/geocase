@@ -25,6 +25,7 @@ A polygon encircling the south pole in EPSG:4326. Exercises polar projection sin
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | South Pole &mdash; 90.00&deg;W, 89.50&deg;S &rarr; 90.00&deg;E, 84.00&deg;S |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -170,7 +171,12 @@ projected 2-D for a south-polar view).
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "-89.5 -90.0 -84.0 90.0"
+    },
+    "name": "South Pole"
   }
 }
 </script>

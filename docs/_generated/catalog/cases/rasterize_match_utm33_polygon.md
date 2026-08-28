@@ -25,6 +25,7 @@ A projected polygon in EPSG:32633 that sits fully inside the bundled UTM raster 
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:32633` |
+| Location | Central Europe (synthetic, UTM 33N) &mdash; 14.87&deg;E, 50.56&deg;N &rarr; 15.13&deg;E, 50.73&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -143,7 +144,12 @@ A projected polygon that lies within the bundled `geotiff_utm_boundary` raster e
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.556352 14.865401 50.727219 15.134599"
+    },
+    "name": "Central Europe (synthetic, UTM 33N)"
   }
 }
 </script>

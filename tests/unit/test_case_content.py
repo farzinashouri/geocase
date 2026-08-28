@@ -13,7 +13,12 @@ import json
 
 import pytest
 
-from geocase.catalog.models import AssertionHints, CaseMetadata, FileMap
+from geocase.catalog.models import (
+    AssertionHints,
+    CaseMetadata,
+    FileMap,
+    SpatialExtent,
+)
 
 rasterio = pytest.importorskip("rasterio")
 
@@ -458,3 +463,77 @@ def test_every_bundled_raster_case_declares_expected_shape():
     )
 
     assert missing == [], f"bundled raster cases with no expected_shape: {missing}"
+
+
+# --- Plan 31: declared extent vs. the real bytes ---------------------------
+
+
+def test_declared_extent_matching_the_data_passes(tmp_path):
+    """A correct extent is silent, like every other satisfied declaration."""
+    pytest.importorskip("geopandas")
+    from geocase.catalog.content import check_case_content
+
+    _write_geojson(tmp_path / "v.geojson", [_point(10.0, 50.0), _point(11.0, 51.0)])
+    meta = _vector_metadata("in_place", "v.geojson")
+    meta.extent = SpatialExtent(west=10.0, south=50.0, east=11.0, north=51.0)
+
+    assert check_case_content(tmp_path, meta) == []
+
+
+def test_declared_extent_in_the_wrong_place_is_an_error(tmp_path):
+    """The failure this gate exists for: a box that is not where the data is.
+
+    An extent is generated, so a stale one means a fixture moved and the page
+    -- and the world map -- now point at the wrong continent.
+    """
+    pytest.importorskip("geopandas")
+    from geocase.catalog.content import check_case_content
+
+    _write_geojson(tmp_path / "v.geojson", [_point(10.0, 50.0), _point(11.0, 51.0)])
+    meta = _vector_metadata("moved", "v.geojson")
+    meta.extent = SpatialExtent(west=-120.0, south=30.0, east=-119.0, north=31.0)
+
+    errors = check_case_content(tmp_path, meta)
+    assert any("extent" in e for e in errors), errors
+
+
+def test_no_declared_extent_is_not_checked(tmp_path):
+    """The field is optional -- netcdf and the malformed cases carry none."""
+    pytest.importorskip("geopandas")
+    from geocase.catalog.content import check_case_content
+
+    _write_geojson(tmp_path / "v.geojson", [_point(10.0, 50.0)])
+    meta = _vector_metadata("no_extent", "v.geojson")
+
+    assert meta.extent is None
+    assert check_case_content(tmp_path, meta) == []
+
+
+def test_assert_bounds_tolerates_small_drift():
+    """Rounding to six decimals must not make a correct extent fail."""
+    from geocase.assertions import assert_bounds
+
+    assert_bounds(
+        (10.0000001, 50.0, 11.0, 51.0),
+        SpatialExtent(west=10.0, south=50.0, east=11.0, north=51.0),
+    )
+
+
+def test_assert_bounds_rejects_a_real_displacement():
+    from geocase.assertions import assert_bounds
+
+    with pytest.raises(AssertionError):
+        assert_bounds(
+            (10.0, 50.0, 11.0, 51.0),
+            SpatialExtent(west=-120.0, south=30.0, east=-119.0, north=31.0),
+        )
+
+
+def test_assert_bounds_understands_the_antimeridian_wrap():
+    """170..190 and the wrapped 170..-170 are the same box, not a 340 error."""
+    from geocase.assertions import assert_bounds
+
+    assert_bounds(
+        (170.0, 40.0, 190.0, 50.0),
+        SpatialExtent(west=170.0, south=40.0, east=-170.0, north=50.0),
+    )

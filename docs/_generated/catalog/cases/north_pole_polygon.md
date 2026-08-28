@@ -25,6 +25,7 @@ A polygon encircling the north pole in EPSG:4326. Its area and centroid are wron
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | North Pole &mdash; 90.00&deg;W, 84.00&deg;N &rarr; 90.00&deg;E, 89.50&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -175,7 +176,12 @@ The ring is wound counter-clockwise (right-hand rule) and encloses the pole.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "84.0 -90.0 89.5 90.0"
+    },
+    "name": "North Pole"
   }
 }
 </script>

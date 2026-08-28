@@ -25,6 +25,7 @@ A polygon with a shell and interior ring touching at a single point. This is par
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Near the origin (synthetic, no real-world location) &mdash; 0.00&deg;E, 0.00&deg;N &rarr; 6.00&deg;E, 6.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -148,7 +149,12 @@ Polygon with touching shell/interior ring to capture engine-dependent validity b
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.0 0.0 6.0 6.0"
+    },
+    "name": "Near the origin (synthetic, no real-world location)"
   }
 }
 </script>

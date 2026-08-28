@@ -25,6 +25,7 @@ A Svalbard polygon in the special UTM 33X band. The standard zone-from-longitude
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Svalbard, Arctic Norway &mdash; 19.50&deg;E, 77.50&deg;N &rarr; 20.50&deg;E, 78.50&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -145,7 +146,12 @@ A polygon in the Svalbard latitude band used to test special UTM zone logic.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "77.5 19.5 78.5 20.5"
+    },
+    "name": "Svalbard, Arctic Norway"
   }
 }
 </script>

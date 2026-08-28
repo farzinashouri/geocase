@@ -26,6 +26,7 @@ from geocase.catalog.models import (
     NodataConvention,
     SizeClass,
     SourceInfo,
+    SpatialExtent,
     Status,
     StorageClass,
     SuiteMetadata,
@@ -48,6 +49,7 @@ __all__ = [
     "AssertionHints",
     "FileMap",
     "SourceInfo",
+    "SpatialExtent",
     # Field vocabularies
     "Category",
     "FormatType",

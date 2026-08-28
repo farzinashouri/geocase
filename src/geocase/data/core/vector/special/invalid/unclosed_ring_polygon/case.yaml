@@ -41,6 +41,9 @@ loader_hint: geopandas
 geometry_type: Polygon
 crs: EPSG:4326
 
+# Hand-written; scripts/catalog_extent.py does not touch it.
+region: "Unplaceable -- the geometry is deliberately malformed"
+
 files:
   primary: geometry.geojson
   notes: notes.md

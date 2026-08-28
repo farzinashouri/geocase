@@ -25,6 +25,7 @@ A zero-length LineString whose two vertices are identical. The geometry is parse
 | Format | GeoJSON |
 | Geometry type | LineString |
 | CRS | `EPSG:4326` |
+| Location | Mediterranean, off Libya (synthetic) &mdash; 12.00&deg;E, 34.00&deg;N &rarr; 12.00&deg;E, 34.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -148,7 +149,12 @@ Zero-length LineString that parses successfully but is geometrically degenerate.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "34.0 12.0 34.0 12.0"
+    },
+    "name": "Mediterranean, off Libya (synthetic)"
   }
 }
 </script>

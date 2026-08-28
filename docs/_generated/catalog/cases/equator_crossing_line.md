@@ -25,6 +25,7 @@ A WGS84 LineString crossing latitude 0 to expose equatorial edge cases and sign-
 | Format | GeoJSON |
 | Geometry type | LineString |
 | CRS | `EPSG:4326` |
+| Location | Equator at the prime meridian (synthetic) &mdash; 30.00&deg;W, 1.00&deg;S &rarr; 30.00&deg;E, 1.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -145,7 +146,12 @@ Simple LineString crossing the equator for geographic boundary coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "-1.0 -30.0 1.0 30.0"
+    },
+    "name": "Equator at the prime meridian (synthetic)"
   }
 }
 </script>

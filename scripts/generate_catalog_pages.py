@@ -46,7 +46,7 @@ from geocase.catalog.roots import case_roots_by_id  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from catalog_geometry import geometry_provider  # noqa: E402
-from catalog_svg import case_diagram, case_thumbnail  # noqa: E402
+from catalog_svg import case_diagram, case_thumbnail, world_map  # noqa: E402
 
 
 def _build_geometry_provider() -> Any:
@@ -162,6 +162,49 @@ def _generated_note() -> list[str]:
     ]
 
 
+def _format_degrees(value: float, axis: str) -> str:
+    """Render one coordinate with a hemisphere letter, not a signed number.
+
+    ``-170.0`` is correct and unreadable; ``170.00W`` is the form a reader can
+    place without doing arithmetic in their head.
+    """
+    positive, negative = ("E", "W") if axis == "lon" else ("N", "S")
+    hemisphere = positive if value >= 0 else negative
+    return f"{abs(value):.2f}&deg;{hemisphere}"
+
+
+def _format_extent(extent: Any) -> str:
+    """Render an extent as a corner-to-corner span, naming a wrap explicitly.
+
+    The wrap has to be said in words. Four numbers where west is larger than
+    east look like a typo unless the page says what they mean, and this is
+    the one fact the antimeridian cases exist to teach.
+    """
+    corner_sw = (
+        f"{_format_degrees(extent.west, 'lon')}, {_format_degrees(extent.south, 'lat')}"
+    )
+    corner_ne = (
+        f"{_format_degrees(extent.east, 'lon')}, {_format_degrees(extent.north, 'lat')}"
+    )
+    span = f"{corner_sw} &rarr; {corner_ne}"
+    if extent.crosses_antimeridian:
+        span += (
+            " (crosses the antimeridian &mdash; the box runs east from the "
+            "first corner, over 180&deg;)"
+        )
+    return span
+
+
+def _location_value(case: Any) -> str | None:
+    """The Location row's value: the region label, the extent, or both."""
+    region = getattr(case, "region", None)
+    extent = getattr(case, "extent", None)
+    if extent is not None:
+        formatted = _format_extent(extent)
+        return f"{region} &mdash; {formatted}" if region else formatted
+    return region
+
+
 def _attribute_rows(case: Any) -> list[tuple[str, str]]:
     """Return the (label, value) pairs shown in the case summary table."""
     rows: list[tuple[str, str]] = [
@@ -173,6 +216,12 @@ def _attribute_rows(case: Any) -> list[tuple[str, str]]:
         rows.append(("Geometry type", _value(case.geometry_type)))
     if case.crs:
         rows.append(("CRS", f"`{case.crs}`"))
+    # A CRS is a coordinate convention, not a location: two cases sharing
+    # EPSG:4326 can be on opposite sides of the planet. This is the row that
+    # actually says where the data is.
+    location = _location_value(case)
+    if location:
+        rows.append(("Location", location))
     rows.extend(
         [
             ("Test tier", _value(case.test_tier)),
@@ -337,15 +386,27 @@ def _json_ld(case: Any, site_url: str) -> list[str]:
             }
         ]
 
+    place: dict[str, Any] = {}
     if case.crs:
-        payload["spatialCoverage"] = {
-            "@type": "Place",
-            "additionalProperty": {
-                "@type": "PropertyValue",
-                "name": "coordinateReferenceSystem",
-                "value": case.crs,
-            },
+        place["additionalProperty"] = {
+            "@type": "PropertyValue",
+            "name": "coordinateReferenceSystem",
+            "value": case.crs,
         }
+    extent = getattr(case, "extent", None)
+    if extent is not None:
+        # schema.org GeoShape.box is "south west north east", space separated,
+        # in WGS84. This is the SEO payoff: a search engine understands a box
+        # and understands nothing whatsoever about an EPSG string.
+        place["geo"] = {
+            "@type": "GeoShape",
+            "box": (f"{extent.south} {extent.west} {extent.north} {extent.east}"),
+        }
+    region = getattr(case, "region", None)
+    if region:
+        place["name"] = region
+    if place:
+        payload["spatialCoverage"] = {"@type": "Place", **place}
 
     rendered = json.dumps(payload, indent=2, ensure_ascii=False)
     return ['<script type="application/ld+json">', rendered, "</script>", ""]
@@ -567,6 +628,61 @@ def _html_escape(text: str) -> str:
     ).replace('"', "&quot;")
 
 
+def _coverage_maps(cases: list[Any]) -> list[str]:
+    """Two world maps -- vector and raster -- above the compare table.
+
+    Two rather than one, and that is a requirement rather than a layout
+    preference. 23 of the bundled rasters share a single synthetic UTM 33N
+    transform and the vector baselines pile onto two more points, so a single
+    combined map would put 130 markers on roughly four dots and tell a reader
+    nothing. Split by category, each map is legible on its own terms.
+    """
+    groups = [
+        (
+            "Vector coverage",
+            [case for case in cases if _value(case.category) == "vector"],
+            "Where the vector cases sit. Most are synthetic fixtures placed at "
+            "shared convenience origins in Central Europe, so co-located cases "
+            "are collapsed into one marker carrying a count.",
+        ),
+        (
+            "Raster coverage",
+            [case for case in cases if _value(case.category) == "raster"],
+            "Where the raster cases sit. The large cluster is the shared "
+            "UTM 33N fixture transform; the dashed edges of the map are the "
+            "antimeridian, which several cases deliberately straddle.",
+        ),
+    ]
+
+    lines = ["## Where these cases are", ""]
+    lines.append(
+        "A case's CRS says what coordinate convention it uses, not where it is. "
+        "These maps plot each case at its computed WGS84 extent. Cases with no "
+        "valid position -- a deliberately malformed geometry, coordinates "
+        "outside the WGS84 domain -- are absent rather than invented."
+    )
+    lines.append("")
+
+    for title, group, blurb in groups:
+        svg = world_map(group, title)
+        if not svg:
+            continue
+        placed = len([case for case in group if getattr(case, "extent", None)])
+        lines.append(f"### {title}")
+        lines.append("")
+        lines.append('<figure class="gc-figure gc-map-figure">')
+        lines.append(svg)
+        lines.append(
+            f"<figcaption>{blurb} {placed} of {len(group)} "
+            f"{title.split()[0].lower()} cases have a resolvable extent."
+            "</figcaption>"
+        )
+        lines.append("</figure>")
+        lines.append("")
+
+    return lines
+
+
 def _render_compare_page(cases: list[Any]) -> str:
     """Render the single table that puts every case side by side.
 
@@ -599,7 +715,10 @@ def _render_compare_page(cases: list[Any]) -> str:
     )
     lines.append("")
     lines.extend(_install_cta())
+    lines.extend(_coverage_maps(ordered))
 
+    lines.append("## All cases")
+    lines.append("")
     lines.append('<div class="gc-compare-controls">')
     lines.append(
         '<input type="search" id="gc-compare-search" class="gc-compare-search" '

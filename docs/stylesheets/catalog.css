@@ -13,6 +13,13 @@
 	--gc-diagram-fill: rgba(0, 150, 136, 0.18);
 	--gc-diagram-accent: #00796b;
 	--gc-diagram-muted: rgba(0, 150, 136, 0.07);
+	--gc-map-ocean: #eef3f4;
+	--gc-map-land: #cfd9da;
+	--gc-map-grid: #ffffff;
+	--gc-map-edge: #00695c;
+	--gc-map-marker: #00796b;
+	--gc-map-extent: #009688;
+	--gc-map-label: #ffffff;
 }
 
 [data-md-color-scheme="slate"] {
@@ -23,6 +30,13 @@
 	--gc-diagram-fill: rgba(77, 182, 172, 0.22);
 	--gc-diagram-accent: #80cbc4;
 	--gc-diagram-muted: rgba(77, 182, 172, 0.09);
+	--gc-map-ocean: #1b2426;
+	--gc-map-land: #37474f;
+	--gc-map-grid: #263238;
+	--gc-map-edge: #4db6ac;
+	--gc-map-marker: #80cbc4;
+	--gc-map-extent: #4db6ac;
+	--gc-map-label: #10191a;
 }
 
 /* The header uses the wordmark without a separate icon. */
@@ -228,4 +242,39 @@ table.gc-compare th[data-sort][aria-sort="descending"]::after {
 .gc-compare-risks {
 	max-width: 18em;
 	color: var(--md-default-fg-color--light);
+}
+
+/* World maps on the compare page.
+ *
+ * Full width rather than the schematics' fixed 180px: these are locator maps
+ * carrying 100+ markers, and at thumbnail size the clusters would overlap
+ * each other and the point of drawing them separately would be lost.
+ */
+.gc-map-figure {
+	text-align: left;
+}
+
+.gc-worldmap {
+	display: block;
+	width: 100%;
+	max-width: 720px;
+	height: auto;
+	margin: 0 auto;
+	border-radius: 3px;
+}
+
+/* Markers get a pointer cursor because each carries a <title> tooltip naming
+   the cases stacked at that spot -- the only way to read a 36-case cluster. */
+.gc-map-marker {
+	cursor: help;
+}
+
+.gc-map-marker:hover circle {
+	fill-opacity: 1;
+}
+
+/* The count sits on top of its marker, so it must never swallow the tooltip. */
+.gc-map-count {
+	pointer-events: none;
+	font-family: var(--md-text-font-family, sans-serif);
 }

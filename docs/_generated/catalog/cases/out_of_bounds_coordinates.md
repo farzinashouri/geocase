@@ -25,6 +25,7 @@ A point at latitude 100°, beyond the valid ±90° range — the classic symptom
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Undefined -- coordinates fall outside the WGS84 domain |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -177,7 +178,8 @@ Tests detection of coordinates that exceed valid geographic ranges.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "name": "Undefined -- coordinates fall outside the WGS84 domain"
   }
 }
 </script>

@@ -25,6 +25,7 @@ Three points within 50 km of each other across the antimeridian. Clustering that
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Antimeridian, North Pacific &mdash; 179.80&deg;E, 10.00&deg;N &rarr; 179.80&deg;W, 10.40&deg;N (crosses the antimeridian &mdash; the box runs east from the first corner, over 180&deg;) |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -149,7 +150,12 @@ clustering can incorrectly split them into multiple clusters.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "10.0 179.8 10.4 -179.8"
+    },
+    "name": "Antimeridian, North Pacific"
   }
 }
 </script>

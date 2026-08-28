@@ -24,6 +24,7 @@ A three-band GeoTIFF with NoData in every band. Exercises band-order preservatio
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Equator, Gulf of Guinea (synthetic) &mdash; 15.00&deg;E, 0.01&deg;N &rarr; 15.00&deg;E, 0.01&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -167,7 +168,12 @@ Three-band raster baseline for validating multi-band read behavior.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.008143 15.0 0.009047 15.000899"
+    },
+    "name": "Equator, Gulf of Guinea (synthetic)"
   }
 }
 </script>

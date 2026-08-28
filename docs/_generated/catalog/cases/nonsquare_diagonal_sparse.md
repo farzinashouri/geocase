@@ -23,6 +23,7 @@ Raster with non-square cells and sparse diagonal valid pixels to surface edge be
 | Case ID | `nonsquare_diagonal_sparse` |
 | Category | raster |
 | Format | GeoTIFF |
+| Location | Southern Italy / Sicily (synthetic, UTM 33N) &mdash; 12.00&deg;E, 41.51&deg;N &rarr; 12.01&deg;E, 41.51&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -182,6 +183,14 @@ purpose. See `docs/plans/28-validate-geocase.md` Phase 1.
       "encodingFormat": "GeoTIFF",
       "name": "nonsquare_diagonal_sparse.tif"
     }
-  ]
+  ],
+  "spatialCoverage": {
+    "@type": "Place",
+    "geo": {
+      "@type": "GeoShape",
+      "box": "41.510469 12.004239 41.512777 12.010082"
+    },
+    "name": "Southern Italy / Sicily (synthetic, UTM 33N)"
+  }
 }
 </script>

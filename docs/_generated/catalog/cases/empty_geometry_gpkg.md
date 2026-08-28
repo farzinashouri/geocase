@@ -25,6 +25,7 @@ A GeoPackage containing rows with empty geometries (WKB EMPTY representation) to
 | Format | GPKG |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 11.00&deg;E, 51.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -200,7 +201,12 @@ This case is **GeoPackage-specific** because of SQLite's explicit NULL handling.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.0 10.0 51.0 11.0"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

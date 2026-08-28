@@ -141,6 +141,42 @@ properties:
     type: string
     description: Declared CRS identifier, usually EPSG or OGC form.
 
+  extent:
+    type: object
+    description: >
+      WGS84 bounding box of the case's data. Generated from the real bytes by
+      scripts/catalog_extent.py -- do not hand-edit. `west` greater than `east`
+      is valid and means the box crosses the antimeridian.
+    required:
+      - west
+      - south
+      - east
+      - north
+    properties:
+      west:
+        type: number
+        minimum: -180
+        maximum: 180
+      south:
+        type: number
+        minimum: -90
+        maximum: 90
+      east:
+        type: number
+        minimum: -180
+        maximum: 180
+      north:
+        type: number
+        minimum: -90
+        maximum: 90
+    additionalProperties: false
+
+  region:
+    type: string
+    description: >
+      Short human-readable place label, hand-written. Say so when the placement
+      is synthetic, e.g. "Central Europe (synthetic)".
+
   files:
     type: object
     required:

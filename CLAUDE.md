@@ -34,6 +34,7 @@ Catalog gates (the `catalog` CI job; needs `osgeo`, so run under conda). All are
 python scripts/build_case_index.py --check
 python scripts/validate_catalog.py
 python scripts/validate_case_content.py   # declared assertions vs. real bytes
+python scripts/catalog_extent.py --check  # declared extent vs. real bytes (--write to regenerate)
 python scripts/generate_raster_fixtures.py --check
 python scripts/generate_vector_fixtures.py --check
 python scripts/generate_checksums.py --check

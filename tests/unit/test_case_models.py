@@ -14,6 +14,7 @@ from geocase.catalog.models import (
     FileMap,
     RemoteInfo,
     SourceInfo,
+    SpatialExtent,
     SuiteMetadata,
     SuiteSelection,
 )
@@ -111,6 +112,65 @@ class TestCaseMetadataValid:
         assert case.source is None
         assert case.assertions.expect_loadable is True
         assert case.assertions.expected_geometry_types == []
+
+    def test_extent_and_region_round_trip(self):
+        """Accepts a WGS84 extent and an editorial region label."""
+        case = CaseMetadata(
+            **_minimal_case(
+                extent={"west": 10.0, "south": 50.0, "east": 11.0, "north": 51.0},
+                region="Central Europe (synthetic)",
+            )
+        )
+        assert case.extent is not None
+        assert case.extent.west == 10.0
+        assert case.extent.north == 51.0
+        assert case.region == "Central Europe (synthetic)"
+
+    def test_extent_and_region_are_optional(self):
+        """Omitting both keeps the 130 existing case files parseable."""
+        case = CaseMetadata(**_minimal_case())
+        assert case.extent is None
+        assert case.region is None
+
+    def test_extent_may_wrap_the_antimeridian(self):
+        """``west > east`` is the antimeridian convention, not an error."""
+        case = CaseMetadata(
+            **_minimal_case(
+                extent={"west": 170.0, "south": -10.0, "east": -170.0, "north": 10.0}
+            )
+        )
+        assert case.extent is not None
+        assert case.extent.west > case.extent.east
+
+
+# ===================================================================
+# SpatialExtent
+# ===================================================================
+
+
+class TestSpatialExtent:
+    """SpatialExtent should police WGS84 coordinate ranges."""
+
+    def test_rejects_inverted_latitudes(self):
+        """``north < south`` has no antimeridian analogue -- it is just wrong."""
+        with pytest.raises(ValidationError):
+            SpatialExtent(west=10.0, south=51.0, east=11.0, north=50.0)
+
+    def test_rejects_longitude_out_of_range(self):
+        with pytest.raises(ValidationError):
+            SpatialExtent(west=-181.0, south=50.0, east=11.0, north=51.0)
+
+    def test_rejects_latitude_out_of_range(self):
+        with pytest.raises(ValidationError):
+            SpatialExtent(west=10.0, south=50.0, east=11.0, north=91.0)
+
+    def test_crosses_antimeridian_flag(self):
+        assert SpatialExtent(
+            west=170.0, south=-10.0, east=-170.0, north=10.0
+        ).crosses_antimeridian
+        assert not SpatialExtent(
+            west=10.0, south=50.0, east=11.0, north=51.0
+        ).crosses_antimeridian
 
 
 # ===================================================================

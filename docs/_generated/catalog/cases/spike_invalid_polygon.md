@@ -25,6 +25,7 @@ A polygon with a self-touching spike that repairs to a mixed GeometryCollection 
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Near the origin (synthetic, no real-world location) &mdash; 0.00&deg;E, 0.00&deg;N &rarr; 4.00&deg;E, 4.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -149,7 +150,12 @@ which is useful for testing whether repair helpers keep only polygonal output.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.0 0.0 4.0 4.0"
+    },
+    "name": "Near the origin (synthetic, no real-world location)"
   }
 }
 </script>

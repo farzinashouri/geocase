@@ -23,6 +23,7 @@ Raster with rotated/skewed transform and disconnected valid regions, designed to
 | Case ID | `rotated_two_islands` |
 | Category | raster |
 | Format | GeoTIFF |
+| Location | Equator, Gulf of Guinea (synthetic) &mdash; 10.52&deg;E, 0.02&deg;N &rarr; 10.52&deg;E, 0.02&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -182,6 +183,14 @@ purpose. See `docs/plans/28-validate-geocase.md` Phase 1.
       "encodingFormat": "GeoTIFF",
       "name": "rotated_two_islands.tif"
     }
-  ]
+  ],
+  "spatialCoverage": {
+    "@type": "Place",
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.016235 10.520215 0.018039 10.522007"
+    },
+    "name": "Equator, Gulf of Guinea (synthetic)"
+  }
 }
 </script>

@@ -25,6 +25,7 @@ An explicitly empty polygon geometry used to verify that code handles empty-but-
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | No geometry -- the case is deliberately empty |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -141,7 +142,8 @@ Used for functions that should accept or short-circuit on an empty polygon geome
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "name": "No geometry -- the case is deliberately empty"
   }
 }
 </script>

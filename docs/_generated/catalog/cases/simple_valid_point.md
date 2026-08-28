@@ -25,6 +25,7 @@ A straightforward Point in EPSG:4326 used as the canonical baseline for point-lo
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 12.50&deg;E, 55.70&deg;N &rarr; 12.50&deg;E, 55.70&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -142,7 +143,12 @@ Baseline Point case for selector, loader, and cross-format coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "55.7 12.5 55.7 12.5"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

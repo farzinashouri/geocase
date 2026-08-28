@@ -25,6 +25,7 @@ A polygon crossing the dateline. Its bounding box spans the whole planet unless 
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Antimeridian, North Pacific &mdash; 170.00&deg;E, 40.00&deg;N &rarr; 170.00&deg;W, 50.00&deg;N (crosses the antimeridian &mdash; the box runs east from the first corner, over 180&deg;) |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -167,7 +168,12 @@ Antimeridian stress case for longitude wrapping and bounds logic.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "40.0 170.0 50.0 -170.0"
+    },
+    "name": "Antimeridian, North Pacific"
   }
 }
 </script>

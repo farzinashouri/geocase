@@ -25,6 +25,7 @@ A Shapefile dataset with attribute field names that exceed the DBF 10-character 
 | Format | Shapefile |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 12.00&deg;E, 52.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -193,7 +194,12 @@ Other formats (GeoJSON, GPKG, Parquet) do not have this limitation.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.0 10.0 52.0 12.0"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

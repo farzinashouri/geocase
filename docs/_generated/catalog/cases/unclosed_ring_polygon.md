@@ -25,6 +25,7 @@ A polygon where the exterior ring isn't properly closed (first coordinate ≠ la
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Unplaceable -- the geometry is deliberately malformed |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -164,7 +165,8 @@ Per RFC 7946 §3.1.6:
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "name": "Unplaceable -- the geometry is deliberately malformed"
   }
 }
 </script>

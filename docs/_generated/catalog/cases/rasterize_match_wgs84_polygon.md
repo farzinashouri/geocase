@@ -25,6 +25,7 @@ A WGS84 polygon that must be reprojected to EPSG:32633 to align with its raster.
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic, UTM 33N) &mdash; 14.90&deg;E, 50.58&deg;N &rarr; 15.10&deg;E, 50.70&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -145,7 +146,12 @@ A WGS84 polygon that overlaps the bundled `geotiff_utm_boundary` raster after re
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.58 14.9 50.7 15.1"
+    },
+    "name": "Central Europe (synthetic, UTM 33N)"
   }
 }
 </script>

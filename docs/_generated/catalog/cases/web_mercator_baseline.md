@@ -25,6 +25,7 @@ A point in EPSG:3857 (Web Mercator). Baseline for the CRS mismatch that arises w
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:3857` |
+| Location | Gulf of Guinea (synthetic, Web Mercator) &mdash; 8.98&deg;E, 8.95&deg;N &rarr; 8.98&deg;E, 8.95&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -146,7 +147,12 @@ Baseline EPSG:3857 point for projected-vector coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:3857"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "8.946574 8.983153 8.946574 8.983153"
+    },
+    "name": "Gulf of Guinea (synthetic, Web Mercator)"
   }
 }
 </script>

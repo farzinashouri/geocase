@@ -24,6 +24,7 @@ A GeoTIFF with an explicit NoData sentinel. Statistics computed over the raw arr
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Central Europe (synthetic, UTM 33N) &mdash; 15.00&deg;E, 50.55&deg;N &rarr; 15.14&deg;E, 50.64&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -166,7 +167,12 @@ statistics validation.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.551847 15.0 50.641864 15.141426"
+    },
+    "name": "Central Europe (synthetic, UTM 33N)"
   }
 }
 </script>

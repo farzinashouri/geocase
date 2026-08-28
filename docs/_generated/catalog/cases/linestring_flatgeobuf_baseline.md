@@ -25,6 +25,7 @@ Canonical baseline LineString stored as FlatGeobuf to exercise compact binary li
 | Format | FlatGeobuf |
 | Geometry type | LineString |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 11.00&deg;E, 50.30&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -166,7 +167,12 @@ geometry is derived from `params.canonical_source_case_id`
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.0 10.0 50.3 11.0"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

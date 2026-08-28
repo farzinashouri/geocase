@@ -25,6 +25,7 @@ A GeoJSON dataset containing coordinates with very high precision that may lose 
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | North Atlantic, off Bermuda &mdash; 122.42&deg;W, 0.00&deg;N &rarr; 10.12&deg;E, 50.99&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -196,7 +197,12 @@ GeoJSON's human-readable text format trades some precision for readability.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.0 -122.419416 50.987654 10.123457"
+    },
+    "name": "North Atlantic, off Bermuda"
   }
 }
 </script>

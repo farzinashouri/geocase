@@ -25,6 +25,7 @@ A WGS84 point located at the geographic north pole for validating polar edge cas
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | North Pole &mdash; 0.00&deg;E, 90.00&deg;N &rarr; 0.00&deg;E, 90.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -145,7 +146,12 @@ Point exactly at the geographic north pole for polar edge-case coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "90.0 0.0 90.0 0.0"
+    },
+    "name": "North Pole"
   }
 }
 </script>

@@ -25,6 +25,7 @@ A LineString crossing the antimeridian (180° longitude). Naive code draws it th
 | Format | GeoJSON |
 | Geometry type | LineString |
 | CRS | `EPSG:4326` |
+| Location | Antimeridian, North Pacific &mdash; 179.50&deg;E, 20.00&deg;N &rarr; 179.50&deg;W, 20.00&deg;N (crosses the antimeridian &mdash; the box runs east from the first corner, over 180&deg;) |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -170,7 +171,12 @@ A line crosses the antimeridian if:
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "20.0 179.5 20.0 -179.5"
+    },
+    "name": "Antimeridian, North Pacific"
   }
 }
 </script>

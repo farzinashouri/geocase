@@ -25,6 +25,7 @@ A Shapefile holding the same square as simple_valid_polygon, but with its exteri
 | Format | Shapefile |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 11.00&deg;E, 51.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -218,7 +219,12 @@ assert it at all.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.0 10.0 51.0 11.0"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

@@ -24,6 +24,7 @@ An RGB scene in polar stereographic EPSG:3995. Exercises the CRS assumptions tha
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:3995` |
+| Location | Arctic, northern Alaska &mdash; 135.00&deg;W, 64.39&deg;N &rarr; 135.00&deg;W, 64.39&deg;N |
 | Test tier | integration |
 | Size class | tiny |
 | Storage class | bundled |
@@ -143,7 +144,12 @@ Confirm GeoCase handles an RGB optical scene in a polar stereographic CRS.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:3995"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "64.386164 -135.002292 64.388148 -134.997708"
+    },
+    "name": "Arctic, northern Alaska"
   }
 }
 </script>

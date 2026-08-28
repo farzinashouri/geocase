@@ -9,6 +9,7 @@ from geocase.catalog.loader import (
 )
 from geocase.catalog.models import (
     CaseMetadata,
+    SpatialExtent,
     SuiteMetadata,
     SuiteSelection,
 )
@@ -26,6 +27,7 @@ __all__ = [
     "RemoteCaseUnavailableError",
     # Models
     "CaseMetadata",
+    "SpatialExtent",
     "SuiteMetadata",
     "SuiteSelection",
     # Loader

@@ -24,6 +24,7 @@ An RGB GeoTIFF whose bounds straddle the antimeridian at +180 longitude. Exercis
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:4326` |
+| Location | Antimeridian, North Pacific &mdash; 179.90&deg;E, 0.68&deg;N &rarr; 179.78&deg;W, 1.00&deg;N (crosses the antimeridian &mdash; the box runs east from the first corner, over 180&deg;) |
 | Test tier | integration |
 | Size class | tiny |
 | Storage class | bundled |
@@ -143,7 +144,12 @@ Confirm GeoCase handles an RGB optical scene whose extent crosses the antimeridi
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.68 179.9 1.0 -179.78"
+    },
+    "name": "Antimeridian, North Pacific"
   }
 }
 </script>

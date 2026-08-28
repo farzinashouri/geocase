@@ -19,6 +19,7 @@ A minimal CF-compliant NetCDF file with latitude/longitude dimensions and a sing
 | Category | netcdf |
 | Format | NetCDF |
 | CRS | `EPSG:4326` |
+| Location | Global grid (synthetic) |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -162,7 +163,8 @@ primary data variable (`temperature`).
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "name": "Global grid (synthetic)"
   }
 }
 </script>

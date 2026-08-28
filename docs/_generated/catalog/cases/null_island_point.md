@@ -25,6 +25,7 @@ A point at (0, 0) — the intersection of the Prime Meridian and the Equator. Wh
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Null Island (0, 0) &mdash; 0.00&deg;E, 0.00&deg;N &rarr; 0.00&deg;E, 0.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -172,7 +173,12 @@ Extremely common in:
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.0 0.0 0.0 0.0"
+    },
+    "name": "Null Island (0, 0)"
   }
 }
 </script>

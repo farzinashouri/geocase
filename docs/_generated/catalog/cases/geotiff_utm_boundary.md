@@ -24,6 +24,7 @@ A GeoTIFF straddling a UTM zone boundary. Mosaicking or reprojecting across the 
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Central Europe (synthetic, UTM 33N) &mdash; 14.86&deg;E, 50.55&deg;N &rarr; 15.14&deg;E, 50.73&deg;N |
 | Test tier | unit |
 | Size class | small |
 | Storage class | bundled |
@@ -167,7 +168,12 @@ issues in zone-edge workflows.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.551847 14.858304 50.731793 15.141696"
+    },
+    "name": "Central Europe (synthetic, UTM 33N)"
   }
 }
 </script>

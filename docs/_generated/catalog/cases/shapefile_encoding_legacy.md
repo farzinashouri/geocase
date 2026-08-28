@@ -25,6 +25,7 @@ A Shapefile dataset with attribute text encoded using a legacy code page (Window
 | Format | Shapefile |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | West Africa, off Senegal &mdash; 46.63&deg;W, 23.55&deg;S &rarr; 13.00&deg;E, 55.60&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -204,7 +205,12 @@ internationalization bugs in geospatial workflows.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "-23.5505 -46.6333 55.605 13.0038"
+    },
+    "name": "West Africa, off Senegal"
   }
 }
 </script>

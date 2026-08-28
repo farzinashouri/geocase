@@ -37,6 +37,9 @@ expected_capabilities:
 loader_hint: xarray
 crs: EPSG:4326
 
+# Hand-written; scripts/catalog_extent.py does not touch it.
+region: "Global grid (synthetic)"
+
 files:
   primary: latlon_sample.nc
   notes: notes.md

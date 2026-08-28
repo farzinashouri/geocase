@@ -25,6 +25,7 @@ A very thin, valid polygon that relies on high coordinate precision to remain no
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Equator at the prime meridian (synthetic) &mdash; 0.00&deg;E, 0.00&deg;N &rarr; 1.00&deg;E, 0.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -147,7 +148,12 @@ Thin polygon that is valid in high-precision formats but vulnerable to rounding-
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.0 0.0 0.0 1.0"
+    },
+    "name": "Equator at the prime meridian (synthetic)"
   }
 }
 </script>

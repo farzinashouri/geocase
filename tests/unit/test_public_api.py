@@ -36,6 +36,10 @@ _PUBLIC_SURFACE = sorted(
         "AssertionHints",
         "FileMap",
         "SourceInfo",
+        # Added in Plan 31 -- a purely additive extension of the v1.0 surface:
+        # both new CaseMetadata fields are optional, so existing code is
+        # unaffected and no name was removed or changed.
+        "SpatialExtent",
         "Category",
         "FormatType",
         "TestTier",

@@ -23,6 +23,7 @@ Raster with fully valid rectangular coverage used as a baseline footprint edge-c
 | Case ID | `all_valid_rectangular` |
 | Category | raster |
 | Format | GeoTIFF |
+| Location | Southern Italy / Sicily (synthetic, UTM 33N) &mdash; 15.00&deg;E, 37.94&deg;N &rarr; 15.00&deg;E, 37.95&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -180,6 +181,14 @@ purpose. See `docs/plans/28-validate-geocase.md` Phase 1.
       "encodingFormat": "GeoTIFF",
       "name": "all_valid_rectangular.tif"
     }
-  ]
+  ],
+  "spatialCoverage": {
+    "@type": "Place",
+    "geo": {
+      "@type": "GeoShape",
+      "box": "37.944345 15.0 37.94759 15.004097"
+    },
+    "name": "Southern Italy / Sicily (synthetic, UTM 33N)"
+  }
 }
 </script>

@@ -25,6 +25,7 @@ A polygon encoded with longitudes that jump from +179 to -179 degrees, represent
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Antimeridian, North Pacific &mdash; 179.00&deg;E, 0.00&deg;N &rarr; 179.00&deg;W, 1.00&deg;N (crosses the antimeridian &mdash; the box runs east from the first corner, over 180&deg;) |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -144,7 +145,12 @@ A canonical polygon whose coordinates wrap from +179 to -179 degrees.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.0 179.0 1.0 -179.0"
+    },
+    "name": "Antimeridian, North Pacific"
   }
 }
 </script>

@@ -25,6 +25,7 @@ Three nearby WGS84 points that should cluster together under a modest metric dis
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Copenhagen, Denmark (synthetic) &mdash; 12.00&deg;E, 55.00&deg;N &rarr; 12.00&deg;E, 55.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -142,7 +143,12 @@ Three points close enough to cluster together with a small metric threshold.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "55.0 12.0 55.0001 12.0002"
+    },
+    "name": "Copenhagen, Denmark (synthetic)"
   }
 }
 </script>

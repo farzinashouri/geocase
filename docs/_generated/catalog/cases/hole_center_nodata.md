@@ -23,6 +23,7 @@ A raster whose valid pixels ring a central NoData void. Footprint extraction tha
 | Case ID | `hole_center_nodata` |
 | Category | raster |
 | Format | GeoTIFF |
+| Location | Southern Italy / Sicily (synthetic, UTM 33N) &mdash; 13.85&deg;E, 38.84&deg;N &rarr; 13.85&deg;E, 38.84&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -183,6 +184,14 @@ purpose. See `docs/plans/28-validate-geocase.md` Phase 1.
       "encodingFormat": "GeoTIFF",
       "name": "hole_center_nodata.tif"
     }
-  ]
+  ],
+  "spatialCoverage": {
+    "@type": "Place",
+    "geo": {
+      "@type": "GeoShape",
+      "box": "38.839891 13.847712 38.843175 13.851912"
+    },
+    "name": "Southern Italy / Sicily (synthetic, UTM 33N)"
+  }
 }
 </script>

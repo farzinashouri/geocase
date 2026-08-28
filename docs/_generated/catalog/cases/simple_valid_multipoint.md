@@ -25,6 +25,7 @@ A minimal MultiPoint fixture in EPSG:4326 to cover non-singleton point geometry 
 | Format | GeoJSON |
 | Geometry type | MultiPoint |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 10.40&deg;E, 50.20&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -142,7 +143,12 @@ Baseline MultiPoint case for multi-point coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.0 10.0 50.2 10.4"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

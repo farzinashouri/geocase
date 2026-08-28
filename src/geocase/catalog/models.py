@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 Category = Literal["vector", "raster", "netcdf", "satellite"]
 FormatType = Literal[
@@ -103,6 +103,57 @@ class ManifestMetadata(BaseModel):
         return value
 
 
+class SpatialExtent(BaseModel):
+    """A WGS84 bounding box saying where on Earth a case's data sits.
+
+    Longitudes are degrees east in [-180, 180], latitudes degrees north in
+    [-90, 90]. ``north`` must be >= ``south``.
+
+    ``west > east`` is **valid** and means the box crosses the antimeridian:
+    the box runs east from ``west``, over 180, and on to ``east``. Without
+    that convention an antimeridian case reports a naive envelope spanning the
+    whole planet, which is the opposite of the fact its page needs to state.
+    It is the same convention the ``geojson_bounds`` benchmark grader uses.
+
+    Extents are *computed from the real bytes* by ``scripts/catalog_extent.py``
+    and written into ``case.yaml``, so they cannot drift from the data. The
+    prose companion is the hand-written :attr:`CaseMetadata.region`.
+    """
+
+    west: float
+    south: float
+    east: float
+    north: float
+
+    @field_validator("west", "east")
+    @classmethod
+    def validate_longitude(cls, value: float) -> float:
+        if not -180.0 <= value <= 180.0:
+            raise ValueError(f"Longitude {value} is outside [-180, 180]")
+        return value
+
+    @field_validator("south", "north")
+    @classmethod
+    def validate_latitude(cls, value: float) -> float:
+        if not -90.0 <= value <= 90.0:
+            raise ValueError(f"Latitude {value} is outside [-90, 90]")
+        return value
+
+    @model_validator(mode="after")
+    def validate_latitude_order(self) -> SpatialExtent:
+        if self.north < self.south:
+            raise ValueError(
+                f"north ({self.north}) must be >= south ({self.south}); "
+                "only longitudes may be inverted, to cross the antimeridian"
+            )
+        return self
+
+    @property
+    def crosses_antimeridian(self) -> bool:
+        """True when the box wraps past 180 -- see the class docstring."""
+        return self.west > self.east
+
+
 class SourceInfo(BaseModel):
     name: str | None = None
     url: str | None = None
@@ -157,6 +208,13 @@ class CaseMetadata(BaseModel):
     loader_hint: LoaderHint
     geometry_type: str | None = None
     crs: str | None = None
+
+    # Where on Earth this case is. ``extent`` is generated from the data by
+    # ``scripts/catalog_extent.py``; ``region`` is a hand-written label. Both
+    # optional: netcdf cases get no computed extent, and a case may have no
+    # region worth naming. See docs/plans/31-case-geography-and-world-maps.md.
+    extent: SpatialExtent | None = None
+    region: str | None = None
 
     files: FileMap
     remote: RemoteInfo | None = None

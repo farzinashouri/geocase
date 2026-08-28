@@ -24,6 +24,7 @@ A tiny three-band uint8 RGB scene in EPSG:4326 centred on the equator. Exercises
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:4326` |
+| Location | Equator, Gulf of Guinea (synthetic) &mdash; 10.00&deg;E, 0.00&deg;N &rarr; 10.16&deg;E, 0.16&deg;N |
 | Test tier | integration |
 | Size class | tiny |
 | Storage class | bundled |
@@ -141,7 +142,12 @@ Confirm GeoCase handles an RGB optical scene whose extent spans the equator.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.0 10.0 0.16 10.16"
+    },
+    "name": "Equator, Gulf of Guinea (synthetic)"
   }
 }
 </script>

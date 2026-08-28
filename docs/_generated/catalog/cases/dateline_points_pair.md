@@ -25,6 +25,7 @@ Two points positioned on opposite sides of the antimeridian but very close in re
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Antimeridian, North Pacific &mdash; 179.90&deg;E, 45.00&deg;N &rarr; 179.90&deg;W, 45.00&deg;N (crosses the antimeridian &mdash; the box runs east from the first corner, over 180&deg;) |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -147,7 +148,12 @@ Two points on either side of the antimeridian that are geographically near each 
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "45.0 179.9 45.0 -179.9"
+    },
+    "name": "Antimeridian, North Pacific"
   }
 }
 </script>

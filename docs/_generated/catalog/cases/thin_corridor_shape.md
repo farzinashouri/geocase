@@ -23,6 +23,7 @@ Raster whose valid region forms a thin corridor geometry, sensitive to simplific
 | Case ID | `thin_corridor_shape` |
 | Category | raster |
 | Format | GeoTIFF |
+| Location | Central Europe (synthetic, UTM 33N) &mdash; 17.58&deg;E, 46.02&deg;N &rarr; 17.59&deg;E, 46.02&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -181,6 +182,14 @@ purpose. See `docs/plans/28-validate-geocase.md` Phase 1.
       "encodingFormat": "GeoTIFF",
       "name": "thin_corridor_shape.tif"
     }
-  ]
+  ],
+  "spatialCoverage": {
+    "@type": "Place",
+    "geo": {
+      "@type": "GeoShape",
+      "box": "46.021104 17.583918 46.024353 17.588583"
+    },
+    "name": "Central Europe (synthetic, UTM 33N)"
+  }
 }
 </script>

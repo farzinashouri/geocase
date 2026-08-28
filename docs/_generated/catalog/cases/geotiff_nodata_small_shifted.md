@@ -24,6 +24,7 @@ A copy of the small NoData GeoTIFF shifted exactly one pixel east while preservi
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Central Europe (synthetic, UTM 33N) &mdash; 15.01&deg;E, 50.55&deg;N &rarr; 15.16&deg;E, 50.64&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -149,7 +150,12 @@ from true pixel-lattice compatibility.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.551829 15.014116 50.641863 15.155568"
+    },
+    "name": "Central Europe (synthetic, UTM 33N)"
   }
 }
 </script>

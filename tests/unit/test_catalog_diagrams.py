@@ -237,23 +237,23 @@ def test_raster_pages_embed_the_pixel_preview() -> None:
     assert "actual pixels" in figure
 
 
-def test_unshaped_raster_gets_no_preview(cases: list) -> None:
+def test_unshaped_raster_gets_no_preview() -> None:
     """No declared shape means no preview, whatever the provider answers.
 
     The provider here answers for *every* id, which is the failure mode this
     guards: the diagram must select on the case's own metadata rather than
     trusting a URL to exist, or a page ends up with a broken image.
+
+    The case is built here rather than drawn from the registry because every
+    bundled raster now declares ``expected_shape`` -- the catalog no longer
+    supplies an unshaped example, but the selection rule still has to hold for
+    external and manifest-supplied cases that may omit it.
     """
-    unshaped = [
-        case
-        for case in cases
-        if _category(case) == "raster"
-        and not getattr(case.assertions, "expected_shape", None)
-    ]
-    assert unshaped, "expected at least one raster case with no declared shape"
-    for case in unshaped:
-        figure = "".join(case_diagram(case, preview_url_provider=_preview_url))
-        assert "<img" not in figure, case.id
+    case = get_registry().get("optical_rgb_small").model_copy(deep=True)
+    case.assertions.expected_shape = None
+
+    figure = "".join(case_diagram(case, preview_url_provider=_preview_url))
+    assert "<img" not in figure
 
 
 def test_raster_preview_is_labelled() -> None:
@@ -287,3 +287,105 @@ def test_generated_card_links_resolve_to_real_case_pages() -> None:
             if not (case_dir / f"{case_id}.md").exists():
                 broken.append(f"{page.relative_to(REPO_ROOT)} -> {href}")
     assert broken == [], "card links with no target page:\n" + "\n".join(broken)
+
+
+# --- Plan 31: geography on the pages ----------------------------------------
+
+
+def test_case_pages_state_where_the_case_is(cases: list) -> None:
+    """A CRS is a coordinate convention; a reader needs a location.
+
+    Every bundled case declares a region, and all but four resolve to an
+    extent, so the Location row is not optional decoration -- its absence
+    means the generator dropped the field.
+    """
+    missing = []
+    for case in cases:
+        if case.region is None and case.extent is None:
+            continue
+        page = GENERATED / "cases" / f"{case.id}.md"
+        if not page.exists():
+            continue
+        if "Location" not in page.read_text(encoding="utf-8"):
+            missing.append(case.id)
+    assert missing == [], f"case pages with no Location row: {missing}"
+
+
+def test_dateline_page_shows_a_wrapped_extent() -> None:
+    """The case exists to demonstrate the wrap, so the page must show it."""
+    page = GENERATED / "cases" / "dateline_crossing_polygon.md"
+    text = page.read_text(encoding="utf-8")
+
+    assert "Location" in text
+    assert "antimeridian" in text.lower(), "the wrap must be called out in words"
+    # The naive envelope, which is the bug this case is about.
+    assert "-180" not in text.split("## Notes")[0]
+
+
+def test_json_ld_carries_a_geoshape_box() -> None:
+    """schema.org understands a box; it understands nothing about a CRS string."""
+    import json as _json
+
+    page = GENERATED / "cases" / "simple_valid_polygon.md"
+    text = page.read_text(encoding="utf-8")
+    blob = text.split('<script type="application/ld+json">')[1].split("</script>")[0]
+    payload = _json.loads(blob)
+
+    coverage = payload["spatialCoverage"]
+    assert coverage["@type"] == "Place"
+    assert coverage["geo"]["@type"] == "GeoShape"
+    # "south west north east", the schema.org GeoShape ordering.
+    assert coverage["geo"]["box"] == "50.0 10.0 51.0 11.0"
+
+
+def test_compare_page_carries_both_world_maps() -> None:
+    """One map would pile 130 markers onto two synthetic points -- hence two."""
+    text = (GENERATED / "compare.md").read_text(encoding="utf-8")
+
+    assert 'class="gc-worldmap"' in text
+    assert text.count('class="gc-worldmap"') == 2, "expected a vector and a raster map"
+    assert "Vector coverage" in text
+    assert "Raster coverage" in text
+    assert "gc-map-marker" in text, "the maps must plot the cases"
+
+
+def test_world_maps_use_theme_variables_not_hex() -> None:
+    """Same rule as the schematics: a hex literal strands the map in one scheme."""
+    from catalog_svg import world_map  # type: ignore[import-not-found]
+
+    registry_cases = [case for case in get_registry().list_cases() if case.extent]
+    svg = world_map(registry_cases, "All cases")
+
+    assert svg
+    assert "#" not in svg, "world map hard-codes a colour"
+
+
+def test_world_map_clusters_colocated_cases() -> None:
+    """23 rasters share one transform; 23 stacked dots would be unreadable."""
+    from catalog_svg import world_map  # type: ignore[import-not-found]
+
+    rasters = [
+        case
+        for case in get_registry().list_cases()
+        if _category(case) == "raster" and case.extent
+    ]
+    svg = world_map(rasters, "Raster coverage")
+
+    markers = svg.count("gc-map-marker")
+    assert markers < len(rasters), (
+        f"{len(rasters)} raster cases produced {markers} markers -- "
+        "co-located cases must collapse into one marker with a count"
+    )
+    assert "gc-map-count" in svg, "a cluster must show how many cases it holds"
+
+
+def test_world_map_draws_a_wrapping_extent_against_both_edges() -> None:
+    """An antimeridian box is two rectangles, one per edge -- never one wide one."""
+    from catalog_svg import world_map  # type: ignore[import-not-found]
+
+    dateline = get_registry().get("dateline_crossing_polygon")
+    svg = world_map([dateline], "Antimeridian")
+
+    # The class attribute specifically -- ``--gc-map-extent`` is also the name
+    # of the CSS variable the rectangles are filled with.
+    assert svg.count('class="gc-map-extent"') == 2, svg

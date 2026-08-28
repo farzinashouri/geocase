@@ -25,6 +25,7 @@ A simple rectangle straddling the equator in EPSG:4326, spanning latitudes -5 to
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Equator at the prime meridian (synthetic) &mdash; 10.00&deg;W, 5.00&deg;S &rarr; 10.00&deg;E, 5.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -173,7 +174,12 @@ projection choice is minimal but the equator-crossing property is present.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "-5.0 -10.0 5.0 10.0"
+    },
+    "name": "Equator at the prime meridian (synthetic)"
   }
 }
 </script>

@@ -25,6 +25,7 @@ A point stored at longitude 190° instead of the normalized -170°. Exercises lo
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | North Pacific, near the antimeridian &mdash; 170.00&deg;W, 45.00&deg;N &rarr; 170.00&deg;W, 45.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -147,7 +148,12 @@ into the conventional `[-180, 180]` range.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "45.0 -170.0 45.0 -170.0"
+    },
+    "name": "North Pacific, near the antimeridian"
   }
 }
 </script>

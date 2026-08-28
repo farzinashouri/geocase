@@ -25,6 +25,7 @@ A valid polygon in WGS84 whose centroid falls inside UTM zone 33N. Useful for ba
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Denmark / Baltic (synthetic, UTM 33N) &mdash; 13.00&deg;E, 55.00&deg;N &rarr; 14.00&deg;E, 56.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -143,7 +144,12 @@ A baseline WGS84 polygon whose representative point falls in UTM zone 33N.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "55.0 13.0 56.0 14.0"
+    },
+    "name": "Denmark / Baltic (synthetic, UTM 33N)"
   }
 }
 </script>

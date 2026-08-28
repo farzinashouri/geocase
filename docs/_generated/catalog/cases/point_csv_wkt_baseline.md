@@ -25,6 +25,7 @@ Canonical baseline point stored as CSV with WKT geometry column for cross-format
 | Format | CSV_WKT |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 12.50&deg;E, 55.70&deg;N &rarr; 12.50&deg;E, 55.70&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -163,7 +164,12 @@ geometry is derived from `params.canonical_source_case_id`
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "55.7 12.5 55.7 12.5"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

@@ -25,6 +25,7 @@ A GeoParquet file with deliberately mixed attribute types and nullable columns: 
 | Format | Parquet |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 52.00&deg;N &rarr; 13.00&deg;E, 55.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -180,7 +181,12 @@ Four simple WGS 84 points along a NE diagonal across northern Europe.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "52.0 10.0 55.0 13.0"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>
