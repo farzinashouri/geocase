@@ -6,6 +6,7 @@ repo_name: farzinashouri/geocase
 
 theme:
   name: material
+  custom_dir: docs/overrides
   palette:
     - scheme: default
       primary: teal
@@ -23,8 +24,7 @@ theme:
     - navigation.tabs
     - navigation.sections
     - content.code.copy
-  favicon: assets/favicon.svg
-  logo: assets/logo.svg
+  favicon: assets/geocase-mark-512.png
 
 # Declaring this block at all disables the implicit default `search` plugin, so
 # it must be listed explicitly or site search silently disappears.
