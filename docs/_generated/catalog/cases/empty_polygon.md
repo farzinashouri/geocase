@@ -15,7 +15,7 @@ An explicitly empty polygon geometry used to verify that code handles empty-but-
 
 <figure class="gc-figure">
 <svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<figcaption>Schematic only -- this case's geometry could not be rendered, so the drawing is a generic Polygon, not the fixture's coordinates.</figcaption>
 </figure>
 
 | Property | Value |

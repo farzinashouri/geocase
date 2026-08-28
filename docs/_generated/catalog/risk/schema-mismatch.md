@@ -21,17 +21,17 @@ pip install "geocase[all]"
 
 <div class="gc-grid">
 <a class="gc-card" href="../../cases/format_limited_kml_case/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of format_limited_kml_case, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of format_limited_kml_case, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 32.61 70 L 32.61 67.39 L 30 67.39 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 56.09 43.91 L 61.3 43.91 L 61.3 38.7 L 56.09 38.7 L 56.09 43.91 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 82.17 17.83 L 90 17.83 L 90 10 L 82.17 10 L 82.17 17.83 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
 <span class="gc-card-title">Format-Limited KML Case</span>
 <span class="gc-card-meta">KML &middot; Polygon</span>
 </a>
 <a class="gc-card" href="../../cases/parquet_mixed_schema_attributes/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of parquet_mixed_schema_attributes, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of parquet_mixed_schema_attributes, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/><circle cx="50" cy="50" r="3" fill="var(--gc-diagram-accent)"/><circle cx="70" cy="30" r="3" fill="var(--gc-diagram-accent)"/><circle cx="90" cy="10" r="3" fill="var(--gc-diagram-accent)"/></svg>
 <span class="gc-card-title">Parquet Mixed Schema Attributes</span>
 <span class="gc-card-meta">Parquet &middot; Point</span>
 </a>
 <a class="gc-card" href="../../cases/shapefile_field_truncation/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of shapefile_field_truncation, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of shapefile_field_truncation, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="90" cy="10" r="3" fill="var(--gc-diagram-accent)"/></svg>
 <span class="gc-card-title">Shapefile Field Name Truncation</span>
 <span class="gc-card-meta">Shapefile &middot; Point</span>
 </a>

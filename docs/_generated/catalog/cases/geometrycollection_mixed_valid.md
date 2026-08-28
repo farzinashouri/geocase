@@ -14,8 +14,8 @@ description: "A valid GeometryCollection fixture containing a point, line, and p
 A valid GeometryCollection fixture containing a point, line, and polygon to support mixed-geometry loader behavior checks.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a GeometryCollection geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a GeometryCollection geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="16,30 46,26 44,54 20,56" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="58,58 76,34 96,48" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="92" cy="22" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: GeometryCollection geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="GeometryCollection geometry of geometrycollection_mixed_valid, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>GeometryCollection geometry of geometrycollection_mixed_valid, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="70" r="3" fill="var(--gc-diagram-accent)"/><path d="M 10 70 L 60 50 L 110 60" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 30 50 L 70 50 L 70 10 L 30 10 L 30 50 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>GeometryCollection geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |

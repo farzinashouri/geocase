@@ -14,8 +14,8 @@ description: "A GeoJSON dataset containing coordinates with very high precision 
 A GeoJSON dataset containing coordinates with very high precision that may lose accuracy during text serialization roundtrips. GeoJSON uses decimal text representation, and different serializers use different precision settings. This case exposes precision loss that can accumulate across multiple read/write cycles or cause coordinate drift.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of precision_loss_geojson_roundtrip, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of precision_loss_geojson_roundtrip, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="110" cy="20.77" r="3" fill="var(--gc-diagram-accent)"/><circle cx="10" cy="30.73" r="3" fill="var(--gc-diagram-accent)"/><circle cx="102.36" cy="59.23" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Point geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |

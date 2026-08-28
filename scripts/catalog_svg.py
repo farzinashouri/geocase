@@ -1,14 +1,19 @@
 """Inline SVG schematics for the generated catalog pages.
 
-Every diagram here is drawn from *metadata only* -- geometry type, raster shape,
-band count, dtype, nodata convention -- never from the fixture bytes. That is a
-deliberate constraint, not a shortcut: the generator must stay dependency-free
-(no matplotlib, no rasterio) so ``mkdocs build`` works from a plain checkout,
-and the committed output must stay text so ``--check`` diffs are readable.
+This module itself stays *dependency-free*: on its own it draws from metadata
+only -- geometry type, raster shape, band count, dtype, nodata convention --
+so it is importable and testable from a plain checkout with no geospatial
+stack, and the committed output stays text so ``--check`` diffs are readable.
 
-The consequence is worth stating plainly on the pages themselves: these are
-*schematics of a case's structure*, not pictures of its pixels. A reader who
-wants the real bytes loads the case.
+A caller that *does* have the stack can pass a ``geometry_provider``: a
+callable taking a case id and returning that case's loaded GeoDataFrame (or
+``None``). Vector diagrams then show the case's real coordinates instead of an
+archetype of its geometry type. ``generate_catalog_pages.py`` supplies one; the
+projection itself lives in :mod:`catalog_geometry`.
+
+The two paths are captioned differently, and that distinction is not cosmetic:
+a page that claims to show real geometry while drawing an archetype is lying
+about its own provenance. Rasters and NetCDF remain metadata-only either way.
 
 Colours are CSS custom properties defined in ``docs/stylesheets/catalog.css``
 so the diagrams follow the Material light/dark toggle. Nothing here hard-codes
@@ -17,6 +22,7 @@ a hex value that would strand a diagram in one scheme.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import Any
 
 
@@ -101,6 +107,73 @@ def _vector_svg(geometry_type: str) -> str | None:
     lines.extend(shapes)
     lines.append("</svg>")
     return "".join(lines)
+
+
+# --- real geometry previews --------------------------------------------------
+#
+# Presentation for the projected geometry. These mirror the archetype styling
+# above so a preview and a fallback sit together in one grid without one
+# looking like a different kind of object.
+
+_POINT_ATTRS = f'r="3" {_ACCENT}'
+_LINE_ATTRS = (
+    f'fill="none" {_STROKE} stroke-width="2" '
+    'stroke-linejoin="round" stroke-linecap="round"'
+)
+_AREA_ATTRS = (
+    f'{_FILL} fill-rule="evenodd" {_STROKE} stroke-width="1.5" stroke-linejoin="round"'
+)
+
+#: A vector case id maps to its loaded GeoDataFrame, or ``None`` when the case
+#: cannot be loaded (``unclosed_ring_polygon`` is deliberately malformed).
+GeometryProvider = Callable[[str], Any]
+
+
+def _preview_svg(case: Any, provider: GeometryProvider) -> str | None:
+    """Draw the case's real geometry, or ``None`` to fall back to the archetype."""
+    try:
+        from catalog_geometry import geometry_shapes
+    except ImportError:
+        return None
+
+    try:
+        gdf = provider(case.id)
+        shapes = geometry_shapes(
+            gdf,
+            WIDTH,
+            HEIGHT,
+            point_attrs=_POINT_ATTRS,
+            line_attrs=_LINE_ATTRS,
+            area_attrs=_AREA_ATTRS,
+        )
+    except Exception:
+        # Broken fixtures are part of the catalog's point, so a load or
+        # projection failure is an expected outcome here, not an error.
+        return None
+    if not shapes:
+        return None
+
+    geom = str(getattr(case.geometry_type, "value", case.geometry_type))
+    lines = _open(f"{geom} geometry of {case.id}, rendered from the case's data")
+    lines.append(_frame())
+    lines.extend(shapes)
+    lines.append("</svg>")
+    return "".join(lines)
+
+
+def _vector_render(
+    case: Any, provider: GeometryProvider | None
+) -> tuple[str | None, bool]:
+    """Return ``(svg, is_real)`` for a vector case, preferring the real geometry."""
+    if provider is not None:
+        svg = _preview_svg(case, provider)
+        if svg is not None:
+            return svg, True
+
+    geom = getattr(case.geometry_type, "value", case.geometry_type)
+    if not geom:
+        return None, False
+    return _vector_svg(str(geom)), False
 
 
 # --- raster schematics -------------------------------------------------------
@@ -189,14 +262,29 @@ def _raster_svg(case: Any) -> str | None:
     return "".join(lines)
 
 
-def _caption(case: Any) -> str:
-    """One line naming what the schematic is asserting, so it is falsifiable."""
+def _caption(case: Any, is_real: bool = False) -> str:
+    """One line naming what the diagram is asserting, so it is falsifiable.
+
+    ``is_real`` distinguishes the two vector paths. It must track what was
+    actually drawn: the caption is the only thing on the page telling a reader
+    whether they are looking at this case's coordinates or at an archetype.
+    """
     category = str(getattr(case.category, "value", case.category))
     assertions = getattr(case, "assertions", None)
 
     if category == "vector":
         geom = str(getattr(case.geometry_type, "value", case.geometry_type))
-        return f"Schematic: {geom} geometry. Shape is illustrative, not the fixture's coordinates."
+        if is_real:
+            # Deliberately silent about scale: the fit-to-viewport transform
+            # normalizes it away, so a continent and a car park can look alike.
+            return (
+                f"{geom} geometry, rendered from the case's actual geometry. "
+                "Scale is normalized to the viewport and is not comparable between cases."
+            )
+        return (
+            f"Schematic only -- this case's geometry could not be rendered, so the "
+            f"drawing is a generic {geom}, not the fixture's coordinates."
+        )
 
     bits = []
     if assertions is not None:
@@ -213,42 +301,42 @@ def _caption(case: Any) -> str:
     return f"Schematic: {detail}. Drawn from metadata, not from the pixels."
 
 
-def case_diagram(case: Any) -> list[str]:
-    """Return the markdown lines for a case's schematic, or [] if undrawable.
+def _render(case: Any, provider: GeometryProvider | None) -> tuple[str | None, bool]:
+    category = str(getattr(case.category, "value", case.category))
+    if category == "vector":
+        return _vector_render(case, provider)
+    if category == "raster":
+        return _raster_svg(case), False
+    return None, False
+
+
+def case_diagram(
+    case: Any, geometry_provider: GeometryProvider | None = None
+) -> list[str]:
+    """Return the markdown lines for a case's diagram, or [] if undrawable.
 
     Callers append this straight into the page body. Returning an empty list
     for the undrawable cases (netcdf, and rasters with no declared shape or
     band count) is intentional -- a placeholder box would assert structure the
     metadata does not actually have.
+
+    Pass ``geometry_provider`` to draw vector cases from their real geometry;
+    without it every diagram is metadata-only.
     """
-    category = str(getattr(case.category, "value", case.category))
-
-    svg: str | None = None
-    if category == "vector":
-        geom = getattr(case.geometry_type, "value", case.geometry_type)
-        if geom:
-            svg = _vector_svg(str(geom))
-    elif category == "raster":
-        svg = _raster_svg(case)
-
+    svg, is_real = _render(case, geometry_provider)
     if svg is None:
         return []
 
     return [
         '<figure class="gc-figure">',
         svg,
-        f"<figcaption>{_caption(case)}</figcaption>",
+        f"<figcaption>{_caption(case, is_real)}</figcaption>",
         "</figure>",
         "",
     ]
 
 
-def case_thumbnail(case: Any) -> str:
+def case_thumbnail(case: Any, geometry_provider: GeometryProvider | None = None) -> str:
     """Return a bare inline SVG for grid/listing use, or "" if undrawable."""
-    category = str(getattr(case.category, "value", case.category))
-    if category == "vector":
-        geom = getattr(case.geometry_type, "value", case.geometry_type)
-        return _vector_svg(str(geom)) or "" if geom else ""
-    if category == "raster":
-        return _raster_svg(case) or ""
-    return ""
+    svg, _ = _render(case, geometry_provider)
+    return svg or ""

@@ -48,6 +48,12 @@ extra:
 extra_css:
   - stylesheets/catalog.css
 
+# Filtering and sorting for the generated compare page. Progressive
+# enhancement: the table is rendered complete by the generator and stays
+# readable with JavaScript disabled.
+extra_javascript:
+  - javascripts/catalog-compare.js
+
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
@@ -91,6 +97,7 @@ nav:
       - Database Design: design/database-design.md
   - Reference:
       - Case Catalog: _generated/catalog/index.md
+      - Compare All Cases: _generated/catalog/compare.md
       - Vector Coverage Matrix: _generated/vector-coverage-matrix.md
       - Raster Coverage Matrix: _generated/raster-coverage-matrix.md
       - Codebase Summary: reference/codebase-summary.md

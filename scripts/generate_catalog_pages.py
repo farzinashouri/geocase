@@ -45,7 +45,35 @@ from geocase.catalog.roots import case_roots_by_id  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from catalog_geometry import geometry_provider  # noqa: E402
 from catalog_svg import case_diagram, case_thumbnail  # noqa: E402
+
+
+def _build_geometry_provider() -> Any:
+    """Return a cached provider of loaded case geometry, or ``None``.
+
+    ``None`` means the geospatial stack is unavailable, and every vector
+    diagram falls back to its metadata archetype with the caption saying so.
+    The ``catalog`` CI job installs ``.[raster,vector]``, so the real path is
+    the one that runs in the gate.
+    """
+    try:
+        import geocase
+    except ImportError:  # pragma: no cover - only hit in a bare checkout
+        return None
+    return geometry_provider(lambda case_id: geocase.load_case(case_id).load())
+
+
+#: Built once per run so each case is loaded at most once, however many pages
+#: draw it.
+GEOMETRY_PROVIDER = _build_geometry_provider()
+
+#: Vector cases that cannot be loaded fall back to an archetype, which is
+#: correct for the few deliberately-malformed fixtures but catastrophic if it
+#: happens to all of them. A run without geopandas would degrade *every* vector
+#: page silently and commit the result, so anything past this many fallbacks is
+#: treated as a broken environment rather than as broken fixtures.
+MAX_VECTOR_FALLBACKS = 10
 
 
 # Descriptions are written for contributors, not searchers. Until they are
@@ -165,7 +193,7 @@ def _case_card(case: Any, href: str) -> list[str]:
         meta = f"{meta} &middot; {geom}"
     return [
         f'<a class="gc-card" href="{href}">',
-        case_thumbnail(case),
+        case_thumbnail(case, GEOMETRY_PROVIDER),
         f'<span class="gc-card-title">{case.title}</span>',
         f'<span class="gc-card-meta">{meta}</span>',
         "</a>",
@@ -182,7 +210,7 @@ def _case_grid(cases: list[Any], href_prefix: str) -> list[str]:
     """
     cards: list[str] = []
     for case in cases:
-        if not case_thumbnail(case):
+        if not case_thumbnail(case, GEOMETRY_PROVIDER):
             continue
         cards.extend(_case_card(case, f"{href_prefix}{case.id}/"))
     if not cards:
@@ -404,7 +432,7 @@ def _render_case_page(
 
     # The schematic sits above the tables: it answers "what shape of thing is
     # this?" in one glance, which is the question the tables answer slowly.
-    lines.extend(case_diagram(case))
+    lines.extend(case_diagram(case, GEOMETRY_PROVIDER))
 
     lines.extend(_table(("Property", "Value"), _attribute_rows(case)))
     lines.append("")
@@ -503,6 +531,139 @@ def _render_case_page(
     return "\n".join(lines).rstrip() + "\n"
 
 
+#: Sort key for the compare table: related shapes should sit adjacent, so
+#: category groups first, then geometry type, then id for stability.
+def _compare_sort_key(case: Any) -> tuple[str, str, str]:
+    return (_value(case.category), _value(case.geometry_type), case.id)
+
+
+def _html_escape(text: str) -> str:
+    return (
+        str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    ).replace('"', "&quot;")
+
+
+def _render_compare_page(cases: list[Any]) -> str:
+    """Render the single table that puts every case side by side.
+
+    Raw HTML rather than a Markdown table: the preview cells carry inline SVG,
+    and the filter/sort script needs per-row data attributes to work from. The
+    table is complete as rendered -- ``docs/javascripts/catalog-compare.js`` is
+    progressive enhancement, and the page is fully readable without it.
+    """
+    ordered = sorted(cases, key=_compare_sort_key)
+
+    lines = _front_matter(
+        "Compare All Cases",
+        f"Filter and sort all {len(ordered)} GeoCase test cases in one table, "
+        "with a preview of each case's geometry.",
+    )
+    lines.extend(_generated_note())
+    lines.append("# Compare All Cases")
+    lines.append("")
+    lines.append(
+        f"Every one of the {len(ordered)} bundled cases in one table, sorted by "
+        "category and geometry type so related shapes sit together. Vector previews "
+        "are drawn from each case's real coordinates; raster previews are schematics "
+        "of band structure, and NetCDF cases have no drawable diagram."
+    )
+    lines.append("")
+    lines.extend(_install_cta())
+
+    lines.append('<div class="gc-compare-controls">')
+    lines.append(
+        '<input type="search" id="gc-compare-search" class="gc-compare-search" '
+        'placeholder="Filter by id, title, or risk type" '
+        'aria-label="Filter cases by id, title, or risk type">'
+    )
+    for field, label in (
+        ("category", "Category"),
+        ("format", "Format"),
+        ("geometry", "Geometry"),
+    ):
+        values = sorted(
+            {
+                _row_field(case, field)
+                for case in ordered
+                if _row_field(case, field) != "--"
+            }
+        )
+        options = "".join(
+            f'<option value="{_html_escape(value)}">{_html_escape(value)}</option>'
+            for value in values
+        )
+        lines.append(
+            f'<select class="gc-compare-filter" data-field="{field}" '
+            f'aria-label="Filter by {label.lower()}">'
+            f'<option value="">All {label.lower()}s</option>{options}</select>'
+        )
+    lines.append(
+        f'<span class="gc-compare-count" id="gc-compare-count">'
+        f"Showing {len(ordered)} of {len(ordered)} cases</span>"
+    )
+    lines.append("</div>")
+    lines.append("")
+
+    lines.append('<div class="gc-compare-wrap">')
+    lines.append('<table class="gc-compare" id="gc-compare-table">')
+    lines.append("<thead><tr>")
+    lines.append('<th scope="col">Preview</th>')
+    for field, label in (
+        ("case", "Case"),
+        ("category", "Category"),
+        ("format", "Format"),
+        ("geometry", "Geometry"),
+        ("crs", "CRS"),
+        ("risk", "Risk types"),
+    ):
+        lines.append(f'<th scope="col" data-sort="{field}">{label}</th>')
+    lines.append("</tr></thead>")
+    lines.append("<tbody>")
+
+    for case in ordered:
+        risks = sorted(case.risk_types)
+        risk_text = ", ".join(risks) if risks else "--"
+        crs = case.crs or "--"
+        thumb = case_thumbnail(case, GEOMETRY_PROVIDER) or "&mdash;"
+        haystack = " ".join([case.id, str(case.title), *risks]).lower()
+        lines.append(
+            f'<tr data-case-id="{case.id}" '
+            f'data-category="{_html_escape(_value(case.category))}" '
+            f'data-format="{_html_escape(_value(case.format))}" '
+            f'data-geometry="{_html_escape(_row_field(case, "geometry"))}" '
+            f'data-search="{_html_escape(haystack)}">'
+        )
+        lines.append(f'<td class="gc-compare-preview">{thumb}</td>')
+        lines.append(
+            f'<td><a class="gc-compare-link" href="cases/{case.id}/">'
+            f"{_html_escape(case.title)}</a>"
+            f'<br><code class="gc-compare-id">{case.id}</code></td>'
+        )
+        lines.append(f"<td>{_html_escape(_value(case.category))}</td>")
+        lines.append(f"<td>{_html_escape(_value(case.format))}</td>")
+        lines.append(f"<td>{_html_escape(_row_field(case, 'geometry'))}</td>")
+        lines.append(f"<td><code>{_html_escape(crs)}</code></td>")
+        lines.append(f'<td class="gc-compare-risks">{_html_escape(risk_text)}</td>')
+        lines.append("</tr>")
+
+    lines.append("</tbody>")
+    lines.append("</table>")
+    lines.append("</div>")
+    lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def _row_field(case: Any, field: str) -> str:
+    """Return the filterable value of one compare-table column."""
+    if field == "category":
+        return _value(case.category)
+    if field == "format":
+        return _value(case.format)
+    if field == "geometry":
+        return _value(case.geometry_type) or "--"
+    raise ValueError(f"unknown compare field: {field}")
+
+
 def _render_hub_page(
     *,
     title: str,
@@ -563,21 +724,33 @@ def _render_index(
     lines.append("")
     lines.extend(_install_cta())
 
-    lines.append("## Reading the schematics")
-    lines.append("")
     lines.append(
-        "Each case page carries a diagram of the case's *structure*: the geometry type "
-        "for vector cases, and the band stack, pixel grid, and NoData marker for raster "
-        "cases."
+        "[Compare all cases side by side](compare.md) in one filterable, sortable table."
     )
     lines.append("")
-    lines.append('!!! warning "Schematics are not pictures of the data"')
+
+    lines.append("## Reading the diagrams")
     lines.append("")
     lines.append(
-        "    They are drawn from case metadata alone -- never from the fixture bytes. "
-        "A `Polygon` schematic shows *a* polygon, not the case's real coordinates, and "
-        "a raster grid shows *that* there are pixels, not their values. Load the case "
-        "to see the actual data."
+        "Vector case pages render the case's **actual geometry**, projected to fit a "
+        "fixed viewport. Raster pages carry a *schematic* of structure instead: the "
+        "band stack, pixel grid, and NoData marker, drawn from metadata."
+    )
+    lines.append("")
+    lines.append('!!! warning "What a diagram does and does not tell you"')
+    lines.append("")
+    lines.append(
+        "    **Vector previews are real coordinates, but scale is not comparable.** "
+        "Each is fitted to the viewport independently, so a continent-sized polygon and "
+        "a metre-sized one can look identical. A handful of cases are deliberately "
+        "malformed and cannot be loaded at all; those fall back to a generic shape for "
+        "their geometry type and say so in the caption."
+    )
+    lines.append("")
+    lines.append(
+        "    **Raster and NetCDF diagrams are never pictures of the pixels.** A raster "
+        "grid shows *that* there are pixels, not their values. Load the case to see "
+        "the actual data."
     )
     lines.append("")
 
@@ -639,6 +812,7 @@ def build_pages(cases: list[Any], site_url: str) -> dict[str, str]:
 
     pages: dict[str, str] = {
         "index.md": _render_index(cases, by_risk, by_format, hub_risks),
+        "compare.md": _render_compare_page(cases),
     }
 
     case_dirs = case_roots_by_id()
@@ -709,6 +883,17 @@ def check_pages(pages: dict[str, str], output_root: Path) -> list[str]:
     return problems
 
 
+def _vector_fallbacks(cases: list[Any]) -> list[str]:
+    """Return the ids of vector cases whose diagram is an archetype, not real data."""
+    if GEOMETRY_PROVIDER is None:
+        return [case.id for case in cases if _value(case.category) == "vector"]
+    return [
+        case.id
+        for case in cases
+        if _value(case.category) == "vector" and GEOMETRY_PROVIDER(case.id) is None
+    ]
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Generate catalog documentation pages."
@@ -738,6 +923,18 @@ def main() -> int:
     cases = sorted(get_registry().list_cases(), key=lambda case: case.id)
     if not cases:
         print("No cases found in the registry.")
+        return 1
+
+    fallbacks = _vector_fallbacks(cases)
+    if len(fallbacks) > MAX_VECTOR_FALLBACKS:
+        print(
+            f"{len(fallbacks)} of the vector cases could not be loaded, so their "
+            "diagrams would fall back to generic archetypes."
+        )
+        print(
+            "This almost always means the geospatial stack is missing. Run from the "
+            "conda `geocase` environment, or install `.[raster,vector]`."
+        )
         return 1
 
     pages = build_pages(cases, args.site_url.rstrip("/"))

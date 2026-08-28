@@ -126,3 +126,94 @@
 	font-family: var(--md-code-font-family);
 	color: var(--md-default-fg-color--light);
 }
+
+/* Compare-all-cases table.
+ *
+ * Seven columns will not fit a phone, so the table scrolls inside its own
+ * wrapper rather than forcing the page body to scroll horizontally.
+ */
+
+.gc-compare-controls {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5em;
+	margin: 1.2em 0 0.8em;
+}
+
+.gc-compare-search,
+.gc-compare-filter {
+	padding: 0.35em 0.6em;
+	border: 1px solid var(--md-default-fg-color--lighter);
+	border-radius: 4px;
+	background: var(--md-default-bg-color);
+	color: var(--md-default-fg-color);
+	font-size: 0.72rem;
+}
+
+.gc-compare-search {
+	flex: 1 1 16em;
+	min-width: 12em;
+}
+
+.gc-compare-count {
+	margin-left: auto;
+	font-size: 0.68rem;
+	color: var(--md-default-fg-color--light);
+}
+
+.gc-compare-wrap {
+	overflow-x: auto;
+}
+
+table.gc-compare {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.7rem;
+}
+
+table.gc-compare th,
+table.gc-compare td {
+	padding: 0.45em 0.6em;
+	border-bottom: 1px solid var(--md-default-fg-color--lightest);
+	text-align: left;
+	vertical-align: middle;
+}
+
+table.gc-compare th[data-sort] {
+	cursor: pointer;
+	white-space: nowrap;
+	user-select: none;
+}
+
+table.gc-compare th[data-sort]:hover {
+	color: var(--md-accent-fg-color);
+}
+
+table.gc-compare th[data-sort][aria-sort="ascending"]::after {
+	content: " \25B2";
+}
+
+table.gc-compare th[data-sort][aria-sort="descending"]::after {
+	content: " \25BC";
+}
+
+.gc-compare-preview {
+	width: 76px;
+}
+
+.gc-compare-preview .gc-diagram {
+	display: block;
+	width: 64px;
+	height: auto;
+}
+
+.gc-compare-id {
+	font-size: 0.62rem;
+	color: var(--md-default-fg-color--light);
+}
+
+.gc-compare-risks {
+	max-width: 18em;
+	color: var(--md-default-fg-color--light);
+}

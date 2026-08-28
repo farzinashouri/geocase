@@ -19,13 +19,17 @@ pip install "geocase[all]"
 
 [View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
-## Reading the schematics
+[Compare all cases side by side](compare.md) in one filterable, sortable table.
 
-Each case page carries a diagram of the case's *structure*: the geometry type for vector cases, and the band stack, pixel grid, and NoData marker for raster cases.
+## Reading the diagrams
 
-!!! warning "Schematics are not pictures of the data"
+Vector case pages render the case's **actual geometry**, projected to fit a fixed viewport. Raster pages carry a *schematic* of structure instead: the band stack, pixel grid, and NoData marker, drawn from metadata.
 
-    They are drawn from case metadata alone -- never from the fixture bytes. A `Polygon` schematic shows *a* polygon, not the case's real coordinates, and a raster grid shows *that* there are pixels, not their values. Load the case to see the actual data.
+!!! warning "What a diagram does and does not tell you"
+
+    **Vector previews are real coordinates, but scale is not comparable.** Each is fitted to the viewport independently, so a continent-sized polygon and a metre-sized one can look identical. A handful of cases are deliberately malformed and cannot be loaded at all; those fall back to a generic shape for their geometry type and say so in the caption.
+
+    **Raster and NetCDF diagrams are never pictures of the pixels.** A raster grid shows *that* there are pixels, not their values. Load the case to see the actual data.
 
 ## Browse by risk type
 
