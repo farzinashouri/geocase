@@ -20,10 +20,13 @@ tags:
   - nodata
   - masking
 
+# `coordinate_order` and `dimension_mismatch` were removed in plan 34: this is
+# conventional (latitude, longitude) rectilinear data, so neither risk is
+# exercised by the file. A case that returns green for a property it cannot
+# test terminates the user's search. `cf_time_ordering_netcdf` carries the
+# dimension-ordering risk against bytes that actually demonstrate it.
 risk_types:
-  - coordinate_order
   - nodata_ignored
-  - dimension_mismatch
 
 behavioral_goal: >
   Verify that latitude/longitude dimensions are correctly identified,
@@ -48,16 +51,22 @@ source:
   name: geocase-curated
   license: MIT
 
+# `expect_crs`/`expected_epsg` were removed in plan 34 for the same reason as
+# the two risk types above: the file carries no `grid_mapping` attribute and no
+# `crs` variable, so a CRS claim here is undemonstrable. The `crs:` key above
+# still records the coordinates' reference system as documentation.
 assertions:
   expect_loadable: true
-  expect_crs: true
-  expected_epsg: 4326
   expect_nodata: true
 
+# Renamed from `dimensions`/`variables` in plan 34. The old names were read by
+# nothing; these are checked against the real file by `check_netcdf_content`,
+# and `expected_dimensions` is compared in order so a dimension-ordering claim
+# is checkable at all.
 params:
-  dimensions:
+  expected_dimensions:
     - latitude
     - longitude
-  variables:
+  expected_variables:
     - temperature
   fill_value: -9999.0

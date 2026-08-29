@@ -37,7 +37,10 @@ from geocase.assertions.raster import (
     assert_no_nodata_pixels,
     assert_nodata_masked,
     assert_nodata_value,
+    assert_pixel_anchor,
+    assert_scale_factor,
     assert_shape,
+    assert_transform_signs,
 )
 from geocase.assertions.topology import (
     assert_no_duplicates,
@@ -75,6 +78,9 @@ __all__ = [
     "assert_is_cog",
     "assert_band_names",
     "assert_colormap_present",
+    "assert_scale_factor",
+    "assert_transform_signs",
+    "assert_pixel_anchor",
     # Topology
     "assert_no_self_intersections",
     "assert_no_duplicates",

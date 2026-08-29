@@ -7,7 +7,62 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **Seven cases closing gaps found by an external review (143 → 150).** Three raster
+  transform-convention cases: `bottom_up_dem_small` (a positive-`e`, south-up affine —
+  every other raster in the catalog is built with `from_origin`, which always emits a
+  negative `e`, so code assuming north-up passed the whole corpus), plus
+  `pixel_is_area_dem_small` / `pixel_is_point_dem_small`, a differential pair sharing a
+  transform and an array and differing only in `AREA_OR_POINT`. Two NetCDF cases:
+  `ndvi_packed_netcdf` (int16 packed by `scale_factor`, cross-linked with the GeoTIFF
+  `ndvi_scaled_int16_small` as a same-failure-mode pair across containers) and
+  `cf_time_ordering_netcdf` (CF time units on non-conventional `(longitude, latitude,
+  time)` dimensions). Two vector cases: `polygon_z_wkb` / `polygon_z_gpkg`, the first
+  fixtures in the catalog with Z coordinates, the GPKG half also carrying an `id` of
+  9007199254740993 (2^53 + 1) for readers that route integers through a double.
+
+- **`scripts/generate_netcdf_fixtures.py`.** NetCDF fixtures are now regenerable and
+  gated like the raster and vector families. `--check` compares semantics rather than
+  bytes, because HDF5 stamps its library version into every file.
+
+- **NetCDF content checking.** `check_case_content` no longer returns `[]` for the
+  category; `check_netcdf_content` verifies declared dimensions (in order), variables,
+  fill values, packing and time units against the real file.
+
+- **Two `AssertionHints` fields**, both additive and `None`-defaulted:
+  `expected_transform_signs` and `expected_pixel_anchor`, with a new `PixelAnchor`
+  literal. Public assertions `assert_transform_signs`, `assert_pixel_anchor` and
+  `assert_scale_factor`.
+
 ### Changed
+
+- **(data) `latlon_sample.nc` was replaced.** It was the only fixture in the repository
+  that could not be regenerated: its temperature values were unseeded random floats
+  committed in a single "Analyse structure" commit, and 400 seed and distribution
+  combinations failed to recover them. It is now emitted from a deterministic ramp.
+
+  **Shape `(5, 8)`, `float64`, `_FillValue = -9999.0` and both fill positions are
+  preserved exactly**, so every assertion the case declares still holds. Only the
+  temperature values differ. If you pinned an earlier release and asserted against
+  specific temperatures, those assertions will fail.
+
+  The case also dropped three declarations it could not demonstrate: the
+  `coordinate_order` and `dimension_mismatch` risk types (the data is conventional
+  `(latitude, longitude)` rectilinear, which exercises neither) and
+  `expect_crs`/`expected_epsg` (the file has no `grid_mapping` and no `crs` variable).
+  The dimension-ordering risk now lives on `cf_time_ordering_netcdf`, which demonstrates it.
+
+- **`expected_scale_factor` is now enforced.** It had been declared in the model, the
+  schema and three raster `case.yaml`s since the raster action plan, and read by
+  nothing. Those three cases are checked against their real band scales for the first
+  time.
+
+- **The six `*_gml_baseline` cases declare `axis_order`.** Their bytes were always
+  latitude-first — `urn:ogc:def:crs:EPSG::4326` forces the authority's declared axis
+  order — and no `case.yaml` said so. Bytes are unchanged; a new content check verifies
+  the claim against them. Their `notes.md` files also had their geometry corrected: all
+  six still quoted pre-relocation coordinates.
 
 - **BREAKING (data): the `<geometry>_<format>_baseline` fixtures now hold the geometry
   they always claimed to.** 53 of the 60 shipped different coordinates from the GeoJSON

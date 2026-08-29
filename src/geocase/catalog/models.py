@@ -163,6 +163,12 @@ class SourceInfo(BaseModel):
 
 NodataConvention = Literal["sentinel", "nan", "mask", "none"]
 
+#: Whether a transform's coordinates name pixel corners or pixel centres.
+#: A *new* Literal rather than an extension of a promised one, so nothing in the
+#: v1.0 surface changes. GDAL writes this as the ``AREA_OR_POINT`` tag and omits
+#: it entirely for ``area``, which is why the default matters more than the tag.
+PixelAnchor = Literal["area", "point"]
+
 
 class AssertionHints(BaseModel):
     expect_loadable: bool = True
@@ -185,6 +191,13 @@ class AssertionHints(BaseModel):
     expected_scale_factor: float | None = None
     expected_colormap_present: bool | None = None
     is_cog: bool | None = None
+
+    # Georeferencing conventions (plan 34 phase 2). A *list* of signs rather
+    # than one value: a rotated affine carries non-zero b/d as well, which no
+    # single sign describes. Members are "positive_e" | "negative_e" |
+    # "rotated".
+    expected_transform_signs: list[str] | None = None
+    expected_pixel_anchor: PixelAnchor | None = None
 
 
 class CaseMetadata(BaseModel):

@@ -171,6 +171,14 @@ _SIMPLE_EXPECTED_FAILURES: frozenset[str] = frozenset({
     "test_validate_polygon_geometry_handles_all_polygon_cases[vector-polygon-epsg32601-antimeridian-utm-valid]",
     "test_validate_polygon_geometry_handles_all_polygon_cases[vector-polygon-epsg32632-utm-utm-zone-boundary-valid]",
     "test_validate_polygon_geometry_handles_all_polygon_cases[vector-polygon-epsg32756-southern-hemisphere-utm-valid]",
+    # Plan 34's Z cases. A new limitation rather than a variant of the ones
+    # above: `ring_crosses` does `[x for x, y in coords]`, which raises
+    # ValueError on a 3-tuple rather than returning a wrong answer. Every
+    # vector fixture was 2D until these two, so the naive implementation had
+    # never met a coordinate it could not unpack -- which is exactly the gap
+    # the pair was added to expose. The `_perfect` counterpart handles both.
+    "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg4326-dimensionality-three-dimensional-wkb]",
+    "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg4326-dimensionality-geopackage-integer-precision]",
 })
 
 

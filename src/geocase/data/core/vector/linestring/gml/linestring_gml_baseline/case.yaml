@@ -22,6 +22,12 @@ tags:
 
 risk_types:
   - format_comparison
+  # Added in plan 34. These files are written with
+  # urn:ogc:def:crs:EPSG::4326, and the URN form forces EPSG:4326's declared
+  # (latitude, longitude) axis order regardless of GDAL's traditional-order
+  # setting -- so the bytes on disk really are lat-first. OGR reads them back
+  # correctly; a naive text parse of the XML does not. See notes.md.
+  - axis_order
 
 behavioral_goal: >
   Provide a canonical linestring encoded as GML so format-specific

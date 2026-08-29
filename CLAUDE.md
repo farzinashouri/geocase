@@ -37,6 +37,7 @@ python scripts/validate_case_content.py   # declared assertions vs. real bytes
 python scripts/catalog_extent.py --check  # declared extent vs. real bytes (--write to regenerate)
 python scripts/generate_raster_fixtures.py --check
 python scripts/generate_vector_fixtures.py --check
+python scripts/generate_netcdf_fixtures.py --check
 python scripts/generate_checksums.py --check
 python scripts/generate_catalog_pages.py --check
 python scripts/generate_raster_previews.py --check

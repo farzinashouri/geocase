@@ -73,6 +73,10 @@ class RasterSpec:
     scale_factor: float | None = None
     # Single-band categorical colormap: {value: (r, g, b, a)}.
     colormap: dict[int, tuple[int, int, int, int]] | None = None
+    # Dataset-level GDAL metadata tags. ``AREA_OR_POINT`` is the one that
+    # matters: GDAL omits it for the area convention, so a pixel-anchor pair
+    # has to write both sides explicitly to be a real differential.
+    tags: dict[str, str] = field(default_factory=dict)
 
     def array(self) -> np.ndarray:
         return np.stack(self.bands).astype(self.dtype)
@@ -147,6 +151,82 @@ def _specs() -> list[RasterSpec]:
         ),
         *_priority_2_4_specs(),
         *_footprint_edge_specs(),
+        *_transform_convention_specs(),
+    ]
+
+
+#: Directory shared by the transform-convention cases. Like the footprint edge
+#: cases, these are siblings whose whole value is the comparison between them.
+_TRANSFORM_DIR = "transform_conventions"
+
+
+def _transform_convention_specs() -> list[RasterSpec]:
+    """Georeferencing conventions every consumer assumes and none declared.
+
+    Two silent-wrong-answer classes, neither exercised by the catalog before
+    plan 34:
+
+    *Transform sign.* Every other raster here is built with ``from_origin``,
+    which always emits a negative ``e``. Code that assumes north-up therefore
+    passes the whole corpus and mirrors a bottom-up raster the first time it
+    meets one.
+
+    *Pixel anchor.* ``AREA_OR_POINT`` decides whether the transform's
+    coordinates name pixel corners or pixel centres -- half a pixel, invisible
+    to shape, CRS, checksum or preview gates. The two anchor fixtures share a
+    transform and an array and differ *only* in the tag, so the difference in
+    where a pixel sits is attributable to the convention alone.
+    """
+    size = 12
+    pixel = 30.0
+    left = 500000.0
+    bottom = 4200000.0
+    top = bottom + size * pixel
+
+    # A north-up ramp: row 0 is the northernmost, values increase southward.
+    north_up = np.arange(size * size, dtype="float32").reshape(size, size)
+    north_up[0, 0] = -9999.0
+
+    # The bottom-up file must describe the same *ground*, not the same array.
+    # Its row 0 is the SOUTHERNMOST row, so the rows have to be reversed as
+    # well as the transform sign flipped. Doing only the latter yields a file
+    # that is internally consistent and geographically upside down -- exactly
+    # the bug this case exists to catch.
+    bottom_up = np.flipud(north_up).copy()
+
+    north_up_transform = Affine(pixel, 0.0, left, 0.0, -pixel, top)
+    bottom_up_transform = Affine(pixel, 0.0, left, 0.0, pixel, bottom)
+
+    def _spec(case_id: str, array: np.ndarray, transform: Any, **kwargs: Any):  # type: ignore[no-untyped-def]
+        return RasterSpec(
+            case_id=case_id,
+            primary=f"{case_id}.tif",
+            bands=[array],
+            dtype="float32",
+            nodata=-9999.0,
+            crs="EPSG:32633",
+            transform=transform,
+            case_dir=_TRANSFORM_DIR,
+            band_names=["elevation"],
+            **kwargs,
+        )
+
+    return [
+        _spec("bottom_up_dem_small", bottom_up, bottom_up_transform),
+        # The anchor pair. "Area" is written explicitly rather than left to
+        # GDAL's default so that both files make a positive statement.
+        _spec(
+            "pixel_is_area_dem_small",
+            north_up,
+            north_up_transform,
+            tags={"AREA_OR_POINT": "Area"},
+        ),
+        _spec(
+            "pixel_is_point_dem_small",
+            north_up,
+            north_up_transform,
+            tags={"AREA_OR_POINT": "Point"},
+        ),
     ]
 
 
@@ -582,6 +662,9 @@ def _write_raster(spec: RasterSpec, dest: Path) -> None:
             dst.scales = (spec.scale_factor,) * array.shape[0]
         if spec.colormap is not None:
             dst.write_colormap(1, spec.colormap)
+        if spec.tags:
+            # Converges with raster/_writer.py, which already does this.
+            dst.update_tags(**spec.tags)
         # Internal overviews (COG-style) are written inside the same file.
         if spec.overviews and not spec.external_overviews:
             dst.build_overviews(spec.overviews, Resampling.nearest)

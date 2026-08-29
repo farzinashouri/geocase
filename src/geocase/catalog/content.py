@@ -16,7 +16,15 @@ Pure functions, no CLI: ``scripts/validate_case_content.py`` is the runner.
 Living here rather than in ``scripts/`` means the pytest job can unit-test it
 and users can run it against their own manifest cases.
 
-See docs/plans/28-validate-geocase.md, Phase 1.
+All three categories are checked. NetCDF was exempt until Plan 34 -- xarray was
+absent from the catalog job's install set, so the dispatcher returned ``[]``
+for the category and ``latlon_small`` reported green for ``expect_nodata`` and
+three risk types that nothing had examined. The extra is installed now and
+:func:`check_netcdf_content` is the check; it still returns ``[]`` if xarray is
+missing, because an absent optional reader is not a data finding.
+
+See docs/plans/28-validate-geocase.md Phase 1, and
+docs/plans/34-close-reviewed-catalog-gaps.md Phase 1.
 """
 
 from __future__ import annotations
@@ -29,6 +37,7 @@ from geocase.catalog.models import CaseMetadata
 __all__ = [
     "check_case_content",
     "check_extent",
+    "check_netcdf_content",
     "check_raster_content",
     "check_vector_content",
 ]
@@ -89,7 +98,10 @@ def check_raster_content(case_dir: Path, metadata: CaseMetadata) -> list[str]:
         assert_is_cog,
         assert_nan_nodata,
         assert_nodata_value,
+        assert_pixel_anchor,
+        assert_scale_factor,
         assert_shape,
+        assert_transform_signs,
     )
 
     errors: list[str] = []
@@ -159,6 +171,30 @@ def check_raster_content(case_dir: Path, metadata: CaseMetadata) -> list[str]:
             )
         if hints.is_cog is True:
             _collect(errors, metadata, "is_cog", lambda: assert_is_cog(src))
+        if hints.expected_scale_factor is not None:
+            # Declared by three cases since the raster action plan and read by
+            # nothing until plan 34 -- a declared-but-ungated hint of exactly
+            # the class plan 27 section 1.2 forbids.
+            _collect(
+                errors,
+                metadata,
+                "expected_scale_factor",
+                lambda: assert_scale_factor(src, hints.expected_scale_factor),
+            )
+        if hints.expected_transform_signs is not None:
+            _collect(
+                errors,
+                metadata,
+                "expected_transform_signs",
+                lambda: assert_transform_signs(src, hints.expected_transform_signs),
+            )
+        if hints.expected_pixel_anchor is not None:
+            _collect(
+                errors,
+                metadata,
+                "expected_pixel_anchor",
+                lambda: assert_pixel_anchor(src, hints.expected_pixel_anchor),
+            )
         if hints.nodata_convention == "nan":
             _collect(
                 errors, metadata, "nodata_convention", lambda: assert_nan_nodata(src)
@@ -453,7 +489,249 @@ def check_vector_content(case_dir: Path, metadata: CaseMetadata) -> list[str]:
             lambda: assert_feature_count(gdf, int(expected_count)),
         )
 
+    if metadata.params.get("expect_z") is True:
+        _collect(errors, metadata, "expect_z", lambda: _assert_has_z(gdf))
+
+    expected_id = metadata.params.get("expected_id_value")
+    if expected_id is not None:
+        _collect(
+            errors,
+            metadata,
+            "expected_id_value",
+            lambda: _assert_id_value(gdf, int(expected_id)),
+        )
+
+    # risk_types as contract. A vocabulary entry nothing gates is
+    # indistinguishable from a typo (plan 27 section 1.2), so the term has to
+    # be backed by the bytes that justify it.
+    if "axis_order" in metadata.risk_types:
+        errors.extend(_check_authority_axis_order(case_dir, metadata))
+
     return errors
+
+
+def _assert_has_z(gdf: Any) -> None:
+    """Every geometry carries a third ordinate."""
+    flat = [
+        i for i, geom in enumerate(gdf.geometry) if geom is not None and not geom.has_z
+    ]
+    if flat:
+        raise AssertionError(
+            f"expect_z is true, but {len(flat)} geometry/geometries are 2D "
+            f"(rows {flat[:5]})"
+        )
+
+
+def _assert_id_value(gdf: Any, expected: int) -> None:
+    """Exact read-back of an id, for values a float64 cannot hold.
+
+    9007199254740993 is 2^53 + 1. A reader that routes integers through a
+    double returns ...992, so approximate comparison would pass the bug.
+    """
+    if "id" not in gdf.columns:
+        raise AssertionError("expected_id_value declared, but there is no 'id' column")
+    actual = int(gdf["id"].iloc[0])
+    if actual != expected:
+        raise AssertionError(f"expected id {expected}, read back {actual}")
+
+
+def _check_authority_axis_order(case_dir: Path, metadata: CaseMetadata) -> list[str]:
+    """Back the ``axis_order`` risk type with the file's actual bytes.
+
+    Only GML is checked: it is the format in this catalog that genuinely
+    serialises in authority order, via the ``urn:ogc:def:crs`` form. For any
+    other format the term would need its own justification, so silence here is
+    deliberate rather than an omission.
+    """
+    if metadata.format != "GML":
+        return []
+
+    import re as _re
+
+    errors: list[str] = []
+    path = _primary_path(case_dir, metadata)
+    text = path.read_text(encoding="utf-8")
+
+    if "urn:ogc:def:crs:EPSG::4326" not in text:
+        errors.append(
+            _err(
+                metadata,
+                "axis_order",
+                "declares axis_order, but the file does not use the "
+                "urn:ogc:def:crs form that forces authority ordering",
+            )
+        )
+        return errors
+
+    match = _re.search(r"<gml:(?:pos|posList)>([^<]+)</gml:", text)
+    if match is None:
+        errors.append(
+            _err(metadata, "axis_order", "no gml:pos or gml:posList to inspect")
+        )
+        return errors
+
+    first = float(match.group(1).split()[0])
+    extent = metadata.extent
+    if extent is not None and not (extent.south - 1.0 <= first <= extent.north + 1.0):
+        errors.append(
+            _err(
+                metadata,
+                "axis_order",
+                f"declares axis_order, but the first ordinate {first} is not a "
+                f"latitude in [{extent.south}, {extent.north}]",
+            )
+        )
+    return errors
+
+
+# --- netcdf ---------------------------------------------------------------
+
+
+def check_netcdf_content(case_dir: Path, metadata: CaseMetadata) -> list[str]:
+    """Check a NetCDF case's declared assertions against its variables.
+
+    Until Plan 34 this category was not content-checked at all: xarray was not
+    in the catalog job's install set, so the dispatcher returned ``[]`` for
+    every netcdf case. That made ``latlon_small`` a case returning green for
+    ``expect_nodata`` and three risk types without any of them being examined.
+
+    Returns ``[]`` when xarray is absent. A missing optional reader is not a
+    finding -- this function is public, and users run it on machines that never
+    installed the extra.
+    """
+    try:
+        import xarray as xr
+    except ImportError:
+        return []
+
+    errors: list[str] = []
+    hints = metadata.assertions
+    path = _primary_path(case_dir, metadata)
+
+    # decode_cf=False keeps packing attributes observable as attributes. With
+    # decoding on, a drifted scale_factor is silently applied and the check
+    # compares already-corrected values against themselves.
+    with xr.open_dataset(path, decode_cf=False) as ds:
+        dims = [str(name) for name in ds.sizes]
+        variables = [str(name) for name in ds.data_vars]
+
+        # Order matters, and is the point: an ordering claim is only checkable
+        # if the declared order is compared as a sequence, not as a set.
+        expected_dims = metadata.params.get("expected_dimensions")
+        if expected_dims is not None:
+            declared = [str(name) for name in expected_dims]
+            _collect(
+                errors,
+                metadata,
+                "expected_dimensions",
+                lambda: _assert_sequence(declared, dims, "dimensions"),
+            )
+
+        expected_vars = metadata.params.get("expected_variables")
+        if expected_vars is not None:
+            missing = [str(n) for n in expected_vars if str(n) not in variables]
+            _collect(
+                errors,
+                metadata,
+                "expected_variables",
+                lambda: _assert_empty(
+                    missing,
+                    f"declared variables not in the file: {missing}; "
+                    f"file has {variables}",
+                ),
+            )
+
+        if hints.expect_nodata is True:
+            _collect(
+                errors,
+                metadata,
+                "expect_nodata",
+                lambda: _assert_any_fill_value(ds, variables),
+            )
+
+        if hints.expect_crs is True:
+            # Strict, deliberately. The lenient reading -- treat an absent CRS
+            # variable as not-a-finding -- would ship a check that cannot fail
+            # on the only case it runs against, which is the defect this module
+            # exists to close. latlon_small's undemonstrable declaration was
+            # removed rather than accommodated. See Plan 34 section 1.3.
+            _collect(
+                errors,
+                metadata,
+                "expect_crs",
+                lambda: _assert_has_grid_mapping(ds),
+            )
+
+        if hints.expected_scale_factor is not None:
+            _collect(
+                errors,
+                metadata,
+                "expected_scale_factor",
+                lambda: _assert_scale_factor(ds, hints.expected_scale_factor),
+            )
+
+        expected_units = metadata.params.get("expected_time_units")
+        if expected_units is not None:
+            _collect(
+                errors,
+                metadata,
+                "expected_time_units",
+                lambda: _assert_time_units(ds, str(expected_units)),
+            )
+
+    return errors
+
+
+def _assert_sequence(declared: list[str], actual: list[str], label: str) -> None:
+    if declared != actual:
+        raise AssertionError(f"declared {label} {declared}, file has {actual}")
+
+
+def _assert_empty(missing: list[str], detail: str) -> None:
+    if missing:
+        raise AssertionError(detail)
+
+
+def _assert_any_fill_value(ds: Any, variables: list[str]) -> None:
+    """At least one data variable must declare a _FillValue."""
+    for name in variables:
+        if "_FillValue" in ds[name].attrs or "missing_value" in ds[name].attrs:
+            return
+    raise AssertionError(
+        f"expect_nodata is true, but no data variable declares a _FillValue "
+        f"(checked {variables})"
+    )
+
+
+def _assert_has_grid_mapping(ds: Any) -> None:
+    """A CRS claim needs a grid_mapping or a CF crs variable to back it."""
+    names = {str(name) for name in ds.variables}
+    if names & {"crs", "spatial_ref", "grid_mapping"}:
+        return
+    for name in ds.data_vars:
+        if "grid_mapping" in ds[name].attrs:
+            return
+    raise AssertionError(
+        "expect_crs is true, but the file declares no grid_mapping attribute "
+        "and carries no crs/spatial_ref variable"
+    )
+
+
+def _assert_scale_factor(ds: Any, expected: float) -> None:
+    for name in ds.data_vars:
+        actual = ds[name].attrs.get("scale_factor")
+        if actual is not None and float(actual) == float(expected):
+            return
+    observed = {str(name): ds[name].attrs.get("scale_factor") for name in ds.data_vars}
+    raise AssertionError(
+        f"no variable declares scale_factor {expected}; observed {observed}"
+    )
+
+
+def _assert_time_units(ds: Any, expected: str) -> None:
+    actual = ds["time"].attrs.get("units") if "time" in ds.variables else None
+    if actual != expected:
+        raise AssertionError(f"declared time units {expected!r}, file has {actual!r}")
 
 
 # --- extent ---------------------------------------------------------------
@@ -529,18 +807,12 @@ def check_case_content(case_dir: Path, metadata: CaseMetadata) -> list[str]:
     Returns a list of human-readable error strings — empty means the case's
     declarations are backed by real bytes. Never raises for a data problem:
     a case that fails to open is itself a finding.
-
-    NetCDF cases are not content-checked beyond what the schema gate already
-    does; xarray is not in the catalog CI job's install set (Phase 1 cut).
     """
     case_dir = Path(case_dir)
     path = _primary_path(case_dir, metadata)
 
     if not path.exists():
         return [_err(metadata, "files.primary", f"primary file not found: {path.name}")]
-
-    if metadata.category == "netcdf":
-        return []
 
     # 1.2.5 — an expected-failure that silently stopped failing is a corpus
     # defect too, so the negative case is checked before the positive ones.
@@ -560,6 +832,8 @@ def check_case_content(case_dir: Path, metadata: CaseMetadata) -> list[str]:
     try:
         if metadata.category == "raster":
             errors = check_raster_content(case_dir, metadata)
+        elif metadata.category == "netcdf":
+            errors = check_netcdf_content(case_dir, metadata)
         else:
             errors = check_vector_content(case_dir, metadata)
         return errors + check_extent(case_dir, metadata)
@@ -583,6 +857,7 @@ def _load_for_category(case_dir: Path, metadata: CaseMetadata) -> Any:
     the gate fail 19 perfectly good cases for a defect in the gate.
     """
     from geocase.cases.factory import create_case
+    from geocase.cases.netcdf import NetCDFCase
     from geocase.cases.raster import RasterCase
     from geocase.cases.vector import VectorCase
 
@@ -591,5 +866,11 @@ def _load_for_category(case_dir: Path, metadata: CaseMetadata) -> Any:
         with case.open() as src:
             return src.read(1)
     if isinstance(case, VectorCase):
+        return case.load()
+    if isinstance(case, NetCDFCase):
+        # Needed by the expect_loadable branches, not only by the netcdf
+        # content check. Without it a netcdf case declared unloadable would
+        # "pass" on the TypeError this used to raise -- green for the wrong
+        # reason, which is the failure mode this module exists to catch.
         return case.load()
     raise TypeError(f"No content reader for case category '{metadata.category}'")

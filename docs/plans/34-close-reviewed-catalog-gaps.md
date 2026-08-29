@@ -1,6 +1,65 @@
 # Plan 34 — Close the Reviewed Catalog Gaps
 
-> **Status: proposed 2026-08-29.**
+> **Status: implemented 2026-08-29.** All five phases landed. Catalog 143 → 150
+> (7 new cases, one more than the planned 6: the pixel-anchor pair needed an
+> explicit control). One subtraction, one generator built from nothing, and
+> `expected_scale_factor` gated for the first time since it was introduced.
+
+## Corrections applied before implementation (2026-08-29)
+
+Verifying this plan against the code turned up eight factual errors and five open
+decisions. They are recorded here rather than silently fixed in place, because a
+plan that was wrong about where a symbol lives is evidence about how it was
+written.
+
+**Path corrections.** `AssertionHints` is `src/geocase/catalog/models.py:167-188`,
+not `src/geocase/metadata/models.py`. The schema is
+`src/geocase/metadata/schemas/case.schema.yaml`. Case data lives under
+`src/geocase/data/core/{raster,vector,netcdf}/`; the GML baselines are at
+`src/geocase/data/core/vector/<geom>/gml/<geom>_gml_baseline/`.
+
+**§1.0's flagged unknown is resolved.** The worry that `netCDF4>=1.6` might not
+resolve against the catalog job's `numpy<2` pin was probed in a throwaway
+Python 3.11 venv: `numpy 1.26.4` + `netCDF4 1.7.4` + `xarray 2026.7.0` install
+cleanly and round-trip a `to_netcdf`/`open_dataset`. **The `h5netcdf` fallback is
+unnecessary**; the generator pins `engine="netcdf4"`.
+
+**§4.3's int64 rider misread `_ID_FIELD`.** That constant
+(`scripts/generate_vector_fixtures.py:163`) is the string `"id"` — a *field
+name*. The value `1` is hardcoded separately at `:587`, `:647`, `:750` and in the
+CSV writer. Editing the constant would change bytes in ~60 baselines and report
+the entire family stale. The rider threads a new `VectorSpec.id_value: int = 1`
+and overrides it for the Z-GPKG spec alone.
+
+**§4.3's `_decimate` watch-item is already satisfied.** `scripts/catalog_geometry.py:98`
+already slices `(c[:2] for c in coords)`, and `catalog_extent.py` reads
+`total_bounds`, which is 4-length regardless of dimensionality. The Z test stays
+as a regression guard; no work is owed.
+
+**§1.3 was wrong that `expected_scale_factor` has a consumer.** The field is
+declared in the model, the schema and three raster `case.yaml`s, but nothing in
+`check_raster_content` reads it — a declared-but-ungated hint of exactly the
+class [Plan 27](27-close-plan-26-findings.md) §1.2 forbids. See the decisions
+table.
+
+**§4.2 was wrong that Plan 27 §1.3 owes an `axis_order` row.** That table holds
+one row, `ambiguous_zero`, still owed and untouched by this plan. The real
+`axis_order` debt is Plan 27 **§1.1**'s proposed `axis_order_swapped_pair`, which
+never shipped. §4.2 therefore *adds* a §1.3 row rather than flipping one.
+
+**`south_up_transform`** is listed in [Plan 28](28-validate-geocase.md) as an axis
+in `src/geocase/raster/axes.py`, not as a bundled case. Phase 2.4 delivers a
+bundled case covering the same property; the axis itself stays owed.
+
+### Decisions
+
+| Question | Decision |
+|---|---|
+| `expected_scale_factor` | Gate it on **both** sides. Phase 2.3 adds `assert_scale_factor` and wires it into `check_raster_content`, closing the ungated hint on the three existing raster cases; Phase 1.3 then genuinely reuses it. |
+| The `axis_order` debt | §4.2 **adds** a Plan 27 §1.3 row and closes Plan 27 §1.1: the six GML baselines genuinely carry authority-order bytes, so a synthetic `axis_order_swapped_pair` is redundant. |
+| `latlon_small`'s `expect_crs` | **Remove** `expect_crs` and `expected_epsg` in the 3.2 subtraction. The file has no `grid_mapping` and no `crs` variable, so they are as undemonstrable as the two `risk_types` being dropped beside them. `check_netcdf_content` gates `expect_crs` **strictly** — an absent CRS variable *is* a finding — rather than carrying the permanent leniency §1.3 proposed. |
+| New `risk_types` terms | **Skip** `transform_sign`, `time_parsing` and `integer_precision`. Only `axis_order` is added, and it gets a real check. The typed hints already carry these contracts, and Plan 27 §1.2 warns against singleton vocabulary nothing gates. |
+| `expected_dimensions` / `expected_variables` / `expected_time_units` | Stay in **`params`** with matching `content.py` checks, per this plan's own structural constraint 2. §3.2's wording, which reads as though they become typed fields, is corrected. |
 
 ## Context
 
@@ -49,11 +108,23 @@ Nothing touches `src/geocase/__init__.py`'s `__all__` or the four pytest fixture
 
 ---
 
-## Phase 1 — Make NetCDF reproducible (unblocking)
+## Phase 1 — Make NetCDF reproducible (unblocking) — **implemented 2026-08-29**
+
+**As built.** All of 1.0–1.5 landed as described, with three deviations worth recording.
+
+*The `_semantic_signature` NaN trap.* The first working generator reported its own freshly written fixture as stale, on every run. xarray gives unpacked coordinate variables a `_FillValue` of NaN, and `nan != nan`, so a signature carrying a raw NaN can never compare equal to itself. `_round` now maps NaN to a sentinel string. A byte gate would never have surfaced this; a semantic one had to.
+
+*`expect_crs` was decided here, not deferred.* §1.3 originally proposed treating an absent CRS variable as not-a-finding. Implemented strictly instead, and the check immediately failed `latlon_small` — which is the correct outcome, and exactly what the lenient reading would have hidden. Phase 3.2's subtraction of `expect_crs`/`expected_epsg` was pulled forward into this phase because the check could not be landed green without it.
+
+*`_load_for_category` needed the branch predicted in the hazard list.* Added with the reasoning in a comment, in the same change as the carve-out removal.
+
+Gates after this phase: 1820 passed / 37 skipped, `validate_case_content.py` green across all 143 cases (netcdf now genuinely checked rather than skipped), `mypy src` clean, every `--check` up to date. No case count change.
 
 ### 1.0 CI can run it
 
-`.github/workflows/ci.yml:137` → `.[raster,vector,netcdf] "numpy<2"`. **Verify first** in `.venv` (3.11) that `netCDF4>=1.6` resolves against `numpy<2` — netCDF4 wheels are built per-numpy-ABI and this is the likeliest thing to break the job. Fallback: add `h5netcdf` (pure h5py, no numpy ABI coupling) to the extra. Comment in the style of the existing `numpy<2` note.
+`.github/workflows/ci.yml:137` → `.[raster,vector,netcdf] "numpy<2"`, commented in the style of the existing `numpy<2` note.
+
+**Verified 2026-08-29, so the `h5netcdf` fallback is dropped.** The concern was that netCDF4 wheels are built per-numpy-ABI. Probed in a throwaway Python 3.11 venv: `numpy 1.26.4` + `netCDF4 1.7.4` + `xarray 2026.7.0` resolve, import, and round-trip a `to_netcdf`/`open_dataset` without complaint. The generator pins `engine="netcdf4"`.
 
 ### 1.1 Tests first — new `tests/unit/test_netcdf_fixtures.py`
 
@@ -73,9 +144,13 @@ Modelled on `generate_raster_fixtures.py`. A `NetCDFSpec` dataclass (`case_id`, 
 
 Replace `if metadata.category == "netcdf": return []` (line 542) with a dispatch to a new `check_netcdf_content`, added beside `check_raster_content`/`check_vector_content` and exported in `__all__`. It returns `[]` on `ImportError` — a missing optional reader is not a finding.
 
-Checks, all through `_collect`: `params.expected_dimensions` (**in declared order** — that is what makes dim-ordering checkable at all), `params.expected_variables`, `expect_nodata` → the variable declares `_FillValue`, `expected_scale_factor` (reusing the existing raster field), `params.expected_time_units`.
+**`_load_for_category` must move in the same commit.** It (`content.py:576`) handles only `RasterCase` and `VectorCase` and ends in `raise TypeError`. Removing the carve-out without giving it a `NetCDFCase` branch breaks netcdf in *both* directions: an `expect_loadable: true` case falls through to `check_vector_content` and fails, while an `expect_loadable: false` case passes for the wrong reason, via the bare `except Exception`. `NetCDFCase.load()` already exists (`src/geocase/cases/netcdf.py:33`), so this is a three-line branch — but omitting it makes the phase's own gate lie.
 
-**Do not check `expect_crs` naively.** `latlon_small` declares `expect_crs: true` and `expected_epsg: 4326` with *no* `grid_mapping` or `crs` variable in the file. A strict check turns this phase red on an unrelated case. Treat an absent CRS variable as not-a-finding, and record in "As built" whether the declaration or the check is wrong. Do not silently change the case.
+Checks, all through `_collect`: `params.expected_dimensions` (**in declared order** — that is what makes dim-ordering checkable at all), `params.expected_variables`, `expect_nodata` → the variable declares `_FillValue`, `expected_scale_factor`, `params.expected_time_units`.
+
+`expected_scale_factor` is **not** the reuse of a working check that this plan first assumed. The field is declared in `models.py`, in the schema, and by three raster `case.yaml`s, and nothing reads it — Phase 2.3 writes `assert_scale_factor` and wires it into `check_raster_content`, so that by the time this check exists the field is gated on both sides.
+
+**`expect_crs` is checked strictly**, reversing this plan's first instinct. `latlon_small` declares `expect_crs: true` and `expected_epsg: 4326` with *no* `grid_mapping` or `crs` variable in the file, and the proposal was to treat an absent CRS variable as not-a-finding so the phase would not go red. That is the same leniency the plan condemns elsewhere: it would ship a check that cannot fail on the only case it runs against. Phase 3.2 removes the two undemonstrable declarations from `latlon_small` instead — beside the two `risk_types` it was already removing for the identical reason — and the check stays strict.
 
 Update the module docstring — its "netcdf is not content-checked (Phase 1 cut)" paragraph becomes false in the same change.
 
@@ -96,6 +171,20 @@ Record the replacement in the case's `notes.md` and in the release notes for the
 `CLAUDE.md`'s catalog-gate block, `ci.yml`'s catalog job (after `generate_vector_fixtures.py --check`), `docs/contributing/workflow.md`, and `docs/adding-a-case.md` — which has never had a NetCDF path.
 
 ---
+
+## Phase 2 — Transform sign and pixel anchor — **implemented 2026-08-29** (143 → 146)
+
+**As built.** 2.1–2.5 landed as described. Four things to record.
+
+*The bounds test was written backwards, and the fixture corrected it.* §2.1 specified `test_bottom_up_case_bounds_are_still_normalised`, asserting `bounds.bottom < bounds.top` "despite positive `e`". rasterio does **not** normalise: `BoundingBox` is computed straight from the affine, so `bottom_up_dem_small` reports `bottom = 4200360` against `top = 4200000`. The test is now `test_bottom_up_case_reports_inverted_bounds`, pinning the real behaviour, because that inversion *is* the trap — anything computing a height as `top - bottom` gets a negative number, and every other fixture in the catalog hides it. `catalog_extent.py` normalises independently, so the published extent is still correct.
+
+*`expected_scale_factor` is now gated on both sides,* per the decision above: `assert_scale_factor` in `assertions/raster.py`, wired into `check_raster_content`. Three raster cases that had declared it since the raster action plan are checked against real band scales for the first time.
+
+*`_COUNT_CLAIMS` was widened from 7 patterns to 12.* Four statements of the case count matched no pattern and would have drifted silently through this plan's three renumberings — README's "curated vector, raster and NetCDF files", `docs/index.md`'s description line and its "Browse all N cases" link, `getting-started.md`'s "browse all N cases". Verified by mutating one and watching the gate name it. This was not in the plan; it is the durable fix for a hazard the plan only worked around.
+
+*Break/restore proof (verification steps 1–2), both passed.* Flipping `bottom_up_dem_small`'s `e` sign → exit 1 naming `expected_transform_signs`. Stripping `pixel_is_point_dem_small`'s `AREA_OR_POINT` tag → exit 1 naming `expected_pixel_anchor`, reading `'area'` rather than `None`, which is the documented default doing its job. Both restored byte-identical (`generate_raster_fixtures.py --check` and `generate_checksums.py --check` clean).
+
+Gates: 1835 passed / 37 skipped, content validation green across 146 cases, every `--check` up to date, `ruff`/`mypy`/`mkdocs --strict` clean.
 
 ## Phase 2 — Transform sign and pixel anchor
 
@@ -144,7 +233,25 @@ Three cases in one `transform_conventions/` directory (following `_FOOTPRINT_DIR
 
 `validate_catalog.py` **will fail** on its case-count claims (Plan 33 hit this): bump every claim it enforces across `README.md`, `docs/`, and `recipe/meta.yaml`. 143 → 146.
 
+**And four sites it does not enforce.** `_COUNT_CLAIMS` (`validate_catalog.py:351`) gates seven files by regex, but `README.md:34` ("143 curated vector, raster and NetCDF files"), `docs/index.md:2` and `:29`, `docs/getting-started.md:16`, and `docs/contributing/releasing.md:62,122` all state the count in forms no pattern matches — they will go stale silently through all three renumberings. Run a plain `grep -rn '\b143\b'` (then 146, 148) after each regeneration rather than trusting the gate, and **widen `_COUNT_CLAIMS` to cover them** so the next plan does not rediscover this. The ungated *test* count (1701, in `getting-started.md:202` and `workflow.md:9`) also drifts as this plan's ~25 tests land.
+
 ---
+
+## Phase 3 — NetCDF coverage, and the subtraction — **implemented 2026-08-29** (146 → 148)
+
+**As built.** Both fixtures shipped and the subtraction landed (in Phase 1, as noted there). Four things to record.
+
+*The packed fixture was first written with pre-packed integers, and xarray rejected it.* Handing `to_netcdf` `int16` storage values *and* a `scale_factor` encoding makes it try to pack them a second time; it fails on the dtype cast. The spec now carries **physical** values in `[-1, 1]` and lets the declared encoding do the packing — which is also the correct mental model: the spec says what the data means, the encoding says how it is stored.
+
+*CF time units belong in `attrs`, not `encoding`.* The netCDF4 backend rejects `units` and `calendar` as encoding parameters outright. Since the coordinate holds raw integers rather than datetimes there is nothing for xarray to encode, so they are written as attributes and land on disk verbatim.
+
+*A brittle test elsewhere broke, and it was the test that was wrong.* `test_select_by_category_netcdf` asserted `len(result) == 1` — true only while netcdf had exactly one case. Adding two broke a test of the *selector* for a reason unrelated to the selector. Rewritten to derive its expectation from the corpus, matching the sibling raster test one function above it.
+
+*Break/restore proof (verification steps 4–5), both passed.* Perturbing `ndvi_packed_netcdf`'s `scale_factor` to 0.5 → exit 1 naming `expected_scale_factor` and printing the observed value. Transposing `cf_time_ordering_netcdf` to conventional `(time, latitude, longitude)` → exit 1 naming `expected_dimensions` and printing both orders. Both restored, `--check` and checksums clean.
+
+**No netcdf coverage matrix**, as planned: a 3-row matrix carries less than the case pages already do, and generalising the matrix generator is a separate deliverable. Recorded here so it is not mistaken for an oversight. Both new cases carry a hand-written `region`, so their pages render a Location row despite `catalog_extent.py` computing no extent for the category (verified).
+
+Gates: 1843 passed / 37 skipped, content validation green across 148 cases, every `--check` up to date, `ruff`/`mypy`/`mkdocs --strict` clean.
 
 ## Phase 3 — NetCDF coverage, and the subtraction
 
@@ -159,7 +266,11 @@ Depends on Phase 1 being green.
 
 ### 3.2 The subtraction — `netcdf/latlon_small/case.yaml`
 
-Remove `coordinate_order` and `dimension_mismatch` from `risk_types`. Replace the unvalidated `params.dimensions`/`params.variables` with the now-gated `expected_dimensions`/`expected_variables`. Record in `notes.md`. Same correction Plan 28 made to `landcover_small`.
+Remove `coordinate_order` and `dimension_mismatch` from `risk_types`, **and `expect_crs`/`expected_epsg` with them** — the file carries no `grid_mapping` and no `crs` variable, so those two are undemonstrable on exactly the same grounds (see 1.3).
+
+Rename the unvalidated `params.dimensions`/`params.variables` to `params.expected_dimensions`/`params.expected_variables`, which 1.3's check reads. They stay in `params` rather than becoming typed `AssertionHints` fields: structural constraint 2 prefers `params` plus a matching check, and a typed field would have to land in Phase 2.2's schema commit instead.
+
+Record in `notes.md`. Same correction Plan 28 made to `landcover_small`.
 
 ### 3.3 Two fixtures
 
@@ -189,9 +300,11 @@ Same order as 2.5, with `generate_netcdf_fixtures.py` at step 1 and no raster pr
 
 Add `axis_order` to `risk_types` on the six `*_gml_baseline` cases, and reproduce in their notes the explanation currently reachable only by reading `_spatial_reference()`'s docstring. Add a `check_vector_content` branch that reads the raw bytes for the URN form and asserts the first `gml:pos` ordinate is the latitude — without it the risk type is a label, which Plan 27 §1.2 forbids.
 
+**Fix the stale notes in the same pass.** Five of the six `notes.md` still quote pre-[Plan 33](33-relocate-canonical-geometries.md) geometry — `linestring_gml_baseline/notes.md` says `LINESTRING (10 50, 10.5 50.3, 11 50.1)` while its own `case.yaml` extent is Patagonia, and multipoint, multilinestring and multipolygon are wrong the same way. Only `point` was updated. Rewriting these notes without correcting the coordinates would re-certify the stale numbers. `_spatial_reference()`'s docstring has the same problem — its worked example is the pre-relocation Copenhagen point — so reproduce its *argument*, not its numbers.
+
 `out_of_bounds_coordinates` **does not** gain `axis_order`: it catches a swap only because lat=100 is out of range, which is a validity signal. Record the distinction in its notes rather than leave it to be rediscovered.
 
-**This closes Plan 27 §1.3's owed row** — update that table from "Owed" to the check's name.
+**This adds a Plan 27 §1.3 row; it does not flip one.** That table holds a single row, `ambiguous_zero`, which stays owed and is not this plan's business. The `axis_order` debt that does exist is Plan 27 **§1.1**'s proposed `axis_order_swapped_pair`, which never shipped — and declaring the six GML baselines discharges it, because those bytes genuinely carry authority order on disk. A synthetic swapped pair would demonstrate less. Mark §1.1 delivered here.
 
 ### 4.3 The Z fixtures — `scripts/generate_vector_fixtures.py`
 
@@ -200,9 +313,11 @@ Not family members (no `canonical_source_case_id`, no `cross_format_canonical`) 
 - **`polygon_z_wkb`** — a 5-vertex closed ring with a Z ramp, e.g. `POLYGON Z ((12.50 55.70 0.0, 12.52 55.70 12.5, 12.52 55.72 25.0, 12.50 55.72 12.5, 12.50 55.70 0.0))`. Pure-shapely WKB, so `--check` stays a strict byte comparison.
 - **`polygon_z_gpkg`** — the same WKT through `_write_ogr` with `wkbPolygon25D`. `_OGR_GEOMETRY_TYPES` has no Z entries; extend it keyed on a new `VectorSpec.has_z: bool = False` rather than by inventing a `"PolygonZ"` string, so `geometry_type` stays inside the values `SuiteSelection.geometry_type` filters on. Getting this wrong silently writes 2D — which is what the transcoding test catches.
 
-**Rider (int64 > 2^53):** give the GPKG sibling `_ID_FIELD = 9007199254740993` instead of `1`, with `params.expected_id_value` and a check asserting exact read-back. One line, and it covers the expert's int64 gap without minting a case.
+**Rider (int64 > 2^53):** give the GPKG sibling the id value `9007199254740993` instead of `1`, with `params.expected_id_value` and a check asserting exact read-back. It covers the expert's int64 gap without minting a case.
 
-Watch for: Plan 33's `_decimate` in `catalog_geometry.py` now receives 3-tuples. Confirm it indexes `coord[0]`/`coord[1]` rather than unpacking, or page generation raises on the Z case.
+**Not by editing `_ID_FIELD`, as this plan first said.** That constant (`generate_vector_fixtures.py:163`) is the *field name* `"id"`; the value `1` is written separately at `:587` (OGR), `:647` (geopandas), `:750` (GeoJSON) and in the CSV writer. Changing the constant would rewrite the id column in ~60 baselines and report the whole family stale. Thread a new `VectorSpec.id_value: int = 1` and override it for this one spec at `:587`.
+
+~~Watch for: `_decimate` now receives 3-tuples.~~ **Already safe** — `catalog_geometry.py:98` slices `(c[:2] for c in coords)` before `_decimate` sees a coordinate, and `catalog_extent.py` uses `total_bounds`, which is 4-length regardless of dimensionality. `test_z_case_extent_ignores_the_third_dimension` stays as a regression guard on a path that is already closed.
 
 ### 4.4 Regenerate
 
@@ -210,9 +325,35 @@ Same order, substituting the vector generator and `generate_vector_coverage_matr
 
 ---
 
+## Phase 4 — Vector: Z and axis order — **implemented 2026-08-29** (148 → 150)
+
+**As built.** 4.1–4.4 landed. Four things to record.
+
+*The `_ID_FIELD` misread was real and was avoided.* §4.3 said to set `_ID_FIELD = 9007199254740993`. That constant is the field *name* `"id"`; the value `1` is written separately in four places. Following the plan literally would have rewritten the id column in ~60 baselines. A `VectorSpec.id_value` field now carries it, overridden for the GPKG sibling alone — `generate_vector_fixtures.py --check` reports all 65 fixtures up to date, which is the evidence that nothing else moved.
+
+*The stale GML notes were worse than reported.* Five of six quoted pre-Plan-33 geometry; the sixth, `point`, quoted Copenhagen while its file is Wellington — so **all six** were wrong. Each notes file now states its real geometry, read back from the fixture rather than retyped, alongside the new axis-order section. `_spatial_reference()`'s docstring has the same stale example; its *argument* was reproduced, not its numbers.
+
+*Plan 27 §1.1 is partially closed, not wholly.* The `axis_order_swapped_pair` item is superseded — the GML baselines carry the property on real bytes, so a synthetic pair would demonstrate less. `crs_mismatch_overlay_pair`, the other case that section proposed, is untouched and still owed. §1.3 gained `axis_order` and `integer_precision` rows naming their checks; the pre-existing `ambiguous_zero` row stays owed, as it was not this plan's business.
+
+*The `_decimate` watch-item was confirmed closed, not fixed.* Z never reaches the projection maths — `catalog_geometry.py:98` slices `c[:2]`, `catalog_extent.py` uses `total_bounds`. Both Z cases got correct extents on the first run. The test remains as a regression guard.
+
+*Break/restore proof (verification step 3), passed.* Rewriting `polygon_z_wkb` as 2D → exit 1 naming `expect_z` and the offending row. Restored byte-identical.
+
+Gates: 1873 passed / 37 skipped, content validation green across 150 cases.
+
 ## Phase 5 — Record what was cut
 
-Append to the plan doc and cross-reference from `development-plan.md`'s backlog: alpha-band nodata (needs a v1.0 `Literal` break; revisit at v1.1), mixed-timezone datetimes (owned by Plan 28 Phase 3), curvilinear 2D grids (unblocked by Phase 1, the correct next NetCDF case), collinear vertices (assessed and declined — the expert's reading was inverted), overlapping MultiPolygon parts (declined).
+**Implemented 2026-08-29.** Cross-referenced from `development-plan.md`'s backlog.
+
+| Item | Disposition |
+|---|---|
+| **Alpha band as nodata** | **Deferred to v1.1.** `NodataConvention` is a v1.0 `Literal`; extending it for one fixture is a compatibility break. `mask` already carries "validity lives outside the pixel values". |
+| **Mixed-timezone datetimes** | **Deferred — owned by [Plan 28](28-validate-geocase.md) Phase 3.** The gap is real (no vector fixture has any datetime attribute), but it needs ~10k features to discriminate, and a two-feature version here would pre-empt that design with a fixture too small to work. |
+| **Curvilinear 2D coordinate grids** | **Deferred, and now unblocked.** This was the strongest argument for building the NetCDF generator first. With Phase 1 landed it is the natural next NetCDF case, and it is the one this plan most regrets not reaching. |
+| **Collinear vertices** | **Declined.** The review read this backwards: `fractal_coastline_polygon` states it has *no* collinear vertices as a deliberate property, and collinearity is already a benchmark trap category. A fixture would test `simplify()` tolerance — a library behaviour, not a data property. |
+| **Overlapping MultiPolygon parts** | **Declined.** Same OGC-validity axis as the bowtie and touching-ring cases already shipped. It would add a case without adding a discriminating failure mode. |
+| **`crs_mismatch_overlay_pair`** | **Still owed** by [Plan 27](27-close-plan-26-findings.md) §1.1 — noted here because Phase 4.2 closed that section's *other* item, and the remainder should not be lost with it. |
+| **`ambiguous_zero`'s enforcing check** | **Still owed** by Plan 27 §1.3. Untouched by this plan; recorded so the two new rows beside it are not read as closing it. |
 
 ---
 

@@ -81,6 +81,8 @@ matters because selectors, hub pages, and the risk facet all key on `risk_types`
 
 **Two new cases, metadata-first per [`docs/adding-a-case.md`](../adding-a-case.md):**
 
+> **Superseded for `axis_order_swapped_pair` by [Plan 34](34-close-reviewed-catalog-gaps.md) Phase 4.2 (2026-08-29).** The six `*_gml_baseline` cases already *contain* authority-order coordinates on disk — `urn:ogc:def:crs:EPSG::4326` forces `(lat, lon)` in `gml:pos` regardless of GDAL's traditional-order setting — and no `case.yaml` said so. Declaring the property on real bytes, plus a check that verifies it against those bytes, delivers this item's intent more directly than a synthetic pair would: the swap is silent for exactly the reason described below, and the fixtures needed no new payload. `crs_mismatch_overlay_pair` is **not** affected and remains owed.
+
 1. **`axis_order_swapped_pair`** — a vector case holding the same feature twice: once in the
    authority's declared axis order (EPSG:4326 = lat, lon) and once in the GeoJSON/OGC:CRS84
    order (lon, lat), with coordinates chosen so **both are geographically plausible** (a
@@ -132,6 +134,8 @@ a vocabulary entry nothing gates is indistinguishable from a typo.
 | Term | Introduced by | Cases | Enforcing check |
 |---|---|---|---|
 | `ambiguous_zero` | [Plan 32](32-footprint-truth-and-ambiguous-zero.md) Phase 2 | `landcover_ambiguous_zero_small` | **Owed.** Today the term is carried by `nodata_ignored` on the same case, which `_check_footprint`'s sibling in `catalog/content.py` does gate (the raster must declare a nodata value and contain pixels at it). A check specific to `ambiguous_zero` — the declared sentinel must also be a *meaningful value elsewhere in the scene*, not merely present — belongs in this phase. |
+| `axis_order` | [Plan 34](34-close-reviewed-catalog-gaps.md) Phase 4.2 | the six `*_gml_baseline` cases | `_check_authority_axis_order` in `catalog/content.py`, called from `check_vector_content` whenever the term is present. The file must use the `urn:ogc:def:crs` form, and the first `gml:pos` ordinate must fall inside the case's declared latitude band. |
+| `integer_precision` | [Plan 34](34-close-reviewed-catalog-gaps.md) Phase 4.3 | `polygon_z_gpkg` | `_assert_id_value`, via `params.expected_id_value`. Exact equality, not approximate — the value is 2^53 + 1, so an approximate comparison would pass the bug the term names. |
 
 `ambiguous_zero` is a singleton term, which §1.2 otherwise warns against adding. It is justified
 because the term was **already referenced** in `landcover_small`'s `behavioral_goal` before any

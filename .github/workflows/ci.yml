@@ -134,7 +134,14 @@ jobs:
           # for the Parquet/Feather/Arrow branches. Without them it exits 2
           # ("cannot verify") rather than passing silently -- but a gate that
           # can never run is not a gate.
-          python -m pip install -e .[raster,vector] "numpy<2"
+          #
+          # `netcdf` since plan 34: the netcdf fixtures now have a generator and
+          # a content check, and both need xarray. Its absence here is the whole
+          # reason `check_case_content` used to return [] for the category. The
+          # netCDF4 wheels are built per-NumPy-ABI, so this combination was
+          # verified against the pin above rather than assumed: netCDF4 1.7.4
+          # resolves, imports and round-trips under NumPy 1.26.
+          python -m pip install -e .[raster,vector,netcdf] "numpy<2"
           echo "/venv/bin" >> "$GITHUB_PATH"
       - run: python scripts/build_case_index.py --check
       - run: python scripts/validate_catalog.py
@@ -151,6 +158,12 @@ jobs:
       - run: python scripts/catalog_extent.py --check
       - run: python scripts/generate_raster_fixtures.py --check
       - run: python scripts/generate_vector_fixtures.py --check
+      # Plan 34: `latlon_sample.nc` used to be the one fixture in the tree that
+      # could not be rebuilt, which is why netcdf had no gate. `--check` here is
+      # semantic rather than byte-for-byte -- HDF5 stamps its library version
+      # into the file, so a byte gate would go red on a dependency bump that
+      # changed no data.
+      - run: python scripts/generate_netcdf_fixtures.py --check
       # Checksums cover the whole bundled catalog, not just raster: the vector
       # SQLite fixtures drifted to 6.7 MB each precisely because nothing
       # watched them.

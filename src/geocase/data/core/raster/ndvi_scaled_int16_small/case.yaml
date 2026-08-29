@@ -72,3 +72,7 @@ assertions:
 
 params:
   generator: scripts/generate_raster_fixtures.py
+  # The same failure mode in the other container. Packing metadata lives in a
+  # GDAL band scale here and in a CF variable attribute there, and libraries
+  # routinely handle one and not the other.
+  analogous_case_id: ndvi_packed_netcdf

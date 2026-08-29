@@ -1,0 +1,67 @@
+id: ndvi_packed_netcdf
+title: Packed int16 NDVI (NetCDF)
+description: >
+  NDVI stored as int16 with scale_factor 1e-4, the standard CF packing
+  convention. A reader that ignores scale_factor gets plausible-looking
+  integers in the thousands instead of NDVI in [-1, 1] -- wrong by four
+  orders of magnitude, with nothing raised and nothing to notice.
+category: netcdf
+format: NetCDF
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - netcdf
+  - cf-conventions
+  - packing
+  - scale-factor
+  - ndvi
+
+risk_types:
+  - nodata_ignored
+  - scale_offset_ignored
+
+behavioral_goal: >
+  Verify that packed values are unpacked through scale_factor/add_offset
+  before use, and that the fill value is masked rather than scaled into a
+  plausible-looking number.
+
+expected_capabilities:
+  - load
+  - coordinate-inspection
+  - nodata-check
+
+loader_hint: xarray
+crs: EPSG:4326
+
+# Hand-written; scripts/catalog_extent.py does not touch it.
+region: "Western Europe (synthetic)"
+
+files:
+  primary: ndvi_packed.nc
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+  expect_nodata: true
+  expected_scale_factor: 1.0e-4
+
+params:
+  expected_dimensions:
+    - latitude
+    - longitude
+  expected_variables:
+    - ndvi
+  fill_value: -32768
+  # The same failure mode in the other container. A reader that unpacks
+  # GeoTIFF scales but not CF attributes (or vice versa) passes one and
+  # fails the other; the pair is what makes that gap visible.
+  analogous_case_id: ndvi_scaled_int16_small

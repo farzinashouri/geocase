@@ -12,6 +12,8 @@ while :func:`load_case` and the ``geocase`` pytest fixture yield a
 
 from __future__ import annotations
 
+from typing import get_args
+
 from geocase.cases.base import BaseCase
 from geocase.catalog.manifests import build_manifest_uri
 from geocase.catalog.models import (
@@ -36,6 +38,35 @@ __all__ = [
     "list_suites",
     "get_suite",
 ]
+
+#: The four :data:`~geocase.catalog.models.Category` values, as a set, so
+#: :func:`_reject_category_as_format` can intercept them before pydantic does.
+_CATEGORY_VALUES = frozenset(get_args(Category))
+
+
+def _reject_category_as_format(format: str | None) -> None:
+    """Redirect ``format="vector"`` to ``category="vector"``.
+
+    ``format`` and ``category`` are both plausible names for "what kind of case
+    is this", so passing a category to ``format`` is the single most common
+    first-contact mistake (it is the "worst first impression" recorded in
+    ``docs/geocase_validate/geocase-improvement-report.md``). Left to pydantic
+    it raises a ``ValidationError`` reciting every ``FormatType`` literal and
+    never mentioning ``category`` — the answer is not in the error.
+
+    ``format`` deliberately keeps its name: renaming it would break the v1.0
+    keyword surface to fix a message. See Plan 28 phase 2.3.
+
+    Raises:
+        ValueError: If *format* is one of the four ``Category`` literals.
+    """
+    if format in _CATEGORY_VALUES:
+        raise ValueError(
+            f"{format!r} is a case category, not a file format. "
+            f"Use category={format!r} instead of format={format!r}. "
+            f"The 'format' filter takes a file format such as 'GeoJSON', "
+            f"'GPKG' or 'GeoTIFF'."
+        )
 
 
 def list_cases(

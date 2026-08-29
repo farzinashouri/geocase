@@ -1,6 +1,8 @@
 schema_version: '1.0'
 cases:
+- path: data/core/netcdf/cf_time_ordering_netcdf/case.yaml
 - path: data/core/netcdf/latlon_small/case.yaml
+- path: data/core/netcdf/ndvi_packed_netcdf/case.yaml
 - path: data/core/raster/cog_multispectral_small/case.yaml
 - path: data/core/raster/cog_singleband_small/case.yaml
 - path: data/core/raster/dem_nan_nodata_small/case.yaml
@@ -31,6 +33,9 @@ cases:
 - path: data/core/raster/optical_rgb_small/case.yaml
 - path: data/core/raster/sar_dualpol_small/case.yaml
 - path: data/core/raster/sar_vv_small/case.yaml
+- path: data/core/raster/transform_conventions/case_bottom_up_dem_small.yaml
+- path: data/core/raster/transform_conventions/case_pixel_is_area_dem_small.yaml
+- path: data/core/raster/transform_conventions/case_pixel_is_point_dem_small.yaml
 - path: data/core/raster/water_mask_small/case.yaml
 - path: data/core/vector/geometrycollection/geojson/case.yaml
 - path: data/core/vector/linestring/csv_wkt/linestring_csv_wkt_baseline/case.yaml
@@ -125,6 +130,8 @@ cases:
 - path: data/core/vector/special/dateline/wrapped_longitude_point/case.yaml
 - path: data/core/vector/special/degenerate/degenerate_but_parseable_line/case.yaml
 - path: data/core/vector/special/degenerate/disjoint_polygons/case.yaml
+- path: data/core/vector/special/dimensionality/polygon_z_gpkg/case.yaml
+- path: data/core/vector/special/dimensionality/polygon_z_wkb/case.yaml
 - path: data/core/vector/special/empty/empty_geometry_gpkg/case.yaml
 - path: data/core/vector/special/empty/empty_polygon/case.yaml
 - path: data/core/vector/special/encoding/format_limited_kml_case/case.yaml

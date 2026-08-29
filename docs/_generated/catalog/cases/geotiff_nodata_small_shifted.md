@@ -107,7 +107,7 @@ from true pixel-lattice compatibility.
 - [Hole Center NoData Raster](hole_center_nodata.md) -- `hole_center_nodata`
 - [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
 - [All Valid Rectangular Raster](all_valid_rectangular.md) -- `all_valid_rectangular`
-- [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 
 <script type="application/ld+json">
 {

@@ -114,9 +114,19 @@ Named here so it is not lost, and not started:
 - **Coverage gaps in the catalog** — rotated/skewed affine transforms, non-square pixels,
   southern-hemisphere UTM. Enumerated honestly in
   [`docs/dataset-catalog.md`](../dataset-catalog.md). Plan 26 §3.3 surfaced one more — **no
-  case declares an `axis_order` or `crs_mismatch` risk type** — which is now
-  [Plan 27](27-close-plan-26-findings.md) §1.1 and is not merely deferred: it should land
-  before Plan 24 deploys, since the README already leads with both terms.
+  case declares an `axis_order` or `crs_mismatch` risk type** — which became
+  [Plan 27](27-close-plan-26-findings.md) §1.1. **`axis_order` is now closed** by
+  [Plan 34](34-close-reviewed-catalog-gaps.md) §4.2: the six GML baselines already carried
+  authority-order coordinates on disk and now declare and gate the property. **`crs_mismatch`
+  remains owed** and should land before Plan 24 deploys, since the README leads with the term.
+- **Gaps assessed and deliberately not closed by [Plan 34](34-close-reviewed-catalog-gaps.md)**,
+  from an external expert's review of the catalog — its Phase 5 records each with reasons.
+  Two are genuinely deferred rather than declined: **alpha-band-as-nodata**, which needs a v1.1
+  break to extend the `NodataConvention` literal, and **curvilinear 2D coordinate grids**, which
+  Plan 34's NetCDF generator has now unblocked and which is the natural next NetCDF case.
+  **Mixed-timezone datetimes** stay with [Plan 28](28-validate-geocase.md) Phase 3.
+- **`ambiguous_zero`'s enforcing check** — registered in [Plan 27](27-close-plan-26-findings.md)
+  §1.3 and still owed there. Plan 34 added two rows to that table and did not touch this one.
 - **mypy strictness** beyond `geocase.catalog.*` and `geocase.api.*`, ratcheting in v1.1.
 
 ## Decision log

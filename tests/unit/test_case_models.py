@@ -419,3 +419,16 @@ class TestCaseSchemaMatchesModels:
         assert prop["nodata_convention"]["enum"] == list(
             get_args(models.NodataConvention)
         )
+
+    def test_pixel_anchor_enum_matches_literal(self) -> None:
+        """Same for pixel_anchor, which is nested rather than top-level.
+
+        Deliberately not a row in ``test_enum_matches_literal`` above: that one
+        indexes ``["properties"][name]["enum"]``, and this enum lives under
+        ``assertions``, so a row there would raise KeyError rather than check
+        anything.
+        """
+        prop = self._schema()["properties"]["assertions"]["properties"]
+        assert prop["expected_pixel_anchor"]["enum"] == list(
+            get_args(models.PixelAnchor)
+        )

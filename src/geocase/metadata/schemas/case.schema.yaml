@@ -269,6 +269,19 @@ properties:
         type: boolean
       is_cog:
         type: boolean
+      expected_transform_signs:
+        type: array
+        items:
+          type: string
+          enum:
+            - positive_e
+            - negative_e
+            - rotated
+      expected_pixel_anchor:
+        type: string
+        enum:
+          - area
+          - point
 
   params:
     type: object

@@ -112,8 +112,8 @@ Single-band `int16` raster for validating signed integer raster dtype handling.
 - [GeoTIFF Float64 Small](geotiff_float64_small.md) -- `geotiff_float64_small`
 - [GeoTIFF Int32 Small](geotiff_int32_small.md) -- `geotiff_int32_small`
 - [GeoTIFF Int8 Small](geotiff_int8_small.md) -- `geotiff_int8_small`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
-- [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
 
 <script type="application/ld+json">
 {

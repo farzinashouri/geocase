@@ -231,6 +231,59 @@ the case a rendered pixel preview on its catalog page -- a raster without one
 falls back to the metadata band-stack schematic. Declare it and regenerate with
 `python scripts/generate_raster_previews.py`.
 
+#### NetCDF cases: declare dimensions in order
+
+NetCDF cases are content-checked like the other two categories. The typed
+`assertions` block carries what it can, and the rest goes in `params`, where
+`check_netcdf_content` reads it:
+
+```yaml
+assertions:
+  expect_loadable: true
+  expect_nodata: true
+
+params:
+  expected_dimensions:
+    - longitude
+    - latitude
+    - time
+  expected_variables:
+    - t2m
+  expected_time_units: "hours since 2020-01-01 00:00:00"
+```
+
+**`expected_dimensions` is compared in order, not as a set.** That is what makes
+a dimension-ordering claim checkable at all — a case asserting non-conventional
+x-before-y ordering is only meaningful if reordering the file's dimensions makes
+the gate fail.
+
+Two declarations need real bytes behind them:
+
+- `expect_nodata` requires a data variable that declares `_FillValue` or
+  `missing_value`.
+- `expect_crs` requires a `grid_mapping` attribute or a `crs`/`spatial_ref`
+  variable. Most simple lat/lon files have neither, and declaring a CRS anyway
+  is how `latlon_small` shipped an unverifiable claim for a year — the `crs:`
+  top-level key still records the coordinate system as documentation.
+
+NetCDF cases leave `extent` unset (see above), so give them a hand-written
+`region` or their catalog page loses its Location row.
+
+Finally, the primary file must be **generated, not hand-placed.** Add a
+`NetCDFSpec` to `scripts/generate_netcdf_fixtures.py` and run it:
+
+```bash
+python scripts/generate_netcdf_fixtures.py
+python scripts/generate_netcdf_fixtures.py --check
+```
+
+`--check` compares semantics — dimensions, variable dtypes, packing attributes,
+coordinates, global attributes — rather than bytes, because HDF5 stamps its
+library version into every file and a byte gate would fail on a dependency bump
+that changed no data. Set packing (`scale_factor`, `add_offset`, `dtype`)
+explicitly in the spec's `encoding`; left to xarray it is re-derived on write,
+and a packed fixture's whole point becomes an artifact of the library version.
+
 ### Optional custom parameters
 
 Use `params` for case-specific values that tests may want to read.

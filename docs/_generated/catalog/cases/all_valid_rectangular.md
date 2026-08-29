@@ -176,7 +176,7 @@ case's stated purpose. See `docs/plans/28-validate-geocase.md` Phase 1 and
 - [Nonsquare Diagonal Sparse Raster](nonsquare_diagonal_sparse.md) -- `nonsquare_diagonal_sparse`
 - [Rotated Two Islands Raster](rotated_two_islands.md) -- `rotated_two_islands`
 - [Thin Corridor Shape Raster](thin_corridor_shape.md) -- `thin_corridor_shape`
-- [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 
 <script type="application/ld+json">
 {

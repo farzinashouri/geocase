@@ -348,12 +348,24 @@ def _validate_documented_case_ids(docs_root: Path, registry: CaseRegistry) -> in
 #: Files that state the bundled case count and must agree with the registry.
 #: ``recipe/meta.yaml``'s is an executable assertion -- a stale number there
 #: fails the conda build rather than merely misinforming a reader.
+#:
+#: Widened in plan 34. The seven patterns below covered one phrasing each, and
+#: four *other* statements of the same number -- README's "curated vector,
+#: raster and NetCDF files", the two "Browse all N cases" links, and
+#: releasing.md's shell comment -- matched none of them, so they drifted
+#: silently through three renumberings. A count claim this gate cannot see is
+#: worse than no claim at all.
 _COUNT_CLAIMS: tuple[tuple[str, str], ...] = (
     ("README.md", r"(\d+) bundled cases"),
+    ("README.md", r"(\d+) curated vector, raster and NetCDF files"),
     ("docs/index.md", r"(\d+) bundled cases"),
+    ("docs/index.md", r"(\d+) curated geospatial test cases"),
+    ("docs/index.md", r"Browse all (\d+) cases"),
     ("docs/getting-started.md", r"(\d+) bundled cases"),
+    ("docs/getting-started.md", r"browse all (\d+) cases"),
     ("docs/contributing/workflow.md", r"(\d+) bundled cases"),
     ("docs/contributing/releasing.md", r"(\d+) cases in `case-index\.yaml`"),
+    ("docs/contributing/releasing.md", r"len\(geocase\.list_cases\(\)\)\)\"\s+# (\d+)"),
     ("docs/contributing/structure-and-planning.md", r"catalog is \*\*(\d+) cases\*\*"),
     ("recipe/meta.yaml", r"len\(geocase\.list_cases\(\)\) == (\d+)"),
 )

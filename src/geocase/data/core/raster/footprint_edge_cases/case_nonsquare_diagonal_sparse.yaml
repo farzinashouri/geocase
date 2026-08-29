@@ -57,6 +57,10 @@ assertions:
   expect_loadable: true
   expect_crs: true
   expected_shape: [8, 8]
+  # Backfilled in plan 34. North-up, but anisotropic (60 m x 30 m pixels),
+  # which is the property this case already carried and never declared.
+  expected_transform_signs:
+    - negative_e
 
 params:
   expected_footprint: nonsquare_diagonal_sparse_footprint_truth.geojson

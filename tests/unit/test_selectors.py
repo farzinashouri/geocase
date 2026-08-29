@@ -199,10 +199,18 @@ class TestSelectCases:
         assert all(c.category == "raster" for c in result)
 
     def test_select_by_category_netcdf(self, all_cases: list[CaseMetadata]):
-        """Test select by category netcdf."""
+        """Test select by category netcdf.
+
+        Derived from the corpus rather than hardcoded: this asserted ``== 1``
+        back when netcdf had exactly one case, so plan 34 adding two broke a
+        test of the *selector* for a reason that had nothing to do with it.
+        """
+        expected = [c for c in all_cases if c.category == "netcdf"]
         result = select_cases(all_cases, category="netcdf")
-        assert len(result) == 1
-        assert result[0].id == "latlon_small"
+
+        assert len(result) == len(expected)
+        assert all(c.category == "netcdf" for c in result)
+        assert "latlon_small" in {c.id for c in result}
 
     def test_select_all_bundled(self, all_cases: list[CaseMetadata]):
         """Test select all bundled."""

@@ -122,9 +122,9 @@ issues in zone-edge workflows.
 
 - [Rasterize Match WGS84 Polygon](rasterize_match_wgs84_polygon.md) -- `rasterize_match_wgs84_polygon`
 - [All Valid Rectangular Raster](all_valid_rectangular.md) -- `all_valid_rectangular`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
 - [COG Single-Band Small](cog_singleband_small.md) -- `cog_singleband_small`
-- [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 
 <script type="application/ld+json">
 {

@@ -182,6 +182,13 @@ class VectorSpec:
     geometry: Any
     #: SpatiaLite metadata + R-tree index, versus a plain OGR SQLite database.
     spatialite: bool = False
+    #: Write the 2.5D ("Z") form of ``geometry_type``. Keyed on a flag rather
+    #: than a ``"PolygonZ"`` string so ``geometry_type`` stays inside the
+    #: values ``SuiteSelection.geometry_type`` filters on.
+    has_z: bool = False
+    #: Value written to the ``id`` column. Overridden only by the int64 case:
+    #: 9007199254740993 is 2^53 + 1, the first integer a float64 cannot hold.
+    id_value: int = 1
 
     @property
     def path(self) -> Path:
@@ -189,7 +196,8 @@ class VectorSpec:
 
     @property
     def ogr_geometry_type(self) -> str:
-        return _OGR_GEOMETRY_TYPES[self.geometry_type]
+        name = _OGR_GEOMETRY_TYPES[self.geometry_type]
+        return f"{name}25D" if self.has_z else name
 
 
 # ---------------------------------------------------------------------------
@@ -429,6 +437,67 @@ def _procedural_specs(vector_root: Path = VECTOR_ROOT) -> list[VectorSpec]:
     return specs
 
 
+#: The Z ring, shared by both dimensional cases so they cannot drift apart.
+#: A closed 5-vertex ring with a Z ramp: the elevations are distinct and
+#: non-monotonic, so a dropped or truncated dimension is visible rather than
+#: coincidentally right.
+_Z_RING = (
+    (12.50, 55.70, 0.0),
+    (12.52, 55.70, 12.5),
+    (12.52, 55.72, 25.0),
+    (12.50, 55.72, 12.5),
+    (12.50, 55.70, 0.0),
+)
+
+#: 2^53 + 1 -- the first integer a float64 cannot represent. A reader that
+#: routes ids through a double returns ...992.
+_BIG_ID = 9007199254740993
+
+
+def _dimensional_specs(vector_root: Path = VECTOR_ROOT) -> list[VectorSpec]:
+    """The Z-coordinate cases.
+
+    Deliberately **not** family members: no ``canonical_source_case_id`` and no
+    ``cross_format_canonical`` tag, the same choice plan 33 made for the
+    procedural cases and for the same reason -- they vary a property the family
+    holds constant, so diffing them against a 2D canonical would report a
+    difference that is the entire point of the fixture.
+
+    The pair is what earns two files. Shapely round-tripping Z through WKB
+    proves little; a GPKG that still has Z after OGR wrote it proves the
+    *driver* preserved a dimension it is free to drop silently.
+    """
+    from shapely.geometry import Polygon
+
+    geometry = Polygon(_Z_RING)
+    cases = _read_case_files(vector_root)
+
+    specs: list[VectorSpec] = []
+    for case_id, fmt in (("polygon_z_wkb", "WKB"), ("polygon_z_gpkg", "GPKG")):
+        entry = cases.get(case_id)
+        if entry is None:
+            raise RuntimeError(
+                f"Dimensional case '{case_id}' has no case.yaml under {vector_root}"
+            )
+        case_dir, data = entry
+        primary = data["files"]["primary"]
+        specs.append(
+            VectorSpec(
+                case_id=case_id,
+                rel_path=(case_dir / primary).relative_to(vector_root).as_posix(),
+                format=fmt,
+                layer=Path(primary).stem,
+                geometry_type=data["geometry_type"],
+                geometry=geometry,
+                has_z=True,
+                # The int64 rider rides on the GPKG sibling, which is the half
+                # with a real attribute table to carry it.
+                id_value=_BIG_ID if fmt == "GPKG" else 1,
+            )
+        )
+    return specs
+
+
 def _specs(vector_root: Path = VECTOR_ROOT) -> list[VectorSpec]:
     """Build one spec per case declaring a canonical source, sorted by id.
 
@@ -584,7 +653,7 @@ def _write_ogr(spec: VectorSpec, dest: Path) -> None:
         layer.CreateField(ogr.FieldDefn(_NAME_FIELD, ogr.OFTString))
 
         feature = ogr.Feature(layer.GetLayerDefn())
-        feature.SetField(_ID_FIELD, 1)
+        feature.SetField(_ID_FIELD, spec.id_value)
         feature.SetField(_NAME_FIELD, spec.case_id)
         # Handed over as WKB rather than WKT: float64 in, float64 out, with no
         # decimal round trip to lose a digit in.
@@ -1063,6 +1132,7 @@ def main() -> int:
     # The procedural cases go through the same write backends, fingerprints and
     # budget checks; only where their geometry comes from differs.
     specs = specs + _procedural_specs(args.vector_root)
+    specs = specs + _dimensional_specs(args.vector_root)
 
     if args.check:
         problems: list[str] = []

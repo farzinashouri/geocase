@@ -126,7 +126,7 @@ Three-band raster baseline for validating multi-band read behavior.
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
 - [Optical RGB Small](optical_rgb_small.md) -- `optical_rgb_small`
 - [SAR Dual-Pol Small](sar_dualpol_small.md) -- `sar_dualpol_small`
-- [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 
 <script type="application/ld+json">
 {

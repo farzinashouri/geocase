@@ -69,6 +69,7 @@ Ensure footprint extraction remains robust for sparse and anisotropic raster sam
 | `expect_loadable` | yes |
 | `expect_crs` | yes |
 | `expected_shape` | `[8, 8]` |
+| `expected_transform_signs` | `negative_e` |
 
 ## Notes
 
@@ -177,7 +178,7 @@ case's stated purpose. See `docs/plans/28-validate-geocase.md` Phase 1 and
 - [Hole Center NoData Raster](hole_center_nodata.md) -- `hole_center_nodata`
 - [Rotated Two Islands Raster](rotated_two_islands.md) -- `rotated_two_islands`
 - [Thin Corridor Shape Raster](thin_corridor_shape.md) -- `thin_corridor_shape`
-- [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 
 <script type="application/ld+json">
 {

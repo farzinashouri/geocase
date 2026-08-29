@@ -13,7 +13,7 @@ GeoCase is built around a simple workflow:
 3. write a normal `pytest` test,
 4. let GeoCase provide realistic geospatial inputs.
 
-To see what ships in the box, [browse all 143 cases](_generated/catalog/index.md).
+To see what ships in the box, [browse all 150 cases](_generated/catalog/index.md).
 
 If you want to understand the broader roadmap, see [`docs/plans/development-plan.md`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md).
 
@@ -200,7 +200,7 @@ Start simple with explicit case IDs. Move to selectors when your test intent is 
 ## Current project status
 
 GeoCase 1.0.0 covers the core `pytest` workflow and a small public API, with 1701 passing
-tests and 143 bundled cases. The metadata, catalog, runtime, assertions, loader, and
+tests and 150 bundled cases. The metadata, catalog, runtime, assertions, loader, and
 pytest plugin layers are complete.
 
 The v1.0 compatibility promise covers **two surfaces only**: the pytest workflow (markers

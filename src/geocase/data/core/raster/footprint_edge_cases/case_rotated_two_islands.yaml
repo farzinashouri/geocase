@@ -57,6 +57,12 @@ assertions:
   expect_loadable: true
   expect_crs: true
   expected_shape: [8, 8]
+  # Backfilled in plan 34: this case always had a rotated affine (non-zero
+  # b/d as well as a negative e). Declaring it turns a property the corpus
+  # merely had into one it states and the content gate checks.
+  expected_transform_signs:
+    - negative_e
+    - rotated
 
 params:
   expected_footprint: rotated_two_islands_footprint_truth.geojson
