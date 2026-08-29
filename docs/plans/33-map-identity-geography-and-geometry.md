@@ -82,6 +82,36 @@ under the same names, so the planned test imports are unchanged.
 assumed: `north_pole_polygon` is `84.0N-89.5N` over a 180-degree span, which
 clears both bounds comfortably.
 
+
+**Follow-up (2026-08-29), after review of the shipped maps.** Phase 1 gave every
+footprint a `<title>` and a click action, and both choices were wrong together.
+The `<title>` is a *native* SVG tooltip: it waits about a second, cannot wrap,
+and truncates precisely the long cluster lists that most need reading -- so on
+the element where the text mattered most, it showed the least. Meanwhile
+`cursor: help` said "hover me" while `role="button"` said "click me", and the
+click jumped the page to a table row the reader had not asked for.
+
+Fixed by splitting the two affordances rather than adding to them:
+
+- **An HTML tooltip replaces the native one while hovering.** Appears
+  immediately, wraps, follows the cursor, and flips back inside the viewport at
+  the edges. The SVG `<title>` stays as the no-JS fallback, and the tooltip is
+  `aria-hidden` so a screen reader does not hear the same text twice.
+- **Footprints are hover-only** (`cursor: default`, no click, no `role`). They
+  name their case and highlight its table row.
+- **Clicking survives on multi-case cluster markers only**, where filtering the
+  table is the one action a click pays for -- a 36-case marker cannot be read
+  any other way. A single-case marker is hover-only too, since it has nothing
+  to filter down to.
+- Cluster lists cap at **8 ids then a count**, with `_MAX_LABELLED_IDS` in
+  `catalog_svg.py` and `MAX_LISTED_IDS` in the script kept in step so the
+  fallback and the tooltip say the same thing.
+
+Gated by `test_only_clusters_are_clickable`, which reads the delimited
+clickable region of the script and fails if a footprint selector reappears in
+it, plus CSS gates asserting footprints do not claim the help cursor and
+clusters do show a pointer.
+
 ---
 
 ## Phase 2 — Procedural non-trivial geometry (done)

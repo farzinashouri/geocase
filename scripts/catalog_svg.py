@@ -632,12 +632,18 @@ def _cluster(points: list[tuple[float, float, Any]]) -> list[dict[str, Any]]:
     return clusters
 
 
+#: Ids named in full before a cluster label switches to a count. Matches
+#: ``MAX_LISTED_IDS`` in ``docs/javascripts/catalog-compare.js``, so the
+#: no-JS ``<title>`` fallback and the HTML tooltip say the same thing.
+_MAX_LABELLED_IDS = 8
+
+
 def _cluster_label(cases: list[Any]) -> str:
     """A tooltip naming what sits here, capped so a 36-case cluster stays sane."""
     ids = [str(case.id) for case in cases]
-    shown = ", ".join(ids[:6])
-    if len(ids) > 6:
-        shown += f", and {len(ids) - 6} more"
+    shown = ", ".join(ids[:_MAX_LABELLED_IDS])
+    if len(ids) > _MAX_LABELLED_IDS:
+        shown += f", and {len(ids) - _MAX_LABELLED_IDS} more"
     region = next(
         (str(case.region) for case in cases if getattr(case, "region", None)), ""
     )

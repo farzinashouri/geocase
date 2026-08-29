@@ -263,10 +263,11 @@ table.gc-compare th[data-sort][aria-sort="descending"]::after {
 	border-radius: 3px;
 }
 
-/* Markers get a pointer cursor because each carries a <title> tooltip naming
-   the cases stacked at that spot -- the only way to read a 36-case cluster. */
+/* Clusters are the one clickable thing on the map: clicking filters the table
+   to the cases stacked here, which is the only practical way to work through a
+   36-case marker. So they get a pointer, not the help cursor. */
 .gc-map-marker {
-	cursor: help;
+	cursor: pointer;
 }
 
 .gc-map-marker:hover circle {
@@ -279,10 +280,12 @@ table.gc-compare th[data-sort][aria-sort="descending"]::after {
 	font-family: var(--md-text-font-family, sans-serif);
 }
 
-/* Every footprint carries a <title> naming its case, so it is interrogable in
-   the same way a marker is. */
+/* Footprints are read, not pressed. They name their case on hover and
+   highlight its table row; they carry no click action, so they must not
+   advertise one -- a help cursor over something that also navigated on click
+   was the mixed signal that made the map feel broken. */
 .gc-map-extent-group {
-	cursor: help;
+	cursor: default;
 }
 
 .gc-map-extent-group:hover rect {
@@ -314,4 +317,51 @@ tr.gc-row-highlight > td {
 	cursor: pointer;
 	font: inherit;
 	text-decoration: underline;
+}
+
+/* The map tooltip.
+ *
+ * An HTML element rather than the SVG <title> the maps still carry as a
+ * no-JS fallback: a native tooltip waits about a second before appearing,
+ * cannot wrap, and truncates a long cluster list -- so on the one element
+ * where the text matters most, it showed the least. This one appears
+ * immediately and is positioned against the pointer by catalog-compare.js.
+ */
+.gc-map-tooltip {
+	position: fixed;
+	z-index: 10;
+	max-width: 22rem;
+	padding: 0.4rem 0.6rem;
+	border-radius: 3px;
+	background: var(--md-default-bg-color);
+	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+	color: var(--md-default-fg-color);
+	font-size: 0.7rem;
+	line-height: 1.45;
+	/* The cursor is always somewhere over the map; a tooltip that could take
+	   the cursor would flicker as it stole its own trigger's hover. */
+	pointer-events: none;
+}
+
+.gc-map-tooltip[hidden] {
+	display: none;
+}
+
+.gc-map-tooltip-head {
+	display: block;
+	margin-bottom: 0.15rem;
+	font-weight: 600;
+}
+
+.gc-map-tooltip-ids {
+	display: block;
+	font-family: var(--md-code-font-family, monospace);
+	/* Long ids wrap rather than forcing the tooltip wider than its max-width. */
+	overflow-wrap: anywhere;
+}
+
+.gc-map-tooltip-hint {
+	display: block;
+	margin-top: 0.25rem;
+	opacity: 0.75;
 }

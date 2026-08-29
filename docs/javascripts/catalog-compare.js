@@ -114,51 +114,167 @@
       });
     }
 
-    // Bind the world maps to the table. Progressive enhancement: the maps are
-    // complete, readable SVG on their own, and the interactive affordances are
-    // set from here rather than baked into the generated markup so the
-    // committed page text stays small.
+    // --- the map tooltip ---------------------------------------------------
+    //
+    // The SVG <title> the generator emits stays in place as the no-JS
+    // fallback, but it is a poor primary affordance: a native tooltip waits
+    // about a second, cannot wrap, and truncates exactly the long cluster
+    // lists that most need reading. This replaces it while hovering.
+
+    //: Ids listed in full before the tooltip switches to a count. Eight fits
+    //: the tooltip's width without turning a 36-case cluster into a wall.
+    var MAX_LISTED_IDS = 8;
+
+    var tooltip = document.createElement("div");
+    tooltip.className = "gc-map-tooltip";
+    tooltip.hidden = true;
+    // aria-hidden: the same text is already on the element's <title>, which is
+    // what a screen reader reads. Announcing it twice helps nobody.
+    tooltip.setAttribute("aria-hidden", "true");
+    document.body.appendChild(tooltip);
+
+    function tooltipText(ids, isCluster) {
+      var head = document.createElement("span");
+      head.className = "gc-map-tooltip-head";
+
+      var body = document.createElement("span");
+      body.className = "gc-map-tooltip-ids";
+
+      if (isCluster) {
+        head.textContent =
+          ids.length + " case" + (ids.length === 1 ? "" : "s") + " here";
+        body.textContent = ids.slice(0, MAX_LISTED_IDS).join(", ");
+        if (ids.length > MAX_LISTED_IDS) {
+          body.textContent +=
+            ", and " + (ids.length - MAX_LISTED_IDS) + " more";
+        }
+      } else {
+        head.textContent = ids[0];
+        body.textContent = "";
+      }
+
+      tooltip.textContent = "";
+      tooltip.appendChild(head);
+      if (body.textContent) {
+        tooltip.appendChild(body);
+      }
+      return tooltip;
+    }
+
+    function positionTooltip(event) {
+      // Offset from the cursor, then flipped back inside the viewport when the
+      // tooltip would overhang -- otherwise a marker near the right edge shows
+      // its tooltip half off-screen, which is where the long ones live.
+      var pad = 12;
+      var rect = tooltip.getBoundingClientRect();
+      var x = event.clientX + pad;
+      var y = event.clientY + pad;
+
+      if (x + rect.width > window.innerWidth - pad) {
+        x = event.clientX - rect.width - pad;
+      }
+      if (y + rect.height > window.innerHeight - pad) {
+        y = event.clientY - rect.height - pad;
+      }
+      tooltip.style.left = Math.max(pad, x) + "px";
+      tooltip.style.top = Math.max(pad, y) + "px";
+    }
+
+    function showTooltip(ids, isCluster, hint, event) {
+      tooltipText(ids, isCluster);
+      if (hint) {
+        var note = document.createElement("span");
+        note.className = "gc-map-tooltip-hint";
+        note.textContent = hint;
+        tooltip.appendChild(note);
+      }
+      tooltip.hidden = false;
+      positionTooltip(event);
+    }
+
+    function hideTooltip() {
+      tooltip.hidden = true;
+    }
+
+    // --- footprints: hover only --------------------------------------------
+    //
+    // A footprint names its case and highlights its row. It is deliberately
+    // NOT clickable: the mixed affordance (help cursor plus a click that
+    // jumped the page) is what made the maps feel unpredictable.
+
     Array.prototype.slice
-      .call(document.querySelectorAll(".gc-worldmap [data-case-id], .gc-worldmap [data-case-ids]"))
+      .call(document.querySelectorAll(".gc-worldmap [data-case-id]"))
       .forEach(function (node) {
-        var ids = (
-          node.dataset.caseIds || node.dataset.caseId || ""
-        )
-          .split(/\s+/)
-          .filter(Boolean);
+        var ids = (node.dataset.caseId || "").split(/\s+/).filter(Boolean);
         if (!ids.length) {
           return;
         }
 
-        node.tabIndex = 0;
-        node.setAttribute("role", "button");
-
-        function enter() {
+        node.addEventListener("mouseenter", function (event) {
           highlight(ids, true);
-        }
-        function leave() {
+          showTooltip(ids, false, "", event);
+        });
+        node.addEventListener("mousemove", positionTooltip);
+        node.addEventListener("mouseleave", function () {
           highlight(ids, false);
+          hideTooltip();
+        });
+      });
+
+    // --- clusters: hover and click -----------------------------------------
+    //
+    // CLICKABLE-START -- clusters are the only pressable thing on the map.
+    // Filtering the table is the one action that pays for a click here:
+    // a 36-case marker cannot be read any other way.
+
+    Array.prototype.slice
+      .call(document.querySelectorAll(".gc-worldmap [data-case-ids]"))
+      .forEach(function (node) {
+        var ids = (node.dataset.caseIds || "").split(/\s+/).filter(Boolean);
+        if (!ids.length) {
+          return;
         }
 
-        node.addEventListener("mouseenter", enter);
-        node.addEventListener("focus", enter);
-        node.addEventListener("mouseleave", leave);
-        node.addEventListener("blur", leave);
+        var isCluster = ids.length > 1;
+        // A one-case marker has nothing to filter down to, so it stays a
+        // hover target and never claims to be a button.
+        if (isCluster) {
+          node.tabIndex = 0;
+          node.setAttribute("role", "button");
+        } else {
+          node.style.cursor = "default";
+        }
+
+        var hint = isCluster ? "Click to filter the table to these cases" : "";
+
+        node.addEventListener("mouseenter", function (event) {
+          highlight(ids, true);
+          showTooltip(ids, isCluster, hint, event);
+        });
+        node.addEventListener("mousemove", positionTooltip);
+        node.addEventListener("mouseleave", function () {
+          highlight(ids, false);
+          hideTooltip();
+        });
+
+        if (!isCluster) {
+          return;
+        }
+
+        node.addEventListener("focus", function () {
+          highlight(ids, true);
+        });
+        node.addEventListener("blur", function () {
+          highlight(ids, false);
+          hideTooltip();
+        });
 
         function activate() {
-          if (ids.length === 1) {
-            var row = byId[ids[0]];
-            if (row) {
-              row.hidden = false;
-              row.scrollIntoView({ block: "center" });
-              highlight(ids, true);
-            }
-            return;
-          }
           mapFilter = {};
           ids.forEach(function (id) {
             mapFilter[id] = true;
           });
+          hideTooltip();
           apply();
         }
 
@@ -170,6 +286,7 @@
           }
         });
       });
+    // CLICKABLE-END
 
     // Column index 0 is the preview, which has nothing to sort on; the header
     // cells carrying data-sort start at index 1.
