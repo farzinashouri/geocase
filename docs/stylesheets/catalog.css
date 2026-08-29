@@ -278,3 +278,40 @@ table.gc-compare th[data-sort][aria-sort="descending"]::after {
 	pointer-events: none;
 	font-family: var(--md-text-font-family, sans-serif);
 }
+
+/* Every footprint carries a <title> naming its case, so it is interrogable in
+   the same way a marker is. */
+.gc-map-extent-group {
+	cursor: help;
+}
+
+.gc-map-extent-group:hover rect {
+	fill-opacity: 0.6;
+}
+
+/* A pole cap's band is bbox arithmetic, not the polygon's shape. Dashing it
+   says "provisional" before the reader reaches the tooltip that explains why. */
+.gc-map-polar {
+	stroke-dasharray: 3 2;
+	fill-opacity: 0.18;
+}
+
+/* Set by catalog-compare.js when the map points at a row. */
+tr.gc-row-highlight > td {
+	background: var(--md-accent-fg-color--transparent);
+}
+
+.gc-map-filter-chip {
+	margin-left: 0.6em;
+	font-size: 0.75rem;
+}
+
+.gc-map-filter-chip button {
+	margin-left: 0.4em;
+	border: none;
+	background: none;
+	color: var(--md-accent-fg-color);
+	cursor: pointer;
+	font: inherit;
+	text-decoration: underline;
+}

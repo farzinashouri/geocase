@@ -25,7 +25,7 @@ Canonical baseline linestring stored as KML for cross-format comparison and form
 | Format | KML |
 | Geometry type | LineString |
 | CRS | `EPSG:4326` |
-| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 11.00&deg;E, 50.30&deg;N |
+| Location | Patagonia, Southern Andes (synthetic) &mdash; 72.50&deg;W, 50.90&deg;S &rarr; 71.50&deg;W, 50.60&deg;S |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -172,9 +172,9 @@ geometry is derived from `params.canonical_source_case_id`
     },
     "geo": {
       "@type": "GeoShape",
-      "box": "50.0 10.0 50.3 11.0"
+      "box": "-50.9 -72.5 -50.6 -71.5"
     },
-    "name": "Central Europe (synthetic)"
+    "name": "Patagonia, Southern Andes (synthetic)"
   }
 }
 </script>

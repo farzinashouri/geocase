@@ -150,7 +150,7 @@ Three simple WGS 84 polygons (rectangular zones) across northern Europe.
 - [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
 - [Mixed Encoding Attributes](mixed_encoding_attributes.md) -- `mixed_encoding_attributes`
 - [Polygon KML Baseline](polygon_kml_baseline.md) -- `polygon_kml_baseline`
-- [Format-limited Precision Polygon](format_limited_precision_polygon.md) -- `format_limited_precision_polygon`
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
 
 <script type="application/ld+json">
 {

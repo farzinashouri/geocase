@@ -45,9 +45,7 @@ def _iter_cases(case_index: Path):
         yield case_yaml.parent, metadata
 
 
-def _selected(
-    metadata: CaseMetadata, only: str | None, category: str | None
-) -> bool:
+def _selected(metadata: CaseMetadata, only: str | None, category: str | None) -> bool:
     if only is not None and metadata.id != only:
         return False
     if category is not None and metadata.category != category:

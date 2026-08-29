@@ -25,7 +25,7 @@ Canonical baseline multilinestring stored as plain WKT file for cross-format com
 | Format | WKT |
 | Geometry type | MultiLineString |
 | CRS | `EPSG:4326` |
-| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 49.80&deg;N &rarr; 11.10&deg;E, 50.20&deg;N |
+| Location | Great Rift Valley, East Africa (synthetic) &mdash; 36.10&deg;E, 0.70&deg;S &rarr; 37.20&deg;E, 0.30&deg;S |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -167,9 +167,9 @@ geometry is derived from `params.canonical_source_case_id`
     },
     "geo": {
       "@type": "GeoShape",
-      "box": "49.8 10.0 50.2 11.1"
+      "box": "-0.7 36.1 -0.3 37.2"
     },
-    "name": "Central Europe (synthetic)"
+    "name": "Great Rift Valley, East Africa (synthetic)"
   }
 }
 </script>

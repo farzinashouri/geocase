@@ -389,3 +389,71 @@ def test_world_map_draws_a_wrapping_extent_against_both_edges() -> None:
     # The class attribute specifically -- ``--gc-map-extent`` is also the name
     # of the CSS variable the rectangles are filled with.
     assert svg.count('class="gc-map-extent"') == 2, svg
+
+
+def test_world_map_extent_rects_carry_case_identity() -> None:
+    """A footprint a reader cannot name is a footprint they cannot use."""
+    from catalog_svg import world_map  # type: ignore[import-not-found]
+
+    dateline = get_registry().get("dateline_crossing_polygon")
+    svg = world_map([dateline], "Antimeridian")
+
+    # Identity is per-box: the antimeridian split makes two rects for one case,
+    # and both must answer "what am I?".
+    assert svg.count('data-case-id="dateline_crossing_polygon"') == 2, svg
+    assert "dateline_crossing_polygon -- Dateline crossing polygon" in svg
+
+
+def test_world_map_marks_pole_caps_distinctly() -> None:
+    """A pole cap's 180-degree band is bbox arithmetic, not the data's shape."""
+    from catalog_svg import world_map  # type: ignore[import-not-found]
+
+    north = get_registry().get("north_pole_polygon")
+    svg = world_map([north], "Polar")
+
+    assert 'class="gc-map-extent gc-map-polar"' in svg, svg
+    title = svg[svg.index("<title>", svg.index("gc-map-extent-group")) :]
+    title = title[: title.index("</title>")].lower()
+    assert "pole" in title and "bounding box" in title, title
+
+
+def test_pole_cap_is_detected_from_extent_not_declared() -> None:
+    """Derived from the extent, so it cannot drift from what it describes."""
+    from catalog_svg import _is_pole_cap  # type: ignore[import-not-found]
+
+    from geocase.catalog.models import SpatialExtent
+
+    assert _is_pole_cap(SpatialExtent(west=-90, south=84, east=90, north=89.5))
+    assert not _is_pole_cap(SpatialExtent(west=-90, south=-3, east=90, north=3))
+    assert not _is_pole_cap(get_registry().get("dateline_crossing_polygon").extent)
+
+
+def test_compare_map_and_table_share_case_ids() -> None:
+    """Guards the JS binding contract at generation time, not in a browser."""
+    text = (GENERATED / "compare.md").read_text(encoding="utf-8")
+
+    rows = set(re.findall(r'<tr[^>]*data-case-id="([^"]+)"', text))
+    assert rows, "compare table carries no data-case-id rows"
+
+    for svg in re.findall(r'<svg class="gc-worldmap".*?</svg>', text, re.S):
+        for case_id in re.findall(r'data-case-id="([^"]+)"', svg):
+            assert case_id in rows, f"map plots {case_id} with no matching table row"
+        for group in re.findall(r'data-case-ids="([^"]+)"', svg):
+            for case_id in group.split():
+                assert case_id in rows, f"cluster names {case_id} with no row"
+
+
+def test_thumbnail_decimates_a_dense_geometry() -> None:
+    """A 4096-vertex path would bloat compare.md past text-diffability."""
+    from catalog_svg import (  # type: ignore[import-not-found]
+        _MAX_THUMBNAIL_POINTS,
+        _decimate,
+    )
+
+    dense = [(float(i), float(i % 7)) for i in range(4096)]
+    thinned = _decimate(dense)
+
+    assert len(thinned) <= _MAX_THUMBNAIL_POINTS
+    assert thinned[0] == dense[0]
+    assert thinned[-1] == dense[-1], "decimation must keep the ring closed"
+    assert _decimate(dense[:50]) == dense[:50], "short rings must pass through"

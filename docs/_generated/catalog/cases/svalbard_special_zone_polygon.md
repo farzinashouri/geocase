@@ -100,11 +100,11 @@ A polygon in the Svalbard latitude band used to test special UTM zone logic.
 
 ## Related cases
 
+- [UTM Zone 1N Polygon](utm_zone_1n_small.md) -- `utm_zone_1n_small`
 - [UTM Zone 33 Polygon](utm_zone_33_polygon.md) -- `utm_zone_33_polygon`
-- [Rasterize Match UTM33 Polygon](rasterize_match_utm33_polygon.md) -- `rasterize_match_utm33_polygon`
-- [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
-- [Dateline Points Pair](dateline_points_pair.md) -- `dateline_points_pair`
-- [Equator-Crossing Polygon](equator_polygon.md) -- `equator_polygon`
+- [UTM Zone 33N / 32N Adjacent Pair](utm_zone_33n_to_32n_pair.md) -- `utm_zone_33n_to_32n_pair`
+- [UTM Zone 56S Polygon (Sydney)](utm_zone_56s_small.md) -- `utm_zone_56s_small`
+- [UTM Zone Boundary Straddle](utm_zone_boundary_straddle.md) -- `utm_zone_boundary_straddle`
 
 <script type="application/ld+json">
 {

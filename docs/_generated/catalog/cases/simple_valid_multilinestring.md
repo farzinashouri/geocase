@@ -25,7 +25,7 @@ A compact MultiLineString fixture with two short line parts in EPSG:4326.
 | Format | GeoJSON |
 | Geometry type | MultiLineString |
 | CRS | `EPSG:4326` |
-| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 49.80&deg;N &rarr; 11.10&deg;E, 50.20&deg;N |
+| Location | Great Rift Valley, East Africa (synthetic) &mdash; 36.10&deg;E, 0.70&deg;S &rarr; 37.20&deg;E, 0.30&deg;S |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -103,7 +103,7 @@ Baseline MultiLineString case for multi-part line coverage.
 - [Simple Valid MultiPoint](simple_valid_multipoint.md) -- `simple_valid_multipoint`
 - [Simple Valid Point](simple_valid_point.md) -- `simple_valid_point`
 - [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
-- [MultiLineString CSV WKT Baseline](multilinestring_csv_wkt_baseline.md) -- `multilinestring_csv_wkt_baseline`
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
 
 <script type="application/ld+json">
 {
@@ -146,9 +146,9 @@ Baseline MultiLineString case for multi-part line coverage.
     },
     "geo": {
       "@type": "GeoShape",
-      "box": "49.8 10.0 50.2 11.1"
+      "box": "-0.7 36.1 -0.3 37.2"
     },
-    "name": "Central Europe (synthetic)"
+    "name": "Great Rift Valley, East Africa (synthetic)"
   }
 }
 </script>

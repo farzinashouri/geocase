@@ -99,11 +99,11 @@ A baseline WGS84 polygon whose representative point falls in UTM zone 33N.
 
 ## Related cases
 
+- [UTM Zone 1N Polygon](utm_zone_1n_small.md) -- `utm_zone_1n_small`
+- [UTM Zone 33N / 32N Adjacent Pair](utm_zone_33n_to_32n_pair.md) -- `utm_zone_33n_to_32n_pair`
+- [UTM Zone 56S Polygon (Sydney)](utm_zone_56s_small.md) -- `utm_zone_56s_small`
+- [UTM Zone Boundary Straddle](utm_zone_boundary_straddle.md) -- `utm_zone_boundary_straddle`
 - [Svalbard Special Zone Polygon](svalbard_special_zone_polygon.md) -- `svalbard_special_zone_polygon`
-- [Rasterize Match UTM33 Polygon](rasterize_match_utm33_polygon.md) -- `rasterize_match_utm33_polygon`
-- [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
-- [Dateline Points Pair](dateline_points_pair.md) -- `dateline_points_pair`
-- [Equator Crossing Line](equator_crossing_line.md) -- `equator_crossing_line`
 
 <script type="application/ld+json">
 {

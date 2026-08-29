@@ -60,6 +60,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import sqlite3
 import sys
 import tempfile
@@ -72,7 +73,11 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[1]
 VECTOR_ROOT = REPO_ROOT / "src" / "geocase" / "data" / "core" / "vector"
 
-# Every bundled baseline fixture holds exactly one feature at EPSG:4326.
+# Every fixture in the cross-format *baseline families* holds exactly one
+# feature at EPSG:4326 -- that one-to-one correspondence is what makes the
+# families comparable. The procedural cases below are not family members and
+# are not bound by it (they are still single-feature today, but for their own
+# reasons).
 _SRID = 4326
 
 #: Tag and param that together declare "this case mirrors that case's geometry".
@@ -117,6 +122,12 @@ _OGR_DRIVERS: dict[str, str] = {
 #: Formats written by hand in pure Python, with no driver in the loop. These are
 #: the only ones ``--check`` can byte-compare.
 _TEXT_FORMATS = frozenset({"WKT", "WKB", "CSV_WKT"})
+
+#: Every format written in pure Python, and therefore every format ``--check``
+#: can compare as raw bytes. GeoJSON has its own writer (``_write_geojson``)
+#: rather than sharing ``_write_text``'s body, but it is byte-comparable for
+#: the same reason: no driver, so nothing stamps a version or a timestamp in.
+_BYTE_COMPARABLE_FORMATS = _TEXT_FORMATS | {"GeoJSON"}
 
 #: Formats written through geopandas' own writers.
 _GEOPANDAS_FORMATS = frozenset({"Parquet", "Feather"})
@@ -213,6 +224,11 @@ def _canonical_geometry(
 ) -> Any:
     """Return the single geometry held by canonical case *source_id*.
 
+    The single-feature requirement below scopes the *canonical sources of the
+    transcoding families*, whose purpose is one-to-one comparability across
+    formats. It is not a claim about the catalog at large: the procedural cases
+    are built by :func:`_procedural_specs` and never reach this function.
+
     Read straight off disk with ``json`` + ``shapely.geometry.shape``. Polygonal
     geometries are oriented to the RFC 7946 / OGC right-hand rule (exterior CCW,
     interior CW) before being handed to any writer. The committed canonicals are
@@ -254,6 +270,163 @@ def _canonical_geometry(
     if geometry.geom_type in {"Polygon", "MultiPolygon"}:
         geometry = orient(geometry, sign=1.0)
     return geometry
+
+
+# ---------------------------------------------------------------------------
+# Procedural geometry -- the non-trivial cases
+# ---------------------------------------------------------------------------
+#
+# The hand-authored canonicals top out at 10 vertices and 12 of them are plain
+# 5-vertex rectangles, so the bundled catalog cannot fail a vertex-dense
+# consumer. These two generators fix that without touching the transcoding
+# families: their output becomes its own cases, with no canonical source.
+#
+# Everything here is pure ``math``. **No ``random``, seeded or otherwise** --
+# a PRNG is reproducible only for as long as CPython's stream is, and the
+# fixture tree is gated on byte-identical regeneration.
+
+#: Coordinates are rounded to this many decimals, matching
+#: ``catalog_extent.py``'s PRECISION, so nothing churns on floating-point noise
+#: across platforms or libm versions.
+_PROCEDURAL_PRECISION = 6
+
+
+def _round_point(x: float, y: float) -> tuple[float, float]:
+    return round(x, _PROCEDURAL_PRECISION), round(y, _PROCEDURAL_PRECISION)
+
+
+def _koch_segment(
+    a: tuple[float, float], b: tuple[float, float], depth: int
+) -> list[tuple[float, float]]:
+    """Return the points of the Koch curve from *a* to *b*, excluding *b*.
+
+    One pass replaces ``a -> b`` with ``a, a+(b-a)/3, apex, a+2(b-a)/3``, the
+    apex being the middle third's third point rotated 60 degrees outward.
+    """
+    if depth <= 0:
+        return [a]
+
+    (ax, ay), (bx, by) = a, b
+    dx, dy = (bx - ax) / 3.0, (by - ay) / 3.0
+    p1 = (ax + dx, ay + dy)
+    p2 = (ax + 2.0 * dx, ay + 2.0 * dy)
+
+    # Rotate (p2 - p1) by +60 degrees about p1 to raise the apex outward.
+    cos60, sin60 = 0.5, math.sqrt(3.0) / 2.0
+    ex, ey = p2[0] - p1[0], p2[1] - p1[1]
+    apex = (p1[0] + ex * cos60 - ey * sin60, p1[1] + ex * sin60 + ey * cos60)
+
+    return (
+        _koch_segment(a, p1, depth - 1)
+        + _koch_segment(p1, apex, depth - 1)
+        + _koch_segment(apex, p2, depth - 1)
+        + _koch_segment(p2, b, depth - 1)
+    )
+
+
+def _koch_ring(
+    sides: int, depth: int, radius: float, centre: tuple[float, float]
+) -> Any:
+    """A Koch snowflake polygon: a regular *sides*-gon with *depth* Koch passes.
+
+    The result has exactly ``sides * 4**depth + 1`` coordinates, the closing
+    point included -- a closed form, so a case's vertex count is chosen rather
+    than discovered.
+    """
+    from shapely.geometry import Polygon
+
+    cx, cy = centre
+    corners = [
+        (
+            cx + radius * math.cos(2.0 * math.pi * i / sides),
+            cy + radius * math.sin(2.0 * math.pi * i / sides),
+        )
+        for i in range(sides)
+    ]
+
+    points: list[tuple[float, float]] = []
+    for i in range(sides):
+        points.extend(_koch_segment(corners[i], corners[(i + 1) % sides], depth))
+
+    ring = [_round_point(x, y) for x, y in points]
+    return Polygon(ring + [ring[0]])
+
+
+def _dense_parametric_ring(
+    vertices: int,
+    radius: float,
+    lobes: int,
+    amplitude: float,
+    centre: tuple[float, float],
+) -> Any:
+    """A lobed closed ring: ``r(theta) = radius * (1 + amplitude*cos(lobes*theta))``.
+
+    *vertices* is an exact dial on the coordinate count, which is the point:
+    fixture size is chosen up front rather than discovered after writing.
+    """
+    from shapely.geometry import Polygon
+
+    cx, cy = centre
+    ring = []
+    for i in range(vertices):
+        theta = 2.0 * math.pi * i / vertices
+        r = radius * (1.0 + amplitude * math.cos(lobes * theta))
+        ring.append(_round_point(cx + r * math.cos(theta), cy + r * math.sin(theta)))
+
+    return Polygon(ring + [ring[0]])
+
+
+#: The procedural cases, keyed by case id. The geometry is built here rather
+#: than read off disk, so these deliberately carry no ``canonical_source_case_id``
+#: and no ``cross_format_canonical`` tag: they are not members of the 60-case
+#: transcoding family and must not be compared against one.
+def _procedural_geometries() -> dict[str, Any]:
+    # The dense ring is built once and shared: the GeoPackage case is the same
+    # geometry through a driver, so building it twice would let the two forms
+    # drift apart under an edit to the parameters.
+    dense_ring = _dense_parametric_ring(
+        vertices=4096, radius=1.2, lobes=17, amplitude=0.18, centre=(24.9, -30.6)
+    )
+    return {
+        "fractal_coastline_polygon": _koch_ring(
+            sides=6, depth=4, radius=1.5, centre=(-8.5, 41.2)
+        ),
+        "dense_ring_polygon_4k": dense_ring,
+        "dense_ring_polygon_4k_gpkg": dense_ring,
+    }
+
+
+def _procedural_specs(vector_root: Path = VECTOR_ROOT) -> list[VectorSpec]:
+    """Build one spec per procedural case present on disk, sorted by id.
+
+    Same ``VectorSpec`` and therefore the same write backends, fingerprints and
+    ``--check`` semantics as the transcoding family -- only the *source* of the
+    geometry differs.
+    """
+    cases = _read_case_files(vector_root)
+    geometries = _procedural_geometries()
+
+    specs: list[VectorSpec] = []
+    for case_id, geometry in sorted(geometries.items()):
+        entry = cases.get(case_id)
+        if entry is None:
+            raise RuntimeError(
+                f"Procedural case '{case_id}' has no case.yaml under {vector_root}"
+            )
+        case_dir, data = entry
+        primary = data["files"]["primary"]
+        specs.append(
+            VectorSpec(
+                case_id=case_id,
+                rel_path=(case_dir / primary).relative_to(vector_root).as_posix(),
+                format=data["format"],
+                layer=Path(primary).stem,
+                geometry_type=data["geometry_type"],
+                geometry=geometry,
+                spatialite="spatialite" in (data.get("tags") or []),
+            )
+        )
+    return specs
 
 
 def _specs(vector_root: Path = VECTOR_ROOT) -> list[VectorSpec]:
@@ -552,6 +725,40 @@ def _freeze_gpkg_last_change(path: Path) -> None:
         con.close()
 
 
+def _write_geojson(spec: VectorSpec, dest: Path) -> None:
+    """Write *spec* as a GeoJSON FeatureCollection -- pure Python, no driver.
+
+    Only the *procedural* cases take this path. The transcoding family's
+    GeoJSON canonicals are hand-authored source files: they are what everything
+    else is derived *from*, so a generator that rewrote them would be arguing
+    with its own input.
+
+    Written by hand rather than through OGR for the same reason as the WKT/WKB
+    formats: no driver means no library version or timestamp stamped into the
+    output, so ``--check`` can compare bytes rather than semantics.
+    """
+    from shapely.geometry import mapping
+
+    _remove_existing(dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    payload = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {_ID_FIELD: 1, _NAME_FIELD: spec.case_id},
+                "geometry": mapping(spec.geometry),
+            }
+        ],
+    }
+    # No indentation: at 4096 vertices, ``indent=2`` costs ~200 KB of leading
+    # whitespace and pushes the file past the size budget. One coordinate pair
+    # per line would be the readable compromise, but these files are generated
+    # and diffed by the checksum gate, not read by hand.
+    dest.write_text(json.dumps(payload, separators=(",", ":")) + "\n", encoding="utf-8")
+
+
 def _write_fixture(spec: VectorSpec, dest: Path) -> None:
     """Create *dest* from *spec*, dispatching on format.
 
@@ -560,7 +767,9 @@ def _write_fixture(spec: VectorSpec, dest: Path) -> None:
     and read by another, which is how a format ends up unloadable with every
     test still green.
     """
-    if spec.format in _OGR_DRIVERS:
+    if spec.format == "GeoJSON":
+        _write_geojson(spec, dest)
+    elif spec.format in _OGR_DRIVERS:
         _write_ogr(spec, dest)
     elif spec.format in _TEXT_FORMATS:
         _write_text(spec, dest)
@@ -706,7 +915,7 @@ def _fingerprint(path: Path, spec: VectorSpec) -> dict[str, object]:
     """Fingerprint *path* using the strategy its format allows."""
     if spec.format in _OGR_DRIVERS:
         return _fingerprint_ogr(path, spec)
-    if spec.format in _TEXT_FORMATS:
+    if spec.format in _BYTE_COMPARABLE_FORMATS:
         return _fingerprint_text(path, spec)
     return _fingerprint_arrow(path, spec)
 
@@ -850,6 +1059,10 @@ def main() -> int:
             file=sys.stderr,
         )
         return 2
+
+    # The procedural cases go through the same write backends, fingerprints and
+    # budget checks; only where their geometry comes from differs.
+    specs = specs + _procedural_specs(args.vector_root)
 
     if args.check:
         problems: list[str] = []

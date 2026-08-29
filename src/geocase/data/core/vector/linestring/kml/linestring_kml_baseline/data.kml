@@ -11,7 +11,7 @@
 	<ExtendedData><SchemaData schemaUrl="#data">
 		<SimpleData name="id">1</SimpleData>
 	</SchemaData></ExtendedData>
-      <LineString><coordinates>10,50 10.5,50.3 11.0,50.1</coordinates></LineString>
+      <LineString><coordinates>-72.5,-50.9 -72,-50.6 -71.5,-50.8</coordinates></LineString>
   </Placemark>
 </Folder>
 </Document></kml>

@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:32632"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "utm_zone_boundary_straddle"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [246598.027, 5488929.55],
+            [318989.981, 5486044.573],
+            [321586.854, 5563859.314],
+            [250235.314, 5566732.284],
+            [246598.027, 5488929.55]
+          ]
+        ]
+      }
+    }
+  ]
+}

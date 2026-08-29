@@ -134,6 +134,19 @@ _AREA_ATTRS = (
 GeometryProvider = Callable[[str], Any]
 
 
+# Re-exported from :mod:`catalog_geometry`, which owns the coordinates and so
+# owns the thinning. It lives there, not here, because this module imports that
+# one lazily -- the reverse edge would be a cycle -- but the thumbnail point
+# budget is a rendering concern, so it is reachable under this name too.
+try:
+    from catalog_geometry import (  # noqa: F401
+        _MAX_THUMBNAIL_POINTS,
+        _decimate,
+    )
+except ImportError:  # pragma: no cover - only when scripts/ is off sys.path
+    pass
+
+
 def _preview_svg(case: Any, provider: GeometryProvider) -> str | None:
     """Draw the case's real geometry, or ``None`` to fall back to the archetype."""
     try:
@@ -461,6 +474,12 @@ _CLUSTER_RADIUS = 9.0
 #: than a rectangle -- below it the rectangle is smaller than its own stroke.
 _MIN_EXTENT_PIXELS = 4.0
 
+#: A box reaching within this many degrees of a pole, and spanning at least
+#: ``_POLE_CAP_MIN_SPAN`` degrees of longitude, is a pole cap: a polygon
+#: encircling the pole, whose bounding box legitimately spans half the world.
+_POLE_CAP_LATITUDE = 5.0
+_POLE_CAP_MIN_SPAN = 120.0
+
 _MAP_LAND = 'fill="var(--gc-map-land)"'
 _MAP_GRID = 'stroke="var(--gc-map-grid)"'
 _MAP_EDGE = 'stroke="var(--gc-map-edge)"'
@@ -545,6 +564,42 @@ def _extent_boxes(extent: Any) -> list[tuple[float, float, float, float]]:
     return [(left, top, _map_x(extent.east) - left, height)]
 
 
+def _is_pole_cap(extent: Any) -> bool:
+    """True when *extent* is the bounding box of a polygon encircling a pole.
+
+    Derived from the extent rather than declared in ``case.yaml``: the case
+    schema is gated by strict set equality against ``CaseMetadata.model_fields``,
+    so a new field is a schema change -- and more importantly a derived rule
+    cannot drift out of agreement with the extent it describes, which a
+    hand-maintained ``pole_cap:`` flag eventually would.
+    """
+    north = float(extent.north)
+    south = float(extent.south)
+    reaches_pole = (
+        north >= 90.0 - _POLE_CAP_LATITUDE or south <= -90.0 + _POLE_CAP_LATITUDE
+    )
+    if not reaches_pole:
+        return False
+
+    west, east = float(extent.west), float(extent.east)
+    span = (360.0 - west + east) if west > east else (east - west)
+    return span >= _POLE_CAP_MIN_SPAN
+
+
+def _extent_title(case: Any, is_cap: bool) -> str:
+    """The tooltip naming a footprint, so a reader can identify what they see."""
+    title = f"{case.id} -- {case.title}"
+    region = getattr(case, "region", None)
+    if region:
+        title += f" ({region})"
+    if is_cap:
+        title += (
+            ". The band is this case's bounding box: the polygon encircles the "
+            "pole, so its box spans half the world. It is not the data's shape."
+        )
+    return title
+
+
 def _extent_centroid(extent: Any) -> tuple[float, float]:
     """The marker position: the middle of the box, the short way round."""
     if extent.west > extent.east:
@@ -626,13 +681,23 @@ def world_map(cases: list[Any], title: str) -> str:
 
     # Extents wide enough to read are outlined first, so markers stay on top.
     for case in placed:
+        is_cap = _is_pole_cap(case.extent)
         for x, y, w, h in _extent_boxes(case.extent):
-            if w < _MIN_EXTENT_PIXELS or h < _MIN_EXTENT_PIXELS:
+            # A pole cap is a thin band by construction, so the suppression
+            # threshold would drop it on height alone. It is drawn because it
+            # is a cap, not because it happened to clear a pixel budget.
+            if not is_cap and (w < _MIN_EXTENT_PIXELS or h < _MIN_EXTENT_PIXELS):
                 continue
+            klass = "gc-map-extent gc-map-polar" if is_cap else "gc-map-extent"
+            # A group, not attributes on the rect: <title> must be a child
+            # element, and grouping keeps an antimeridian split one hoverable
+            # unit carrying one identity.
             lines.append(
-                f'<rect class="gc-map-extent" x="{_n(x)}" y="{_n(y)}" '
+                f'<g class="gc-map-extent-group" data-case-id="{case.id}">'
+                f"<title>{_map_escape(_extent_title(case, is_cap))}</title>"
+                f'<rect class="{klass}" x="{_n(x)}" y="{_n(y)}" '
                 f'width="{_n(w)}" height="{_n(h)}" {_MAP_EXTENT} '
-                'stroke-width="1" fill-opacity="0.35"/>'
+                'stroke-width="1" fill-opacity="0.35"/></g>'
             )
 
     points = [(*_extent_centroid(case.extent), case) for case in placed]
@@ -644,7 +709,9 @@ def world_map(cases: list[Any], title: str) -> str:
         radius = 3.5 + min(count, 40) ** 0.5
         x, y = _n(cluster["x"]), _n(cluster["y"])
         lines.append(
-            f'<g class="gc-map-marker"><title>{_map_escape(_cluster_label(members))}'
+            f'<g class="gc-map-marker" data-case-ids="'
+            f'{" ".join(str(member.id) for member in members)}">'
+            f"<title>{_map_escape(_cluster_label(members))}"
             f'</title><circle cx="{x}" cy="{y}" r="{_n(radius)}" {_MAP_MARKER} '
             'fill-opacity="0.75" stroke="var(--gc-map-edge)" stroke-width="1"/>'
         )

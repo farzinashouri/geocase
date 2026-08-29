@@ -25,7 +25,7 @@ A minimal MultiPoint fixture in EPSG:4326 to cover non-singleton point geometry 
 | Format | GeoJSON |
 | Geometry type | MultiPoint |
 | CRS | `EPSG:4326` |
-| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 10.40&deg;E, 50.20&deg;N |
+| Location | Hokkaido, Northern Japan (synthetic) &mdash; 142.40&deg;E, 43.10&deg;N &rarr; 142.80&deg;E, 43.30&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -103,7 +103,7 @@ Baseline MultiPoint case for multi-point coverage.
 - [Simple Valid MultiLineString](simple_valid_multilinestring.md) -- `simple_valid_multilinestring`
 - [Simple Valid Point](simple_valid_point.md) -- `simple_valid_point`
 - [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
-- [MultiPoint CSV WKT Baseline](multipoint_csv_wkt_baseline.md) -- `multipoint_csv_wkt_baseline`
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
 
 <script type="application/ld+json">
 {
@@ -146,9 +146,9 @@ Baseline MultiPoint case for multi-point coverage.
     },
     "geo": {
       "@type": "GeoShape",
-      "box": "50.0 10.0 50.2 10.4"
+      "box": "43.1 142.4 43.3 142.8"
     },
-    "name": "Central Europe (synthetic)"
+    "name": "Hokkaido, Northern Japan (synthetic)"
   }
 }
 </script>

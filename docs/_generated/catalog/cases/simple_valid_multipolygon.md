@@ -25,7 +25,7 @@ A compact MultiPolygon fixture with two disjoint polygons in EPSG:4326.
 | Format | GeoJSON |
 | Geometry type | MultiPolygon |
 | CRS | `EPSG:4326` |
-| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 11.50&deg;E, 50.50&deg;N |
+| Location | Nunavut, Canadian Arctic (synthetic) &mdash; 96.00&deg;W, 68.00&deg;N &rarr; 94.50&deg;W, 68.50&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -99,11 +99,11 @@ Baseline MultiPolygon case for multipart polygon coverage.
 
 ## Related cases
 
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
+- [Dense Ring Polygon (4096 vertices, GeoPackage)](dense_ring_polygon_4k_gpkg.md) -- `dense_ring_polygon_4k_gpkg`
+- [Fractal Coastline Polygon](fractal_coastline_polygon.md) -- `fractal_coastline_polygon`
 - [Simple Valid LineString](simple_valid_linestring.md) -- `simple_valid_linestring`
 - [Simple Valid MultiLineString](simple_valid_multilinestring.md) -- `simple_valid_multilinestring`
-- [Simple Valid MultiPoint](simple_valid_multipoint.md) -- `simple_valid_multipoint`
-- [Simple Valid Point](simple_valid_point.md) -- `simple_valid_point`
-- [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
 
 <script type="application/ld+json">
 {
@@ -146,9 +146,9 @@ Baseline MultiPolygon case for multipart polygon coverage.
     },
     "geo": {
       "@type": "GeoShape",
-      "box": "50.0 10.0 50.5 11.5"
+      "box": "68.0 -96.0 68.5 -94.5"
     },
-    "name": "Central Europe (synthetic)"
+    "name": "Nunavut, Canadian Arctic (synthetic)"
   }
 }
 </script>

@@ -121,11 +121,11 @@ running edge-case scenarios.
 
 ## Related cases
 
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
+- [Dense Ring Polygon (4096 vertices, GeoPackage)](dense_ring_polygon_4k_gpkg.md) -- `dense_ring_polygon_4k_gpkg`
+- [Fractal Coastline Polygon](fractal_coastline_polygon.md) -- `fractal_coastline_polygon`
 - [Simple Valid LineString](simple_valid_linestring.md) -- `simple_valid_linestring`
 - [Simple Valid MultiLineString](simple_valid_multilinestring.md) -- `simple_valid_multilinestring`
-- [Simple Valid MultiPoint](simple_valid_multipoint.md) -- `simple_valid_multipoint`
-- [Simple Valid Point](simple_valid_point.md) -- `simple_valid_point`
-- [Polygon CSV WKT Baseline](polygon_csv_wkt_baseline.md) -- `polygon_csv_wkt_baseline`
 
 <script type="application/ld+json">
 {

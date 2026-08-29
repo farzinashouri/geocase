@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:32756"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "utm_zone_56s"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [296577.968, 6246752.861],
+            [342816.175, 6247630.916],
+            [342267.625, 6280898.619],
+            [295867.857, 6280024.373],
+            [296577.968, 6246752.861]
+          ]
+        ]
+      }
+    }
+  ]
+}

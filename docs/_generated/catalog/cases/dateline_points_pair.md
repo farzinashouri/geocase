@@ -105,7 +105,7 @@ Two points on either side of the antimeridian that are geographically near each 
 - [Classic Antimeridian Polygon](classic_antimeridian_polygon.md) -- `classic_antimeridian_polygon`
 - [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 - [Nearby Points Cluster](nearby_points_cluster.md) -- `nearby_points_cluster`
-- [Antimeridian Crossing LineString](antimeridian_crossing_line.md) -- `antimeridian_crossing_line`
+- [UTM Zone 1N Polygon](utm_zone_1n_small.md) -- `utm_zone_1n_small`
 
 <script type="application/ld+json">
 {

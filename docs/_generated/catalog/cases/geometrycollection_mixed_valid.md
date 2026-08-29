@@ -100,10 +100,10 @@ Valid mixed GeometryCollection case for loader and metadata coverage.
 ## Related cases
 
 - [Spike Invalid Polygon](spike_invalid_polygon.md) -- `spike_invalid_polygon`
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
+- [Dense Ring Polygon (4096 vertices, GeoPackage)](dense_ring_polygon_4k_gpkg.md) -- `dense_ring_polygon_4k_gpkg`
 - [Equator Crossing Line](equator_crossing_line.md) -- `equator_crossing_line`
 - [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
-- [Format-limited Precision Polygon](format_limited_precision_polygon.md) -- `format_limited_precision_polygon`
-- [LineString CSV_WKT Baseline](linestring_csv_wkt_baseline.md) -- `linestring_csv_wkt_baseline`
 
 <script type="application/ld+json">
 {

@@ -25,7 +25,7 @@ Canonical baseline point stored as binary WKB file for cross-format comparison a
 | Format | WKB |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
-| Location | Central Europe (synthetic) &mdash; 12.50&deg;E, 55.70&deg;N &rarr; 12.50&deg;E, 55.70&deg;N |
+| Location | Wellington, New Zealand (synthetic) &mdash; 174.78&deg;E, 41.29&deg;S &rarr; 174.78&deg;E, 41.29&deg;S |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -167,9 +167,9 @@ geometry is derived from `params.canonical_source_case_id`
     },
     "geo": {
       "@type": "GeoShape",
-      "box": "55.7 12.5 55.7 12.5"
+      "box": "-41.29 174.78 -41.29 174.78"
     },
-    "name": "Central Europe (synthetic)"
+    "name": "Wellington, New Zealand (synthetic)"
   }
 }
 </script>

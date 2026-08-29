@@ -101,9 +101,9 @@ A projected polygon that lies within the bundled `geotiff_utm_boundary` raster e
 
 - [Rasterize Match WGS84 Polygon](rasterize_match_wgs84_polygon.md) -- `rasterize_match_wgs84_polygon`
 - [Svalbard Special Zone Polygon](svalbard_special_zone_polygon.md) -- `svalbard_special_zone_polygon`
+- [UTM Zone 1N Polygon](utm_zone_1n_small.md) -- `utm_zone_1n_small`
 - [UTM Zone 33 Polygon](utm_zone_33_polygon.md) -- `utm_zone_33_polygon`
-- [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
-- [Equator-Crossing Polygon](equator_polygon.md) -- `equator_polygon`
+- [UTM Zone 33N / 32N Adjacent Pair](utm_zone_33n_to_32n_pair.md) -- `utm_zone_33n_to_32n_pair`
 
 <script type="application/ld+json">
 {

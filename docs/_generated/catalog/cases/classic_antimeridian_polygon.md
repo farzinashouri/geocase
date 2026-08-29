@@ -104,7 +104,7 @@ A canonical polygon whose coordinates wrap from +179 to -179 degrees.
 - [Dateline Points Pair](dateline_points_pair.md) -- `dateline_points_pair`
 - [Dateline Chain Cluster](dateline_chain_cluster.md) -- `dateline_chain_cluster`
 - [Antimeridian Crossing LineString](antimeridian_crossing_line.md) -- `antimeridian_crossing_line`
-- [Ambiguous Engine-dependent Polygon](ambiguous_engine_dependent_polygon.md) -- `ambiguous_engine_dependent_polygon`
+- [UTM Zone 1N Polygon](utm_zone_1n_small.md) -- `utm_zone_1n_small`
 
 <script type="application/ld+json">
 {

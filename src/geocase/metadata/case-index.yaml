@@ -90,9 +90,12 @@ cases:
 - path: data/core/vector/point/wkt/point_wkt_baseline/case.yaml
 - path: data/core/vector/polygon/csv_wkt/polygon_csv_wkt_baseline/case.yaml
 - path: data/core/vector/polygon/flatgeobuf/polygon_flatgeobuf_baseline/case.yaml
+- path: data/core/vector/polygon/geojson/dense_ring_polygon_4k/case.yaml
+- path: data/core/vector/polygon/geojson/fractal_coastline_polygon/case.yaml
 - path: data/core/vector/polygon/geojson/simple_valid_polygon/case.yaml
 - path: data/core/vector/polygon/geopackage/polygon_geopackage_baseline/case.yaml
 - path: data/core/vector/polygon/gml/polygon_gml_baseline/case.yaml
+- path: data/core/vector/polygon/gpkg/dense_ring_polygon_4k_gpkg/case.yaml
 - path: data/core/vector/polygon/kml/polygon_kml_baseline/case.yaml
 - path: data/core/vector/polygon/parquet/polygon_parquet_baseline/case.yaml
 - path: data/core/vector/polygon/shapefile/polygon_shapefile_baseline/case.yaml
@@ -108,7 +111,11 @@ cases:
 - path: data/core/vector/special/crs/south_pole_point/case.yaml
 - path: data/core/vector/special/crs/south_pole_polygon/case.yaml
 - path: data/core/vector/special/crs/svalbard_special_zone_polygon/case.yaml
+- path: data/core/vector/special/crs/utm_zone_1n_small/case.yaml
 - path: data/core/vector/special/crs/utm_zone_33_polygon/case.yaml
+- path: data/core/vector/special/crs/utm_zone_33n_to_32n_pair/case.yaml
+- path: data/core/vector/special/crs/utm_zone_56s_small/case.yaml
+- path: data/core/vector/special/crs/utm_zone_boundary_straddle/case.yaml
 - path: data/core/vector/special/crs/web_mercator_baseline/case.yaml
 - path: data/core/vector/special/dateline/antimeridian_crossing_line/case.yaml
 - path: data/core/vector/special/dateline/classic_antimeridian_polygon/case.yaml

@@ -11,7 +11,7 @@
 	<ExtendedData><SchemaData schemaUrl="#data">
 		<SimpleData name="id">1</SimpleData>
 	</SchemaData></ExtendedData>
-      <MultiGeometry><LineString><coordinates>10,50 10.5,50.2 11.0,50.1</coordinates></LineString><LineString><coordinates>10.2,49.8 10.8,49.9 11.1,50.0</coordinates></LineString></MultiGeometry>
+      <MultiGeometry><LineString><coordinates>36.1,-0.5 36.6,-0.3 37.1,-0.4</coordinates></LineString><LineString><coordinates>36.3,-0.7 36.9,-0.6 37.2,-0.5</coordinates></LineString></MultiGeometry>
   </Placemark>
 </Folder>
 </Document></kml>

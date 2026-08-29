@@ -25,7 +25,7 @@ Canonical baseline multipolygon stored as GML for cross-format comparison and fo
 | Format | GML |
 | Geometry type | MultiPolygon |
 | CRS | `EPSG:4326` |
-| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 11.50&deg;E, 50.50&deg;N |
+| Location | Nunavut, Canadian Arctic (synthetic) &mdash; 96.00&deg;W, 68.00&deg;N &rarr; 94.50&deg;W, 68.50&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -170,9 +170,9 @@ geometry is derived from `params.canonical_source_case_id`
     },
     "geo": {
       "@type": "GeoShape",
-      "box": "50.0 10.0 50.5 11.5"
+      "box": "68.0 -96.0 68.5 -94.5"
     },
-    "name": "Central Europe (synthetic)"
+    "name": "Nunavut, Canadian Arctic (synthetic)"
   }
 }
 </script>

@@ -101,11 +101,11 @@ Thin polygon that is valid in high-precision formats but vulnerable to rounding-
 
 ## Related cases
 
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
+- [Dense Ring Polygon (4096 vertices, GeoPackage)](dense_ring_polygon_4k_gpkg.md) -- `dense_ring_polygon_4k_gpkg`
 - [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
+- [Fractal Coastline Polygon](fractal_coastline_polygon.md) -- `fractal_coastline_polygon`
 - [Polygon CSV WKT Baseline](polygon_csv_wkt_baseline.md) -- `polygon_csv_wkt_baseline`
-- [Polygon FlatGeobuf Baseline](polygon_flatgeobuf_baseline.md) -- `polygon_flatgeobuf_baseline`
-- [Polygon GeoPackage Baseline](polygon_geopackage_baseline.md) -- `polygon_geopackage_baseline`
-- [Polygon GML Baseline](polygon_gml_baseline.md) -- `polygon_gml_baseline`
 
 <script type="application/ld+json">
 {

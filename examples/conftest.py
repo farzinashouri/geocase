@@ -154,6 +154,23 @@ _SIMPLE_EXPECTED_FAILURES: frozenset[str] = frozenset({
     "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg32633-rasterization-utm]",
     "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg4326-antimeridian-dateline-2]",
     "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg4326-attributes-format-limitation-format-specific]",
+    # Plan 33's projected UTM cases. Same limitation the epsg32633 entries
+    # above already record -- the simple implementations assume their input is
+    # in degrees -- now reached by three more zones (1N at the antimeridian,
+    # 56S with the southern false northing, and the 32N zone-boundary
+    # straddle) rather than only by 33N.
+    "test_area_m2_handles_all_polygon_cases[vector-polygon-epsg32601-antimeridian-utm-valid]",
+    "test_area_m2_handles_all_polygon_cases[vector-polygon-epsg32632-utm-utm-zone-boundary-valid]",
+    "test_area_m2_handles_all_polygon_cases[vector-polygon-epsg32756-southern-hemisphere-utm-valid]",
+    "test_buffer_in_meters_handles_all_polygon_cases[vector-polygon-epsg32601-antimeridian-utm-valid]",
+    "test_buffer_in_meters_handles_all_polygon_cases[vector-polygon-epsg32632-utm-utm-zone-boundary-valid]",
+    "test_buffer_in_meters_handles_all_polygon_cases[vector-polygon-epsg32756-southern-hemisphere-utm-valid]",
+    "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg32601-antimeridian-utm-valid]",
+    "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg32632-utm-utm-zone-boundary-valid]",
+    "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg32756-southern-hemisphere-utm-valid]",
+    "test_validate_polygon_geometry_handles_all_polygon_cases[vector-polygon-epsg32601-antimeridian-utm-valid]",
+    "test_validate_polygon_geometry_handles_all_polygon_cases[vector-polygon-epsg32632-utm-utm-zone-boundary-valid]",
+    "test_validate_polygon_geometry_handles_all_polygon_cases[vector-polygon-epsg32756-southern-hemisphere-utm-valid]",
 })
 
 

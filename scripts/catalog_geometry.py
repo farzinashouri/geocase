@@ -71,8 +71,34 @@ class _Projector:
         return px, py
 
 
+#: The most points a single thumbnail path may carry. A 120x80 viewport can
+#: resolve nothing finer, and the paths are committed *as text* into
+#: ``compare.md`` -- a 4096-vertex case emitted verbatim would make that page
+#: undiffable, which is the property the generated-artifact gates depend on.
+_MAX_THUMBNAIL_POINTS = 300
+
+
+def _decimate(points: list[Any]) -> list[Any]:
+    """Thin *points* to at most :data:`_MAX_THUMBNAIL_POINTS`, keeping the ends.
+
+    A uniform stride rather than Douglas-Peucker: the thumbnail only has to
+    read as the right *shape*, the stride is deterministic across platforms
+    with no tolerance to tune, and keeping the last point verbatim means a
+    closed ring stays closed.
+    """
+    if len(points) <= _MAX_THUMBNAIL_POINTS:
+        return points
+    stride = -(-len(points) // (_MAX_THUMBNAIL_POINTS - 1))  # ceil
+    thinned = points[::stride]
+    if thinned[-1] != points[-1]:
+        thinned.append(points[-1])
+    return thinned
+
+
 def _ring_path(project: Any, coords: Any) -> str:
-    points = [project(float(x), float(y)) for x, y in (c[:2] for c in coords)]
+    points = _decimate(
+        [project(float(x), float(y)) for x, y in (c[:2] for c in coords)]
+    )
     if not points:
         return ""
     head = f"M {_fmt(points[0][0])} {_fmt(points[0][1])}"

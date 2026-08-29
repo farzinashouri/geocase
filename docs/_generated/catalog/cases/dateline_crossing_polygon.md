@@ -125,7 +125,7 @@ Antimeridian stress case for longitude wrapping and bounds logic.
 - [Dateline Points Pair](dateline_points_pair.md) -- `dateline_points_pair`
 - [Rasterize Match WGS84 Polygon](rasterize_match_wgs84_polygon.md) -- `rasterize_match_wgs84_polygon`
 - [Dateline Chain Cluster](dateline_chain_cluster.md) -- `dateline_chain_cluster`
-- [Web Mercator Baseline Point](web_mercator_baseline.md) -- `web_mercator_baseline`
+- [UTM Zone 1N Polygon](utm_zone_1n_small.md) -- `utm_zone_1n_small`
 
 <script type="application/ld+json">
 {
