@@ -12,6 +12,7 @@ import pytest
 import rasterio
 from pyproj import CRS, Transformer
 from shapely.affinity import translate
+from shapely.errors import GEOSException
 from shapely.geometry import Point, Polygon
 from shapely.ops import unary_union
 
@@ -171,8 +172,41 @@ def _select_bundled_vector_cases(**selection_kwargs: Any) -> list[Any]:
 
 
 def _load_selected_geometry(geocase: Any):
-    """Load and union all geometries from a selector-resolved vector case."""
-    return unary_union(list(geocase.load().geometry))
+    """Load and union all geometries from a selector-resolved vector case.
+
+    ``unary_union`` raises ``TopologyException`` when it is asked to merge an
+    invalid geometry with valid neighbours -- GEOS can return a lone invalid
+    polygon untouched, but it cannot compute an overlay against one. Every
+    invalid case in the catalog held a single feature until
+    ``invalid_geometry_at_scale_gpkg`` (10,000 polygons, one bowtie at index
+    9,999), so the union always had exactly one geometry to "merge" and the
+    exception was unreachable.
+
+    The fallback assembles the parts into a ``MultiPolygon`` instead, which
+    preserves the two properties the questions downstream depend on: the result
+    is still polygonal (several of them reject anything that is not), and it is
+    still *invalid* (which is the whole point of the fixture -- `is_valid`
+    correctly reports False, and the repair questions have something to
+    repair).
+
+    Repairing here would be wrong: it would hand the interview questions
+    pre-fixed input and quietly delete the defect the case exists to present,
+    which is the same "green light for a property that was never tested"
+    failure the content gate was built to end.
+    """
+    from shapely.geometry import MultiPolygon
+
+    geometries = [g for g in geocase.load().geometry if g is not None]
+    try:
+        return unary_union(geometries)
+    except GEOSException:
+        parts: list[Any] = []
+        for geom in geometries:
+            if geom.geom_type == "MultiPolygon":
+                parts.extend(geom.geoms)
+            elif geom.geom_type == "Polygon":
+                parts.append(geom)
+        return MultiPolygon(parts)
 
 
 def _is_valid_geometry_case(meta: Any) -> bool:
@@ -718,7 +752,7 @@ def test_get_bbox_perfect_classic_antimeridian_polygon_uses_minimal_span() -> No
 @pytest.mark.parametrize("geocase", _VECTOR_POLYGON_CASE_PARAMS)
 def test_get_bbox_handles_all_polygon_cases(geocase: Any) -> None:
     """Question 3: discover which bundled polygon fixtures break the simple bbox helper."""
-    geom = unary_union(list(geocase.load().geometry))
+    geom = _load_selected_geometry(geocase)
     minx, miny, maxx, maxy = get_bbox(geom)
 
     assert all(math.isfinite(value) for value in (minx, miny, maxx, maxy))
@@ -729,7 +763,7 @@ def test_get_bbox_handles_all_polygon_cases(geocase: Any) -> None:
 @pytest.mark.parametrize("geocase", _VECTOR_POLYGON_ALL_PARAMS)
 def test_get_bbox_perfect_handles_all_polygon_cases(geocase: Any) -> None:
     """Question 3 perfect: keep bbox handling correct across bundled polygon fixtures."""
-    geom = unary_union(list(geocase.load().geometry))
+    geom = _load_selected_geometry(geocase)
 
     if not geom.is_valid:
         with pytest.raises(ValueError, match="valid"):
@@ -789,7 +823,7 @@ def test_buffer_in_meters_perfect_keeps_dateline_polygon_valid() -> None:
 def test_buffer_in_meters_handles_all_polygon_cases(geocase: Any) -> None:
     """Question 4: discover which bundled polygon fixtures break the simple buffer helper."""
     context = describe_case_data(geocase)
-    geom = unary_union(list(geocase.load().geometry))
+    geom = _load_selected_geometry(geocase)
     buffered = buffer_in_meters(geom, 1_000.0)
 
     if geom.is_empty:
@@ -1533,7 +1567,7 @@ def test_reproject_geometry_identity_preserves_simple_polygon() -> None:
 def test_reproject_geometry_handles_all_polygon_cases(geocase: Any) -> None:
     """Question 11: discover which bundled polygon fixtures break the simple helper."""
     context = describe_case_data(geocase)
-    geom = unary_union(list(geocase.load().geometry))
+    geom = _load_selected_geometry(geocase)
     assert geocase.metadata.crs is not None
 
     src_epsg = CRS.from_user_input(geocase.metadata.crs).to_epsg()
@@ -1563,7 +1597,7 @@ def test_reproject_geometry_handles_all_polygon_cases(geocase: Any) -> None:
 @pytest.mark.parametrize("geocase", _VECTOR_POLYGON_ALL_PARAMS)
 def test_reproject_geometry_perfect_handles_all_polygon_cases(geocase: Any) -> None:
     """Question 11 perfect: handle nearly all bundled polygon fixtures without handpicking ids."""
-    geom = unary_union(list(geocase.load().geometry))
+    geom = _load_selected_geometry(geocase)
     assert geocase.metadata.crs is not None
 
     src_epsg = CRS.from_user_input(geocase.metadata.crs).to_epsg()

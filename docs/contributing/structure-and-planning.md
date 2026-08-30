@@ -406,7 +406,7 @@ Why it exists: keeps structure explicit and reviewable.
 
 Bundled sample data. All 8 `case.yaml` files are populated with full metadata.
 
-The catalog is **150 cases**. The lists that were once here enumerated eight of them and
+The catalog is **153 cases**. The lists that were once here enumerated eight of them and
 went stale within one release; the enumeration is now generated from the registry and
 CI-gated instead. See the [dataset catalog](../dataset-catalog.md) for the reasoning and
 the [case catalog](../_generated/catalog/index.md) for the full list.

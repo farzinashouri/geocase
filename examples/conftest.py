@@ -179,6 +179,18 @@ _SIMPLE_EXPECTED_FAILURES: frozenset[str] = frozenset({
     # the pair was added to expose. The `_perfect` counterpart handles both.
     "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg4326-dimensionality-three-dimensional-wkb]",
     "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg4326-dimensionality-geopackage-integer-precision]",
+    # Plan 28 phase 3's large case. The same "does not repair invalid inputs
+    # before union" limitation the two entries above already record -- but
+    # reached for the first time by a *multi-feature* case, which is what makes
+    # it bite. GEOS returns a lone invalid polygon from `unary_union`
+    # untouched, so the existing single-feature invalid cases never raised;
+    # unioning that same bowtie against 9,999 valid neighbours raises
+    # TopologyException. The `_perfect` counterpart repairs first and passes.
+    "test_dissolve_polygons_handles_all_polygon_cases[vector-polygon-epsg4326-batch-boundary-invalid-large]",
+    # Same case, and the same "simple area_m2 does not reject invalid
+    # geometries" limitation the self-intersection and spike entries above
+    # already record.
+    "test_area_m2_handles_all_polygon_cases[vector-polygon-epsg4326-batch-boundary-invalid-large]",
 })
 
 

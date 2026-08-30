@@ -119,9 +119,9 @@ Per RFC 7946 §3.1.6:
 
 - [Self-Intersecting Polygon](self_intersecting_polygon.md) -- `self_intersecting_polygon`
 - [Ambiguous Engine-dependent Polygon](ambiguous_engine_dependent_polygon.md) -- `ambiguous_engine_dependent_polygon`
+- [Invalid Geometry at Feature 9,999 (GeoPackage)](invalid_geometry_at_scale_gpkg.md) -- `invalid_geometry_at_scale_gpkg`
 - [Out-of-Bounds / Invalid Coordinates](out_of_bounds_coordinates.md) -- `out_of_bounds_coordinates`
 - [Disjoint Polygons](disjoint_polygons.md) -- `disjoint_polygons`
-- [Spike Invalid Polygon](spike_invalid_polygon.md) -- `spike_invalid_polygon`
 
 <script type="application/ld+json">
 {

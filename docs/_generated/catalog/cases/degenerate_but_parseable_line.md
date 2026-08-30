@@ -104,8 +104,8 @@ Zero-length LineString that parses successfully but is geometrically degenerate.
 - [Ambiguous Engine-dependent Polygon](ambiguous_engine_dependent_polygon.md) -- `ambiguous_engine_dependent_polygon`
 - [Antimeridian Crossing LineString](antimeridian_crossing_line.md) -- `antimeridian_crossing_line`
 - [Equator Crossing Line](equator_crossing_line.md) -- `equator_crossing_line`
+- [Invalid Geometry at Feature 9,999 (GeoPackage)](invalid_geometry_at_scale_gpkg.md) -- `invalid_geometry_at_scale_gpkg`
 - [LineString CSV_WKT Baseline](linestring_csv_wkt_baseline.md) -- `linestring_csv_wkt_baseline`
-- [LineString FlatGeobuf Baseline](linestring_flatgeobuf_baseline.md) -- `linestring_flatgeobuf_baseline`
 
 <script type="application/ld+json">
 {

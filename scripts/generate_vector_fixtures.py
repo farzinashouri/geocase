@@ -498,6 +498,310 @@ def _dimensional_specs(vector_root: Path = VECTOR_ROOT) -> list[VectorSpec]:
     return specs
 
 
+# ---------------------------------------------------------------------------
+# The large cases -- plan 28 phase 3
+# ---------------------------------------------------------------------------
+#
+# Every other fixture in this file holds one feature. These hold 10,000, and
+# the count is the point: with one feature every batch boundary is the same
+# boundary and every partial read is the full read, so a probe for
+# ``skip_features``, ``max_features``, Arrow chunking or a paged read executes
+# without being able to fail. Each case puts its one defect *past* the
+# boundary, where only a full read finds it.
+#
+# They go through their own spec type and their own writer rather than
+# widening ``VectorSpec``: that dataclass carries a single ``geometry`` and its
+# writers emit exactly one feature, and the ``--check`` fingerprints compare
+# every feature's WKB and attributes -- which is right for one feature and
+# 10,000 WKB blobs of noise for these.
+#
+# Same discipline as everything else here: pure ``math``/``itertools``, **no
+# ``random``**, so regeneration is byte-identical.
+
+#: The large cases, by id. Listed rather than discovered by tag: each one has a
+#: bespoke attribute recipe in :func:`_large_frame`, so a case that reached
+#: this set without a recipe is an error worth raising loudly.
+_LARGE_CASE_IDS = frozenset(
+    {
+        "invalid_geometry_at_scale_gpkg",
+        "null_after_batch_boundary_gpkg",
+        "mixed_timezone_after_batch_gpkg",
+    }
+)
+
+#: Grid origin and step for the large cases' geometry. A regular lattice, not a
+#: cluster: the geometry is deliberately the *uninteresting* part of these
+#: cases, so nothing about the defect can be confused with a geometric quirk.
+#: 100 columns x 0.005 degrees spans 0.5 degrees of longitude.
+_LARGE_ORIGIN = (10.0, 50.0)
+_LARGE_STEP = 0.005
+_LARGE_COLUMNS = 100
+
+#: Side of the triangles in ``invalid_geometry_at_scale_gpkg``. Comfortably
+#: inside ``_LARGE_STEP`` so no two features touch -- an accidental overlap
+#: would make the *corpus* topologically interesting in a way the case does not
+#: declare.
+_LARGE_TRIANGLE = 0.003
+
+#: The two UTC offsets in ``mixed_timezone_after_batch_gpkg``. 4.5 hours apart,
+#: so the divergent row lands on a different UTC instant and a reader that
+#: silently drops the offset is visible rather than coincidentally right.
+_LARGE_TZ_MAJORITY = "+01:00"
+_LARGE_TZ_OUTLIER = "+05:30"
+_LARGE_TZ_WALL_CLOCK = "2024-01-01T12:00:00.000"
+
+
+@dataclass
+class LargeVectorSpec:
+    """One of the plan 28 phase 3 cases: 10,000 features, one defect past the boundary."""
+
+    case_id: str
+    #: Path of the primary file relative to ``VECTOR_ROOT``.
+    rel_path: str
+    #: Table/layer name inside the GeoPackage. Always the primary file's stem.
+    layer: str
+    #: Declared ``geometry_type``.
+    geometry_type: str
+    #: Total feature count, defect row included.
+    feature_count: int
+
+
+def _large_grid_point(index: int) -> tuple[float, float]:
+    """Return the lattice position of feature *index*, rounded like every other fixture."""
+    x = _LARGE_ORIGIN[0] + (index % _LARGE_COLUMNS) * _LARGE_STEP
+    y = _LARGE_ORIGIN[1] + (index // _LARGE_COLUMNS) * _LARGE_STEP
+    return _round_point(x, y)
+
+
+def _large_triangle(index: int) -> Any:
+    """A valid 3-vertex triangle at feature *index*'s lattice position."""
+    from shapely.geometry import Polygon
+
+    x, y = _large_grid_point(index)
+    return Polygon(
+        [
+            (x, y),
+            _round_point(x + _LARGE_TRIANGLE, y),
+            _round_point(x + _LARGE_TRIANGLE / 2.0, y + _LARGE_TRIANGLE),
+        ]
+    )
+
+
+def _large_bowtie() -> Any:
+    """A self-intersecting quadrilateral -- the one invalid feature in 10,000.
+
+    The classic bowtie: the ring's second and fourth vertices are swapped, so
+    the two edges cross at the centre. ``shapely`` reports
+    ``Self-intersection``; GEOS, GDAL and PostGIS all agree it is invalid,
+    which matters because a case whose invalidity is engine-dependent tests the
+    engine rather than the consumer (that is what
+    ``ambiguous_engine_dependent_polygon`` is for).
+    """
+    from shapely.geometry import Polygon
+
+    x, y = _LARGE_ORIGIN
+    side = _LARGE_TRIANGLE
+    return Polygon(
+        [
+            (x, y),
+            _round_point(x + side, y + side),
+            _round_point(x + side, y),
+            _round_point(x, y + side),
+        ]
+    )
+
+
+def _large_frame(spec: LargeVectorSpec) -> Any:
+    """Return the full GeoDataFrame for *spec* -- geometry, attributes and defect.
+
+    Split out from the writer so a test can build the frame twice and compare,
+    which is what proves determinism without writing a megabyte to disk.
+    """
+    import geopandas
+    import pandas as pd
+    from shapely.geometry import Point
+
+    n = spec.feature_count
+    ids = list(range(n))
+
+    if spec.case_id == "invalid_geometry_at_scale_gpkg":
+        geometries = [_large_triangle(i) for i in range(n)]
+        # The defect is the *last* feature, not a middle one: a consumer that
+        # reads any prefix of the file -- one batch, half the file, all but the
+        # final row -- sees clean data. A middle position would be found by
+        # roughly half of all partial reads and would blunt the claim.
+        geometries[-1] = _large_bowtie()
+        attributes: dict[str, Any] = {"id": ids}
+    else:
+        geometries = [Point(*_large_grid_point(i)) for i in range(n)]
+        if spec.case_id == "null_after_batch_boundary_gpkg":
+            # ``Int64`` (the pandas nullable dtype), not ``int64``: writing a
+            # NULL through a numpy int column is impossible, and writing it
+            # through a float column would make the file itself float -- which
+            # is the *consumer's* coercion, and therefore the thing under test
+            # rather than a property of the fixture.
+            attributes = {
+                "id": ids,
+                "measure": pd.array([i for i in range(n - 1)] + [None], dtype="Int64"),
+            }
+        elif spec.case_id == "mixed_timezone_after_batch_gpkg":
+            # The column is written as text by ``_write_large`` -- see there for
+            # why the offsets cannot go through a pandas dtype.
+            attributes = {"id": ids}
+        else:  # pragma: no cover - _large_specs() rejects these first
+            raise RuntimeError(f"no frame recipe for large case '{spec.case_id}'")
+
+    return geopandas.GeoDataFrame(attributes, geometry=geometries, crs=f"EPSG:{_SRID}")
+
+
+def _write_large(spec: LargeVectorSpec, dest: Path) -> None:
+    """Write a large case: geopandas for the bulk, SQL for what pandas cannot express.
+
+    ``geopandas.to_file`` rather than the ``osgeo.ogr`` loop ``_write_ogr``
+    uses. Ten thousand ``ogr.Feature`` round trips is slow enough to make
+    ``--check`` unpleasant, and none of the reasons ``_write_ogr`` exists
+    (SpatiaLite options, per-driver layer creation flags) apply to a plain
+    GeoPackage.
+
+    ``SPATIAL_INDEX=NO``: the R-tree costs ~750 KB on 10,000 features -- more
+    than half the payload -- to accelerate a query no case here performs. The
+    R-tree is covered deliberately by the SpatiaLite five, at one feature each.
+    """
+    import sqlite3 as _sqlite3
+
+    _remove_existing(dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    from osgeo import gdal
+
+    frame = _large_frame(spec)
+    with gdal.config_option("OGR_CURRENT_DATE", _FROZEN_TIMESTAMP):
+        frame.to_file(
+            dest, driver="GPKG", layer=spec.layer, SPATIAL_INDEX="NO", index=False
+        )
+
+    if spec.case_id == "mixed_timezone_after_batch_gpkg":
+        # Written as SQL text rather than as a pandas column, because there is
+        # no pandas dtype that survives this. A ``datetime64[ns, tz]`` column
+        # holds exactly *one* timezone by construction, and an object column of
+        # per-value ``tzinfo`` is normalised to UTC by the writer -- either way
+        # the mixed offset is gone before it reaches the file. GeoPackage
+        # stores DATETIME as ISO 8601 text, so the offsets can simply be
+        # written, which is also how a real dataset acquires them: from a
+        # producer that recorded local time.
+        con = _sqlite3.connect(dest)
+        try:
+            con.execute(f'ALTER TABLE "{spec.layer}" ADD COLUMN observed DATETIME')
+            con.executemany(
+                f'UPDATE "{spec.layer}" SET observed = ? WHERE id = ?',
+                [
+                    (f"{_LARGE_TZ_WALL_CLOCK}{_LARGE_TZ_MAJORITY}", i)
+                    for i in range(spec.feature_count - 1)
+                ],
+            )
+            con.execute(
+                f'UPDATE "{spec.layer}" SET observed = ? WHERE id = ?',
+                (
+                    f"{_LARGE_TZ_WALL_CLOCK}{_LARGE_TZ_OUTLIER}",
+                    spec.feature_count - 1,
+                ),
+            )
+            con.commit()
+            # ``ALTER TABLE`` plus 10,000 updates leaves free pages behind;
+            # without this the file is ~40% larger than its content.
+            con.execute("VACUUM")
+        finally:
+            con.close()
+
+    _freeze_gpkg_last_change(dest)
+
+
+def _large_specs(vector_root: Path = VECTOR_ROOT) -> list[LargeVectorSpec]:
+    """Build one spec per large case present on disk, sorted by id.
+
+    Feature counts come from ``params.expected_feature_count`` in the
+    ``case.yaml`` rather than being repeated here, so the number the generator
+    writes and the number phase 1's content gate checks cannot disagree.
+    """
+    cases = _read_case_files(vector_root)
+
+    specs: list[LargeVectorSpec] = []
+    for case_id in sorted(_LARGE_CASE_IDS):
+        entry = cases.get(case_id)
+        if entry is None:
+            raise RuntimeError(
+                f"Large case '{case_id}' has no case.yaml under {vector_root}"
+            )
+        case_dir, data = entry
+        primary = data["files"]["primary"]
+        count = (data.get("params") or {}).get("expected_feature_count")
+        if not isinstance(count, int):
+            raise RuntimeError(
+                f"Large case '{case_id}' must declare params.expected_feature_count; "
+                f"the generator takes its size from the metadata, not the reverse"
+            )
+        specs.append(
+            LargeVectorSpec(
+                case_id=case_id,
+                rel_path=(case_dir / primary).relative_to(vector_root).as_posix(),
+                layer=Path(primary).stem,
+                geometry_type=data["geometry_type"],
+                feature_count=count,
+            )
+        )
+    return specs
+
+
+#: Size budget for a large case's payload, well under ``validate_catalog.py``'s
+#: 5 MB ``small`` limit but tight enough to catch a regression: the three land
+#: at 1.4 MB, 0.5 MB and 0.7 MB, and the R-tree alone would add ~0.75 MB.
+_MAX_BYTES_LARGE = 2 * 1024 * 1024
+
+
+def _fingerprint_large(path: Path, spec: LargeVectorSpec) -> dict[str, object]:
+    """Return what ``--check`` compares for a large case.
+
+    Not the per-feature fingerprint ``_fingerprint_ogr`` uses: 10,000 WKB blobs
+    in a diff message are unreadable, and a mismatch anywhere in them says
+    nothing about *what* changed. Compared instead on the case's schema, its
+    size, and the **defect** each case exists to carry -- which is the property
+    that would actually be lost in a regeneration, and the one whose loss the
+    small-case fingerprint would report as an anonymous byte difference.
+    """
+    import geopandas
+    import pandas as pd
+
+    gdf = geopandas.read_file(path, layer=spec.layer)
+
+    fingerprint: dict[str, object] = {
+        "feature_count": len(gdf),
+        "columns": sorted(c for c in gdf.columns if c != gdf.geometry.name),
+        "epsg": gdf.crs.to_epsg() if gdf.crs is not None else None,
+        "geometry_types": sorted(set(gdf.geometry.geom_type)),
+        # The corners of the lattice: enough to catch a moved or rescaled grid
+        # without carrying 10,000 coordinates.
+        "bounds": [round(float(v), _PROCEDURAL_PRECISION) for v in gdf.total_bounds],
+    }
+
+    if spec.case_id == "invalid_geometry_at_scale_gpkg":
+        fingerprint["invalid_rows"] = [
+            i for i, valid in enumerate(gdf.geometry.is_valid) if not valid
+        ]
+    elif spec.case_id == "null_after_batch_boundary_gpkg":
+        fingerprint["null_rows"] = [
+            i for i, missing in enumerate(gdf["measure"].isna()) if missing
+        ]
+    elif spec.case_id == "mixed_timezone_after_batch_gpkg":
+        observed = pd.to_datetime(gdf["observed"], utc=True)
+        # Distinct UTC instants, not the raw strings: the offsets are the
+        # point, and a reader that normalises them away collapses this to one.
+        fingerprint["distinct_instants"] = sorted(
+            str(value) for value in observed.unique()
+        )
+
+    return fingerprint
+
+
 def _specs(vector_root: Path = VECTOR_ROOT) -> list[VectorSpec]:
     """Build one spec per case declaring a canonical source, sorted by id.
 
@@ -1134,6 +1438,13 @@ def main() -> int:
     specs = specs + _procedural_specs(args.vector_root)
     specs = specs + _dimensional_specs(args.vector_root)
 
+    # The large cases (plan 28 phase 3) do not: they hold 10,000 features, so
+    # they have their own writer, their own fingerprint and their own budget.
+    # They still share this loop, because being outside the regeneration gate
+    # is exactly how ``hole_center_nodata`` drifted into the inverse of its own
+    # description.
+    large = _large_specs(args.vector_root)
+
     if args.check:
         problems: list[str] = []
         for spec in specs:
@@ -1159,12 +1470,38 @@ def main() -> int:
                 ):
                     problems.append(f"{spec.case_id}: {line}")
 
+        for large_spec in large:
+            dest = args.vector_root / large_spec.rel_path
+            if not dest.exists():
+                problems.append(f"{large_spec.case_id}: missing ({dest})")
+                continue
+
+            size = _payload_bytes(dest)
+            if size > _MAX_BYTES_LARGE:
+                problems.append(
+                    f"{large_spec.case_id}: {size / 1024:.0f} KB exceeds the "
+                    f"{_MAX_BYTES_LARGE / 1024:.0f} KB budget -- was it "
+                    f"regenerated with a spatial index?"
+                )
+
+            with tempfile.TemporaryDirectory() as tmp:
+                candidate = Path(tmp) / dest.name
+                _write_large(large_spec, candidate)
+                for line in _diff(
+                    _fingerprint_large(candidate, large_spec),
+                    _fingerprint_large(dest, large_spec),
+                ):
+                    problems.append(f"{large_spec.case_id}: {line}")
+
         if problems:
             print("Vector fixtures out of date:")
             for line in problems:
                 print(f"  {line}")
             return 1
-        print(f"All vector fixtures up to date ({len(specs)} fixtures)")
+        print(
+            f"All vector fixtures up to date "
+            f"({len(specs) + len(large)} fixtures, {len(large)} large)"
+        )
         return 0
 
     for spec in specs:
@@ -1173,6 +1510,15 @@ def main() -> int:
         print(
             f"Wrote {dest.relative_to(REPO_ROOT)} "
             f"({_payload_bytes(dest) / 1024:.1f} KB)"
+        )
+
+    for large_spec in large:
+        dest = args.vector_root / large_spec.rel_path
+        _write_large(large_spec, dest)
+        print(
+            f"Wrote {dest.relative_to(REPO_ROOT)} "
+            f"({_payload_bytes(dest) / 1024:.1f} KB, "
+            f"{large_spec.feature_count} features)"
         )
     return 0
 

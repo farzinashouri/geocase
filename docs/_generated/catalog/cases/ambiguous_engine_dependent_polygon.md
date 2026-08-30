@@ -104,8 +104,8 @@ Polygon with touching shell/interior ring to capture engine-dependent validity b
 - [Self-Intersecting Polygon](self_intersecting_polygon.md) -- `self_intersecting_polygon`
 - [Unclosed Ring Polygon](unclosed_ring_polygon.md) -- `unclosed_ring_polygon`
 - [Disjoint Polygons](disjoint_polygons.md) -- `disjoint_polygons`
+- [Invalid Geometry at Feature 9,999 (GeoPackage)](invalid_geometry_at_scale_gpkg.md) -- `invalid_geometry_at_scale_gpkg`
 - [Spike Invalid Polygon](spike_invalid_polygon.md) -- `spike_invalid_polygon`
-- [Classic Antimeridian Polygon](classic_antimeridian_polygon.md) -- `classic_antimeridian_polygon`
 
 <script type="application/ld+json">
 {

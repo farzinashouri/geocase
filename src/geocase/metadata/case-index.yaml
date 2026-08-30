@@ -150,3 +150,6 @@ cases:
 - path: data/core/vector/special/precision/format_limited_precision_polygon/case.yaml
 - path: data/core/vector/special/precision/nearby_points_cluster/case.yaml
 - path: data/core/vector/special/precision/precision_loss_geojson_roundtrip/case.yaml
+- path: data/core/vector/special/scale/invalid_geometry_at_scale_gpkg/case.yaml
+- path: data/core/vector/special/scale/mixed_timezone_after_batch_gpkg/case.yaml
+- path: data/core/vector/special/scale/null_after_batch_boundary_gpkg/case.yaml

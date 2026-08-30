@@ -63,7 +63,7 @@ Expose loaders that incorrectly handle EMPTY geometries in GeoPackage format. De
 
 - `empty_geometry_handling`
 - [`format_specific`](../risk/format-specific.md)
-- `null_empty_conflation`
+- [`null_empty_conflation`](../risk/null-empty-conflation.md)
 
 ## Expected behavior
 
@@ -164,11 +164,11 @@ This case is **GeoPackage-specific** because of SQLite's explicit NULL handling.
 
 ## Related cases
 
+- [First NULL After 10,000 Non-NULL Values (GeoPackage)](null_after_batch_boundary_gpkg.md) -- `null_after_batch_boundary_gpkg`
 - [GeoJSON Precision Loss Roundtrip](precision_loss_geojson_roundtrip.md) -- `precision_loss_geojson_roundtrip`
 - [Shapefile Legacy DBF Encoding](shapefile_encoding_legacy.md) -- `shapefile_encoding_legacy`
 - [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
 - [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
-- [Empty Polygon](empty_polygon.md) -- `empty_polygon`
 
 <script type="application/ld+json">
 {

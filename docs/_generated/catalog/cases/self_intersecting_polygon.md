@@ -124,9 +124,9 @@ topology checks catch bad geometry.
 
 - [Unclosed Ring Polygon](unclosed_ring_polygon.md) -- `unclosed_ring_polygon`
 - [Ambiguous Engine-dependent Polygon](ambiguous_engine_dependent_polygon.md) -- `ambiguous_engine_dependent_polygon`
+- [Invalid Geometry at Feature 9,999 (GeoPackage)](invalid_geometry_at_scale_gpkg.md) -- `invalid_geometry_at_scale_gpkg`
 - [Out-of-Bounds / Invalid Coordinates](out_of_bounds_coordinates.md) -- `out_of_bounds_coordinates`
 - [Polygon with Hole](polygon_with_hole.md) -- `polygon_with_hole`
-- [Disjoint Polygons](disjoint_polygons.md) -- `disjoint_polygons`
 
 <script type="application/ld+json">
 {

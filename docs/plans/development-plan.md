@@ -18,7 +18,7 @@ collapsed. Sequencing that used to live in `execution-order.md` is folded in bel
 | | |
 |---|---|
 | Version | `1.0.0rc2` in this repository; `1.0.0rc1` is published on [PyPI](https://pypi.org/project/geocase/). |
-| Catalog | **135 cases** (vector, raster, NetCDF), 2.1 MB bundled, gated in CI. |
+| Catalog | **153 cases** (vector, raster, NetCDF), 5.1 MB bundled, gated in CI. |
 | Gates | `catalog`, `tests` (3.11 + 3.14), `lint`, `typecheck`, `docs` — all green. |
 | Docs site | 188 generated pages with `schema.org/Dataset` JSON-LD. GitHub Pages deployment is configured; enable Pages in repository settings to serve it. |
 | Users | Zero confirmed adopters. One prospective adopter (S2/Prithvi change detection) identified but not yet asked. |
@@ -57,9 +57,11 @@ Within that frame, in order:
    is the one indexable page GeoCase has.
 2. **[Plan 28](28-validate-geocase.md) — vector-first, act on the two external validation
    runs.** Ahead of the catalog deployment on purpose: a catalog site should not deploy on top
-   of a corpus with a known false-passing case. **Phase 1 (the content gate) and all of Phase 2
-   are implemented**; Phase 3 (large curated vector cases) is the remaining blocking work, and
-   Phases 4–5 are a recorded raster backlog and a positioning pass rather than a queue.
+   of a corpus with a known false-passing case. **Phases 1, 2 and 3 are implemented** — the
+   content gate, the pyogrio track, and the three ~10k-feature vector cases that give the corpus
+   its first fixtures able to discriminate a partial read from a full one. Phases 4–5 are a
+   recorded raster backlog and a positioning pass rather than a queue, so no blocking work
+   remains here.
 3. **Publish the catalog on GitHub Pages.** The existing MkDocs site is the one canonical public
    home at `https://farzinashouri.github.io/geocase/`; enable GitHub Pages with GitHub Actions
    in repository settings. [Plan 24](24-catalog-site-on-owned-domain.md)'s Astro/Netlify route
@@ -129,7 +131,8 @@ Named here so it is not lost, and not started:
   Two are genuinely deferred rather than declined: **alpha-band-as-nodata**, which needs a v1.1
   break to extend the `NodataConvention` literal, and **curvilinear 2D coordinate grids**, which
   Plan 34's NetCDF generator has now unblocked and which is the natural next NetCDF case.
-  **Mixed-timezone datetimes** stay with [Plan 28](28-validate-geocase.md) Phase 3.
+  **Mixed-timezone datetimes** landed with [Plan 28](28-validate-geocase.md) Phase 3 as
+  `mixed_timezone_after_batch_gpkg`, at the ~10k-feature scale that design required.
 - **`ambiguous_zero`'s enforcing check** — registered in [Plan 27](27-close-plan-26-findings.md)
   §1.3 and still owed there. Plan 34 added two rows to that table and did not touch this one.
 - **mypy strictness** beyond `geocase.catalog.*` and `geocase.api.*`, ratcheting in v1.1.
