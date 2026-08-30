@@ -1,6 +1,7 @@
 """Assertions module — reusable geospatial validation checks."""
 
 from geocase.assertions.crs import assert_crs_units, assert_epsg, assert_has_crs
+from geocase.assertions.extent import assert_bounds
 from geocase.assertions.footprint import (
     assert_footprint_no_holes,
     assert_footprint_rectangularity,
@@ -36,7 +37,10 @@ from geocase.assertions.raster import (
     assert_no_nodata_pixels,
     assert_nodata_masked,
     assert_nodata_value,
+    assert_pixel_anchor,
+    assert_scale_factor,
     assert_shape,
+    assert_transform_signs,
 )
 from geocase.assertions.topology import (
     assert_no_duplicates,
@@ -59,6 +63,8 @@ __all__ = [
     "assert_has_crs",
     "assert_epsg",
     "assert_crs_units",
+    # Extent
+    "assert_bounds",
     # Raster
     "assert_band_count",
     "assert_nodata_value",
@@ -72,6 +78,9 @@ __all__ = [
     "assert_is_cog",
     "assert_band_names",
     "assert_colormap_present",
+    "assert_scale_factor",
+    "assert_transform_signs",
+    "assert_pixel_anchor",
     # Topology
     "assert_no_self_intersections",
     "assert_no_duplicates",

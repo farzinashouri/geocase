@@ -14,8 +14,8 @@ description: "A compact MultiLineString fixture with two short line parts in EPS
 A compact MultiLineString fixture with two short line parts in EPSG:4326.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: MultiLineString geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of simple_valid_multilinestring, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of simple_valid_multilinestring, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<figcaption>MultiLineString geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A compact MultiLineString fixture with two short line parts in EPSG:4326.
 | Format | GeoJSON |
 | Geometry type | MultiLineString |
 | CRS | `EPSG:4326` |
+| Location | Great Rift Valley, East Africa (synthetic) &mdash; 36.10&deg;E, 0.70&deg;S &rarr; 37.20&deg;E, 0.30&deg;S |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_simple_valid_multilinestring(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -74,8 +85,10 @@ Baseline MultiLineString case for multi-part line coverage.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multilinestring/geojson/simple_valid_multilinestring/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multilinestring/geojson/simple_valid_multilinestring/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/multilinestring/geojson/simple_valid_multilinestring)
 
 ## Source and license
 
@@ -92,7 +105,7 @@ Baseline MultiLineString case for multi-part line coverage.
 - [Simple Valid MultiPoint](simple_valid_multipoint.md) -- `simple_valid_multipoint`
 - [Simple Valid Point](simple_valid_point.md) -- `simple_valid_point`
 - [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
-- [MultiLineString CSV WKT Baseline](multilinestring_csv_wkt_baseline.md) -- `multilinestring_csv_wkt_baseline`
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
 
 <script type="application/ld+json">
 {
@@ -132,7 +145,12 @@ Baseline MultiLineString case for multi-part line coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "-0.7 36.1 -0.3 37.2"
+    },
+    "name": "Great Rift Valley, East Africa (synthetic)"
   }
 }
 </script>

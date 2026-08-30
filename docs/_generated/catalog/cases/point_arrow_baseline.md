@@ -14,8 +14,8 @@ description: "Canonical baseline point stored as an Arrow IPC file to exercise t
 Canonical baseline point stored as an Arrow IPC file to exercise the explicit Arrow loader path.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_arrow_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_arrow_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Point geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ Canonical baseline point stored as an Arrow IPC file to exercise the explicit Ar
 | Format | Arrow |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Wellington, New Zealand (synthetic) &mdash; 174.78&deg;E, 41.29&deg;S &rarr; 174.78&deg;E, 41.29&deg;S |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -44,6 +45,16 @@ def test_point_arrow_baseline(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Provide a canonical point encoded as Arrow IPC so the explicit Arrow loader path can be compared against GeoArrow, Feather, and GeoJSON baselines.
@@ -62,6 +73,7 @@ Provide a canonical point encoded as Arrow IPC so the explicit Arrow loader path
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
+| `required_drivers` | `Arrow` |
 
 ## Notes
 
@@ -95,8 +107,10 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Files
 
-- Primary: `geometry.arrow`
-- Notes: `notes.md`
+- Primary: [`geometry.arrow`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/point/arrow/point_arrow_baseline/geometry.arrow)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/point/arrow/point_arrow_baseline/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/point/arrow/point_arrow_baseline)
 
 ## Source and license
 
@@ -156,7 +170,12 @@ geometry is derived from `params.canonical_source_case_id`
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "-41.29 174.78 -41.29 174.78"
+    },
+    "name": "Wellington, New Zealand (synthetic)"
   }
 }
 </script>

@@ -14,8 +14,8 @@ description: "Canonical baseline multipolygon stored as GML for cross-format com
 Canonical baseline multipolygon stored as GML for cross-format comparison and format-specific loader behavior testing.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: MultiPolygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of multipolygon_gml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of multipolygon_gml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 43.33 56.67 L 43.33 23.33 L 10 23.33 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 110 56.67 L 110 23.33 L 76.67 23.33 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>MultiPolygon geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ Canonical baseline multipolygon stored as GML for cross-format comparison and fo
 | Format | GML |
 | Geometry type | MultiPolygon |
 | CRS | `EPSG:4326` |
+| Location | Nunavut, Canadian Arctic (synthetic) &mdash; 96.00&deg;W, 68.00&deg;N &rarr; 94.50&deg;W, 68.50&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -44,12 +45,23 @@ def test_multipolygon_gml_baseline(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Provide a canonical multipolygon encoded as GML so format-specific loader behavior can be compared directly against the GeoJSON baseline.
 
 ## Risk types covered
 
+- [`axis_order`](../risk/axis-order.md)
 - [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
@@ -68,7 +80,7 @@ Provide a canonical multipolygon encoded as GML so format-specific loader behavi
 Tests MultiPolygon geometry loading from GML format.
 
 ### Data
-- Geometry: `MULTIPOLYGON (((10 50, 10.5 50, 10.5 50.5, 10 50.5, 10 50)), ((11 50, 11.5 50, 11.5 50.5, 11 50.5, 11 50)))`
+- Geometry: `MULTIPOLYGON (((-96 68, -95.5 68, -95.5 68.5, -96 68.5, -96 68)), ((-95 68, -94.5 68, -94.5 68.5, -95 68.5, -95 68)))`
 - Attributes: `id` = 1, `name` = `multipolygon_gml_baseline`
 - OGR additionally injects a `gml_id` column on read.
 - Feature count: 1
@@ -81,6 +93,38 @@ Tests MultiPolygon geometry loading from GML format.
   winding-insensitive by necessity: the Shapefile specification mandates the
   opposite ring orientation from RFC 7946, and OGR rewrites winding on write.
   Orientation itself is asserted by `shapefile_ring_orientation`.
+
+### Axis order — the bytes really are latitude-first
+
+These files are written with `srsName="urn:ogc:def:crs:EPSG::4326"`. The URN
+form forces EPSG:4326's **declared** axis order, which is `(latitude,
+longitude)` — and it does so regardless of GDAL's `OAMS_TRADITIONAL_GIS_ORDER`
+setting, which the generator applies for every other format. So on disk this
+file reads:
+
+```xml
+<gml:pos>68 -96 68.0 -95.5 68.5 -95.5 68.5 -96 68 -96</gml:pos>
+```
+
+Latitude first. That is **correct GML**, not a defect, and OGR reads it back
+lon-first as you would expect:
+
+```python
+load_case("multipolygon_gml_baseline").load().geometry.iloc[0]   # MULTIPOLYGON (((-96 68, -95.5 68, -95.5 68.5, -96 68.5, -96 68)), ((-95 68, -94.5 68, -...
+```
+
+The trap is for anyone who parses the XML as text — an entirely reasonable
+thing to do with a small GML file. Split `gml:pos` on whitespace, feed the
+pair to a constructor expecting `(x, y)`, and you have silently swapped every
+coordinate. Nothing raises; the geometry is simply somewhere else.
+
+This is why the case carries the `axis_order` risk type. The content gate
+checks the claim against the bytes: the file must use the URN form, and the
+first ordinate must fall inside the declared latitude band.
+
+Note that `out_of_bounds_coordinates` deliberately does **not** carry this risk
+type. It catches a swap only because latitude 100 is outside the valid range —
+that is a validity signal, not a statement about axis ordering.
 
 ### Generation
 Generated by `scripts/generate_vector_fixtures.py` — do not hand-edit. The
@@ -95,9 +139,11 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Files
 
-- Primary: `data.gml`
-- Sidecar: `data.xsd`
-- Notes: `notes.md`
+- Primary: [`data.gml`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipolygon/gml/multipolygon_gml_baseline/data.gml)
+- Sidecar: [`data.xsd`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipolygon/gml/multipolygon_gml_baseline/data.xsd)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipolygon/gml/multipolygon_gml_baseline/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/multipolygon/gml/multipolygon_gml_baseline)
 
 ## Source and license
 
@@ -113,8 +159,8 @@ geometry is derived from `params.canonical_source_case_id`
 - [LineString GML Baseline](linestring_gml_baseline.md) -- `linestring_gml_baseline`
 - [MultiLineString GML Baseline](multilinestring_gml_baseline.md) -- `multilinestring_gml_baseline`
 - [MultiPoint GML Baseline](multipoint_gml_baseline.md) -- `multipoint_gml_baseline`
-- [MultiPolygon CSV WKT Baseline](multipolygon_csv_wkt_baseline.md) -- `multipolygon_csv_wkt_baseline`
-- [MultiPolygon FlatGeobuf Baseline](multipolygon_flatgeobuf_baseline.md) -- `multipolygon_flatgeobuf_baseline`
+- [Point GML Baseline](point_gml_baseline.md) -- `point_gml_baseline`
+- [Polygon GML Baseline](polygon_gml_baseline.md) -- `polygon_gml_baseline`
 
 <script type="application/ld+json">
 {
@@ -130,6 +176,7 @@ geometry is derived from `params.canonical_source_case_id`
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "axis_order",
     "baseline",
     "cross_format_canonical",
     "format_comparison",
@@ -156,7 +203,12 @@ geometry is derived from `params.canonical_source_case_id`
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "68.0 -96.0 68.5 -94.5"
+    },
+    "name": "Nunavut, Canadian Arctic (synthetic)"
   }
 }
 </script>

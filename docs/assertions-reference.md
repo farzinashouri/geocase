@@ -66,6 +66,37 @@ Checks CRS unit expectations, such as degrees or metres.
 
 ---
 
+## Extent assertions
+
+### `assert_bounds(observed, expected, tolerance=1e-4)`
+
+Checks that a `(west, south, east, north)` WGS84 envelope matches a declared
+`SpatialExtent` (the case's `extent` field). `observed` is a raw envelope as a reader hands it over --
+`gdf.total_bounds`, or `rasterio.warp.transform_bounds(...)` for a projected
+raster -- so it may carry unwrapped longitudes past 180.
+
+Those are folded to the catalog's convention before the comparison, which
+matters for the antimeridian cases: `dateline_crossing_polygon` really does
+store coordinates at 190, while its declared extent is the wrapped
+`west=170, east=-170`. Those are the same box, and comparing them without
+folding first would report a 340-degree error on a case that is correct.
+
+This is the same function the content gate runs, so a case that passes
+`validate_case_content.py` passes this assertion in your own test too.
+
+```python
+from geocase import get_case
+from geocase.assertions import assert_bounds
+import geocase
+
+case = get_case("simple_valid_polygon")
+gdf = geocase.load_case("simple_valid_polygon").load()
+
+assert_bounds(tuple(gdf.total_bounds), case.extent)
+```
+
+---
+
 ## Raster assertions
 
 ### `assert_band_count(dataset, expected_count)`

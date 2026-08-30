@@ -33,10 +33,14 @@ Catalog gates (the `catalog` CI job; needs `osgeo`, so run under conda). All are
 ```bash
 python scripts/build_case_index.py --check
 python scripts/validate_catalog.py
+python scripts/validate_case_content.py   # declared assertions vs. real bytes
+python scripts/catalog_extent.py --check  # declared extent vs. real bytes (--write to regenerate)
 python scripts/generate_raster_fixtures.py --check
 python scripts/generate_vector_fixtures.py --check
+python scripts/generate_netcdf_fixtures.py --check
 python scripts/generate_checksums.py --check
 python scripts/generate_catalog_pages.py --check
+python scripts/generate_raster_previews.py --check
 python scripts/generate_vector_coverage_matrix.py --output docs/_generated/vector-coverage-matrix.md
 python scripts/generate_raster_coverage_matrix.py --output docs/_generated/raster-coverage-matrix.md
 ```
@@ -51,10 +55,12 @@ Core data flow — keep this mental model:
 
 - `metadata/case-index.yaml` lists every bundled case's `case.yaml` path; `metadata/suite-index.yaml` + `catalog/suites/*.yaml` define named suites. These indices are **generated** — edit cases, then regenerate.
 - `catalog/` — `loader.py` (YAML→model), `models.py` (Pydantic `CaseMetadata`), `registry.py` (in-memory lookup, cached; `reset_registry()` clears), `selectors.py` (filtering), `suites.py`, `manifests.py` (external/remote catalogs layered in via `GEOCASE_MANIFESTS`; ids become *known* without being materialized — missing data raises `RemoteCaseUnavailableError`).
+- `catalog/content.py` — the **content gate**: compares each case's declared assertions against its actual pixels/features, delegating to `assertions/` so the gate and the user-facing checks are the same code. `validate_catalog.py` opens no data file (schema/existence/size only, so it runs anywhere); `validate_case_content.py` opens it and therefore runs only in the `catalog` CI job.
 - `catalog/roots.py` — maps case id → on-disk directory and builds the runtime case. Deliberately **not** re-exported from `geocase.catalog`: it is the one catalog module importing `geocase.cases`, and `cases.base` imports `catalog.models`, so eager re-export makes the packages circular. Import it directly.
 - `cases/` — `BaseCase` subclasses (`vector`, `raster`, `netcdf`) built by `factory.py`; `loaders/` holds the optional-dependency readers (geopandas / rasterio / xarray).
 - `api/public.py` + `api/types.py` — the pinned public surface re-exported from `geocase/__init__.py`. `list_cases`/`get_case` return `CaseMetadata`; `load_case` and the fixtures return `BaseCase`.
 - `assertions/` — reusable checks (crs, footprint, geometry, topology, raster, format compliance) users call in tests.
+- `differential.py` — the *other* testing mode: read every case two ways, compare, report disagreements, so neither path has to be an oracle. This is the mode with external evidence behind it (both defects the pyogrio run found came from comparing a consumer against itself). Consults `CaseMetadata.known_divergences` so a catalogued divergence reports `known` rather than `diverged`. Not in `__all__` — a submodule import, like `geocase.raster`.
 - `raster/` — a dependency-free raster primitive (`primitive.py`, public `.array`/`.transform`/`.crs_wkt`) plus `presets/` (sentinel1/2); `_writer.py` needs the `write` extra.
 - `benchmark/` — separate LLM-benchmark subsystem (tasks, prompts, runners, grading). Not part of the library's compatibility promise.
 - Case data lives in `src/geocase/data/core/{vector,raster,netcdf}/<case_id>/` as `case.yaml` + payload + `checksums.sha256` + `notes.md`.
@@ -68,6 +74,7 @@ Core data flow — keep this mental model:
 - mypy strictness is per-module: `geocase.catalog.*` and `geocase.api.*` are strict; the rest ratchets in v1.1. `tests/` is not typechecked.
 - Adding a case: see [docs/adding-a-case.md](docs/adding-a-case.md) — metadata-first, then `build_case_index.py`, then validate.
 - Plans and roadmap live in [docs/plans/](docs/plans/); `development-plan.md` is authoritative on scope.
+- **`docs/plans/`, `docs/geocase_validate/`, and `docs/evidence/` are not published.** They are excluded from the site via `exclude_docs` in `mkdocs.yml`; a published page must link to them by GitHub URL, never a relative path, or `mkdocs build --strict` fails.
 
 ## Working rules (non-negotiable)
 

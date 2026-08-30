@@ -251,6 +251,54 @@ def test_ndvi_scaled_int16_declares_scale_factor():
     assert hints.expected_scale_factor != 0
 
 
+# --- Plan 32 Phase 2: the ``ambiguous_zero`` sibling ----------------------
+
+
+def test_landcover_ambiguous_zero_case_exists():
+    """The case ``landcover_small``'s description has always pointed at.
+
+    Plan 28 removed a phantom ``nodata: 0`` from ``landcover_small`` on the
+    reasoning that 0-as-both-class-and-sentinel deserves an explicit case; the
+    case was never added, so the corpus named a risk it did not cover.
+    """
+    meta = _require_case("landcover_ambiguous_zero_small")
+    assert meta.assertions.expect_nodata is True
+    assert "ambiguous_zero" in meta.risk_types
+    assert "nodata_ignored" in meta.risk_types
+
+
+def test_landcover_ambiguous_zero_declares_zero_as_nodata(case_roots):
+    """Zero is the declared sentinel *and* a real, meaningful class value.
+
+    That indistinguishability is the case: a consumer masking ``data ==
+    nodata`` silently deletes a legitimate class, and nothing in the file
+    distinguishes the two.
+    """
+    rasterio = pytest.importorskip("rasterio")
+    import numpy as np
+
+    root = case_roots["landcover_ambiguous_zero_small"]
+    meta = _require_case("landcover_ambiguous_zero_small")
+    with rasterio.open(root / meta.files.primary) as src:
+        assert src.nodata == 0
+        data = src.read(1)
+
+    # The sentinel is present as real pixels, so the case is not inert...
+    assert int((data == 0).sum()) > 0
+    # ...and 0 is not the *only* thing there: it sits alongside the same
+    # classes ``landcover_small`` carries, which is what makes it ambiguous
+    # rather than an ordinary nodata collar.
+    assert set(np.unique(data)) >= {0, 1, 2, 3}
+
+
+def test_landcover_ambiguous_zero_is_the_sibling_of_landcover_small():
+    """The pair is the useful artifact, so each must name the other."""
+    ambiguous = _require_case("landcover_ambiguous_zero_small")
+    plain = _require_case("landcover_small")
+    assert "landcover_small" in ambiguous.behavioral_goal
+    assert "landcover_ambiguous_zero_small" in plain.behavioral_goal
+
+
 def test_landcover_is_categorical_with_colormap():
     meta = _require_case("landcover_small")
     hints = meta.assertions

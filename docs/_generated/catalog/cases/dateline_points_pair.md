@@ -14,8 +14,8 @@ description: "Two points positioned on opposite sides of the antimeridian but ve
 Two points positioned on opposite sides of the antimeridian but very close in real-world distance. Useful for exposing longitude-wrapping clustering and UTM-zone edge logic.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of dateline_points_pair, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of dateline_points_pair, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="110" cy="40.14" r="3" fill="var(--gc-diagram-accent)"/><circle cx="10" cy="40.14" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Point geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ Two points positioned on opposite sides of the antimeridian but very close in re
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Antimeridian, North Pacific &mdash; 179.90&deg;E, 45.00&deg;N &rarr; 179.90&deg;W, 45.00&deg;N (crosses the antimeridian &mdash; the box runs east from the first corner, over 180&deg;) |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_dateline_points_pair(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -76,8 +87,10 @@ Two points on either side of the antimeridian that are geographically near each 
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dateline/dateline_points_pair/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dateline/dateline_points_pair/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/dateline/dateline_points_pair)
 
 ## Source and license
 
@@ -94,7 +107,7 @@ Two points on either side of the antimeridian that are geographically near each 
 - [Classic Antimeridian Polygon](classic_antimeridian_polygon.md) -- `classic_antimeridian_polygon`
 - [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 - [Nearby Points Cluster](nearby_points_cluster.md) -- `nearby_points_cluster`
-- [Antimeridian Crossing LineString](antimeridian_crossing_line.md) -- `antimeridian_crossing_line`
+- [UTM Zone 1N Polygon](utm_zone_1n_small.md) -- `utm_zone_1n_small`
 
 <script type="application/ld+json">
 {
@@ -137,7 +150,12 @@ Two points on either side of the antimeridian that are geographically near each 
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "45.0 179.9 45.0 -179.9"
+    },
+    "name": "Antimeridian, North Pacific"
   }
 }
 </script>

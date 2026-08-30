@@ -9,6 +9,44 @@ description: "5 GeoCase test cases that exercise the footprint generation error 
 
 These 5 cases exercise the `footprint_generation_error` failure mode. Run your function against all of them to check how it behaves.
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
+<div class="gc-grid">
+<a class="gc-card" href="../../cases/all_valid_rectangular/">
+<img class="gc-diagram gc-preview" src="../../previews/all_valid_rectangular.png" alt="Pixels of all_valid_rectangular, a 12x12 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">All Valid Rectangular Raster</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/hole_center_nodata/">
+<img class="gc-diagram gc-preview" src="../../previews/hole_center_nodata.png" alt="Pixels of hole_center_nodata, a 12x12 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">Hole Center NoData Raster</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/nonsquare_diagonal_sparse/">
+<img class="gc-diagram gc-preview" src="../../previews/nonsquare_diagonal_sparse.png" alt="Pixels of nonsquare_diagonal_sparse, a 8x8 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">Nonsquare Diagonal Sparse Raster</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/rotated_two_islands/">
+<img class="gc-diagram gc-preview" src="../../previews/rotated_two_islands.png" alt="Pixels of rotated_two_islands, a 8x8 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">Rotated Two Islands Raster</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+<a class="gc-card" href="../../cases/thin_corridor_shape/">
+<img class="gc-diagram gc-preview" src="../../previews/thin_corridor_shape.png" alt="Pixels of thin_corridor_shape, a 14x14 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">Thin Corridor Shape Raster</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
+</div>
+
 | Case | Category | Format | Geometry |
 |---|---|---|---|
 | [All Valid Rectangular Raster](../cases/all_valid_rectangular.md) | raster | GeoTIFF | -- |

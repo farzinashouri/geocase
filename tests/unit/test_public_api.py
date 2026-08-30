@@ -36,6 +36,10 @@ _PUBLIC_SURFACE = sorted(
         "AssertionHints",
         "FileMap",
         "SourceInfo",
+        # Added in Plan 31 -- a purely additive extension of the v1.0 surface:
+        # both new CaseMetadata fields are optional, so existing code is
+        # unaffected and no name was removed or changed.
+        "SpatialExtent",
         "Category",
         "FormatType",
         "TestTier",
@@ -91,10 +95,61 @@ class TestListCases:
         assert all(case.category == "raster" for case in rasters)
         assert len(rasters) < len(geocase.list_cases())
 
+    def test_loader_hint_filters_the_catalog(self):
+        """Test the plan 28 phase 2.2 filter reaches the public API."""
+        rasterio_cases = geocase.list_cases(loader_hint="rasterio")
+
+        assert rasterio_cases
+        assert all(case.loader_hint == "rasterio" for case in rasterio_cases)
+        assert len(rasterio_cases) < len(geocase.list_cases())
+
     def test_results_are_sorted_by_id(self):
         """Test the order is stable across calls."""
         ids = [case.id for case in geocase.list_cases()]
         assert ids == sorted(ids)
+
+
+class TestCategoryPassedAsFormat:
+    """``format="vector"`` is the documented first-contact mistake.
+
+    ``format`` and ``category`` are both natural words for "what kind of case",
+    and a user who guesses wrong used to get a raw pydantic ``ValidationError``
+    reciting 17 ``FormatType`` literals with no mention of ``category``. The
+    pre-check turns that into a redirect. See Plan 28 phase 2.3.
+    """
+
+    @pytest.mark.parametrize("category", ["vector", "raster", "netcdf", "satellite"])
+    def test_a_category_passed_as_format_redirects(self, category: str):
+        """Test each Category literal names category= in the error."""
+        with pytest.raises(ValueError) as excinfo:
+            geocase.list_cases(format=category)
+
+        message = str(excinfo.value)
+        assert f"category={category!r}" in message
+        assert "'format'" in message
+
+    def test_the_redirect_is_a_plain_value_error(self):
+        """Test the message is not a pydantic ValidationError dump."""
+        from pydantic import ValidationError
+
+        with pytest.raises(ValueError) as excinfo:
+            geocase.list_cases(format="vector")
+
+        assert not isinstance(excinfo.value, ValidationError)
+        assert "literal_error" not in str(excinfo.value)
+
+    def test_a_real_format_still_filters(self):
+        """Test the pre-check does not disturb a valid format value."""
+        cases = geocase.list_cases(format="GeoJSON")
+        assert cases
+        assert all(case.format == "GeoJSON" for case in cases)
+
+    def test_an_unrelated_bad_format_still_raises_validation_error(self):
+        """Test only the four Category literals get the redirect."""
+        from pydantic import ValidationError
+
+        with pytest.raises(ValidationError):
+            geocase.list_cases(format="Nonsense")
 
 
 class TestGetAndLoadCase:

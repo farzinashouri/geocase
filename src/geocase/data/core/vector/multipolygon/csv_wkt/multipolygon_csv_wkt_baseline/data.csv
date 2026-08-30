@@ -1,2 +1,2 @@
 id,name,geometry
-1,multipolygon_csv_wkt_baseline,"MULTIPOLYGON (((10 50, 10.5 50, 10.5 50.5, 10 50.5, 10 50)), ((11 50, 11.5 50, 11.5 50.5, 11 50.5, 11 50)))"
+1,multipolygon_csv_wkt_baseline,"MULTIPOLYGON (((-96 68, -95.5 68, -95.5 68.5, -96 68.5, -96 68)), ((-95 68, -94.5 68, -94.5 68.5, -95 68.5, -95 68)))"

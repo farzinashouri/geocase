@@ -14,8 +14,8 @@ description: "A point at latitude 100°, beyond the valid ±90° range — the c
 A point at latitude 100°, beyond the valid ±90° range — the classic symptom of swapped latitude and longitude (EPSG axis order) in the input.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of out_of_bounds_coordinates, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of out_of_bounds_coordinates, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Point geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A point at latitude 100°, beyond the valid ±90° range — the classic symptom
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Undefined -- coordinates fall outside the WGS84 domain |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_out_of_bounds_coordinates(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -96,6 +107,23 @@ Tests detection of coordinates that exceed valid geographic ranges.
 - API responses from systems using [Lat, Lon] order
 - Copy-paste errors in manual data entry
 
+### Why this case does not carry the `axis_order` risk type
+
+It is the obvious candidate — cause 1 above is literally a lat/lon swap — but
+the term belongs to the six `*_gml_baseline` cases instead, and the distinction
+is worth stating so it is not rediscovered.
+
+This case detects a swap **only because latitude 100 happens to be out of
+range**. That is a *validity* signal: the same check catches a unit error, a
+projected coordinate stored as geographic, or a corrupted digit. Swap a point at
+latitude 45 and longitude 10 and this case's mechanism sees nothing wrong.
+
+`axis_order` names a different property: a file whose **declared** coordinate
+order differs from the reader's assumed one, with every value perfectly valid on
+both readings. The GML baselines carry that — `urn:ogc:def:crs:EPSG::4326` forces
+latitude-first on disk — and they carry it for in-range coordinates, which is
+what makes the swap silent rather than detectable.
+
 ## Required capabilities
 
 - `load`
@@ -104,8 +132,10 @@ Tests detection of coordinates that exceed valid geographic ranges.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/invalid/out_of_bounds_coordinates/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/invalid/out_of_bounds_coordinates/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/invalid/out_of_bounds_coordinates)
 
 ## Source and license
 
@@ -118,11 +148,11 @@ Tests detection of coordinates that exceed valid geographic ranges.
 
 ## Related cases
 
+- [Invalid Geometry at Feature 9,999 (GeoPackage)](invalid_geometry_at_scale_gpkg.md) -- `invalid_geometry_at_scale_gpkg`
 - [Self-Intersecting Polygon](self_intersecting_polygon.md) -- `self_intersecting_polygon`
 - [Unclosed Ring Polygon](unclosed_ring_polygon.md) -- `unclosed_ring_polygon`
 - [Null Island Point](null_island_point.md) -- `null_island_point`
 - [Ambiguous Engine-dependent Polygon](ambiguous_engine_dependent_polygon.md) -- `ambiguous_engine_dependent_polygon`
-- [Dateline Chain Cluster](dateline_chain_cluster.md) -- `dateline_chain_cluster`
 
 <script type="application/ld+json">
 {
@@ -167,7 +197,8 @@ Tests detection of coordinates that exceed valid geographic ranges.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "name": "Undefined -- coordinates fall outside the WGS84 domain"
   }
 }
 </script>

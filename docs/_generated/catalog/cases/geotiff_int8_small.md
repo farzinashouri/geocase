@@ -13,12 +13,18 @@ description: "A small single-band GeoTIFF stored as signed 8-bit integers. Tests
 
 A small single-band GeoTIFF stored as signed 8-bit integers. Tests that raster loaders and downstream code preserve narrow integer dtype semantics rather than coercing values to floating point implicitly.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_int8_small.png" alt="Pixels of geotiff_int8_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>10x10 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `geotiff_int8_small` |
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Equator, Gulf of Guinea (synthetic) &mdash; 15.00&deg;E, 0.01&deg;N &rarr; 15.00&deg;E, 0.01&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -38,6 +44,16 @@ def test_geotiff_int8_small(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Confirm that signed 8-bit integer rasters open with the correct dtype and preserve their declared numeric storage type through simple reads.
@@ -56,6 +72,7 @@ Confirm that signed 8-bit integer rasters open with the correct dtype and preser
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
+| `expected_shape` | `[10, 10]` |
 
 ## Notes
 
@@ -78,8 +95,10 @@ Single-band `int8` raster for validating narrow signed integer dtype handling.
 
 ## Files
 
-- Primary: `int8_sample.tif`
-- Notes: `notes.md`
+- Primary: [`int8_sample.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_int8_small/int8_sample.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_int8_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_int8_small)
 
 ## Source and license
 
@@ -95,8 +114,8 @@ Single-band `int8` raster for validating narrow signed integer dtype handling.
 - [GeoTIFF Float64 Small](geotiff_float64_small.md) -- `geotiff_float64_small`
 - [GeoTIFF Int16 Small](geotiff_int16_small.md) -- `geotiff_int16_small`
 - [GeoTIFF Int32 Small](geotiff_int32_small.md) -- `geotiff_int32_small`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
-- [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
 
 <script type="application/ld+json">
 {
@@ -138,7 +157,12 @@ Single-band `int8` raster for validating narrow signed integer dtype handling.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.008143 15.0 0.009047 15.000899"
+    },
+    "name": "Equator, Gulf of Guinea (synthetic)"
   }
 }
 </script>

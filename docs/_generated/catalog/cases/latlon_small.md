@@ -19,6 +19,7 @@ A minimal CF-compliant NetCDF file with latitude/longitude dimensions and a sing
 | Category | netcdf |
 | Format | NetCDF |
 | CRS | `EPSG:4326` |
+| Location | Global grid (synthetic) |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -38,14 +39,22 @@ def test_latlon_small(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Verify that latitude/longitude dimensions are correctly identified, fill values are masked, and basic slicing works.
 
 ## Risk types covered
 
-- `coordinate_order`
-- `dimension_mismatch`
 - [`nodata_ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
@@ -53,8 +62,6 @@ Verify that latitude/longitude dimensions are correctly identified, fill values 
 | Assertion | Expected |
 |---|---|
 | `expect_loadable` | yes |
-| `expect_crs` | yes |
-| `expected_epsg` | `4326` |
 | `expect_nodata` | yes |
 
 ## Notes
@@ -79,9 +86,35 @@ primary data variable (`temperature`).
 
 ### Common failure modes
 
-- Latitude/longitude dimension swap.
 - Fill value ignored during analysis.
 - Inconsistent coordinate metadata handling.
+
+### History
+
+**The primary file was replaced in plan 34 (2026-08-29).** The original
+`latlon_sample.nc` arrived in a single commit carrying unseeded random
+temperature values, which made it the only fixture in the repository that could
+not be regenerated — 400 seed and distribution combinations were searched
+without recovering them. Since every NetCDF gate depends on comparing the
+committed bytes against a fresh build, the file is now emitted by
+`scripts/generate_netcdf_fixtures.py` from a deterministic ramp.
+
+Shape `(5, 8)`, `float64`, `_FillValue = -9999.0` and both fill positions
+(row 0 column 0, row 3 column 5) are preserved exactly, so every assertion the
+case declared still holds. **Only the temperature values differ.** Anyone who
+pinned an earlier release and asserted against specific temperatures will see a
+change; nothing in this repository does, because the case's own assertions are
+structural.
+
+Three declarations were also removed as undemonstrable:
+
+- `coordinate_order` and `dimension_mismatch` risk types — this is conventional
+  `(latitude, longitude)` rectilinear data, which exercises neither.
+- `expect_crs` / `expected_epsg` — the file has no `grid_mapping` attribute and
+  no `crs` variable, so there is nothing in the bytes for a CRS check to read.
+
+The dimension-ordering risk is carried instead by `cf_time_ordering_netcdf`,
+against a file whose dimensions are genuinely non-conventional.
 
 ## Required capabilities
 
@@ -91,8 +124,10 @@ primary data variable (`temperature`).
 
 ## Files
 
-- Primary: `latlon_sample.nc`
-- Notes: `notes.md`
+- Primary: [`latlon_sample.nc`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/netcdf/latlon_small/latlon_sample.nc)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/netcdf/latlon_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/netcdf/latlon_small)
 
 ## Source and license
 
@@ -105,11 +140,11 @@ primary data variable (`temperature`).
 
 ## Related cases
 
+- [Packed int16 NDVI (NetCDF)](ndvi_packed_netcdf.md) -- `ndvi_packed_netcdf`
 - [GeoTIFF NoData Small](geotiff_nodata_small.md) -- `geotiff_nodata_small`
+- [CF Time Units and Non-Conventional Dimension Order](cf_time_ordering_netcdf.md) -- `cf_time_ordering_netcdf`
 - [Hole Center NoData Raster](hole_center_nodata.md) -- `hole_center_nodata`
-- [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
-- [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
-- [DEM Small](dem_small.md) -- `dem_small`
+- [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
 
 <script type="application/ld+json">
 {
@@ -126,8 +161,6 @@ primary data variable (`temperature`).
   },
   "keywords": [
     "cf-conventions",
-    "coordinate_order",
-    "dimension_mismatch",
     "latlon",
     "masking",
     "netcdf",
@@ -152,7 +185,8 @@ primary data variable (`temperature`).
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "name": "Global grid (synthetic)"
   }
 }
 </script>

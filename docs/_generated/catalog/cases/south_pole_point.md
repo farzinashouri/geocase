@@ -14,8 +14,8 @@ description: "A WGS84 point located at the geographic south pole for validating 
 A WGS84 point located at the geographic south pole for validating polar edge cases, coordinate handling, and projection assumptions.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of south_pole_point, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of south_pole_point, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Point geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A WGS84 point located at the geographic south pole for validating polar edge cas
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | South Pole &mdash; 0.00&deg;E, 90.00&deg;S &rarr; 0.00&deg;E, 90.00&deg;S |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_south_pole_point(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -75,8 +86,10 @@ Point exactly at the geographic south pole for polar edge-case coverage.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/south_pole_point/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/south_pole_point/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/crs/south_pole_point)
 
 ## Source and license
 
@@ -93,7 +106,7 @@ Point exactly at the geographic south pole for polar edge-case coverage.
 - [South Pole Polygon](south_pole_polygon.md) -- `south_pole_polygon`
 - [North Pole Polygon](north_pole_polygon.md) -- `north_pole_polygon`
 - [Web Mercator Baseline Point](web_mercator_baseline.md) -- `web_mercator_baseline`
-- [Dateline Chain Cluster](dateline_chain_cluster.md) -- `dateline_chain_cluster`
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 
 <script type="application/ld+json">
 {
@@ -135,7 +148,12 @@ Point exactly at the geographic south pole for polar edge-case coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "-90.0 0.0 -90.0 0.0"
+    },
+    "name": "South Pole"
   }
 }
 </script>

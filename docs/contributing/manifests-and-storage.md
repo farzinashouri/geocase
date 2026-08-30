@@ -42,9 +42,9 @@ catalog is much less useful, because you do not know what is available or what
 you are supposed to ask for.
 
 For the current implementation sequence and scope boundaries, see
-[`development-plan.md`](../plans/development-plan.md). The original manifest plan is retained as
+[`development-plan.md`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md). The original manifest plan is retained as
 an implementation log in
-[`../plans/archive/06-manifest-support.md`](../plans/archive/06-manifest-support.md).
+[`../plans/archive/06-manifest-support.md`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/archive/06-manifest-support.md).
 
 ---
 

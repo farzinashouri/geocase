@@ -38,6 +38,18 @@ Contains supporting logic for footprint-oriented examples.
 
 ---
 
+## Differential workflows
+
+### `examples/test_differential_pyogrio.py`
+
+Reads every openable vector case twice through pyogrio — once on its numpy path,
+once on its Arrow path — and reports the disagreements. This is the mode that
+found real defects in pyogrio and GDAL; see
+[Differential testing](differential-testing.md). Needs `pyogrio` and `pyarrow`,
+and skips without them.
+
+---
+
 ## Real-function examples
 
 ### `examples/test_real_geospatial_function.py`
@@ -78,6 +90,7 @@ Contains the interview-style implementation modules themselves.
 | CRS or dateline behavior | `examples/test_crs_edge_cases.py` or `examples/test_dateline_suite.py` |
 | Raster NoData patterns | `examples/test_raster_nodata_suite.py` |
 | Realistic function testing | `examples/test_real_geospatial_function.py` |
+| Finding bugs without declaring expectations | `examples/test_differential_pyogrio.py` |
 | Training / educational contrasts | `examples/test_easy_geospatial_interview_questions_perfect.py` |
 
 ---

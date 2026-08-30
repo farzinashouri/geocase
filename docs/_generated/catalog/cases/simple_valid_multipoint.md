@@ -14,8 +14,8 @@ description: "A minimal MultiPoint fixture in EPSG:4326 to cover non-singleton p
 A minimal MultiPoint fixture in EPSG:4326 to cover non-singleton point geometry behavior.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: MultiPoint geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of simple_valid_multipoint, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of simple_valid_multipoint, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>MultiPoint geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A minimal MultiPoint fixture in EPSG:4326 to cover non-singleton point geometry 
 | Format | GeoJSON |
 | Geometry type | MultiPoint |
 | CRS | `EPSG:4326` |
+| Location | Hokkaido, Northern Japan (synthetic) &mdash; 142.40&deg;E, 43.10&deg;N &rarr; 142.80&deg;E, 43.30&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_simple_valid_multipoint(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -74,8 +85,10 @@ Baseline MultiPoint case for multi-point coverage.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipoint/geojson/simple_valid_multipoint/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipoint/geojson/simple_valid_multipoint/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/multipoint/geojson/simple_valid_multipoint)
 
 ## Source and license
 
@@ -92,7 +105,7 @@ Baseline MultiPoint case for multi-point coverage.
 - [Simple Valid MultiLineString](simple_valid_multilinestring.md) -- `simple_valid_multilinestring`
 - [Simple Valid Point](simple_valid_point.md) -- `simple_valid_point`
 - [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
-- [MultiPoint CSV WKT Baseline](multipoint_csv_wkt_baseline.md) -- `multipoint_csv_wkt_baseline`
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
 
 <script type="application/ld+json">
 {
@@ -132,7 +145,12 @@ Baseline MultiPoint case for multi-point coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "43.1 142.4 43.3 142.8"
+    },
+    "name": "Hokkaido, Northern Japan (synthetic)"
   }
 }
 </script>

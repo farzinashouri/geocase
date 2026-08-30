@@ -13,12 +13,18 @@ description: "A GeoTIFF with an explicit NoData sentinel. Statistics computed ov
 
 A GeoTIFF with an explicit NoData sentinel. Statistics computed over the raw array rather than the valid pixels are silently wrong — a classic raster bug.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_nodata_small.png" alt="Pixels of geotiff_nodata_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>10x10 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `geotiff_nodata_small` |
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Central Europe (synthetic, UTM 33N) &mdash; 15.00&deg;E, 50.55&deg;N &rarr; 15.14&deg;E, 50.64&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -38,6 +44,16 @@ def test_geotiff_nodata_small(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Confirm that NoData pixels are correctly masked and excluded from statistical computations (min, max, mean).
@@ -56,6 +72,7 @@ Confirm that NoData pixels are correctly masked and excluded from statistical co
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
+| `expected_shape` | `[10, 10]` |
 
 ## Notes
 
@@ -90,8 +107,10 @@ statistics validation.
 
 ## Files
 
-- Primary: `nodata_sample.tif`
-- Notes: `notes.md`
+- Primary: [`nodata_sample.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_nodata_small/nodata_sample.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_nodata_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_nodata_small)
 
 ## Source and license
 
@@ -105,10 +124,10 @@ statistics validation.
 ## Related cases
 
 - [Hole Center NoData Raster](hole_center_nodata.md) -- `hole_center_nodata`
+- [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
 - [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
-- [DEM Small](dem_small.md) -- `dem_small`
-- [GeoTIFF Float64 Small](geotiff_float64_small.md) -- `geotiff_float64_small`
 
 <script type="application/ld+json">
 {
@@ -150,7 +169,12 @@ statistics validation.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.551847 15.0 50.641864 15.141426"
+    },
+    "name": "Central Europe (synthetic, UTM 33N)"
   }
 }
 </script>

@@ -14,8 +14,8 @@ description: "Canonical baseline multilinestring stored as GML for cross-format 
 Canonical baseline multilinestring stored as GML for cross-format comparison and format-specific loader behavior testing.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: MultiLineString geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of multilinestring_gml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of multilinestring_gml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<figcaption>MultiLineString geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ Canonical baseline multilinestring stored as GML for cross-format comparison and
 | Format | GML |
 | Geometry type | MultiLineString |
 | CRS | `EPSG:4326` |
+| Location | Great Rift Valley, East Africa (synthetic) &mdash; 36.10&deg;E, 0.70&deg;S &rarr; 37.20&deg;E, 0.30&deg;S |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -44,12 +45,23 @@ def test_multilinestring_gml_baseline(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Provide a canonical multilinestring encoded as GML so format-specific loader behavior can be compared directly against the GeoJSON baseline.
 
 ## Risk types covered
 
+- [`axis_order`](../risk/axis-order.md)
 - [`format_comparison`](../risk/format-comparison.md)
 
 ## Expected behavior
@@ -68,7 +80,7 @@ Provide a canonical multilinestring encoded as GML so format-specific loader beh
 Tests MultiLineString geometry loading from GML format.
 
 ### Data
-- Geometry: `MULTILINESTRING ((10 50, 10.5 50.2, 11 50.1), (10.2 49.8, 10.8 49.9, 11.1 50))`
+- Geometry: `MULTILINESTRING ((36.1 -0.5, 36.6 -0.3, 37.1 -0.4), (36.3 -0.7, 36.9 -0.6, 37.2 -0.5))`
 - Attributes: `id` = 1, `name` = `multilinestring_gml_baseline`
 - OGR additionally injects a `gml_id` column on read.
 - Feature count: 1
@@ -81,6 +93,38 @@ Tests MultiLineString geometry loading from GML format.
   winding-insensitive by necessity: the Shapefile specification mandates the
   opposite ring orientation from RFC 7946, and OGR rewrites winding on write.
   Orientation itself is asserted by `shapefile_ring_orientation`.
+
+### Axis order — the bytes really are latitude-first
+
+These files are written with `srsName="urn:ogc:def:crs:EPSG::4326"`. The URN
+form forces EPSG:4326's **declared** axis order, which is `(latitude,
+longitude)` — and it does so regardless of GDAL's `OAMS_TRADITIONAL_GIS_ORDER`
+setting, which the generator applies for every other format. So on disk this
+file reads:
+
+```xml
+<gml:pos>-0.5 36.1 -0.3 36.6 -0.4 37.1</gml:pos>
+```
+
+Latitude first. That is **correct GML**, not a defect, and OGR reads it back
+lon-first as you would expect:
+
+```python
+load_case("multilinestring_gml_baseline").load().geometry.iloc[0]   # MULTILINESTRING ((36.1 -0.5, 36.6 -0.3, 37.1 -0.4), (36.3 -0.7, 36.9 -0.6, 37.2 -0.5))
+```
+
+The trap is for anyone who parses the XML as text — an entirely reasonable
+thing to do with a small GML file. Split `gml:pos` on whitespace, feed the
+pair to a constructor expecting `(x, y)`, and you have silently swapped every
+coordinate. Nothing raises; the geometry is simply somewhere else.
+
+This is why the case carries the `axis_order` risk type. The content gate
+checks the claim against the bytes: the file must use the URN form, and the
+first ordinate must fall inside the declared latitude band.
+
+Note that `out_of_bounds_coordinates` deliberately does **not** carry this risk
+type. It catches a swap only because latitude 100 is outside the valid range —
+that is a validity signal, not a statement about axis ordering.
 
 ### Generation
 Generated by `scripts/generate_vector_fixtures.py` — do not hand-edit. The
@@ -95,9 +139,11 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Files
 
-- Primary: `data.gml`
-- Sidecar: `data.xsd`
-- Notes: `notes.md`
+- Primary: [`data.gml`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multilinestring/gml/multilinestring_gml_baseline/data.gml)
+- Sidecar: [`data.xsd`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multilinestring/gml/multilinestring_gml_baseline/data.xsd)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multilinestring/gml/multilinestring_gml_baseline/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/multilinestring/gml/multilinestring_gml_baseline)
 
 ## Source and license
 
@@ -111,10 +157,10 @@ geometry is derived from `params.canonical_source_case_id`
 ## Related cases
 
 - [LineString GML Baseline](linestring_gml_baseline.md) -- `linestring_gml_baseline`
-- [MultiLineString CSV WKT Baseline](multilinestring_csv_wkt_baseline.md) -- `multilinestring_csv_wkt_baseline`
-- [MultiLineString FlatGeobuf Baseline](multilinestring_flatgeobuf_baseline.md) -- `multilinestring_flatgeobuf_baseline`
-- [MultiLineString GeoPackage Baseline](multilinestring_geopackage_baseline.md) -- `multilinestring_geopackage_baseline`
-- [MultiLineString KML Baseline](multilinestring_kml_baseline.md) -- `multilinestring_kml_baseline`
+- [MultiPoint GML Baseline](multipoint_gml_baseline.md) -- `multipoint_gml_baseline`
+- [MultiPolygon GML Baseline](multipolygon_gml_baseline.md) -- `multipolygon_gml_baseline`
+- [Point GML Baseline](point_gml_baseline.md) -- `point_gml_baseline`
+- [Polygon GML Baseline](polygon_gml_baseline.md) -- `polygon_gml_baseline`
 
 <script type="application/ld+json">
 {
@@ -130,6 +176,7 @@ geometry is derived from `params.canonical_source_case_id`
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "axis_order",
     "baseline",
     "cross_format_canonical",
     "format_comparison",
@@ -156,7 +203,12 @@ geometry is derived from `params.canonical_source_case_id`
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "-0.7 36.1 -0.3 37.2"
+    },
+    "name": "Great Rift Valley, East Africa (synthetic)"
   }
 }
 </script>

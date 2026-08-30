@@ -14,8 +14,8 @@ description: "Three points within 50 km of each other across the antimeridian. C
 Three points within 50 km of each other across the antimeridian. Clustering that ignores longitude wrapping splits them into separate groups.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of dateline_chain_cluster, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of dateline_chain_cluster, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="110" cy="40.06" r="3" fill="var(--gc-diagram-accent)"/><circle cx="10" cy="40.06" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="39.94" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Point geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ Three points within 50 km of each other across the antimeridian. Clustering that
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Antimeridian, North Pacific &mdash; 179.80&deg;E, 10.00&deg;N &rarr; 179.80&deg;W, 10.40&deg;N (crosses the antimeridian &mdash; the box runs east from the first corner, over 180&deg;) |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_dateline_chain_cluster(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -78,8 +89,10 @@ clustering can incorrectly split them into multiple clusters.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dateline/dateline_chain_cluster/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dateline/dateline_chain_cluster/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/dateline/dateline_chain_cluster)
 
 ## Source and license
 
@@ -139,7 +152,12 @@ clustering can incorrectly split them into multiple clusters.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "10.0 179.8 10.4 -179.8"
+    },
+    "name": "Antimeridian, North Pacific"
   }
 }
 </script>

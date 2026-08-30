@@ -14,8 +14,8 @@ description: "A point at (0, 0) — the intersection of the Prime Meridian and t
 A point at (0, 0) — the intersection of the Prime Meridian and the Equator. While technically a valid location in the Atlantic Ocean, its presence in datasets almost always indicates a failed geocoding operation where null or missing values were silently cast to 0.0.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of null_island_point, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of null_island_point, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Point geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A point at (0, 0) — the intersection of the Prime Meridian and the Equator. Wh
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Null Island (0, 0) &mdash; 0.00&deg;E, 0.00&deg;N &rarr; 0.00&deg;E, 0.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_null_island_point(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -101,8 +112,10 @@ Extremely common in:
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/invalid/null_island_point/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/invalid/null_island_point/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/invalid/null_island_point)
 
 ## Source and license
 
@@ -162,7 +175,12 @@ Extremely common in:
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.0 0.0 0.0 0.0"
+    },
+    "name": "Null Island (0, 0)"
   }
 }
 </script>

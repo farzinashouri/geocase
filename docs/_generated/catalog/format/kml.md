@@ -9,39 +9,49 @@ description: "7 GeoCase test cases available in KML format."
 
 These 7 cases are packaged as KML.
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 <div class="gc-grid">
 <a class="gc-card" href="../../cases/format_limited_kml_case/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of format_limited_kml_case, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of format_limited_kml_case, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 32.61 70 L 32.61 67.39 L 30 67.39 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 56.09 43.91 L 61.3 43.91 L 61.3 38.7 L 56.09 38.7 L 56.09 43.91 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 82.17 17.83 L 90 17.83 L 90 10 L 82.17 10 L 82.17 17.83 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
 <span class="gc-card-title">Format-Limited KML Case</span>
 <span class="gc-card-meta">KML &middot; Polygon</span>
 </a>
 <a class="gc-card" href="../../cases/linestring_kml_baseline/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of linestring_kml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of linestring_kml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
 <span class="gc-card-title">LineString KML Baseline</span>
 <span class="gc-card-meta">KML &middot; LineString</span>
 </a>
 <a class="gc-card" href="../../cases/multilinestring_kml_baseline/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiLineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiLineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,60 44,40 66,54" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="56,26 80,40 100,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiLineString geometry of multilinestring_kml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiLineString geometry of multilinestring_kml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 40 L 55.45 21.82 L 100.91 30.91" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 28.18 58.18 L 82.73 49.09 L 110 40" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
 <span class="gc-card-title">MultiLineString KML Baseline</span>
 <span class="gc-card-meta">KML &middot; MultiLineString</span>
 </a>
 <a class="gc-card" href="../../cases/multipoint_kml_baseline/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of multipoint_kml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of multipoint_kml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg>
 <span class="gc-card-title">MultiPoint KML Baseline</span>
 <span class="gc-card-meta">KML &middot; MultiPoint</span>
 </a>
 <a class="gc-card" href="../../cases/multipolygon_kml_baseline/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of multipolygon_kml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of multipolygon_kml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 43.33 56.67 L 43.33 23.33 L 10 23.33 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 110 56.67 L 110 23.33 L 76.67 23.33 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
 <span class="gc-card-title">MultiPolygon KML Baseline</span>
 <span class="gc-card-meta">KML &middot; MultiPolygon</span>
 </a>
 <a class="gc-card" href="../../cases/point_kml_baseline/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of point_kml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of point_kml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg>
 <span class="gc-card-title">Point KML Baseline</span>
 <span class="gc-card-meta">KML &middot; Point</span>
 </a>
 <a class="gc-card" href="../../cases/polygon_kml_baseline/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_kml_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_kml_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
 <span class="gc-card-title">Polygon KML Baseline</span>
 <span class="gc-card-meta">KML &middot; Polygon</span>
 </a>

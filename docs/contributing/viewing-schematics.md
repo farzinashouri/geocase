@@ -1,14 +1,26 @@
-# Viewing the catalog schematics
+# Viewing the catalog diagrams
 
-Each generated case page carries a small SVG schematic of the case's geometry — a polygon,
-a line, a raster grid — rendered from `scripts/generate_catalog_pages.py`.
+Each generated case page carries a small SVG diagram — a polygon, a line, a raster grid —
+rendered from `scripts/generate_catalog_pages.py`.
 
-**Those schematics do not render on GitHub or GitLab.** If you open a case page in a
-repository file browser, you will see two lines of text where the shape should be:
+**Vector cases show their real geometry.** The generator loads each case through
+`geocase.load_case(id).load()` and projects its actual coordinates into the diagram
+viewport (`scripts/catalog_geometry.py`), so
+`dateline_crossing_polygon` and `simple_valid_polygon` are visibly different pictures.
+Raster and NetCDF diagrams remain *schematics* drawn from metadata; they are not pictures
+of the pixels.
+
+A handful of cases are deliberately malformed and cannot be loaded at all —
+`unclosed_ring_polygon` is the current example. Those fall back to a generic shape for
+their geometry type, and the caption says so explicitly rather than claiming a provenance
+the drawing does not have.
+
+**Neither kind renders on GitHub or GitLab.** If you open a case page in a repository file
+browser, you will see two lines of text where the shape should be:
 
 ```
-Schematic of a Polygon geometry
-Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.
+Polygon geometry of dateline_crossing_polygon, rendered from the case's data
+Polygon geometry, rendered from the case's actual geometry. Scale is normalized to the viewport…
 ```
 
 That is expected, and it is not a bug in the diagram. This page explains why, and gives
@@ -54,7 +66,7 @@ python -m mkdocs serve
 Watch for the line reporting the address, usually:
 
 ```
-INFO - [12:00:00] Serving on http://127.0.0.1:8000/
+INFO - [12:00:00] Serving on http://127.0.0.1:8000/geocase/
 ```
 
 ### 3. Open a case page
@@ -62,7 +74,7 @@ INFO - [12:00:00] Serving on http://127.0.0.1:8000/
 Navigate to a case with a distinctive shape, for example:
 
 ```
-http://127.0.0.1:8000/_generated/catalog/cases/dateline_crossing_polygon/
+http://127.0.0.1:8000/geocase/_generated/catalog/cases/dateline_crossing_polygon/
 ```
 
 Or browse **Case Catalog** in the site navigation and pick any case.
@@ -72,8 +84,10 @@ Or browse **Case Catalog** in the site navigation and pick any case.
 A correctly rendering page shows, top to bottom:
 
 - a row of small badges — `vector`, `GeoJSON`, `Polygon`, `EPSG:4326`, `tiny`, `bundled`
-- **a teal quadrilateral inside a faint rounded border** — the schematic itself
-- the caption line beneath it
+- **a teal shape inside a faint rounded border** — the diagram itself. For
+  `dateline_crossing_polygon` that is a wide, squat rectangle: its real bounds span 20° of
+  longitude by 10° of latitude
+- the caption line beneath it, naming whether the shape is real geometry or a fallback
 - the properties table, usage snippet, and risk-type links
 
 If you see the caption but no shape, the stylesheet did not load — confirm `extra_css` in
@@ -88,17 +102,16 @@ refresh.
 
 ## Option B — view them on the published site
 
-Once Plan 12 is complete, the same pages are served at:
+Once GitHub Pages is enabled for the repository, the same pages are served at:
 
 ```
 https://farzinashouri.github.io/geocase
 ```
 
-That URL is already the canonical `site_url` in `mkdocs.yml`, and it is baked into the
-JSON-LD of every generated case page. Publication status is tracked in
-[`docs/plans/archive/12-docs-site-publication.md`](../plans/archive/12-docs-site-publication.md) — until
-the GitHub Actions deploy in that plan is in place, the URL will not resolve and Option A
-is the only way to see the schematics.
+That URL is the canonical `site_url` in `mkdocs.yml`, and it is baked into the JSON-LD of
+every generated case page. The GitHub Actions deployment workflow publishes the same strict
+MkDocs build used in CI. Until GitHub Pages is enabled in the repository settings, Option A
+is the way to see the schematics.
 
 ## Producing a static copy
 
@@ -117,8 +130,15 @@ applies. A clean build prints `Documentation built in …` with no warnings abov
 
 ## If you regenerate the pages
 
-The case pages are generated, and carry a `Do not edit by hand` marker. After changing
-`scripts/generate_catalog_pages.py`:
+The case pages are generated, and carry a `Do not edit by hand` marker.
+
+**Regenerating needs the vector stack**, because the generator loads each case to draw it.
+Run it from the conda `geocase` environment. Without `geopandas` the generator still works
+but every vector diagram silently degrades to a fallback archetype, which would commit a
+whole catalog of wrong pages. The `catalog` CI job installs `.[raster,vector]`, so the gate
+compares against the real previews.
+
+After changing `scripts/generate_catalog_pages.py` or `scripts/catalog_geometry.py`:
 
 ```
 python scripts/generate_catalog_pages.py          # rewrite the pages

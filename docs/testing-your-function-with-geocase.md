@@ -18,6 +18,15 @@ GeoCase provides:
 
 In practice, you write normal `pytest` tests and let GeoCase feed realistic cases into them.
 
+!!! tip "There is a second mode, and it needs no assertions from you"
+
+    Everything on this page asserts against a *declared* expectation. If your
+    library has two code paths that ought to agree — numpy vs Arrow, eager vs
+    lazy, old version vs new — [differential testing](differential-testing.md)
+    reads every case both ways and reports the disagreements instead. That mode
+    found two real defects in pyogrio and GDAL; this one found none in the same
+    run.
+
 ## Quick workflow
 
 1. Pick a function to test (vector, raster, or NetCDF).

@@ -87,32 +87,6 @@ jobs:
       # 187 broken links, shipped, because nothing rendered the site in CI.
       - run: mkdocs build --strict
 
-      # The site must stay unpublished until the canonical domain exists.
-      # Every case page's schema.org/Dataset JSON-LD carries a `url`, and
-      # Google Dataset Search dedupes on it, favouring what it saw first -- so
-      # a github.io copy published now would likely be credited as canonical
-      # ahead of the owned domain, and Google picks the canonical, not us.
-      # See docs/plans/24-catalog-site-on-owned-domain.md. The realistic
-      # failure is a slip (someone enabling Pages, a gh-deploy step landing in
-      # a workflow), so this converts a silent, expensive mistake into a build
-      # failure. Delete this step in the same change that sets the real domain.
-      - name: Assert the docs site is not being deployed
-        run: |
-          if git ls-remote --heads origin gh-pages | grep -q gh-pages; then
-            echo "::error::A gh-pages branch exists. Publishing the catalog from" \
-                 "github.io before the owned domain is chosen risks Google" \
-                 "crediting it as the canonical URL. See Plan 24."
-            exit 1
-          fi
-          # Match an actual invocation (`mkdocs gh-deploy`, `run: gh-deploy`),
-          # not the word appearing in a comment -- including this one.
-          if grep -rnE '^[^#]*(mkdocs[[:space:]]+gh-deploy|actions-gh-pages|peaceiris/actions-gh-pages)' \
-               .github/workflows/ --include='*.yml'; then
-            echo "::error::A docs deployment step was added to a workflow. See Plan 24."
-            exit 1
-          fi
-          echo "Docs site is unpublished, as intended."
-
   catalog:
     runs-on: ubuntu-latest
     # Fixture generation needs the GDAL Python bindings (`osgeo`), which are
@@ -160,12 +134,36 @@ jobs:
           # for the Parquet/Feather/Arrow branches. Without them it exits 2
           # ("cannot verify") rather than passing silently -- but a gate that
           # can never run is not a gate.
-          python -m pip install -e .[raster,vector] "numpy<2"
+          #
+          # `netcdf` since plan 34: the netcdf fixtures now have a generator and
+          # a content check, and both need xarray. Its absence here is the whole
+          # reason `check_case_content` used to return [] for the category. The
+          # netCDF4 wheels are built per-NumPy-ABI, so this combination was
+          # verified against the pin above rather than assumed: netCDF4 1.7.4
+          # resolves, imports and round-trips under NumPy 1.26.
+          python -m pip install -e .[raster,vector,netcdf] "numpy<2"
           echo "/venv/bin" >> "$GITHUB_PATH"
       - run: python scripts/build_case_index.py --check
       - run: python scripts/validate_catalog.py
+      # The content gate opens the data, so it belongs here rather than in the
+      # `tests` job: plain ubuntu-latest has no osgeo and no Arrow/Parquet
+      # driver plugins, so a gate there would skip exactly the cases most
+      # likely to drift. `validate_catalog.py` above stays reader-dependency-
+      # free and keeps running in both. See docs/plans/28-validate-geocase.md.
+      - run: python scripts/validate_case_content.py
+      # Extents are computed from the real bytes, so a fixture that moves
+      # without a regeneration would otherwise ship a Location row and a world
+      # map marker pointing at the wrong place. Same reader dependencies as
+      # the content gate above, hence the same job.
+      - run: python scripts/catalog_extent.py --check
       - run: python scripts/generate_raster_fixtures.py --check
       - run: python scripts/generate_vector_fixtures.py --check
+      # Plan 34: `latlon_sample.nc` used to be the one fixture in the tree that
+      # could not be rebuilt, which is why netcdf had no gate. `--check` here is
+      # semantic rather than byte-for-byte -- HDF5 stamps its library version
+      # into the file, so a byte gate would go red on a dependency bump that
+      # changed no data.
+      - run: python scripts/generate_netcdf_fixtures.py --check
       # Checksums cover the whole bundled catalog, not just raster: the vector
       # SQLite fixtures drifted to 6.7 MB each precisely because nothing
       # watched them.
@@ -188,3 +186,8 @@ jobs:
       # in the repository. They were already stale by 127 files when this gate
       # was added.
       - run: python scripts/generate_catalog_pages.py --check
+      # The raster previews are real pixels, so a fixture regenerating with
+      # different values silently changes what the docs claim about it. Files
+      # rather than inlined base64 exactly so this gate names the case that
+      # drifted instead of reporting "some bytes changed".
+      - run: python scripts/generate_raster_previews.py --check

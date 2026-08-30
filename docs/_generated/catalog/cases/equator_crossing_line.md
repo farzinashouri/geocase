@@ -14,8 +14,8 @@ description: "A WGS84 LineString crossing latitude 0 to expose equatorial edge c
 A WGS84 LineString crossing latitude 0 to expose equatorial edge cases and sign-change assumptions in coordinate handling.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: LineString geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of equator_crossing_line, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of equator_crossing_line, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 41.67 L 60 40 L 110 38.33" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<figcaption>LineString geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A WGS84 LineString crossing latitude 0 to expose equatorial edge cases and sign-
 | Format | GeoJSON |
 | Geometry type | LineString |
 | CRS | `EPSG:4326` |
+| Location | Equator at the prime meridian (synthetic) &mdash; 30.00&deg;W, 1.00&deg;S &rarr; 30.00&deg;E, 1.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_equator_crossing_line(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -75,8 +86,10 @@ Simple LineString crossing the equator for geographic boundary coverage.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/equator_crossing_line/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/equator_crossing_line/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/crs/equator_crossing_line)
 
 ## Source and license
 
@@ -135,7 +148,12 @@ Simple LineString crossing the equator for geographic boundary coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "-1.0 -30.0 1.0 30.0"
+    },
+    "name": "Equator at the prime meridian (synthetic)"
   }
 }
 </script>

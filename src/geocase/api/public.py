@@ -12,12 +12,15 @@ while :func:`load_case` and the ``geocase`` pytest fixture yield a
 
 from __future__ import annotations
 
+from typing import get_args
+
 from geocase.cases.base import BaseCase
 from geocase.catalog.manifests import build_manifest_uri
 from geocase.catalog.models import (
     CaseMetadata,
     Category,
     FormatType,
+    LoaderHint,
     SizeClass,
     StorageClass,
     SuiteSelection,
@@ -37,6 +40,35 @@ __all__ = [
     "get_suite",
 ]
 
+#: The four :data:`~geocase.catalog.models.Category` values, as a set, so
+#: :func:`_reject_category_as_format` can intercept them before pydantic does.
+_CATEGORY_VALUES = frozenset(get_args(Category))
+
+
+def _reject_category_as_format(format: str | None) -> None:
+    """Redirect ``format="vector"`` to ``category="vector"``.
+
+    ``format`` and ``category`` are both plausible names for "what kind of case
+    is this", so passing a category to ``format`` is the single most common
+    first-contact mistake (it is the "worst first impression" recorded in
+    ``docs/geocase_validate/geocase-improvement-report.md``). Left to pydantic
+    it raises a ``ValidationError`` reciting every ``FormatType`` literal and
+    never mentioning ``category`` — the answer is not in the error.
+
+    ``format`` deliberately keeps its name: renaming it would break the v1.0
+    keyword surface to fix a message. See Plan 28 phase 2.3.
+
+    Raises:
+        ValueError: If *format* is one of the four ``Category`` literals.
+    """
+    if format in _CATEGORY_VALUES:
+        raise ValueError(
+            f"{format!r} is a case category, not a file format. "
+            f"Use category={format!r} instead of format={format!r}. "
+            f"The 'format' filter takes a file format such as 'GeoJSON', "
+            f"'GPKG' or 'GeoTIFF'."
+        )
+
 
 def list_cases(
     selection: SuiteSelection | None = None,
@@ -46,6 +78,7 @@ def list_cases(
     test_tier: TestTier | None = None,
     storage_class: StorageClass | None = None,
     format: FormatType | None = None,
+    loader_hint: LoaderHint | None = None,
     size_class: SizeClass | None = None,
     tags_any: list[str] | None = None,
     tags_all: list[str] | None = None,
@@ -58,10 +91,28 @@ def list_cases(
     Called with no arguments, returns the whole bundled catalog. The keyword
     filters are the same ones a suite's ``selection`` block uses.
 
+    ``loader_hint`` names the reader geocase itself dispatches to, which is a
+    proxy for ``category`` — every vector case is ``geopandas``. To ask the
+    different question *"can my OGR-based reader open this?"*, filter on
+    :attr:`~geocase.catalog.models.AssertionHints.required_drivers` instead::
+
+        available = set(pyogrio.list_drivers())
+        openable = [
+            case
+            for case in geocase.list_cases(category="vector")
+            if all(d in available for d in case.assertions.required_drivers)
+        ]
+
     Returns:
         Matching :class:`~geocase.catalog.models.CaseMetadata`, *not*
         loadable case objects — see :func:`load_case`.
+
+    Raises:
+        ValueError: If a case *category* ("vector", "raster", "netcdf",
+            "satellite") is passed to ``format``; the message redirects to
+            ``category=``.
     """
+    _reject_category_as_format(format)
     return select_cases(
         get_registry().list_cases(),
         selection,
@@ -70,6 +121,7 @@ def list_cases(
         test_tier=test_tier,
         storage_class=storage_class,
         format=format,
+        loader_hint=loader_hint,
         size_class=size_class,
         tags_any=tags_any,
         tags_all=tags_all,

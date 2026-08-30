@@ -13,12 +13,18 @@ description: "A GeoTIFF straddling a UTM zone boundary. Mosaicking or reprojecti
 
 A GeoTIFF straddling a UTM zone boundary. Mosaicking or reprojecting across the seam produces pixel shifts and CRS mismatches between adjacent tiles.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_utm_boundary.png" alt="Pixels of geotiff_utm_boundary, a 20x20 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>20x20 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `geotiff_utm_boundary` |
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Central Europe (synthetic, UTM 33N) &mdash; 14.86&deg;E, 50.55&deg;N &rarr; 15.14&deg;E, 50.73&deg;N |
 | Test tier | unit |
 | Size class | small |
 | Storage class | bundled |
@@ -38,6 +44,16 @@ def test_geotiff_utm_boundary(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Detect raster code that assumes the entire tile lives in a single UTM zone, causing distortion or misalignment at zone edges.
@@ -55,6 +71,7 @@ Detect raster code that assumes the entire tile lives in a single UTM zone, caus
 | `expect_loadable` | yes |
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
+| `expected_shape` | `[20, 20]` |
 
 ## Notes
 
@@ -89,8 +106,10 @@ issues in zone-edge workflows.
 
 ## Files
 
-- Primary: `utm_boundary.tif`
-- Notes: `notes.md`
+- Primary: [`utm_boundary.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_utm_boundary/utm_boundary.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_utm_boundary/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_utm_boundary)
 
 ## Source and license
 
@@ -103,11 +122,11 @@ issues in zone-edge workflows.
 
 ## Related cases
 
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 - [Rasterize Match WGS84 Polygon](rasterize_match_wgs84_polygon.md) -- `rasterize_match_wgs84_polygon`
 - [All Valid Rectangular Raster](all_valid_rectangular.md) -- `all_valid_rectangular`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
-- [COG Single-Band Small](cog_singleband_small.md) -- `cog_singleband_small`
-- [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 
 <script type="application/ld+json">
 {
@@ -151,7 +170,12 @@ issues in zone-edge workflows.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.551847 14.858304 50.731793 15.141696"
+    },
+    "name": "Central Europe (synthetic, UTM 33N)"
   }
 }
 </script>

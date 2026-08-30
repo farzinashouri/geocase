@@ -15,7 +15,7 @@ A polygon where the exterior ring isn't properly closed (first coordinate ≠ la
 
 <figure class="gc-figure">
 <svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<figcaption>Schematic only -- this case's geometry could not be rendered, so the drawing is a generic Polygon, not the fixture's coordinates.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A polygon where the exterior ring isn't properly closed (first coordinate ≠ la
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Unplaceable -- the geometry is deliberately malformed |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_unclosed_ring_polygon(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -64,6 +75,7 @@ Expose loaders or validators that silently accept unclosed polygon rings, which 
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
+| `expected_error_kind` | `unparseable_geometry` |
 
 ## Notes
 
@@ -91,8 +103,10 @@ Per RFC 7946 §3.1.6:
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/invalid/unclosed_ring_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/invalid/unclosed_ring_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/invalid/unclosed_ring_polygon)
 
 ## Source and license
 
@@ -107,9 +121,9 @@ Per RFC 7946 §3.1.6:
 
 - [Self-Intersecting Polygon](self_intersecting_polygon.md) -- `self_intersecting_polygon`
 - [Ambiguous Engine-dependent Polygon](ambiguous_engine_dependent_polygon.md) -- `ambiguous_engine_dependent_polygon`
+- [Invalid Geometry at Feature 9,999 (GeoPackage)](invalid_geometry_at_scale_gpkg.md) -- `invalid_geometry_at_scale_gpkg`
 - [Out-of-Bounds / Invalid Coordinates](out_of_bounds_coordinates.md) -- `out_of_bounds_coordinates`
 - [Disjoint Polygons](disjoint_polygons.md) -- `disjoint_polygons`
-- [Spike Invalid Polygon](spike_invalid_polygon.md) -- `spike_invalid_polygon`
 
 <script type="application/ld+json">
 {
@@ -154,7 +168,8 @@ Per RFC 7946 §3.1.6:
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "name": "Unplaceable -- the geometry is deliberately malformed"
   }
 }
 </script>

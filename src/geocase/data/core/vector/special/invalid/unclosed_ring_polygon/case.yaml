@@ -41,6 +41,9 @@ loader_hint: geopandas
 geometry_type: Polygon
 crs: EPSG:4326
 
+# Hand-written; scripts/catalog_extent.py does not touch it.
+region: "Unplaceable -- the geometry is deliberately malformed"
+
 files:
   primary: geometry.geojson
   notes: notes.md
@@ -51,6 +54,11 @@ source:
 
 assertions:
   expect_loadable: false
+  # The ring never constructs -- shapely raises GEOSException
+  # ("Points of LinearRing do not form a closed linestring") before any
+  # validity question arises. So a consumer needs pytest.raises here, not
+  # `assert not geom.is_valid`; see docs/adding-a-case.md for the matrix.
+  expected_error_kind: unparseable_geometry
   expect_valid_geometry: false
   expect_crs: true
   expected_epsg: 4326

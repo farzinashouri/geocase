@@ -32,7 +32,7 @@ from typing import Any
 import numpy as np
 import rasterio
 from rasterio.enums import Resampling
-from rasterio.transform import from_origin
+from rasterio.transform import Affine, from_origin
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RASTER_ROOT = REPO_ROOT / "src" / "geocase" / "data" / "core" / "raster"
@@ -54,6 +54,13 @@ class RasterSpec:
     nodata: float | int | None = None
     band_names: list[str] = field(default_factory=list)
     compression: str | None = None
+    # Folder holding the fixture, when it is not ``<raster_root>/<case_id>``.
+    # The footprint edge cases share one directory (see _footprint_edge_specs).
+    case_dir: str | None = None
+    # Emit ``<stem>_footprint_truth.geojson`` derived from this fixture's own
+    # nodata mask, so the footprint cannot drift away from the pixels it
+    # describes.
+    emit_footprint: bool = False
     # CRS / transform overrides for geography-specific scenes.
     crs: str = _CRS
     transform: Any | None = None
@@ -66,6 +73,10 @@ class RasterSpec:
     scale_factor: float | None = None
     # Single-band categorical colormap: {value: (r, g, b, a)}.
     colormap: dict[int, tuple[int, int, int, int]] | None = None
+    # Dataset-level GDAL metadata tags. ``AREA_OR_POINT`` is the one that
+    # matters: GDAL omits it for the area convention, so a pixel-anchor pair
+    # has to write both sides explicitly to be a real differential.
+    tags: dict[str, str] = field(default_factory=dict)
 
     def array(self) -> np.ndarray:
         return np.stack(self.bands).astype(self.dtype)
@@ -139,12 +150,89 @@ def _specs() -> list[RasterSpec]:
             compression="deflate",
         ),
         *_priority_2_4_specs(),
+        *_footprint_edge_specs(),
+        *_transform_convention_specs(),
+    ]
+
+
+#: Directory shared by the transform-convention cases. Like the footprint edge
+#: cases, these are siblings whose whole value is the comparison between them.
+_TRANSFORM_DIR = "transform_conventions"
+
+
+def _transform_convention_specs() -> list[RasterSpec]:
+    """Georeferencing conventions every consumer assumes and none declared.
+
+    Two silent-wrong-answer classes, neither exercised by the catalog before
+    plan 34:
+
+    *Transform sign.* Every other raster here is built with ``from_origin``,
+    which always emits a negative ``e``. Code that assumes north-up therefore
+    passes the whole corpus and mirrors a bottom-up raster the first time it
+    meets one.
+
+    *Pixel anchor.* ``AREA_OR_POINT`` decides whether the transform's
+    coordinates name pixel corners or pixel centres -- half a pixel, invisible
+    to shape, CRS, checksum or preview gates. The two anchor fixtures share a
+    transform and an array and differ *only* in the tag, so the difference in
+    where a pixel sits is attributable to the convention alone.
+    """
+    size = 12
+    pixel = 30.0
+    left = 500000.0
+    bottom = 4200000.0
+    top = bottom + size * pixel
+
+    # A north-up ramp: row 0 is the northernmost, values increase southward.
+    north_up = np.arange(size * size, dtype="float32").reshape(size, size)
+    north_up[0, 0] = -9999.0
+
+    # The bottom-up file must describe the same *ground*, not the same array.
+    # Its row 0 is the SOUTHERNMOST row, so the rows have to be reversed as
+    # well as the transform sign flipped. Doing only the latter yields a file
+    # that is internally consistent and geographically upside down -- exactly
+    # the bug this case exists to catch.
+    bottom_up = np.flipud(north_up).copy()
+
+    north_up_transform = Affine(pixel, 0.0, left, 0.0, -pixel, top)
+    bottom_up_transform = Affine(pixel, 0.0, left, 0.0, pixel, bottom)
+
+    def _spec(case_id: str, array: np.ndarray, transform: Any, **kwargs: Any):  # type: ignore[no-untyped-def]
+        return RasterSpec(
+            case_id=case_id,
+            primary=f"{case_id}.tif",
+            bands=[array],
+            dtype="float32",
+            nodata=-9999.0,
+            crs="EPSG:32633",
+            transform=transform,
+            case_dir=_TRANSFORM_DIR,
+            band_names=["elevation"],
+            **kwargs,
+        )
+
+    return [
+        _spec("bottom_up_dem_small", bottom_up, bottom_up_transform),
+        # The anchor pair. "Area" is written explicitly rather than left to
+        # GDAL's default so that both files make a positive statement.
+        _spec(
+            "pixel_is_area_dem_small",
+            north_up,
+            north_up_transform,
+            tags={"AREA_OR_POINT": "Area"},
+        ),
+        _spec(
+            "pixel_is_point_dem_small",
+            north_up,
+            north_up_transform,
+            tags={"AREA_OR_POINT": "Point"},
+        ),
     ]
 
 
 def _priority_2_4_specs() -> list[RasterSpec]:
     """Build the Priority 2–4 raster families (Step 9 of the action plan)."""
-    from rasterio.transform import from_origin as _origin
+    from rasterio.transform import Affine, from_origin as _origin
 
     # -- Priority 2: COG / overviews / compression ------------------------
     # COG scenes are 64x64 so a 16px internal tiling actually registers
@@ -156,6 +244,15 @@ def _priority_2_4_specs() -> list[RasterSpec]:
 
     cog_single = [(_ramp64(5) * 20).astype("uint16")]
     cog_ms = [(_ramp64(s) * 30).astype("uint16") for s in (10, 20, 30, 40)]
+    # Declares nodata=0 and shipped with none of it, so tile/overview reads
+    # never crossed a nodata boundary (Plan 28 Phase 1.5). A 1 px frame is what
+    # a real reprojected scene carries, and it is what makes the COG's
+    # overview-vs-decimated nodata handling observable at all.
+    for band in cog_ms:
+        band[0, :] = 0
+        band[-1, :] = 0
+        band[:, 0] = 0
+        band[:, -1] = 0
     ovr_band = [(_ramp64(7)).astype("uint8")]
 
     # -- Priority 3: SAR + geography --------------------------------------
@@ -180,7 +277,14 @@ def _priority_2_4_specs() -> list[RasterSpec]:
     # Scaled int16 NDVI: physical NDVI in [-1, 1] stored as int16 * 1e-4.
     ndvi_phys = ((_ramp(0).astype("float32") / 255.0) * 2.0) - 1.0
     ndvi_int16 = np.round(ndvi_phys / 1e-4).astype("int16")
-    # Categorical land cover: 0=nodata, 1=water, 2=veg, 3=urban.
+    # The case exists to exercise "scaled integer with a sentinel", and was
+    # inert without a single pixel at the sentinel (Plan 28 Phase 1.5). A
+    # corner pixel keeps the ramp otherwise intact.
+    ndvi_int16[0, 0] = -32768
+    # Categorical land cover: 1=water, 2=veg, 3=urban. Deliberately *no*
+    # nodata: every pixel is classified, and 0 doubling as both a class and a
+    # sentinel is the ``ambiguous_zero`` risk, which gets its own explicit case
+    # below rather than a silent declaration here (Plan 28 Phase 1.5).
     landcover = np.zeros((_SIZE, _SIZE), dtype="uint8")
     landcover[:8, :8] = 1
     landcover[:8, 8:] = 2
@@ -192,6 +296,16 @@ def _priority_2_4_specs() -> list[RasterSpec]:
         2: (0, 200, 0, 255),
         3: (128, 128, 128, 255),
     }
+
+    # landcover_ambiguous_zero_small -- the sibling scene, with the ambiguity
+    # put back deliberately (Plan 32 Phase 2). Same three classes, plus class 0
+    # ("unclassified / bare") occupying a real region, and ``nodata=0``
+    # declared on top of it. Nothing in the file distinguishes the two
+    # meanings: a consumer masking ``data == nodata`` deletes every class-0
+    # pixel, and a consumer ignoring nodata treats sentinel pixels as a class.
+    # That indistinguishability *is* the case.
+    landcover_ambiguous = landcover.copy()
+    landcover_ambiguous[4:12, 4:12] = 0
 
     return [
         RasterSpec(
@@ -279,12 +393,183 @@ def _priority_2_4_specs() -> list[RasterSpec]:
             primary="landcover_small.tif",
             bands=[landcover],
             dtype="uint8",
+            band_names=["landcover"],
+            compression="deflate",
+            colormap=landcover_cmap,
+        ),
+        RasterSpec(
+            case_id="landcover_ambiguous_zero_small",
+            primary="landcover_ambiguous_zero_small.tif",
+            bands=[landcover_ambiguous],
+            dtype="uint8",
             nodata=0,
             band_names=["landcover"],
             compression="deflate",
             colormap=landcover_cmap,
         ),
     ]
+
+
+#: Directory shared by every footprint edge case.
+_FOOTPRINT_DIR = "footprint_edge_cases"
+
+
+def _footprint_edge_specs() -> list[RasterSpec]:
+    """The footprint edge cases, raster *and* footprint from one array.
+
+    These were hand-committed and sat outside the only regeneration gate, which
+    is how ``hole_center_nodata`` came to be the exact inverse of its own
+    description: it claims valid pixels ringing a central NoData void, and
+    shipped with nodata on the 1 px outer border and a fully valid interior.
+    Its committed footprint had been regenerated from the drifted raster, so the
+    two agreed with each other and disagreed only with the case's stated purpose
+    -- invisible to any check that compares declarations to declarations.
+
+    Deriving both artifacts from the same array here means the footprint is
+    correct by construction and the drift cannot recur (Plan 28 Phase 1.5).
+    """
+    fill = 100.0
+    nd = -9999.0
+
+    # hole_center_nodata -- the shape the case has always claimed: an interior
+    # void, fully enclosed by valid pixels. The border stays valid, which is
+    # what makes footprint extraction that ignores nodata visibly wrong (it
+    # returns the solid 12x12 rectangle instead of a ring).
+    hole = np.full((12, 12), fill, dtype="float32")
+    hole[4:8, 4:8] = nd
+
+    # all_valid_rectangular -- the control: no invalid pixel anywhere. It
+    # declares no nodata expectation and must not gain one.
+    all_valid = np.full((12, 12), fill, dtype="float32")
+
+    # nonsquare_diagonal_sparse -- non-square pixels (60x30 m) plus a diagonal
+    # run of valid pixels touching only at corners, so a footprint built in
+    # pixel space rather than world space comes out with the wrong aspect ratio.
+    diagonal = np.full((8, 8), nd, dtype="float32")
+    diagonal[np.arange(8), np.arange(8)] = fill
+
+    # rotated_two_islands -- two disjoint blobs under a rotated transform: the
+    # footprint must be a MultiPolygon, and must be rotated with the grid.
+    islands = np.full((8, 8), nd, dtype="float32")
+    islands[0:3, 0:3] = fill
+    islands[4:8, 5:8] = fill
+
+    # thin_corridor_shape -- 1 px-wide arms, which simplification tolerances
+    # tend to collapse to nothing.
+    corridor = np.full((14, 14), nd, dtype="float32")
+    corridor[2:12, 3] = fill
+    corridor[4, 3:9] = fill
+    corridor[10, 3:11] = fill
+
+    def _spec(
+        case_id: str,
+        array: np.ndarray,
+        transform: Any,
+        *,
+        emit_footprint: bool = False,
+    ) -> RasterSpec:
+        return RasterSpec(
+            case_id=case_id,
+            primary=f"{case_id}.tif",
+            bands=[array],
+            dtype="float32",
+            nodata=nd,
+            transform=transform,
+            case_dir=_FOOTPRINT_DIR,
+            emit_footprint=emit_footprint,
+        )
+
+    # Every case emits its own mask-exact ``_footprint_truth.geojson`` (Plan 32
+    # Phase 1.2). The hand-committed files these replace were recordings of
+    # ``gdal_footprint``'s simplified/convex-hull answer -- for
+    # ``rotated_two_islands`` a single polygon spanning the gap between two
+    # disjoint islands, 1.98x the true area. Those recordings survive, renamed
+    # to ``_footprint_gdal_hull.geojson`` and pointed at by
+    # ``params.recorded_gdal_footprint``, so GDAL's behaviour stays under a
+    # regression check without being mistaken for truth. ``all_valid_rectangular``
+    # gets no hull file: a full rectangle *is* its own convex hull, so the two
+    # would be byte-identical and the second file would carry no information.
+    return [
+        _spec(
+            "hole_center_nodata",
+            hole,
+            from_origin(400000.0, 4300000.0, 30.0, 30.0),
+            emit_footprint=True,
+        ),
+        _spec(
+            "all_valid_rectangular",
+            all_valid,
+            from_origin(500000.0, 4200000.0, 30.0, 30.0),
+            emit_footprint=True,
+        ),
+        _spec(
+            "nonsquare_diagonal_sparse",
+            diagonal,
+            from_origin(250000.0, 4600000.0, 60.0, 30.0),
+            emit_footprint=True,
+        ),
+        # A genuinely rotated affine: the b/d terms are non-zero.
+        _spec(
+            "rotated_two_islands",
+            islands,
+            Affine(20.0, 5.0, 1000.0, -5.0, -20.0, 2000.0),
+            emit_footprint=True,
+        ),
+        _spec(
+            "thin_corridor_shape",
+            corridor,
+            from_origin(700000.0, 5100000.0, 25.0, 25.0),
+            emit_footprint=True,
+        ),
+    ]
+
+
+def _write_footprint(spec: RasterSpec, raster_path: Path) -> Path:
+    """Derive ``<stem>_footprint_truth.geojson`` from the raster's valid mask.
+
+    The ``_truth`` suffix is load-bearing (Plan 32 Phase 1.2). The folder also
+    ships ``<stem>_footprint_gdal_hull.geojson`` for three of these cases: a
+    *recording of ``gdal_footprint``'s own simplified/hull output*, kept so a
+    change in GDAL's behaviour stays detectable but never mistaken for ground
+    truth. Only this file is mask-exact, and only this file is what
+    ``params.expected_footprint`` points at.
+    """
+    import json
+
+    import rasterio.features
+    from shapely.geometry import mapping, shape
+    from shapely.ops import unary_union
+
+    with rasterio.open(raster_path) as src:
+        mask = src.dataset_mask()
+        crs = src.crs
+        polygons = [
+            shape(geom)
+            for geom, value in rasterio.features.shapes(
+                mask, mask=mask.astype(bool), transform=src.transform
+            )
+            if value != 0
+        ]
+
+    merged = unary_union(polygons)
+    dest = raster_path.with_name(f"{raster_path.stem}_footprint_truth.geojson")
+    payload = {
+        "type": "FeatureCollection",
+        "name": f"{spec.case_id}_footprint_truth",
+        "crs": {
+            "type": "name",
+            "properties": {"name": crs.to_string()},
+        },
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {"case_id": spec.case_id},
+                "geometry": mapping(merged),
+            }
+        ],
+    }
+    dest.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    return dest
 
 
 @dataclass
@@ -304,17 +589,25 @@ def _synth_specs() -> list[SynthSpec]:
         # Real L2A radiometry: nodata 0, scale 1e-4 / offset -0.1 on the
         # bands, BOA_ADD_OFFSET / QUANTIFICATION_VALUE / PROCESSING_BASELINE
         # tags, band names B02/B03/B04/B08.
+        # ``nodata_border=1`` is not decoration: both fixtures declare
+        # ``expect_nodata`` and a nodata value of 0, and both shipped with zero
+        # pixels taking it, so every nodata-handling probe run against them
+        # passed vacuously. Real L2A granules carry a nodata frame; the content
+        # gate (Plan 28 Phase 1) now requires the declaration to be backed by
+        # actual pixels.
         SynthSpec(
             case_id="multispectral_s2_like_small",
             primary="multispectral_s2_like_small.tif",
-            build=lambda p: sentinel2_l2a(p, size=_SIZE),
+            build=lambda p: sentinel2_l2a(p, size=_SIZE, nodata_border=1),
         ),
         # A mismatch that actually exists: B11 is 20 m-native, carried on the
         # 10 m grid as 2x2 block-replicated values.
         SynthSpec(
             case_id="multispectral_mixed_resolution_small",
             primary="multispectral_mixed_resolution_small.tif",
-            build=lambda p: sentinel2_l2a(p, size=_SIZE, bands=("B04", "B08", "B11")),
+            build=lambda p: sentinel2_l2a(
+                p, size=_SIZE, bands=("B04", "B08", "B11"), nodata_border=1
+            ),
         ),
         # Real GRD: uint16 detected amplitude, zero border noise, nodata 0.
         SynthSpec(
@@ -369,6 +662,9 @@ def _write_raster(spec: RasterSpec, dest: Path) -> None:
             dst.scales = (spec.scale_factor,) * array.shape[0]
         if spec.colormap is not None:
             dst.write_colormap(1, spec.colormap)
+        if spec.tags:
+            # Converges with raster/_writer.py, which already does this.
+            dst.update_tags(**spec.tags)
         # Internal overviews (COG-style) are written inside the same file.
         if spec.overviews and not spec.external_overviews:
             dst.build_overviews(spec.overviews, Resampling.nearest)
@@ -403,12 +699,28 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _emit(spec: RasterSpec | SynthSpec, dest: Path) -> None:
+def _emit(spec: RasterSpec | SynthSpec, dest: Path) -> list[Path]:
+    """Write *spec* to *dest*; returns every file written, primary first."""
     dest.parent.mkdir(parents=True, exist_ok=True)
     if isinstance(spec, SynthSpec):
         spec.build(dest)
-    else:
-        _write_raster(spec, dest)
+        return [dest]
+
+    _write_raster(spec, dest)
+    written = [dest]
+    if spec.emit_footprint:
+        written.append(_write_footprint(spec, dest))
+    return written
+
+
+def _dest_for(spec: RasterSpec | SynthSpec, raster_root: Path) -> Path:
+    """Resolve a spec's on-disk primary path.
+
+    Most fixtures live in ``<raster_root>/<case_id>/``; the footprint edge
+    cases share a single directory, so ``RasterSpec.case_dir`` overrides it.
+    """
+    folder = getattr(spec, "case_dir", None) or spec.case_id
+    return raster_root / folder / spec.primary
 
 
 def main() -> int:
@@ -421,15 +733,20 @@ def main() -> int:
 
         stale: list[str] = []
         for spec in specs:
-            dest = args.raster_root / spec.case_id / spec.primary
+            dest = _dest_for(spec, args.raster_root)
             if not dest.exists():
                 stale.append(spec.case_id)
                 continue
             with tempfile.TemporaryDirectory() as tmp:
                 candidate = Path(tmp) / spec.primary
-                _emit(spec, candidate)
-                if candidate.read_bytes() != dest.read_bytes():
-                    stale.append(spec.case_id)
+                for produced in _emit(spec, candidate):
+                    committed = dest.with_name(produced.name)
+                    if (
+                        not committed.exists()
+                        or produced.read_bytes() != committed.read_bytes()
+                    ):
+                        stale.append(spec.case_id)
+                        break
         if stale:
             print(f"Raster fixtures out of date: {', '.join(stale)}")
             return 1
@@ -437,9 +754,9 @@ def main() -> int:
         return 0
 
     for spec in specs:
-        dest = args.raster_root / spec.case_id / spec.primary
-        _emit(spec, dest)
-        print(f"Wrote {dest.relative_to(REPO_ROOT)}")
+        dest = _dest_for(spec, args.raster_root)
+        for produced in _emit(spec, dest):
+            print(f"Wrote {produced.relative_to(REPO_ROOT)}")
     return 0
 
 

@@ -14,8 +14,8 @@ description: "Canonical baseline polygon stored as a SQLite spatial dataset usin
 Canonical baseline polygon stored as a SQLite spatial dataset using the same coordinates as the GeoJSON happy-path polygon.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of polygon_sqlite_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of polygon_sqlite_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>Polygon geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ Canonical baseline polygon stored as a SQLite spatial dataset using the same coo
 | Format | SQLite |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 11.00&deg;E, 51.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_polygon_sqlite_baseline(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -95,8 +106,10 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Files
 
-- Primary: `geometry.sqlite`
-- Notes: `notes.md`
+- Primary: [`geometry.sqlite`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/polygon/sqlite/polygon_sqlite_baseline/geometry.sqlite)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/polygon/sqlite/polygon_sqlite_baseline/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/polygon/sqlite/polygon_sqlite_baseline)
 
 ## Source and license
 
@@ -156,7 +169,12 @@ geometry is derived from `params.canonical_source_case_id`
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.0 10.0 51.0 11.0"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

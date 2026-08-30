@@ -1,0 +1,53 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:4326"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "as_recorded_in_zone_33n",
+        "source_epsg": 32633,
+        "easting_min": 266621.232,
+        "northing_min": 5764230.234
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [11.6, 52.0],
+            [12.4, 52.0],
+            [12.4, 52.4],
+            [11.6, 52.4],
+            [11.6, 52.0]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "as_recorded_in_zone_32n",
+        "source_epsg": 32632,
+        "easting_min": 676880.687,
+        "northing_min": 5764230.234
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [11.6, 52.0],
+            [12.4, 52.0],
+            [12.4, 52.4],
+            [11.6, 52.4],
+            [11.6, 52.0]
+          ]
+        ]
+      }
+    }
+  ]
+}

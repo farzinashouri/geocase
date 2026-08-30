@@ -14,8 +14,8 @@ description: "A GeoParquet file with deliberately mixed attribute types and null
 A GeoParquet file with deliberately mixed attribute types and nullable columns: nullable integers (Int64), nullable booleans, nullable strings, and NaN floats. Exercises Parquet's native nullable type support and exposes loaders that silently downcast nullable types, lose null distinctions, or fail on mixed-type attribute schemas.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of parquet_mixed_schema_attributes, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of parquet_mixed_schema_attributes, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/><circle cx="50" cy="50" r="3" fill="var(--gc-diagram-accent)"/><circle cx="70" cy="30" r="3" fill="var(--gc-diagram-accent)"/><circle cx="90" cy="10" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Point geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A GeoParquet file with deliberately mixed attribute types and nullable columns: 
 | Format | Parquet |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 52.00&deg;N &rarr; 13.00&deg;E, 55.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_parquet_mixed_schema_attributes(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -64,6 +75,7 @@ Detect loaders that silently downcast Parquet nullable integer columns to float6
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
+| `required_drivers` | `Parquet` |
 
 ## Notes
 
@@ -104,8 +116,10 @@ Four simple WGS 84 points along a NE diagonal across northern Europe.
 
 ## Files
 
-- Primary: `mixed_attrs.parquet`
-- Notes: `notes.md`
+- Primary: [`mixed_attrs.parquet`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/parquet_mixed_schema_attributes/mixed_attrs.parquet)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/parquet_mixed_schema_attributes/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/encoding/parquet_mixed_schema_attributes)
 
 ## Source and license
 
@@ -170,7 +184,12 @@ Four simple WGS 84 points along a NE diagonal across northern Europe.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "52.0 10.0 55.0 13.0"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

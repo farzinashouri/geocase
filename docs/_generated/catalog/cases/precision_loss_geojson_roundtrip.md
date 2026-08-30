@@ -14,8 +14,8 @@ description: "A GeoJSON dataset containing coordinates with very high precision 
 A GeoJSON dataset containing coordinates with very high precision that may lose accuracy during text serialization roundtrips. GeoJSON uses decimal text representation, and different serializers use different precision settings. This case exposes precision loss that can accumulate across multiple read/write cycles or cause coordinate drift.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of precision_loss_geojson_roundtrip, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of precision_loss_geojson_roundtrip, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="110" cy="20.77" r="3" fill="var(--gc-diagram-accent)"/><circle cx="10" cy="30.73" r="3" fill="var(--gc-diagram-accent)"/><circle cx="102.36" cy="59.23" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Point geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A GeoJSON dataset containing coordinates with very high precision that may lose 
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | North Atlantic, off Bermuda &mdash; 122.42&deg;W, 0.00&deg;N &rarr; 10.12&deg;E, 50.99&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_precision_loss_geojson_roundtrip(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -125,8 +136,10 @@ GeoJSON's human-readable text format trades some precision for readability.
 
 ## Files
 
-- Primary: `high_precision_points.geojson`
-- Notes: `notes.md`
+- Primary: [`high_precision_points.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/precision/precision_loss_geojson_roundtrip/high_precision_points.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/precision/precision_loss_geojson_roundtrip/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/precision/precision_loss_geojson_roundtrip)
 
 ## Source and license
 
@@ -186,7 +199,12 @@ GeoJSON's human-readable text format trades some precision for readability.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.0 -122.419416 50.987654 10.123457"
+    },
+    "name": "North Atlantic, off Bermuda"
   }
 }
 </script>

@@ -9,24 +9,34 @@ description: "4 GeoCase test cases that exercise the polar projection singularit
 
 These 4 cases exercise the `polar_projection_singularity` failure mode. Run your function against all of them to check how it behaves.
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 <div class="gc-grid">
 <a class="gc-card" href="../../cases/north_pole_point/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of north_pole_point, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of north_pole_point, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg>
 <span class="gc-card-title">North Pole Point</span>
 <span class="gc-card-meta">GeoJSON &middot; Point</span>
 </a>
 <a class="gc-card" href="../../cases/north_pole_polygon/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of north_pole_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of north_pole_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 60 41.53 L 110 39.86 L 60 38.47 L 10 39.86 L 60 41.53 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
 <span class="gc-card-title">North Pole Polygon</span>
 <span class="gc-card-meta">GeoJSON &middot; Polygon</span>
 </a>
 <a class="gc-card" href="../../cases/south_pole_point/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of south_pole_point, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of south_pole_point, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg>
 <span class="gc-card-title">South Pole Point</span>
 <span class="gc-card-meta">GeoJSON &middot; Point</span>
 </a>
 <a class="gc-card" href="../../cases/south_pole_polygon/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of south_pole_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of south_pole_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 60 38.47 L 10 40.14 L 60 41.53 L 110 40.14 L 60 38.47 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
 <span class="gc-card-title">South Pole Polygon</span>
 <span class="gc-card-meta">GeoJSON &middot; Polygon</span>
 </a>

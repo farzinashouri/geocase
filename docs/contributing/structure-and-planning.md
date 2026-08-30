@@ -3,7 +3,7 @@
 > **Status (August 2026):** Core implementation is complete; `pytest tests -q` is green at
 > 780 passed, 1 skipped, and the public API is pinned for v1.0.
 > See [workflow.md](workflow.md) for the detailed status tracker and
-> [development-plan.md](../plans/development-plan.md) for the roadmap, which is authoritative on
+> [development-plan.md](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md) for the roadmap, which is authoritative on
 > scope.
 
 The core implementation is complete:
@@ -18,7 +18,7 @@ The core implementation is complete:
 8. ~~wire the **pytest plugin**~~ ✅
 
 Remaining work focuses on documentation cleanup, additional test cases, and polish.
-See [`development-plan.md`](../plans/development-plan.md) for the current roadmap.
+See [`development-plan.md`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md) for the current roadmap.
 
 ---
 
@@ -333,7 +333,7 @@ existed here as one-line docstring stubs and were deleted — an empty module im
 commitment the project has not made, and both extended manifests are still 100%
 placeholder (`sha256: "replace_me"`, `base_uri: example.org`). They return in v1.1,
 gated on at least one real published archive with a real checksum. See
-[`development-plan.md`](../plans/development-plan.md).
+[`development-plan.md`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md).
 
 ---
 
@@ -406,7 +406,7 @@ Why it exists: keeps structure explicit and reviewable.
 
 Bundled sample data. All 8 `case.yaml` files are populated with full metadata.
 
-The catalog is **135 cases**. The lists that were once here enumerated eight of them and
+The catalog is **154 cases**. The lists that were once here enumerated eight of them and
 went stale within one release; the enumeration is now generated from the registry and
 CI-gated instead. See the [dataset catalog](../dataset-catalog.md) for the reasoning and
 the [case catalog](../_generated/catalog/index.md) for the full list.

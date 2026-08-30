@@ -12,9 +12,9 @@ every one-line docstring placeholder was implemented or deleted. Where something
 absent — the CLI, storage transport — it is absent by decision, and the decision is
 recorded in the roadmap's decision log.
 
-For roadmap-level sequencing, see [`development-plan.md`](../plans/development-plan.md) — the
+For roadmap-level sequencing, see [`development-plan.md`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md) — the
 single roadmap. The superseded planning documents it replaced are retained as an
-implementation log in [`../plans/archive/`](../plans/archive/index.md).
+implementation log in [`../plans/archive/`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/archive/index.md).
 
 ---
 
@@ -200,7 +200,7 @@ circular. Import it directly.
 ### `src/geocase/cli/` — removed
 
 There is no CLI. The stubs and the broken `[project.scripts]` entry point were removed
-for v1.0; see the Decision log in [`development-plan.md`](../plans/development-plan.md).
+for v1.0; see the Decision log in [`development-plan.md`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md).
 
 ---
 
@@ -450,5 +450,5 @@ changes than starting from ad hoc fixture files alone.
 - [`workflow.md`](../contributing/workflow.md)
 - [`manifests-and-storage.md`](../contributing/manifests-and-storage.md)
 - [`raster-dtypes-and-radiometric-resolution.md`](../contributing/raster-dtypes-and-radiometric-resolution.md)
-- [`development-plan.md`](../plans/development-plan.md) — the roadmap
-- [`../plans/archive/`](../plans/archive/index.md) — superseded plans, retained as history
+- [`development-plan.md`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md) — the roadmap
+- [`../plans/archive/`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/archive/index.md) — superseded plans, retained as history

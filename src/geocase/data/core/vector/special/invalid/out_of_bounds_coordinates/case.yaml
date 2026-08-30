@@ -41,6 +41,9 @@ loader_hint: geopandas
 geometry_type: Point
 crs: EPSG:4326
 
+# Hand-written; scripts/catalog_extent.py does not touch it.
+region: "Undefined -- coordinates fall outside the WGS84 domain"
+
 files:
   primary: geometry.geojson
   notes: notes.md

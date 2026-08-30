@@ -14,8 +14,8 @@ description: "A compact MultiPolygon fixture with two disjoint polygons in EPSG:
 A compact MultiPolygon fixture with two disjoint polygons in EPSG:4326.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPolygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPolygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="18,26 54,22 50,54 22,52" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polygon points="66,34 100,30 98,60 70,62" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: MultiPolygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPolygon geometry of simple_valid_multipolygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPolygon geometry of simple_valid_multipolygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 56.67 L 43.33 56.67 L 43.33 23.33 L 10 23.33 L 10 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 76.67 56.67 L 110 56.67 L 110 23.33 L 76.67 23.33 L 76.67 56.67 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>MultiPolygon geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A compact MultiPolygon fixture with two disjoint polygons in EPSG:4326.
 | Format | GeoJSON |
 | Geometry type | MultiPolygon |
 | CRS | `EPSG:4326` |
+| Location | Nunavut, Canadian Arctic (synthetic) &mdash; 96.00&deg;W, 68.00&deg;N &rarr; 94.50&deg;W, 68.50&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_simple_valid_multipolygon(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -74,8 +85,10 @@ Baseline MultiPolygon case for multipart polygon coverage.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipolygon/geojson/simple_valid_multipolygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipolygon/geojson/simple_valid_multipolygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/multipolygon/geojson/simple_valid_multipolygon)
 
 ## Source and license
 
@@ -88,11 +101,11 @@ Baseline MultiPolygon case for multipart polygon coverage.
 
 ## Related cases
 
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
+- [Dense Ring Polygon (4096 vertices, GeoPackage)](dense_ring_polygon_4k_gpkg.md) -- `dense_ring_polygon_4k_gpkg`
+- [Fractal Coastline Polygon](fractal_coastline_polygon.md) -- `fractal_coastline_polygon`
 - [Simple Valid LineString](simple_valid_linestring.md) -- `simple_valid_linestring`
 - [Simple Valid MultiLineString](simple_valid_multilinestring.md) -- `simple_valid_multilinestring`
-- [Simple Valid MultiPoint](simple_valid_multipoint.md) -- `simple_valid_multipoint`
-- [Simple Valid Point](simple_valid_point.md) -- `simple_valid_point`
-- [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
 
 <script type="application/ld+json">
 {
@@ -132,7 +145,12 @@ Baseline MultiPolygon case for multipart polygon coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "68.0 -96.0 68.5 -94.5"
+    },
+    "name": "Nunavut, Canadian Arctic (synthetic)"
   }
 }
 </script>

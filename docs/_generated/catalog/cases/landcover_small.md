@@ -14,8 +14,8 @@ description: "A categorical land-cover raster where 0 is NoData, not a class. Re
 A categorical land-cover raster where 0 is NoData, not a class. Resampling or averaging categorical values silently invents classes that do not exist.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="32.0" y="46.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg>
-<figcaption>Schematic: 1 band, 16x16 px, uint8, sentinel NoData. Drawn from metadata, not from the pixels.</figcaption>
+<img class="gc-diagram gc-preview" src="../../previews/landcover_small.png" alt="Pixels of landcover_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>1 band, 16x16 px, uint8. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
 </figure>
 
 | Property | Value |
@@ -24,6 +24,7 @@ A categorical land-cover raster where 0 is NoData, not a class. Resampling or av
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Southern Italy / Sicily (synthetic, UTM 33N) &mdash; 15.00&deg;E, 40.65&deg;N &rarr; 15.00&deg;E, 40.65&deg;N |
 | Test tier | integration |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,15 +44,24 @@ def test_landcover_small(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
-Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its NoData class.
+Confirm GeoCase preserves a categorical land-cover raster and its colormap. Every pixel is classified and the raster declares no NoData, because 0 doubling as both a class and a sentinel is a distinct risk that belongs in a case of its own rather than in a silent declaration here. That case is ``landcover_ambiguous_zero_small``: the same scene with the ambiguity put back, so the pair isolates the collision (Plan 28, Plan 32).
 
 ## Risk types covered
 
-- `category_misread`
+- [`category_misread`](../risk/category-misread.md)
 - `colormap_dropped`
-- [`nodata_ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -60,12 +70,9 @@ Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its
 | `expect_loadable` | yes |
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
-| `expect_nodata` | yes |
 | `expected_band_count` | `1` |
 | `expected_dtype` | `uint8` |
 | `expected_shape` | `[16, 16]` |
-| `expected_nodata_value` | `0` |
-| `nodata_convention` | `sentinel` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `landcover` |
 | `expected_colormap_present` | yes |
@@ -74,11 +81,12 @@ Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its
 
 - `load`
 - `colormap-check`
-- `nodata-check`
 
 ## Files
 
-- Primary: `landcover_small.tif`
+- Primary: [`landcover_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/landcover_small/landcover_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/landcover_small)
 
 ## Source and license
 
@@ -91,11 +99,11 @@ Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its
 
 ## Related cases
 
+- [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
 - [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
 - [DEM Small](dem_small.md) -- `dem_small`
 - [Multispectral Sentinel-2-like Small](multispectral_s2_like_small.md) -- `multispectral_s2_like_small`
 - [NDVI Scaled Int16 Small](ndvi_scaled_int16_small.md) -- `ndvi_scaled_int16_small`
-- [Water Mask Small](water_mask_small.md) -- `water_mask_small`
 
 <script type="application/ld+json">
 {
@@ -118,7 +126,6 @@ Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its
     "geography:utm",
     "geotiff",
     "landcover",
-    "nodata_ignored",
     "product:landcover",
     "raster"
   ],
@@ -140,7 +147,12 @@ Confirm GeoCase preserves a categorical land-cover raster, its colormap, and its
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "40.649415 15.0 40.650857 15.001893"
+    },
+    "name": "Southern Italy / Sicily (synthetic, UTM 33N)"
   }
 }
 </script>

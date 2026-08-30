@@ -13,12 +13,18 @@ description: "A three-band GeoTIFF with NoData in every band. Exercises band-ord
 
 A three-band GeoTIFF with NoData in every band. Exercises band-order preservation and per-band NoData handling on multiband raster reads.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_multiband_small.png" alt="Pixels of geotiff_multiband_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>10x10 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `geotiff_multiband_small` |
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Equator, Gulf of Guinea (synthetic) &mdash; 15.00&deg;E, 0.01&deg;N &rarr; 15.00&deg;E, 0.01&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -38,6 +44,16 @@ def test_geotiff_multiband_small(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Confirm that GeoCase can open a small multi-band raster, preserve its declared band count, and expose each band as distinct pixel data.
@@ -56,6 +72,7 @@ Confirm that GeoCase can open a small multi-band raster, preserve its declared b
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
+| `expected_shape` | `[10, 10]` |
 
 ## Notes
 
@@ -91,8 +108,10 @@ Three-band raster baseline for validating multi-band read behavior.
 
 ## Files
 
-- Primary: `multiband_sample.tif`
-- Notes: `notes.md`
+- Primary: [`multiband_sample.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_multiband_small/multiband_sample.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_multiband_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_multiband_small)
 
 ## Source and license
 
@@ -109,7 +128,7 @@ Three-band raster baseline for validating multi-band read behavior.
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
 - [Optical RGB Small](optical_rgb_small.md) -- `optical_rgb_small`
 - [SAR Dual-Pol Small](sar_dualpol_small.md) -- `sar_dualpol_small`
-- [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 
 <script type="application/ld+json">
 {
@@ -151,7 +170,12 @@ Three-band raster baseline for validating multi-band read behavior.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.008143 15.0 0.009047 15.000899"
+    },
+    "name": "Equator, Gulf of Guinea (synthetic)"
   }
 }
 </script>

@@ -14,8 +14,8 @@ description: "A GeoPackage containing rows with empty geometries (WKB EMPTY repr
 A GeoPackage containing rows with empty geometries (WKB EMPTY representation) to test how loaders handle the distinction between NULL geometry and EMPTY geometry. In GeoPackage/SQLite, NULL means "no geometry value" while EMPTY means "a geometry that contains no coordinates". This case exposes loaders that conflate NULL and EMPTY or fail to handle EMPTY geometries correctly.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of empty_geometry_gpkg, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of empty_geometry_gpkg, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/><circle cx="90" cy="10" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Point geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A GeoPackage containing rows with empty geometries (WKB EMPTY representation) to
 | Format | GPKG |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 11.00&deg;E, 51.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -44,6 +45,16 @@ def test_empty_geometry_gpkg(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose loaders that incorrectly handle EMPTY geometries in GeoPackage format. Detect confusion between SQL NULL and WKB EMPTY geometry representations. Test filtering and query behavior with empty geometries.
@@ -52,7 +63,7 @@ Expose loaders that incorrectly handle EMPTY geometries in GeoPackage format. De
 
 - `empty_geometry_handling`
 - [`format_specific`](../risk/format-specific.md)
-- `null_empty_conflation`
+- [`null_empty_conflation`](../risk/null-empty-conflation.md)
 
 ## Expected behavior
 
@@ -63,6 +74,16 @@ Expose loaders that incorrectly handle EMPTY geometries in GeoPackage format. De
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
+
+## Known consumer divergences
+
+Disagreements already investigated on this case. If your reader reproduces one of these, it is catalogued &mdash; not a new finding.
+
+**pyogrio** &mdash; pyogrio >=0.11, GDAL 3.12-3.13 (originates in GDAL)
+
+Under a spatial filter (bbox= or mask=), the Arrow path (use_arrow=True) returns the NULL-geometry row that the numpy path and GDAL's own `ogrinfo -spat` both exclude -- 3 rows against 2. Traced to GPKG's GetArrowStream fast path; only GPKG diverges among GeoJSON, Shapefile and SQLite. A NULL geometry intersects nothing, so the numpy path is the correct one.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/geocase_validate/gdal-issue-draft.md>
 
 ## Notes
 
@@ -129,8 +150,10 @@ This case is **GeoPackage-specific** because of SQLite's explicit NULL handling.
 
 ## Files
 
-- Primary: `empty_geom.gpkg`
-- Notes: `notes.md`
+- Primary: [`empty_geom.gpkg`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/empty/empty_geometry_gpkg/empty_geom.gpkg)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/empty/empty_geometry_gpkg/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/empty/empty_geometry_gpkg)
 
 ## Source and license
 
@@ -143,11 +166,11 @@ This case is **GeoPackage-specific** because of SQLite's explicit NULL handling.
 
 ## Related cases
 
+- [First NULL After 10,000 Non-NULL Values (GeoPackage)](null_after_batch_boundary_gpkg.md) -- `null_after_batch_boundary_gpkg`
 - [GeoJSON Precision Loss Roundtrip](precision_loss_geojson_roundtrip.md) -- `precision_loss_geojson_roundtrip`
 - [Shapefile Legacy DBF Encoding](shapefile_encoding_legacy.md) -- `shapefile_encoding_legacy`
 - [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
 - [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
-- [Empty Polygon](empty_polygon.md) -- `empty_polygon`
 
 <script type="application/ld+json">
 {
@@ -190,7 +213,12 @@ This case is **GeoPackage-specific** because of SQLite's explicit NULL handling.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.0 10.0 51.0 11.0"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

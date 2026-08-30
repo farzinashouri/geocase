@@ -57,3 +57,5 @@ agentlab*/
 
 # Plan 17: local operator state for the per-day OpenRouter request quota.
 .geocase_quota.json
+
+geocase_validate/

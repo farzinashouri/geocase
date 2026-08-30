@@ -9,14 +9,24 @@ description: "2 GeoCase test cases that exercise the mojibake failure mode."
 
 These 2 cases exercise the `mojibake` failure mode. Run your function against all of them to check how it behaves.
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 <div class="gc-grid">
 <a class="gc-card" href="../../cases/mixed_encoding_attributes/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of mixed_encoding_attributes, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of mixed_encoding_attributes, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="90" cy="10" r="3" fill="var(--gc-diagram-accent)"/></svg>
 <span class="gc-card-title">Mixed Encoding Attributes</span>
 <span class="gc-card-meta">GPKG &middot; Point</span>
 </a>
 <a class="gc-card" href="../../cases/shapefile_encoding_legacy/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of shapefile_encoding_legacy, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of shapefile_encoding_legacy, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="79.22" cy="16.24" r="3" fill="var(--gc-diagram-accent)"/><circle cx="78.02" cy="13.54" r="3" fill="var(--gc-diagram-accent)"/><circle cx="82.6" cy="10" r="3" fill="var(--gc-diagram-accent)"/><circle cx="37.4" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg>
 <span class="gc-card-title">Shapefile Legacy DBF Encoding</span>
 <span class="gc-card-meta">Shapefile &middot; Point</span>
 </a>

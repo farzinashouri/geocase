@@ -154,6 +154,43 @@ _SIMPLE_EXPECTED_FAILURES: frozenset[str] = frozenset({
     "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg32633-rasterization-utm]",
     "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg4326-antimeridian-dateline-2]",
     "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg4326-attributes-format-limitation-format-specific]",
+    # Plan 33's projected UTM cases. Same limitation the epsg32633 entries
+    # above already record -- the simple implementations assume their input is
+    # in degrees -- now reached by three more zones (1N at the antimeridian,
+    # 56S with the southern false northing, and the 32N zone-boundary
+    # straddle) rather than only by 33N.
+    "test_area_m2_handles_all_polygon_cases[vector-polygon-epsg32601-antimeridian-utm-valid]",
+    "test_area_m2_handles_all_polygon_cases[vector-polygon-epsg32632-utm-utm-zone-boundary-valid]",
+    "test_area_m2_handles_all_polygon_cases[vector-polygon-epsg32756-southern-hemisphere-utm-valid]",
+    "test_buffer_in_meters_handles_all_polygon_cases[vector-polygon-epsg32601-antimeridian-utm-valid]",
+    "test_buffer_in_meters_handles_all_polygon_cases[vector-polygon-epsg32632-utm-utm-zone-boundary-valid]",
+    "test_buffer_in_meters_handles_all_polygon_cases[vector-polygon-epsg32756-southern-hemisphere-utm-valid]",
+    "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg32601-antimeridian-utm-valid]",
+    "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg32632-utm-utm-zone-boundary-valid]",
+    "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg32756-southern-hemisphere-utm-valid]",
+    "test_validate_polygon_geometry_handles_all_polygon_cases[vector-polygon-epsg32601-antimeridian-utm-valid]",
+    "test_validate_polygon_geometry_handles_all_polygon_cases[vector-polygon-epsg32632-utm-utm-zone-boundary-valid]",
+    "test_validate_polygon_geometry_handles_all_polygon_cases[vector-polygon-epsg32756-southern-hemisphere-utm-valid]",
+    # Plan 34's Z cases. A new limitation rather than a variant of the ones
+    # above: `ring_crosses` does `[x for x, y in coords]`, which raises
+    # ValueError on a 3-tuple rather than returning a wrong answer. Every
+    # vector fixture was 2D until these two, so the naive implementation had
+    # never met a coordinate it could not unpack -- which is exactly the gap
+    # the pair was added to expose. The `_perfect` counterpart handles both.
+    "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg4326-dimensionality-three-dimensional-wkb]",
+    "test_crosses_antimeridian_handles_all_polygon_cases[vector-polygon-epsg4326-dimensionality-geopackage-integer-precision]",
+    # Plan 28 phase 3's large case. The same "does not repair invalid inputs
+    # before union" limitation the two entries above already record -- but
+    # reached for the first time by a *multi-feature* case, which is what makes
+    # it bite. GEOS returns a lone invalid polygon from `unary_union`
+    # untouched, so the existing single-feature invalid cases never raised;
+    # unioning that same bowtie against 9,999 valid neighbours raises
+    # TopologyException. The `_perfect` counterpart repairs first and passes.
+    "test_dissolve_polygons_handles_all_polygon_cases[vector-polygon-epsg4326-batch-boundary-invalid-large]",
+    # Same case, and the same "simple area_m2 does not reject invalid
+    # geometries" limitation the self-intersection and spike entries above
+    # already record.
+    "test_area_m2_handles_all_polygon_cases[vector-polygon-epsg4326-batch-boundary-invalid-large]",
 })
 
 

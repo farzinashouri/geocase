@@ -146,6 +146,8 @@ def _validate_cases(case_index_path: Path) -> tuple[CaseRegistry, list[str]]:
                 )
                 missing_file = True
 
+        errors.extend(_extent_errors(metadata))
+
         # Only meaningful once every payload file is present.
         if not missing_file:
             limit = _SIZE_CLASS_MAX_BYTES.get(metadata.size_class)
@@ -168,6 +170,56 @@ def _validate_cases(case_index_path: Path) -> tuple[CaseRegistry, list[str]]:
         raise CatalogValidationError(f"Failed to build case registry: {exc}") from exc
 
     return registry, entries
+
+
+#: An extent wider than this, without wrapping the antimeridian, is almost
+#: always the naive-envelope bug: a dateline-crossing geometry whose
+#: ``total_bounds`` was taken literally reports roughly -180..180. No bundled
+#: case is genuinely near-global, so this is a cheap way to catch a bad
+#: regeneration before it reaches a page or a world map.
+_MAX_PLAUSIBLE_EXTENT_DEGREES = 350.0
+
+
+def _extent_errors(metadata: object) -> list[str]:
+    """Check a declared ``extent`` without opening the data file.
+
+    Range and ``north >= south`` are already enforced by ``SpatialExtent``, so
+    anything reaching here parsed. What is left for this layer is *plausibility*:
+    a degenerate box, or a near-global one that did not declare a wrap. The
+    comparison against real bytes is ``validate_case_content.py``'s job -- this
+    module opens no data file and must stay reader-dependency-free.
+    """
+    extent = getattr(metadata, "extent", None)
+    if extent is None:
+        return []
+
+    case_id = getattr(metadata, "id", "<unknown>")
+    errors: list[str] = []
+
+    span_x = (
+        (180.0 - extent.west) + (extent.east + 180.0)
+        if extent.crosses_antimeridian
+        else extent.east - extent.west
+    )
+    span_y = extent.north - extent.south
+
+    # A zero-area extent is *not* a defect: a single-point case has exactly one
+    # position, and 14 bundled point baselines legitimately declare a box of
+    # zero width and zero height. Only a negative span is impossible.
+    if span_x < 0 or span_y < 0:
+        errors.append(
+            f"Case '{case_id}' declares an extent with a negative span "
+            f"({span_x:.2f} x {span_y:.2f} degrees) -- regenerate with "
+            f"scripts/catalog_extent.py --write"
+        )
+    if not extent.crosses_antimeridian and span_x > _MAX_PLAUSIBLE_EXTENT_DEGREES:
+        errors.append(
+            f"Case '{case_id}' declares a {span_x:.0f}-degree-wide extent without "
+            "crossing the antimeridian. That is the signature of a naive "
+            "total_bounds over a dateline-crossing geometry; the wrapped form "
+            "has west > east"
+        )
+    return errors
 
 
 def _validate_no_orphan_case_metadata(
@@ -296,12 +348,24 @@ def _validate_documented_case_ids(docs_root: Path, registry: CaseRegistry) -> in
 #: Files that state the bundled case count and must agree with the registry.
 #: ``recipe/meta.yaml``'s is an executable assertion -- a stale number there
 #: fails the conda build rather than merely misinforming a reader.
+#:
+#: Widened in plan 34. The seven patterns below covered one phrasing each, and
+#: four *other* statements of the same number -- README's "curated vector,
+#: raster and NetCDF files", the two "Browse all N cases" links, and
+#: releasing.md's shell comment -- matched none of them, so they drifted
+#: silently through three renumberings. A count claim this gate cannot see is
+#: worse than no claim at all.
 _COUNT_CLAIMS: tuple[tuple[str, str], ...] = (
     ("README.md", r"(\d+) bundled cases"),
+    ("README.md", r"(\d+) curated vector, raster and NetCDF files"),
     ("docs/index.md", r"(\d+) bundled cases"),
+    ("docs/index.md", r"(\d+) curated geospatial test cases"),
+    ("docs/index.md", r"Browse all (\d+) cases"),
     ("docs/getting-started.md", r"(\d+) bundled cases"),
+    ("docs/getting-started.md", r"browse all (\d+) cases"),
     ("docs/contributing/workflow.md", r"(\d+) bundled cases"),
     ("docs/contributing/releasing.md", r"(\d+) cases in `case-index\.yaml`"),
+    ("docs/contributing/releasing.md", r"len\(geocase\.list_cases\(\)\)\)\"\s+# (\d+)"),
     ("docs/contributing/structure-and-planning.md", r"catalog is \*\*(\d+) cases\*\*"),
     ("recipe/meta.yaml", r"len\(geocase\.list_cases\(\)\) == (\d+)"),
 )

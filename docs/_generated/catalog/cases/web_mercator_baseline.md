@@ -14,8 +14,8 @@ description: "A point in EPSG:3857 (Web Mercator). Baseline for the CRS mismatch
 A point in EPSG:3857 (Web Mercator). Baseline for the CRS mismatch that arises when projected metre coordinates are treated as degrees.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of web_mercator_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of web_mercator_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Point geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A point in EPSG:3857 (Web Mercator). Baseline for the CRS mismatch that arises w
 | Format | GeoJSON |
 | Geometry type | Point |
 | CRS | `EPSG:3857` |
+| Location | Gulf of Guinea (synthetic, Web Mercator) &mdash; 8.98&deg;E, 8.95&deg;N &rarr; 8.98&deg;E, 8.95&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_web_mercator_baseline(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -75,8 +86,10 @@ Baseline EPSG:3857 point for projected-vector coverage.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/web_mercator_baseline/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/web_mercator_baseline/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/crs/web_mercator_baseline)
 
 ## Source and license
 
@@ -89,11 +102,11 @@ Baseline EPSG:3857 point for projected-vector coverage.
 
 ## Related cases
 
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 - [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 - [Rasterize Match WGS84 Polygon](rasterize_match_wgs84_polygon.md) -- `rasterize_match_wgs84_polygon`
 - [Equator Crossing Line](equator_crossing_line.md) -- `equator_crossing_line`
 - [North Pole Point](north_pole_point.md) -- `north_pole_point`
-- [Parquet Mixed Schema Attributes](parquet_mixed_schema_attributes.md) -- `parquet_mixed_schema_attributes`
 
 <script type="application/ld+json">
 {
@@ -136,7 +149,12 @@ Baseline EPSG:3857 point for projected-vector coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:3857"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "8.946574 8.983153 8.946574 8.983153"
+    },
+    "name": "Gulf of Guinea (synthetic, Web Mercator)"
   }
 }
 </script>

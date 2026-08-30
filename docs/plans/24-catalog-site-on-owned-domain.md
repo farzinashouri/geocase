@@ -1,5 +1,11 @@
 # Plan 24 — Publish the catalog on an owned domain
 
+> **Superseded 2026-08-27.** The project chose GitHub Pages as the catalog's one public,
+> canonical home and does not plan to acquire a domain for it. The implemented replacement is
+> `.github/workflows/pages.yml`, which publishes the existing strict MkDocs build to
+> `https://farzinashouri.github.io/geocase/`. This document is retained as the record of the
+> rejected Astro/Netlify route; its instructions not to deploy to GitHub Pages no longer apply.
+
 > **Status: proposed 2026-08-17.** A scoped implementation plan for one deliverable.
 > The single roadmap remains [`development-plan.md`](development-plan.md).
 >

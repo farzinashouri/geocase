@@ -299,7 +299,16 @@ def _utm_polygon_case() -> Any:
         category="vector",
         geometry_type="Polygon",
         tags_all=["utm"],
-        extra_filter=lambda meta: meta.crs == "EPSG:4326" and "special-case" not in meta.tags,
+        # The single, unambiguous WGS84 UTM polygon. Excluding
+        # ``utm_zone_boundary`` is not a workaround: those cases exist
+        # precisely because they do *not* resolve to one zone, so asking a
+        # zone-selection helper for "the" answer would be a malformed
+        # question. They get their own tests.
+        extra_filter=lambda meta: (
+            meta.crs == "EPSG:4326"
+            and "special-case" not in meta.tags
+            and "utm_zone_boundary" not in meta.tags
+        ),
     )
 
 
@@ -753,7 +762,9 @@ def test_get_utm_epsg_handles_all_utm_polygon_cases() -> None:
     tested = 0
 
     for meta in matches:
-        if meta.crs != "EPSG:4326":
+        # A zone-boundary case has no single correct zone -- that is the whole
+        # point of it -- so "which EPSG?" is not a well-formed question here.
+        if meta.crs != "EPSG:4326" or "utm_zone_boundary" in meta.tags:
             continue
         geom = _load_geometry(meta.id)
         point = geom.representative_point()
@@ -776,7 +787,9 @@ def test_get_utm_epsg_perfect_handles_all_utm_polygon_cases() -> None:
     tested = 0
 
     for meta in matches:
-        if meta.crs != "EPSG:4326":
+        # A zone-boundary case has no single correct zone -- that is the whole
+        # point of it -- so "which EPSG?" is not a well-formed question here.
+        if meta.crs != "EPSG:4326" or "utm_zone_boundary" in meta.tags:
             continue
         geom = _load_geometry(meta.id)
         point = geom.representative_point()

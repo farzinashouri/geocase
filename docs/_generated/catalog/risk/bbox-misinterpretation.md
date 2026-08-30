@@ -9,14 +9,24 @@ description: "2 GeoCase test cases that exercise the bbox misinterpretation fail
 
 These 2 cases exercise the `bbox_misinterpretation` failure mode. Run your function against all of them to check how it behaves.
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 <div class="gc-grid">
 <a class="gc-card" href="../../cases/classic_antimeridian_polygon/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of classic_antimeridian_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of classic_antimeridian_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 110 40.14 L 10 40.14 L 10 39.86 L 110 39.86 L 110 40.14 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
 <span class="gc-card-title">Classic Antimeridian Polygon</span>
 <span class="gc-card-meta">GeoJSON &middot; Polygon</span>
 </a>
 <a class="gc-card" href="../../cases/dateline_crossing_polygon/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of dateline_crossing_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of dateline_crossing_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 65 L 110 65 L 110 15 L 10 15 L 10 65 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
 <span class="gc-card-title">Dateline crossing polygon</span>
 <span class="gc-card-meta">GeoJSON &middot; Polygon</span>
 </a>

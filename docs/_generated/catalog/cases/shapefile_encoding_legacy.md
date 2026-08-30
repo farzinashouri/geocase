@@ -14,8 +14,8 @@ description: "A Shapefile dataset with attribute text encoded using a legacy cod
 A Shapefile dataset with attribute text encoded using a legacy code page (Windows-1252/CP1252) instead of UTF-8. Many older Shapefiles and GIS tools use code page-based encoding, which can cause mojibake when read with UTF-8 assumptions. This case exposes encoding detection failures and character corruption in attribute parsing.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Point geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Point geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="60" cy="40" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: Point geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of shapefile_encoding_legacy, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of shapefile_encoding_legacy, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="79.22" cy="16.24" r="3" fill="var(--gc-diagram-accent)"/><circle cx="78.02" cy="13.54" r="3" fill="var(--gc-diagram-accent)"/><circle cx="82.6" cy="10" r="3" fill="var(--gc-diagram-accent)"/><circle cx="37.4" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>Point geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A Shapefile dataset with attribute text encoded using a legacy code page (Window
 | Format | Shapefile |
 | Geometry type | Point |
 | CRS | `EPSG:4326` |
+| Location | West Africa, off Senegal &mdash; 46.63&deg;W, 23.55&deg;S &rarr; 13.00&deg;E, 55.60&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_shapefile_encoding_legacy(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -126,12 +137,14 @@ internationalization bugs in geospatial workflows.
 
 ## Files
 
-- Primary: `legacy_encoding.shp`
-- Sidecar: `legacy_encoding.dbf`
-- Sidecar: `legacy_encoding.shx`
-- Sidecar: `legacy_encoding.prj`
-- Sidecar: `legacy_encoding.cpg`
-- Notes: `notes.md`
+- Primary: [`legacy_encoding.shp`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy/legacy_encoding.shp)
+- Sidecar: [`legacy_encoding.dbf`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy/legacy_encoding.dbf)
+- Sidecar: [`legacy_encoding.shx`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy/legacy_encoding.shx)
+- Sidecar: [`legacy_encoding.prj`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy/legacy_encoding.prj)
+- Sidecar: [`legacy_encoding.cpg`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy/legacy_encoding.cpg)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy)
 
 ## Source and license
 
@@ -194,7 +207,12 @@ internationalization bugs in geospatial workflows.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "-23.5505 -46.6333 55.605 13.0038"
+    },
+    "name": "West Africa, off Senegal"
   }
 }
 </script>

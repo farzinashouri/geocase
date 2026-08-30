@@ -14,8 +14,8 @@ description: "A KML file demonstrating inherent format limitations: all extended
 A KML file demonstrating inherent format limitations: all extended-data attributes are stored as strings regardless of their original type, coordinates are always WGS 84, and Z coordinates are included even when not meaningful. Exposes loaders or converters that assume numeric attribute types survive a KML round-trip.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of format_limited_kml_case, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of format_limited_kml_case, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 32.61 70 L 32.61 67.39 L 30 67.39 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 56.09 43.91 L 61.3 43.91 L 61.3 38.7 L 56.09 38.7 L 56.09 43.91 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 82.17 17.83 L 90 17.83 L 90 10 L 82.17 10 L 82.17 17.83 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>Polygon geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A KML file demonstrating inherent format limitations: all extended-data attribut
 | Format | KML |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Copenhagen, Denmark (synthetic) &mdash; 10.00&deg;E, 52.00&deg;N &rarr; 12.30&deg;E, 54.30&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_format_limited_kml_case(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -121,8 +132,10 @@ Three simple WGS 84 polygons (rectangular zones) across northern Europe.
 
 ## Files
 
-- Primary: `zones.kml`
-- Notes: `notes.md`
+- Primary: [`zones.kml`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/format_limited_kml_case/zones.kml)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/format_limited_kml_case/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/encoding/format_limited_kml_case)
 
 ## Source and license
 
@@ -139,7 +152,7 @@ Three simple WGS 84 polygons (rectangular zones) across northern Europe.
 - [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
 - [Mixed Encoding Attributes](mixed_encoding_attributes.md) -- `mixed_encoding_attributes`
 - [Polygon KML Baseline](polygon_kml_baseline.md) -- `polygon_kml_baseline`
-- [Format-limited Precision Polygon](format_limited_precision_polygon.md) -- `format_limited_precision_polygon`
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
 
 <script type="application/ld+json">
 {
@@ -185,7 +198,12 @@ Three simple WGS 84 polygons (rectangular zones) across northern Europe.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "52.0 10.0 54.3 12.3"
+    },
+    "name": "Copenhagen, Denmark (synthetic)"
   }
 }
 </script>

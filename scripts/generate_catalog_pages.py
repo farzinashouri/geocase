@@ -30,27 +30,79 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
 OUTPUT_ROOT = REPO_ROOT / "docs" / "_generated" / "catalog"
 
-# PLACEHOLDER, NOT A DEPLOYMENT TARGET. This value is baked into every case
-# page's ``schema.org/Dataset`` JSON-LD, and Google Dataset Search deduplicates
-# on that ``url``. Serving these pages from this host before the owned domain
-# exists is the one thing docs/plans/24-catalog-site-on-owned-domain.md forbids:
-# the github.io copy would be the older and more linked of the two, so Google
-# would likely credit it as canonical, and it is Google that picks -- not us.
-# Override with GEOCASE_SITE_URL (or --site-url) once the domain is chosen, then
-# regenerate; that is one env var rather than an audit of 135 committed pages.
+# The GitHub Pages project URL is the catalog's single public, canonical home.
+# Override with GEOCASE_SITE_URL (or --site-url) only as part of a deliberate
+# migration, then regenerate so every JSON-LD URL changes together.
 DEFAULT_SITE_URL = os.environ.get(
     "GEOCASE_SITE_URL", "https://farzinashouri.github.io/geocase"
+)
+
+# Where a case page's Files section points to fetch the actual bytes. Links
+# target ``main``, not a pinned sha: the docs site tracks the released branch,
+# and a sha would rot on every data change. Override with GEOCASE_REPO_URL (or
+# --repo-url) only as part of a deliberate migration, then regenerate.
+DEFAULT_REPO_URL = os.environ.get(
+    "GEOCASE_REPO_URL", "https://github.com/farzinashouri/geocase"
 )
 
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from geocase.catalog.registry import get_registry  # noqa: E402
-from geocase.catalog.roots import case_roots_by_id  # noqa: E402
+from geocase.catalog.roots import case_roots_by_id, package_root  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from catalog_svg import case_diagram, case_thumbnail  # noqa: E402
+from catalog_geometry import geometry_provider  # noqa: E402
+from catalog_svg import case_diagram, case_thumbnail, world_map  # noqa: E402
+
+
+def _build_geometry_provider() -> Any:
+    """Return a cached provider of loaded case geometry, or ``None``.
+
+    ``None`` means the geospatial stack is unavailable, and every vector
+    diagram falls back to its metadata archetype with the caption saying so.
+    The ``catalog`` CI job installs ``.[raster,vector]``, so the real path is
+    the one that runs in the gate.
+    """
+    try:
+        import geocase
+    except ImportError:  # pragma: no cover - only hit in a bare checkout
+        return None
+    return geometry_provider(lambda case_id: geocase.load_case(case_id).load())
+
+
+#: Built once per run so each case is loaded at most once, however many pages
+#: draw it.
+GEOMETRY_PROVIDER = _build_geometry_provider()
+
+#: Directory the raster pixel previews are generated into, relative to
+#: ``OUTPUT_ROOT``. ``generate_raster_previews.py`` writes it; this module only
+#: links at it, so a missing preview shows up as the gate failing there rather
+#: than as a silently image-less page here.
+PREVIEW_DIR = "previews"
+
+
+def _preview_urls(prefix: str) -> Any:
+    """Return a preview-URL provider for pages sitting at ``prefix`` levels up.
+
+    The URL must be relative to the *rendered* page, not to the markdown file:
+    mkdocs serves ``cases/foo.md`` at ``/catalog/cases/foo/``, so a case page
+    is two levels below the catalog root even though its source file is one.
+    """
+
+    def provide(case_id: str) -> str | None:
+        return f"{prefix}{PREVIEW_DIR}/{case_id}.png"
+
+    return provide
+
+
+#: Vector cases that cannot be loaded fall back to an archetype, which is
+#: correct for the few deliberately-malformed fixtures but catastrophic if it
+#: happens to all of them. A run without geopandas would degrade *every* vector
+#: page silently and commit the result, so anything past this many fallbacks is
+#: treated as a broken environment rather than as broken fixtures.
+MAX_VECTOR_FALLBACKS = 10
 
 
 # Descriptions are written for contributors, not searchers. Until they are
@@ -118,6 +170,49 @@ def _generated_note() -> list[str]:
     ]
 
 
+def _format_degrees(value: float, axis: str) -> str:
+    """Render one coordinate with a hemisphere letter, not a signed number.
+
+    ``-170.0`` is correct and unreadable; ``170.00W`` is the form a reader can
+    place without doing arithmetic in their head.
+    """
+    positive, negative = ("E", "W") if axis == "lon" else ("N", "S")
+    hemisphere = positive if value >= 0 else negative
+    return f"{abs(value):.2f}&deg;{hemisphere}"
+
+
+def _format_extent(extent: Any) -> str:
+    """Render an extent as a corner-to-corner span, naming a wrap explicitly.
+
+    The wrap has to be said in words. Four numbers where west is larger than
+    east look like a typo unless the page says what they mean, and this is
+    the one fact the antimeridian cases exist to teach.
+    """
+    corner_sw = (
+        f"{_format_degrees(extent.west, 'lon')}, {_format_degrees(extent.south, 'lat')}"
+    )
+    corner_ne = (
+        f"{_format_degrees(extent.east, 'lon')}, {_format_degrees(extent.north, 'lat')}"
+    )
+    span = f"{corner_sw} &rarr; {corner_ne}"
+    if extent.crosses_antimeridian:
+        span += (
+            " (crosses the antimeridian &mdash; the box runs east from the "
+            "first corner, over 180&deg;)"
+        )
+    return span
+
+
+def _location_value(case: Any) -> str | None:
+    """The Location row's value: the region label, the extent, or both."""
+    region = getattr(case, "region", None)
+    extent = getattr(case, "extent", None)
+    if extent is not None:
+        formatted = _format_extent(extent)
+        return f"{region} &mdash; {formatted}" if region else formatted
+    return region
+
+
 def _attribute_rows(case: Any) -> list[tuple[str, str]]:
     """Return the (label, value) pairs shown in the case summary table."""
     rows: list[tuple[str, str]] = [
@@ -129,6 +224,12 @@ def _attribute_rows(case: Any) -> list[tuple[str, str]]:
         rows.append(("Geometry type", _value(case.geometry_type)))
     if case.crs:
         rows.append(("CRS", f"`{case.crs}`"))
+    # A CRS is a coordinate convention, not a location: two cases sharing
+    # EPSG:4326 can be on opposite sides of the planet. This is the row that
+    # actually says where the data is.
+    location = _location_value(case)
+    if location:
+        rows.append(("Location", location))
     rows.extend(
         [
             ("Test tier", _value(case.test_tier)),
@@ -162,7 +263,7 @@ def _badges(case: Any) -> list[str]:
     return ['<div class="gc-badges">', chips, "</div>", ""]
 
 
-def _case_card(case: Any, href: str) -> list[str]:
+def _case_card(case: Any, href: str, preview_urls: Any) -> list[str]:
     """Render one case as a thumbnail card for a grid listing."""
     meta = _value(case.format)
     geom = _value(case.geometry_type)
@@ -170,14 +271,14 @@ def _case_card(case: Any, href: str) -> list[str]:
         meta = f"{meta} &middot; {geom}"
     return [
         f'<a class="gc-card" href="{href}">',
-        case_thumbnail(case),
+        case_thumbnail(case, GEOMETRY_PROVIDER, preview_urls),
         f'<span class="gc-card-title">{case.title}</span>',
         f'<span class="gc-card-meta">{meta}</span>',
         "</a>",
     ]
 
 
-def _case_grid(cases: list[Any], href_prefix: str) -> list[str]:
+def _case_grid(cases: list[Any], href_prefix: str, preview_prefix: str) -> list[str]:
     """Render a grid of case cards, skipping cases with no drawable schematic.
 
     ``href_prefix`` must be a *resolved* URL prefix, not a Markdown path.
@@ -185,14 +286,29 @@ def _case_grid(cases: list[Any], href_prefix: str) -> list[str]:
     inside them the way it does for Markdown links -- emitting ``foo.md`` here
     ships a broken link that ``mkdocs build --strict`` will not catch.
     """
+    preview_urls = _preview_urls(preview_prefix)
     cards: list[str] = []
     for case in cases:
-        if not case_thumbnail(case):
+        if not case_thumbnail(case, GEOMETRY_PROVIDER, preview_urls):
             continue
-        cards.extend(_case_card(case, f"{href_prefix}{case.id}/"))
+        cards.extend(_case_card(case, f"{href_prefix}{case.id}/", preview_urls))
     if not cards:
         return []
     return ['<div class="gc-grid">', *cards, "</div>", ""]
+
+
+def _required_drivers_cell(drivers: list[str]) -> str:
+    """Render ``required_drivers`` as prose an OGR consumer can act on.
+
+    The empty-string sentinel (``NO_OGR_DRIVER``) would otherwise render as an
+    empty pair of backticks, which tells the reader nothing. It carries the
+    most useful sentence on the page for a WKB/WKT case, so it gets words.
+    """
+    if not drivers:
+        return ""
+    if drivers == [""]:
+        return "none &mdash; no OGR driver opens this format (use shapely)"
+    return ", ".join(f"`{driver}`" for driver in drivers if driver)
 
 
 def _assertion_rows(case: Any) -> list[tuple[str, str]]:
@@ -204,6 +320,12 @@ def _assertion_rows(case: Any) -> list[tuple[str, str]]:
     dumped = assertions.model_dump(exclude_none=True)
     rows: list[tuple[str, str]] = []
     for key, value in dumped.items():
+        if key == "required_drivers":
+            rendered = _required_drivers_cell(value)
+            if not rendered:
+                continue
+            rows.append((f"`{key}`", rendered))
+            continue
         if isinstance(value, list):
             if not value:
                 continue
@@ -218,6 +340,39 @@ def _assertion_rows(case: Any) -> list[tuple[str, str]]:
             rendered = f"`{_value(value)}`"
         rows.append((f"`{key}`", rendered))
     return rows
+
+
+def _known_divergences_section(case: Any) -> list[str]:
+    """Render the catalogued consumer disagreements, if any (plan 28 §2.5).
+
+    Deliberately its own section rather than a row in the assertions table: a
+    divergence is a paragraph with a link, and it is the thing a reader hitting
+    an unexpected result on this case most needs to see before they start
+    investigating.
+    """
+    divergences = getattr(case, "known_divergences", None)
+    if not divergences:
+        return []
+
+    lines = [
+        "## Known consumer divergences",
+        "",
+        "Disagreements already investigated on this case. If your reader "
+        "reproduces one of these, it is catalogued &mdash; not a new finding.",
+        "",
+    ]
+    for divergence in divergences:
+        header = f"**{divergence.consumer}**"
+        if divergence.version_range:
+            header += f" &mdash; {divergence.version_range}"
+        lines.append(header)
+        lines.append("")
+        lines.append(_collapse(divergence.description))
+        lines.append("")
+        if divergence.upstream_url:
+            lines.append(f"Upstream: <{divergence.upstream_url}>")
+            lines.append("")
+    return lines
 
 
 def _table(headers: tuple[str, str], rows: list[tuple[str, str]]) -> list[str]:
@@ -292,15 +447,27 @@ def _json_ld(case: Any, site_url: str) -> list[str]:
             }
         ]
 
+    place: dict[str, Any] = {}
     if case.crs:
-        payload["spatialCoverage"] = {
-            "@type": "Place",
-            "additionalProperty": {
-                "@type": "PropertyValue",
-                "name": "coordinateReferenceSystem",
-                "value": case.crs,
-            },
+        place["additionalProperty"] = {
+            "@type": "PropertyValue",
+            "name": "coordinateReferenceSystem",
+            "value": case.crs,
         }
+    extent = getattr(case, "extent", None)
+    if extent is not None:
+        # schema.org GeoShape.box is "south west north east", space separated,
+        # in WGS84. This is the SEO payoff: a search engine understands a box
+        # and understands nothing whatsoever about an EPSG string.
+        place["geo"] = {
+            "@type": "GeoShape",
+            "box": (f"{extent.south} {extent.west} {extent.north} {extent.east}"),
+        }
+    region = getattr(case, "region", None)
+    if region:
+        place["name"] = region
+    if place:
+        payload["spatialCoverage"] = {"@type": "Place", **place}
 
     rendered = json.dumps(payload, indent=2, ensure_ascii=False)
     return ['<script type="application/ld+json">', rendered, "</script>", ""]
@@ -372,12 +539,73 @@ def _notes_body(case_dir: Path, notes_name: str) -> list[str]:
     return ["## Notes", "", *out, ""]
 
 
+def _install_cta() -> list[str]:
+    """Return the consistent conversion path from a catalog page to PyPI."""
+    return [
+        "## Use GeoCase in your tests",
+        "",
+        "Install the complete set of vector, raster, and NetCDF dependencies:",
+        "",
+        "```bash",
+        'pip install "geocase[all]"',
+        "```",
+        "",
+        "[View GeoCase on PyPI](https://pypi.org/project/geocase/).",
+        "",
+    ]
+
+
+def _repo_relative(case_dir: Path) -> str:
+    """Return ``case_dir`` as a repository-relative posix path.
+
+    Built on the same root resolution the registry uses, which is what makes
+    the nested vector layout (``data/core/vector/polygon/<id>``) come out right
+    without a second lookup table.
+    """
+    return "src/geocase/" + case_dir.relative_to(package_root()).as_posix()
+
+
+def _files_section(case: Any, case_dir: Path | None, repo_url: str) -> list[str]:
+    """Render the Files section, linking each file to its bytes on GitHub.
+
+    ``case_dir`` is ``None`` for a manifest-backed (remote) case, which has no
+    directory in this repository; those fall back to naming the files.
+    """
+    lines = ["## Files", ""]
+
+    if case_dir is None:
+        lines.append(f"- Primary: `{case.files.primary}`")
+        for sidecar in getattr(case.files, "sidecars", []):
+            lines.append(f"- Sidecar: `{sidecar}`")
+        if getattr(case.files, "notes", None):
+            lines.append(f"- Notes: `{_collapse(str(case.files.notes))}`")
+        lines.append("")
+        return lines
+
+    relative = _repo_relative(case_dir)
+
+    def link(name: str) -> str:
+        return f"[`{name}`]({repo_url}/raw/main/{relative}/{name})"
+
+    lines.append(f"- Primary: {link(str(case.files.primary))}")
+    for sidecar in getattr(case.files, "sidecars", []):
+        lines.append(f"- Sidecar: {link(str(sidecar))}")
+    if getattr(case.files, "notes", None):
+        # Named for completeness only; its body is rendered above under Notes.
+        lines.append(f"- Notes: {link(_collapse(str(case.files.notes)))}")
+    lines.append("")
+    lines.append(f"[Browse this case on GitHub]({repo_url}/tree/main/{relative})")
+    lines.append("")
+    return lines
+
+
 def _render_case_page(
     case: Any,
     all_cases: list[Any],
     site_url: str,
     hub_risks: set[str],
     case_dir: Path | None = None,
+    repo_url: str = DEFAULT_REPO_URL,
 ) -> str:
     """Render the full markdown page for a single case."""
     lines = _front_matter(case.title, _meta_description(case))
@@ -393,7 +621,9 @@ def _render_case_page(
 
     # The schematic sits above the tables: it answers "what shape of thing is
     # this?" in one glance, which is the question the tables answer slowly.
-    lines.extend(case_diagram(case))
+    # Case pages render at /catalog/cases/<id>/ -- two levels below the
+    # catalog root, where the previews directory sits.
+    lines.extend(case_diagram(case, GEOMETRY_PROVIDER, _preview_urls("../../")))
 
     lines.extend(_table(("Property", "Value"), _attribute_rows(case)))
     lines.append("")
@@ -410,6 +640,7 @@ def _render_case_page(
     lines.append("    assert data is not None")
     lines.append("```")
     lines.append("")
+    lines.extend(_install_cta())
 
     if case.behavioral_goal:
         lines.append("## What this case checks")
@@ -436,6 +667,8 @@ def _render_case_page(
         lines.extend(_table(("Assertion", "Expected"), assertion_rows))
         lines.append("")
 
+    lines.extend(_known_divergences_section(case))
+
     # The hand-written prose sits high on the page, right after what the case
     # asserts: it is the part a reader actually reads, and the tables below it
     # are reference material.
@@ -449,15 +682,7 @@ def _render_case_page(
             lines.append(f"- `{capability}`")
         lines.append("")
 
-    lines.append("## Files")
-    lines.append("")
-    lines.append(f"- Primary: `{case.files.primary}`")
-    for sidecar in getattr(case.files, "sidecars", []):
-        lines.append(f"- Sidecar: `{sidecar}`")
-    if getattr(case.files, "notes", None):
-        # Named for completeness only; its body is rendered above under Notes.
-        lines.append(f"- Notes: `{_collapse(str(case.files.notes))}`")
-    lines.append("")
+    lines.extend(_files_section(case, case_dir, repo_url))
 
     source = getattr(case, "source", None)
     if source is not None and (source.name or source.license or source.url):
@@ -491,6 +716,203 @@ def _render_case_page(
     return "\n".join(lines).rstrip() + "\n"
 
 
+#: Sort key for the compare table: related shapes should sit adjacent, so
+#: category groups first, then geometry type, then id for stability.
+def _compare_sort_key(case: Any) -> tuple[str, str, str]:
+    return (_value(case.category), _value(case.geometry_type), case.id)
+
+
+def _html_escape(text: str) -> str:
+    return (
+        str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    ).replace('"', "&quot;")
+
+
+def _coverage_maps(cases: list[Any]) -> list[str]:
+    """Two world maps -- vector and raster -- above the compare table.
+
+    Two rather than one, and that is a requirement rather than a layout
+    preference. 23 of the bundled rasters share a single synthetic UTM 33N
+    transform and the vector baselines pile onto two more points, so a single
+    combined map would put 130 markers on roughly four dots and tell a reader
+    nothing. Split by category, each map is legible on its own terms.
+    """
+    groups = [
+        (
+            "Vector coverage",
+            [case for case in cases if _value(case.category) == "vector"],
+            "Where the vector cases sit. Most are synthetic fixtures placed at "
+            "shared convenience origins in Central Europe, so co-located cases "
+            "are collapsed into one marker carrying a count.",
+        ),
+        (
+            "Raster coverage",
+            [case for case in cases if _value(case.category) == "raster"],
+            "Where the raster cases sit. The large cluster is the shared "
+            "UTM 33N fixture transform; the dashed edges of the map are the "
+            "antimeridian, which several cases deliberately straddle.",
+        ),
+    ]
+
+    lines = ["## Where these cases are", ""]
+    lines.append(
+        "A case's CRS says what coordinate convention it uses, not where it is. "
+        "These maps plot each case at its computed WGS84 extent. Cases with no "
+        "valid position -- a deliberately malformed geometry, coordinates "
+        "outside the WGS84 domain -- are absent rather than invented."
+    )
+    lines.append("")
+
+    for title, group, blurb in groups:
+        svg = world_map(group, title)
+        if not svg:
+            continue
+        placed = len([case for case in group if getattr(case, "extent", None)])
+        lines.append(f"### {title}")
+        lines.append("")
+        lines.append('<figure class="gc-figure gc-map-figure">')
+        lines.append(svg)
+        lines.append(
+            f"<figcaption>{blurb} {placed} of {len(group)} "
+            f"{title.split()[0].lower()} cases have a resolvable extent."
+            "</figcaption>"
+        )
+        lines.append("</figure>")
+        lines.append("")
+
+    return lines
+
+
+def _render_compare_page(cases: list[Any]) -> str:
+    """Render the single table that puts every case side by side.
+
+    Raw HTML rather than a Markdown table: the preview cells carry inline SVG,
+    and the filter/sort script needs per-row data attributes to work from. The
+    table is complete as rendered -- ``docs/javascripts/catalog-compare.js`` is
+    progressive enhancement, and the page is fully readable without it.
+    """
+    ordered = sorted(cases, key=_compare_sort_key)
+    # compare.md is served at /catalog/compare/, a directory of its own, so
+    # every relative target here is one level below the catalog root. A bare
+    # ``cases/<id>/`` would resolve to /catalog/compare/cases/<id>/.
+    preview_urls = _preview_urls("../")
+
+    lines = _front_matter(
+        "Compare All Cases",
+        f"Filter and sort all {len(ordered)} GeoCase test cases in one table, "
+        "with a preview of each case's geometry.",
+    )
+    lines.extend(_generated_note())
+    lines.append("# Compare All Cases")
+    lines.append("")
+    lines.append(
+        f"Every one of the {len(ordered)} bundled cases in one table, sorted by "
+        "category and geometry type so related shapes sit together. Vector previews "
+        "are drawn from each case's real coordinates and raster previews from its "
+        "real pixels, with NoData in magenta; a raster that declares no pixel shape "
+        "shows a band-structure schematic instead, and NetCDF cases have no drawable "
+        "diagram."
+    )
+    lines.append("")
+    lines.extend(_install_cta())
+    lines.extend(_coverage_maps(ordered))
+
+    lines.append("## All cases")
+    lines.append("")
+    lines.append('<div class="gc-compare-controls">')
+    lines.append(
+        '<input type="search" id="gc-compare-search" class="gc-compare-search" '
+        'placeholder="Filter by id, title, or risk type" '
+        'aria-label="Filter cases by id, title, or risk type">'
+    )
+    for field, label in (
+        ("category", "Category"),
+        ("format", "Format"),
+        ("geometry", "Geometry"),
+    ):
+        values = sorted(
+            {
+                _row_field(case, field)
+                for case in ordered
+                if _row_field(case, field) != "--"
+            }
+        )
+        options = "".join(
+            f'<option value="{_html_escape(value)}">{_html_escape(value)}</option>'
+            for value in values
+        )
+        lines.append(
+            f'<select class="gc-compare-filter" data-field="{field}" '
+            f'aria-label="Filter by {label.lower()}">'
+            f'<option value="">All {label.lower()}s</option>{options}</select>'
+        )
+    lines.append(
+        f'<span class="gc-compare-count" id="gc-compare-count">'
+        f"Showing {len(ordered)} of {len(ordered)} cases</span>"
+    )
+    lines.append("</div>")
+    lines.append("")
+
+    lines.append('<div class="gc-compare-wrap">')
+    lines.append('<table class="gc-compare" id="gc-compare-table">')
+    lines.append("<thead><tr>")
+    lines.append('<th scope="col">Preview</th>')
+    for field, label in (
+        ("case", "Case"),
+        ("category", "Category"),
+        ("format", "Format"),
+        ("geometry", "Geometry"),
+        ("crs", "CRS"),
+        ("risk", "Risk types"),
+    ):
+        lines.append(f'<th scope="col" data-sort="{field}">{label}</th>')
+    lines.append("</tr></thead>")
+    lines.append("<tbody>")
+
+    for case in ordered:
+        risks = sorted(case.risk_types)
+        risk_text = ", ".join(risks) if risks else "--"
+        crs = case.crs or "--"
+        thumb = case_thumbnail(case, GEOMETRY_PROVIDER, preview_urls) or "&mdash;"
+        haystack = " ".join([case.id, str(case.title), *risks]).lower()
+        lines.append(
+            f'<tr data-case-id="{case.id}" '
+            f'data-category="{_html_escape(_value(case.category))}" '
+            f'data-format="{_html_escape(_value(case.format))}" '
+            f'data-geometry="{_html_escape(_row_field(case, "geometry"))}" '
+            f'data-search="{_html_escape(haystack)}">'
+        )
+        lines.append(f'<td class="gc-compare-preview">{thumb}</td>')
+        lines.append(
+            f'<td><a class="gc-compare-link" href="../cases/{case.id}/">'
+            f"{_html_escape(case.title)}</a>"
+            f'<br><code class="gc-compare-id">{case.id}</code></td>'
+        )
+        lines.append(f"<td>{_html_escape(_value(case.category))}</td>")
+        lines.append(f"<td>{_html_escape(_value(case.format))}</td>")
+        lines.append(f"<td>{_html_escape(_row_field(case, 'geometry'))}</td>")
+        lines.append(f"<td><code>{_html_escape(crs)}</code></td>")
+        lines.append(f'<td class="gc-compare-risks">{_html_escape(risk_text)}</td>')
+        lines.append("</tr>")
+
+    lines.append("</tbody>")
+    lines.append("</table>")
+    lines.append("</div>")
+    lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def _row_field(case: Any, field: str) -> str:
+    """Return the filterable value of one compare-table column."""
+    if field == "category":
+        return _value(case.category)
+    if field == "format":
+        return _value(case.format)
+    if field == "geometry":
+        return _value(case.geometry_type) or "--"
+    raise ValueError(f"unknown compare field: {field}")
+
+
 def _render_hub_page(
     *,
     title: str,
@@ -506,12 +928,15 @@ def _render_hub_page(
     lines.append("")
     lines.append(intro)
     lines.append("")
+    lines.extend(_install_cta())
 
     # The grid first, then the table. Someone landing on a risk hub is asking
     # "what kind of data trips this?" -- the schematics answer that before the
     # table's names do.
     # Hub pages render at /catalog/<facet>/<slug>/, so cases sit two levels up.
-    lines.extend(_case_grid(sorted(cases, key=lambda item: item.id), "../../cases/"))
+    lines.extend(
+        _case_grid(sorted(cases, key=lambda item: item.id), "../../cases/", "../../")
+    )
 
     lines.append("| Case | Category | Format | Geometry |")
     lines.append("|---|---|---|---|")
@@ -548,22 +973,38 @@ def _render_index(
         "Every case is addressable by ID from a plain `pytest` test."
     )
     lines.append("")
+    lines.extend(_install_cta())
 
-    lines.append("## Reading the schematics")
-    lines.append("")
     lines.append(
-        "Each case page carries a diagram of the case's *structure*: the geometry type "
-        "for vector cases, and the band stack, pixel grid, and NoData marker for raster "
-        "cases."
+        "[Compare all cases side by side](compare.md) in one filterable, sortable table."
     )
     lines.append("")
-    lines.append('!!! warning "Schematics are not pictures of the data"')
+
+    lines.append("## Reading the diagrams")
     lines.append("")
     lines.append(
-        "    They are drawn from case metadata alone -- never from the fixture bytes. "
-        "A `Polygon` schematic shows *a* polygon, not the case's real coordinates, and "
-        "a raster grid shows *that* there are pixels, not their values. Load the case "
-        "to see the actual data."
+        "Vector case pages render the case's **actual geometry**, projected to fit a "
+        "fixed viewport. Raster pages carry a *schematic* of structure instead: the "
+        "band stack, pixel grid, and NoData marker, drawn from metadata."
+    )
+    lines.append("")
+    lines.append('!!! warning "What a diagram does and does not tell you"')
+    lines.append("")
+    lines.append(
+        "    **Vector previews are real coordinates, but scale is not comparable.** "
+        "Each is fitted to the viewport independently, so a continent-sized polygon and "
+        "a metre-sized one can look identical. A handful of cases are deliberately "
+        "malformed and cannot be loaded at all; those fall back to a generic shape for "
+        "their geometry type and say so in the caption."
+    )
+    lines.append("")
+    lines.append(
+        "    **Raster previews are real pixels, but contrast-stretched.** Brightness "
+        "is relative to each case's own range, so it carries no absolute value; "
+        "NoData is painted magenta, a colour no valid pixel can take. A raster that "
+        "declares no pixel shape gets a band-structure schematic instead, which shows "
+        "*that* there are pixels and not their values. NetCDF cases have no diagram "
+        "at all. Load the case to see the actual data."
     )
     lines.append("")
 
@@ -610,7 +1051,9 @@ def _render_index(
     return "\n".join(lines).rstrip() + "\n"
 
 
-def build_pages(cases: list[Any], site_url: str) -> dict[str, str]:
+def build_pages(
+    cases: list[Any], site_url: str, repo_url: str = DEFAULT_REPO_URL
+) -> dict[str, str]:
     """Build every catalog page as a mapping of relative path to content."""
     by_risk: dict[str, list[Any]] = defaultdict(list)
     by_format: dict[str, list[Any]] = defaultdict(list)
@@ -625,12 +1068,13 @@ def build_pages(cases: list[Any], site_url: str) -> dict[str, str]:
 
     pages: dict[str, str] = {
         "index.md": _render_index(cases, by_risk, by_format, hub_risks),
+        "compare.md": _render_compare_page(cases),
     }
 
     case_dirs = case_roots_by_id()
     for case in cases:
         pages[f"cases/{case.id}.md"] = _render_case_page(
-            case, cases, site_url, hub_risks, case_dirs.get(case.id)
+            case, cases, site_url, hub_risks, case_dirs.get(case.id), repo_url
         )
 
     for risk in sorted(hub_risks):
@@ -695,6 +1139,17 @@ def check_pages(pages: dict[str, str], output_root: Path) -> list[str]:
     return problems
 
 
+def _vector_fallbacks(cases: list[Any]) -> list[str]:
+    """Return the ids of vector cases whose diagram is an archetype, not real data."""
+    if GEOMETRY_PROVIDER is None:
+        return [case.id for case in cases if _value(case.category) == "vector"]
+    return [
+        case.id
+        for case in cases
+        if _value(case.category) == "vector" and GEOMETRY_PROVIDER(case.id) is None
+    ]
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Generate catalog documentation pages."
@@ -709,6 +1164,11 @@ def parse_args() -> argparse.Namespace:
         "--site-url",
         default=DEFAULT_SITE_URL,
         help="Canonical site URL used in JSON-LD.",
+    )
+    parser.add_argument(
+        "--repo-url",
+        default=DEFAULT_REPO_URL,
+        help="Repository URL the Files section links case data files into.",
     )
     parser.add_argument(
         "--check",
@@ -726,7 +1186,19 @@ def main() -> int:
         print("No cases found in the registry.")
         return 1
 
-    pages = build_pages(cases, args.site_url.rstrip("/"))
+    fallbacks = _vector_fallbacks(cases)
+    if len(fallbacks) > MAX_VECTOR_FALLBACKS:
+        print(
+            f"{len(fallbacks)} of the vector cases could not be loaded, so their "
+            "diagrams would fall back to generic archetypes."
+        )
+        print(
+            "This almost always means the geospatial stack is missing. Run from the "
+            "conda `geocase` environment, or install `.[raster,vector]`."
+        )
+        return 1
+
+    pages = build_pages(cases, args.site_url.rstrip("/"), args.repo_url.rstrip("/"))
 
     if args.check:
         problems = check_pages(pages, args.output_root)

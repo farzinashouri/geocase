@@ -10,6 +10,7 @@ from geocase.catalog.models import (
     CaseMetadata,
     Category,
     FormatType,
+    LoaderHint,
     SizeClass,
     StorageClass,
     SuiteSelection,
@@ -24,7 +25,8 @@ def matches_selection(case: CaseMetadata, sel: SuiteSelection) -> bool:
       * ``include_case_ids`` — if non-empty, case.id must be listed.
       * ``exclude_case_ids`` — case.id must *not* be listed.
             * ``category``, ``geometry_type``, ``test_tier``, ``storage_class``,
-                ``format``, ``size_class`` — exact match when the field is set.
+                ``format``, ``loader_hint``, ``size_class`` — exact match when
+                the field is set.
       * ``tags_any`` — case must have **at least one** of the listed tags.
       * ``tags_all`` — case must have **all** of the listed tags.
       * ``risk_types_any`` — case must have at least one matching risk type.
@@ -47,6 +49,8 @@ def matches_selection(case: CaseMetadata, sel: SuiteSelection) -> bool:
     if sel.storage_class is not None and case.storage_class != sel.storage_class:
         return False
     if sel.format is not None and case.format != sel.format:
+        return False
+    if sel.loader_hint is not None and case.loader_hint != sel.loader_hint:
         return False
     if sel.size_class is not None and case.size_class != sel.size_class:
         return False
@@ -73,6 +77,7 @@ def select_cases(
     test_tier: TestTier | None = None,
     storage_class: StorageClass | None = None,
     format: FormatType | None = None,
+    loader_hint: LoaderHint | None = None,
     size_class: SizeClass | None = None,
     tags_any: list[str] | None = None,
     tags_all: list[str] | None = None,
@@ -103,6 +108,7 @@ def select_cases(
             test_tier=test_tier,
             storage_class=storage_class,
             format=format,
+            loader_hint=loader_hint,
             size_class=size_class,
             tags_any=tags_any or [],
             tags_all=tags_all or [],

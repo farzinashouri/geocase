@@ -13,12 +13,18 @@ description: "A copy of the small NoData GeoTIFF shifted exactly one pixel east 
 
 A copy of the small NoData GeoTIFF shifted exactly one pixel east while preserving CRS, resolution, band structure, and pixel values. Useful for testing whether raster alignment logic recognizes grids that are aligned on the same pixel lattice but have different extents.
 
+<figure class="gc-figure">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_nodata_small_shifted.png" alt="Pixels of geotiff_nodata_small_shifted, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>10x10 px. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
+</figure>
+
 | Property | Value |
 |---|---|
 | Case ID | `geotiff_nodata_small_shifted` |
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Central Europe (synthetic, UTM 33N) &mdash; 15.01&deg;E, 50.55&deg;N &rarr; 15.16&deg;E, 50.64&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -38,6 +44,16 @@ def test_geotiff_nodata_small_shifted(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Expose alignment helpers that require identical extents instead of recognizing rasters that share the same pixel lattice with an integer-pixel offset.
@@ -56,6 +72,7 @@ Expose alignment helpers that require identical extents instead of recognizing r
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
+| `expected_shape` | `[10, 10]` |
 
 ## Notes
 
@@ -72,8 +89,10 @@ from true pixel-lattice compatibility.
 
 ## Files
 
-- Primary: `nodata_sample_shifted.tif`
-- Notes: `notes.md`
+- Primary: [`nodata_sample_shifted.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_nodata_small_shifted/nodata_sample_shifted.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_nodata_small_shifted/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_nodata_small_shifted)
 
 ## Source and license
 
@@ -88,9 +107,9 @@ from true pixel-lattice compatibility.
 
 - [GeoTIFF NoData Small](geotiff_nodata_small.md) -- `geotiff_nodata_small`
 - [Hole Center NoData Raster](hole_center_nodata.md) -- `hole_center_nodata`
+- [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
 - [All Valid Rectangular Raster](all_valid_rectangular.md) -- `all_valid_rectangular`
-- [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
-- [COG Single-Band Small](cog_singleband_small.md) -- `cog_singleband_small`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 
 <script type="application/ld+json">
 {
@@ -133,7 +152,12 @@ from true pixel-lattice compatibility.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.551829 15.014116 50.641863 15.155568"
+    },
+    "name": "Central Europe (synthetic, UTM 33N)"
   }
 }
 </script>

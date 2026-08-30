@@ -1,12 +1,12 @@
 ---
-description: "GeoCase is a pytest plugin and case catalog: 135 curated geospatial test cases covering NoData, antimeridian crossing, CRS mismatch and axis order."
+description: "GeoCase is a pytest plugin and case catalog: 154 curated geospatial test cases covering NoData, antimeridian crossing, CRS mismatch and axis order."
 ---
 
 # GeoCase
 
 GeoCase is an open geospatial testing toolkit and case catalog for realistic, reproducible, parameterized tests.
 
-> Status: **1.0, not yet published to PyPI** — install from source for now. The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 135 bundled cases, 2.1 MB. Remote dataset transport is deferred to v1.1; see the [changelog](https://github.com/farzinashouri/geocase/blob/main/CHANGELOG.md).
+> Status: **1.0.0rc1 is available on [PyPI](https://pypi.org/project/geocase/)**; this repository contains the next release candidate (`1.0.0rc3`). The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 154 bundled cases, 5.1 MB. Remote dataset transport is deferred to v1.1; see the [changelog](https://github.com/farzinashouri/geocase/blob/main/CHANGELOG.md).
 
 Most spatial tests use overly simple geometries or ad hoc local files. GeoCase provides a curated catalog of compact but behaviorally meaningful cases that can be selected into pytest suites by metadata such as category, risk type, test tier, format, and storage class.
 
@@ -26,6 +26,7 @@ Most spatial tests use overly simple geometries or ad hoc local files. GeoCase p
 
 ## Start here
 
+- **[Browse all 154 cases](_generated/catalog/compare.md)** — the case catalog, filterable and sortable, with coverage maps
 - New users: [`getting-started.md`](getting-started.md)
 - Testing a real function: [`testing-your-function-with-geocase.md`](testing-your-function-with-geocase.md)
 - Finding cases by metadata: [`case-discovery.md`](case-discovery.md)
@@ -39,7 +40,7 @@ Each folder under `docs/` holds one kind of document:
 
 - User guides at the top level explain how to select cases, write tests, and use GeoCase day to day.
 - `docs/contributing/` — how to work on GeoCase: workflow, conventions, and maintainer practices.
-- `docs/plans/` — what is planned and in what order, including the [roadmap](plans/development-plan.md). Superseded plans stay in `docs/plans/archive/` as an implementation log.
+- `docs/plans/` — what is planned and in what order, including the [roadmap](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md). Superseded plans stay in `docs/plans/archive/` as an implementation log.
 - `docs/design/` — future-facing designs that are not part of the core workflow.
 - `docs/reference/` — descriptive maps of the project as it exists today, such as the [codebase summary](reference/codebase-summary.md).
 - `docs/_generated/` — pages built by scripts and gated in CI; never edit them by hand.

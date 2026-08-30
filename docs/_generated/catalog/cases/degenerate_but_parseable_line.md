@@ -14,8 +14,8 @@ description: "A zero-length LineString whose two vertices are identical. The geo
 A zero-length LineString whose two vertices are identical. The geometry is parseable and loadable, but it is degenerate and invalid for many downstream geometric operations.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: LineString geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of degenerate_but_parseable_line, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of degenerate_but_parseable_line, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 30 70" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<figcaption>LineString geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A zero-length LineString whose two vertices are identical. The geometry is parse
 | Format | GeoJSON |
 | Geometry type | LineString |
 | CRS | `EPSG:4326` |
+| Location | Mediterranean, off Libya (synthetic) &mdash; 12.00&deg;E, 34.00&deg;N &rarr; 12.00&deg;E, 34.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_degenerate_but_parseable_line(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -76,8 +87,10 @@ Zero-length LineString that parses successfully but is geometrically degenerate.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/degenerate/degenerate_but_parseable_line/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/degenerate/degenerate_but_parseable_line/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/degenerate/degenerate_but_parseable_line)
 
 ## Source and license
 
@@ -93,8 +106,8 @@ Zero-length LineString that parses successfully but is geometrically degenerate.
 - [Ambiguous Engine-dependent Polygon](ambiguous_engine_dependent_polygon.md) -- `ambiguous_engine_dependent_polygon`
 - [Antimeridian Crossing LineString](antimeridian_crossing_line.md) -- `antimeridian_crossing_line`
 - [Equator Crossing Line](equator_crossing_line.md) -- `equator_crossing_line`
+- [Invalid Geometry at Feature 9,999 (GeoPackage)](invalid_geometry_at_scale_gpkg.md) -- `invalid_geometry_at_scale_gpkg`
 - [LineString CSV_WKT Baseline](linestring_csv_wkt_baseline.md) -- `linestring_csv_wkt_baseline`
-- [LineString FlatGeobuf Baseline](linestring_flatgeobuf_baseline.md) -- `linestring_flatgeobuf_baseline`
 
 <script type="application/ld+json">
 {
@@ -138,7 +151,12 @@ Zero-length LineString that parses successfully but is geometrically degenerate.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "34.0 12.0 34.0 12.0"
+    },
+    "name": "Mediterranean, off Libya (synthetic)"
   }
 }
 </script>

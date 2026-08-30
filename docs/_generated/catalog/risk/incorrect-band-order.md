@@ -9,19 +9,34 @@ description: "4 GeoCase test cases that exercise the incorrect band order failur
 
 These 4 cases exercise the `incorrect_band_order` failure mode. Run your function against all of them to check how it behaves.
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 <div class="gc-grid">
+<a class="gc-card" href="../../cases/geotiff_multiband_small/">
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_multiband_small.png" alt="Pixels of geotiff_multiband_small, a 10x10 raster, with NoData in magenta" loading="lazy" decoding="async">
+<span class="gc-card-title">GeoTIFF Multi-Band Small</span>
+<span class="gc-card-meta">GeoTIFF</span>
+</a>
 <a class="gc-card" href="../../cases/multispectral_s2_like_small/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 4 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 4 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="40.0" y="14.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="34.0" y="20.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="28.0" y="26.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="22.0" y="32.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="36.5" y1="32.0" x2="36.5" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="51.0" y1="32.0" x2="51.0" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="65.5" y1="32.0" x2="65.5" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="22.0" y1="43.3" x2="80.0" y2="43.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="22.0" y1="54.7" x2="80.0" y2="54.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="23.0" y="55.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg>
+<img class="gc-diagram gc-preview" src="../../previews/multispectral_s2_like_small.png" alt="Pixels of multispectral_s2_like_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
 <span class="gc-card-title">Multispectral Sentinel-2-like Small</span>
 <span class="gc-card-meta">GeoTIFF</span>
 </a>
 <a class="gc-card" href="../../cases/optical_rgb_small/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 3 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 3 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="37.0" y="17.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="25.0" y="29.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="39.5" y1="29.0" x2="39.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="54.0" y1="29.0" x2="54.0" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="68.5" y1="29.0" x2="68.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="40.3" x2="83.0" y2="40.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="51.7" x2="83.0" y2="51.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg>
+<img class="gc-diagram gc-preview" src="../../previews/optical_rgb_small.png" alt="Pixels of optical_rgb_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
 <span class="gc-card-title">Optical RGB Small</span>
 <span class="gc-card-meta">GeoTIFF</span>
 </a>
 <a class="gc-card" href="../../cases/sar_dualpol_small/">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 2 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 2 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="34.0" y="20.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="28.0" y="26.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="42.5" y1="26.0" x2="42.5" y2="60.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="57.0" y1="26.0" x2="57.0" y2="60.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="71.5" y1="26.0" x2="71.5" y2="60.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="28.0" y1="37.3" x2="86.0" y2="37.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="28.0" y1="48.7" x2="86.0" y2="48.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="29.0" y="49.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg>
+<img class="gc-diagram gc-preview" src="../../previews/sar_dualpol_small.png" alt="Pixels of sar_dualpol_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
 <span class="gc-card-title">SAR Dual-Pol Small</span>
 <span class="gc-card-meta">GeoTIFF</span>
 </a>

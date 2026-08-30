@@ -14,8 +14,8 @@ description: "An int16 NDVI raster with a 0.0001 scale factor and a NoData value
 An int16 NDVI raster with a 0.0001 scale factor and a NoData value. Reading the raw integers without applying scale_factor yields NDVI in the thousands.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="32.0" y="46.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg>
-<figcaption>Schematic: 1 band, 16x16 px, int16, sentinel NoData. Drawn from metadata, not from the pixels.</figcaption>
+<img class="gc-diagram gc-preview" src="../../previews/ndvi_scaled_int16_small.png" alt="Pixels of ndvi_scaled_int16_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>1 band, 16x16 px, int16, sentinel NoData. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
 </figure>
 
 | Property | Value |
@@ -24,6 +24,7 @@ An int16 NDVI raster with a 0.0001 scale factor and a NoData value. Reading the 
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Southern Italy / Sicily (synthetic, UTM 33N) &mdash; 15.00&deg;E, 40.65&deg;N &rarr; 15.00&deg;E, 40.65&deg;N |
 | Test tier | integration |
 | Size class | tiny |
 | Storage class | bundled |
@@ -42,6 +43,16 @@ def test_ndvi_scaled_int16_small(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -78,7 +89,9 @@ Confirm GeoCase preserves a scaled int16 NDVI product, its scale factor, and its
 
 ## Files
 
-- Primary: `ndvi_scaled_int16_small.tif`
+- Primary: [`ndvi_scaled_int16_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/ndvi_scaled_int16_small/ndvi_scaled_int16_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/ndvi_scaled_int16_small)
 
 ## Source and license
 
@@ -140,7 +153,12 @@ Confirm GeoCase preserves a scaled int16 NDVI product, its scale factor, and its
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "40.649415 15.0 40.650857 15.001893"
+    },
+    "name": "Southern Italy / Sicily (synthetic, UTM 33N)"
   }
 }
 </script>

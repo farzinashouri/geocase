@@ -15,7 +15,7 @@ An explicitly empty polygon geometry used to verify that code handles empty-but-
 
 <figure class="gc-figure">
 <svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<figcaption>Schematic only -- this case's geometry could not be rendered, so the drawing is a generic Polygon, not the fixture's coordinates.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ An explicitly empty polygon geometry used to verify that code handles empty-but-
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | No geometry -- the case is deliberately empty |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_empty_polygon(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -73,8 +84,10 @@ Used for functions that should accept or short-circuit on an empty polygon geome
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/empty/empty_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/empty/empty_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/empty/empty_polygon)
 
 ## Source and license
 
@@ -131,7 +144,8 @@ Used for functions that should accept or short-circuit on an empty polygon geome
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "name": "No geometry -- the case is deliberately empty"
   }
 }
 </script>

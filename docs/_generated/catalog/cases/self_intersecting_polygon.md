@@ -14,8 +14,8 @@ description: "A polygon whose boundary crosses itself, producing an invalid geom
 A polygon whose boundary crosses itself, producing an invalid geometry by OGC standards. Used to verify that validation and repair routines detect the issue.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of self_intersecting_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of self_intersecting_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 10 L 90 70 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>Polygon geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A polygon whose boundary crosses itself, producing an invalid geometry by OGC st
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Near the origin (synthetic, no real-world location) &mdash; 0.00&deg;E, 0.00&deg;N &rarr; 10.00&deg;E, 10.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_self_intersecting_polygon(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -97,8 +108,10 @@ topology checks catch bad geometry.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/invalid/self_intersecting_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/invalid/self_intersecting_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/invalid/self_intersecting_polygon)
 
 ## Source and license
 
@@ -113,9 +126,9 @@ topology checks catch bad geometry.
 
 - [Unclosed Ring Polygon](unclosed_ring_polygon.md) -- `unclosed_ring_polygon`
 - [Ambiguous Engine-dependent Polygon](ambiguous_engine_dependent_polygon.md) -- `ambiguous_engine_dependent_polygon`
+- [Invalid Geometry at Feature 9,999 (GeoPackage)](invalid_geometry_at_scale_gpkg.md) -- `invalid_geometry_at_scale_gpkg`
 - [Out-of-Bounds / Invalid Coordinates](out_of_bounds_coordinates.md) -- `out_of_bounds_coordinates`
 - [Polygon with Hole](polygon_with_hole.md) -- `polygon_with_hole`
-- [Disjoint Polygons](disjoint_polygons.md) -- `disjoint_polygons`
 
 <script type="application/ld+json">
 {
@@ -158,7 +171,12 @@ topology checks catch bad geometry.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.0 0.0 10.0 10.0"
+    },
+    "name": "Near the origin (synthetic, no real-world location)"
   }
 }
 </script>

@@ -14,8 +14,8 @@ description: "A WGS84 polygon that must be reprojected to EPSG:32633 to align wi
 A WGS84 polygon that must be reprojected to EPSG:32633 to align with its raster. Exercises the CRS mismatch that makes rasterization silently misalign.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of rasterize_match_wgs84_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of rasterize_match_wgs84_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 70 L 110 70 L 110 10 L 10 10 L 10 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>Polygon geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A WGS84 polygon that must be reprojected to EPSG:32633 to align with its raster.
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic, UTM 33N) &mdash; 14.90&deg;E, 50.58&deg;N &rarr; 15.10&deg;E, 50.70&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_rasterize_match_wgs84_polygon(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -75,8 +86,10 @@ A WGS84 polygon that overlaps the bundled `geotiff_utm_boundary` raster after re
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/rasterize_match_wgs84_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/rasterize_match_wgs84_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/crs/rasterize_match_wgs84_polygon)
 
 ## Source and license
 
@@ -90,10 +103,10 @@ A WGS84 polygon that overlaps the bundled `geotiff_utm_boundary` raster after re
 ## Related cases
 
 - [Rasterize Match UTM33 Polygon](rasterize_match_utm33_polygon.md) -- `rasterize_match_utm33_polygon`
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 - [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 - [Web Mercator Baseline Point](web_mercator_baseline.md) -- `web_mercator_baseline`
 - [Equator-Crossing Polygon](equator_polygon.md) -- `equator_polygon`
-- [GeoTIFF UTM Boundary](geotiff_utm_boundary.md) -- `geotiff_utm_boundary`
 
 <script type="application/ld+json">
 {
@@ -135,7 +148,12 @@ A WGS84 polygon that overlaps the bundled `geotiff_utm_boundary` raster after re
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.58 14.9 50.7 15.1"
+    },
+    "name": "Central Europe (synthetic, UTM 33N)"
   }
 }
 </script>

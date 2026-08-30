@@ -1,0 +1,47 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::4326"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "layer": "mismatched",
+        "crs_declared": "EPSG:4326",
+        "crs_actual": "EPSG:32633",
+        "honest": false
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              309839.329,
+              6645158.002
+            ],
+            [
+              321019.283,
+              6644600.296
+            ],
+            [
+              321827.283,
+              6661292.378
+            ],
+            [
+              310697.858,
+              6661848.403
+            ],
+            [
+              309839.329,
+              6645158.002
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

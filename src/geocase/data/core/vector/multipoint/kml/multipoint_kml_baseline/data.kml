@@ -10,7 +10,7 @@
 	<ExtendedData><SchemaData schemaUrl="#data">
 		<SimpleData name="id">1</SimpleData>
 	</SchemaData></ExtendedData>
-      <MultiGeometry><Point><coordinates>10,50</coordinates></Point><Point><coordinates>10.2,50.1</coordinates></Point><Point><coordinates>10.4,50.2</coordinates></Point></MultiGeometry>
+      <MultiGeometry><Point><coordinates>142.4,43.1</coordinates></Point><Point><coordinates>142.6,43.2</coordinates></Point><Point><coordinates>142.8,43.3</coordinates></Point></MultiGeometry>
   </Placemark>
 </Folder>
 </Document></kml>

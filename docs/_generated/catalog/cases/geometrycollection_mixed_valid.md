@@ -14,8 +14,8 @@ description: "A valid GeometryCollection fixture containing a point, line, and p
 A valid GeometryCollection fixture containing a point, line, and polygon to support mixed-geometry loader behavior checks.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a GeometryCollection geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a GeometryCollection geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="16,30 46,26 44,54 20,56" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="58,58 76,34 96,48" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="92" cy="22" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: GeometryCollection geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="GeometryCollection geometry of geometrycollection_mixed_valid, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>GeometryCollection geometry of geometrycollection_mixed_valid, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="70" r="3" fill="var(--gc-diagram-accent)"/><path d="M 10 70 L 60 50 L 110 60" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M 30 50 L 70 50 L 70 10 L 30 10 L 30 50 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>GeometryCollection geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A valid GeometryCollection fixture containing a point, line, and polygon to supp
 | Format | GeoJSON |
 | Geometry type | GeometryCollection |
 | CRS | `EPSG:4326` |
+| Location | Central Europe (synthetic) &mdash; 10.00&deg;E, 50.00&deg;N &rarr; 11.00&deg;E, 50.60&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_geometrycollection_mixed_valid(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -74,8 +85,10 @@ Valid mixed GeometryCollection case for loader and metadata coverage.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/geometrycollection/geojson/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/geometrycollection/geojson/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/geometrycollection/geojson)
 
 ## Source and license
 
@@ -89,10 +102,10 @@ Valid mixed GeometryCollection case for loader and metadata coverage.
 ## Related cases
 
 - [Spike Invalid Polygon](spike_invalid_polygon.md) -- `spike_invalid_polygon`
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
+- [Dense Ring Polygon (4096 vertices, GeoPackage)](dense_ring_polygon_4k_gpkg.md) -- `dense_ring_polygon_4k_gpkg`
 - [Equator Crossing Line](equator_crossing_line.md) -- `equator_crossing_line`
 - [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
-- [Format-limited Precision Polygon](format_limited_precision_polygon.md) -- `format_limited_precision_polygon`
-- [LineString CSV_WKT Baseline](linestring_csv_wkt_baseline.md) -- `linestring_csv_wkt_baseline`
 
 <script type="application/ld+json">
 {
@@ -132,7 +145,12 @@ Valid mixed GeometryCollection case for loader and metadata coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "50.0 10.0 50.6 11.0"
+    },
+    "name": "Central Europe (synthetic)"
   }
 }
 </script>

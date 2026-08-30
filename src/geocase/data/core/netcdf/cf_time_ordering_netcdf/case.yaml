@@ -1,0 +1,62 @@
+id: cf_time_ordering_netcdf
+title: CF Time Units and Non-Conventional Dimension Order
+description: >
+  A CF time axis encoded as "hours since 2020-01-01 00:00:00" on a variable
+  whose dimensions run (longitude, latitude, time) -- x before y, time last.
+  Undecoded, the time axis is three small integers meaning nothing; assumed
+  to be (time, latitude, longitude), the array transposes silently.
+category: netcdf
+format: NetCDF
+test_tier: unit
+size_class: tiny
+storage_class: bundled
+redistributable: true
+schema_version: "1.0"
+status: validated
+
+tags:
+  - netcdf
+  - cf-conventions
+  - time
+  - dimension-order
+
+risk_types:
+  - coordinate_order
+  - dimension_mismatch
+
+behavioral_goal: >
+  Verify that dimension order is read from the file rather than assumed,
+  and that CF time units are decoded to real timestamps rather than used
+  as raw offsets.
+
+expected_capabilities:
+  - load
+  - coordinate-inspection
+
+loader_hint: xarray
+crs: EPSG:4326
+
+# Hand-written; scripts/catalog_extent.py does not touch it.
+region: "North Sea / Northern Europe (synthetic)"
+
+files:
+  primary: cf_time_ordering.nc
+  notes: notes.md
+
+source:
+  name: geocase-curated
+  license: MIT
+
+assertions:
+  expect_loadable: true
+
+params:
+  # Compared in order, not as a set -- that is what makes the ordering
+  # claim checkable at all.
+  expected_dimensions:
+    - longitude
+    - latitude
+    - time
+  expected_variables:
+    - t2m
+  expected_time_units: "hours since 2020-01-01 00:00:00"

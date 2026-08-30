@@ -13,7 +13,9 @@ GeoCase is built around a simple workflow:
 3. write a normal `pytest` test,
 4. let GeoCase provide realistic geospatial inputs.
 
-If you want to understand the broader roadmap, see [`docs/plans/development-plan.md`](plans/development-plan.md).
+To see what ships in the box, [browse all 154 cases](_generated/catalog/index.md).
+
+If you want to understand the broader roadmap, see [`docs/plans/development-plan.md`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md).
 
 ---
 
@@ -42,7 +44,7 @@ pip install -e ".[dev]"
 
 ### Installed package usage
 
-When a published package release is available, install it with extras appropriate for your data types:
+To install the latest published release with all data-type extras:
 
 ```bash
 pip install "geocase[all]"
@@ -198,7 +200,7 @@ Start simple with explicit case IDs. Move to selectors when your test intent is 
 ## Current project status
 
 GeoCase 1.0.0 covers the core `pytest` workflow and a small public API, with 1701 passing
-tests and 135 bundled cases. The metadata, catalog, runtime, assertions, loader, and
+tests and 154 bundled cases. The metadata, catalog, runtime, assertions, loader, and
 pytest plugin layers are complete.
 
 The v1.0 compatibility promise covers **two surfaces only**: the pytest workflow (markers
@@ -210,6 +212,5 @@ Deferred to v1.1, by decision rather than omission:
 - Rotated/skewed affine transforms and southern-hemisphere UTM coverage
 - A command-line interface
 
-See [`docs/plans/development-plan.md`](plans/development-plan.md) for the
+See [`docs/plans/development-plan.md`](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md) for the
 current roadmap.
-

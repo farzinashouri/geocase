@@ -12,8 +12,10 @@ from geocase.catalog.models import (
     AssertionHints,
     CaseMetadata,
     FileMap,
+    KnownDivergence,
     RemoteInfo,
     SourceInfo,
+    SpatialExtent,
     SuiteMetadata,
     SuiteSelection,
 )
@@ -111,6 +113,65 @@ class TestCaseMetadataValid:
         assert case.source is None
         assert case.assertions.expect_loadable is True
         assert case.assertions.expected_geometry_types == []
+
+    def test_extent_and_region_round_trip(self):
+        """Accepts a WGS84 extent and an editorial region label."""
+        case = CaseMetadata(
+            **_minimal_case(
+                extent={"west": 10.0, "south": 50.0, "east": 11.0, "north": 51.0},
+                region="Central Europe (synthetic)",
+            )
+        )
+        assert case.extent is not None
+        assert case.extent.west == 10.0
+        assert case.extent.north == 51.0
+        assert case.region == "Central Europe (synthetic)"
+
+    def test_extent_and_region_are_optional(self):
+        """Omitting both keeps the 130 existing case files parseable."""
+        case = CaseMetadata(**_minimal_case())
+        assert case.extent is None
+        assert case.region is None
+
+    def test_extent_may_wrap_the_antimeridian(self):
+        """``west > east`` is the antimeridian convention, not an error."""
+        case = CaseMetadata(
+            **_minimal_case(
+                extent={"west": 170.0, "south": -10.0, "east": -170.0, "north": 10.0}
+            )
+        )
+        assert case.extent is not None
+        assert case.extent.west > case.extent.east
+
+
+# ===================================================================
+# SpatialExtent
+# ===================================================================
+
+
+class TestSpatialExtent:
+    """SpatialExtent should police WGS84 coordinate ranges."""
+
+    def test_rejects_inverted_latitudes(self):
+        """``north < south`` has no antimeridian analogue -- it is just wrong."""
+        with pytest.raises(ValidationError):
+            SpatialExtent(west=10.0, south=51.0, east=11.0, north=50.0)
+
+    def test_rejects_longitude_out_of_range(self):
+        with pytest.raises(ValidationError):
+            SpatialExtent(west=-181.0, south=50.0, east=11.0, north=51.0)
+
+    def test_rejects_latitude_out_of_range(self):
+        with pytest.raises(ValidationError):
+            SpatialExtent(west=10.0, south=50.0, east=11.0, north=91.0)
+
+    def test_crosses_antimeridian_flag(self):
+        assert SpatialExtent(
+            west=170.0, south=-10.0, east=-170.0, north=10.0
+        ).crosses_antimeridian
+        assert not SpatialExtent(
+            west=10.0, south=50.0, east=11.0, north=51.0
+        ).crosses_antimeridian
 
 
 # ===================================================================
@@ -230,6 +291,110 @@ class TestSupportingModels:
         ah = AssertionHints()
         assert ah.expect_loadable is True
         assert ah.expect_nodata is None
+
+    def test_required_drivers_defaults_to_empty(self):
+        """Defaults required_drivers to [], so existing case.yaml stays valid."""
+        assert AssertionHints().required_drivers == []
+
+    def test_required_drivers_accepts_driver_names(self):
+        """Stores the OGR driver names a consumer needs before opening a case."""
+        ah = AssertionHints(required_drivers=["Parquet"])
+        assert ah.required_drivers == ["Parquet"]
+
+    def test_required_drivers_rejects_a_bare_string(self):
+        """Rejects a scalar: the field is a list even when there is one driver."""
+        with pytest.raises(ValidationError):
+            AssertionHints(required_drivers="Parquet")
+
+    def test_expected_error_kind_defaults_to_none(self):
+        """Defaults expected_error_kind to None, so existing case.yaml stays valid."""
+        assert AssertionHints().expected_error_kind is None
+
+    def test_expected_error_kind_accepts_a_vocabulary_term(self):
+        """Stores how a curated-failure case is expected to fail."""
+        ah = AssertionHints(
+            expect_loadable=False, expected_error_kind="unparseable_geometry"
+        )
+        assert ah.expected_error_kind == "unparseable_geometry"
+
+    def test_expected_error_kind_rejects_an_exception_class_name(self):
+        """Rejects consumer-specific exception names: the field is a vocabulary."""
+        with pytest.raises(ValidationError):
+            AssertionHints(expect_loadable=False, expected_error_kind="GEOSException")
+
+    def test_expected_error_kind_requires_a_case_that_actually_fails(self):
+        """Rejects a failure mode on a case declared loadable -- it never fails."""
+        with pytest.raises(ValidationError, match="expect_loadable"):
+            AssertionHints(expected_error_kind="unparseable_geometry")
+
+
+# ===================================================================
+# KnownDivergence -- plan 28 phase 2.5
+# ===================================================================
+
+
+class TestKnownDivergence:
+    """A catalogued consumer disagreement, so repeat runs stay cumulative."""
+
+    def test_requires_a_consumer_and_a_description(self):
+        """Both are the minimum for the record to mean anything to a reader."""
+        kd = KnownDivergence(
+            consumer="pyogrio",
+            description="use_arrow=True returns a NULL-geometry row under bbox",
+        )
+        assert kd.consumer == "pyogrio"
+        assert kd.version_range is None
+        assert kd.upstream_url is None
+
+    def test_rejects_a_record_with_no_consumer(self):
+        """An unattributed divergence cannot be matched against anything."""
+        with pytest.raises(ValidationError):
+            KnownDivergence(description="something diverges")
+
+    def test_rejects_a_blank_consumer(self):
+        """Whitespace is not a consumer name."""
+        with pytest.raises(ValidationError):
+            KnownDivergence(consumer="   ", description="something diverges")
+
+    def test_rejects_a_blank_description(self):
+        """A record nobody can read is worse than no record."""
+        with pytest.raises(ValidationError):
+            KnownDivergence(consumer="pyogrio", description="  ")
+
+    def test_carries_a_version_range_and_upstream_link(self):
+        """The two fields that let a reader tell "still open" from "fixed"."""
+        kd = KnownDivergence(
+            consumer="pyogrio",
+            version_range=">=0.8",
+            description="Arrow path keeps NULL geometries under a spatial filter",
+            upstream_url="https://github.com/OSGeo/gdal/issues/1",
+        )
+        assert kd.version_range == ">=0.8"
+        assert kd.upstream_url.endswith("/1")
+
+
+class TestCaseMetadataKnownDivergences:
+    def test_defaults_to_empty(self):
+        """Additive with a [] default, so every existing case.yaml stays valid."""
+        case = CaseMetadata(**_minimal_case())
+        assert case.known_divergences == []
+
+    def test_accepts_records(self):
+        """Stores the catalogued divergences alongside the case they belong to."""
+        case = CaseMetadata(
+            **_minimal_case(
+                known_divergences=[
+                    {
+                        "consumer": "pyogrio",
+                        "version_range": ">=0.8",
+                        "description": "numpy and Arrow paths disagree on row count",
+                        "upstream_url": "https://github.com/OSGeo/gdal/issues/1",
+                    }
+                ]
+            )
+        )
+        assert len(case.known_divergences) == 1
+        assert case.known_divergences[0].consumer == "pyogrio"
 
 
 # ===================================================================
@@ -353,9 +518,28 @@ class TestCaseSchemaMatchesModels:
         )
         assert schema_properties == set(AssertionHints.model_fields)
 
+    def test_known_divergence_properties_match_the_model(self) -> None:
+        """Keeps the nested known_divergences item schema in step with the model."""
+        item = self._schema()["properties"]["known_divergences"]["items"]
+        assert set(item["properties"]) == set(KnownDivergence.model_fields)
+        assert set(item["required"]) == {"consumer", "description"}
+
     def test_nodata_convention_enum_matches_literal(self) -> None:
         """Keeps the nested nodata_convention enum in step as well."""
         prop = self._schema()["properties"]["assertions"]["properties"]
         assert prop["nodata_convention"]["enum"] == list(
             get_args(models.NodataConvention)
+        )
+
+    def test_pixel_anchor_enum_matches_literal(self) -> None:
+        """Same for pixel_anchor, which is nested rather than top-level.
+
+        Deliberately not a row in ``test_enum_matches_literal`` above: that one
+        indexes ``["properties"][name]["enum"]``, and this enum lives under
+        ``assertions``, so a row there would raise KeyError rather than check
+        anything.
+        """
+        prop = self._schema()["properties"]["assertions"]["properties"]
+        assert prop["expected_pixel_anchor"]["enum"] == list(
+            get_args(models.PixelAnchor)
         )

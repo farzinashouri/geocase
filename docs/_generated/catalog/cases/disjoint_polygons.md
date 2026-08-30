@@ -14,8 +14,8 @@ description: "Two separated polygon features in the same vector dataset. Useful 
 Two separated polygon features in the same vector dataset. Useful for dissolve and intersection tests that should preserve non-overlapping parts.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of disjoint_polygons, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of disjoint_polygons, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 52.5 L 35 52.5 L 35 27.5 L 10 27.5 L 10 52.5 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/><path d="M 85 52.5 L 110 52.5 L 110 27.5 L 85 27.5 L 85 52.5 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>Polygon geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ Two separated polygon features in the same vector dataset. Useful for dissolve a
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Near the origin (synthetic, no real-world location) &mdash; 20.00&deg;E, 0.00&deg;N &rarr; 24.00&deg;E, 1.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_disjoint_polygons(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -75,8 +86,10 @@ Two separated polygons for dissolve and intersection tests that should remain no
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/degenerate/disjoint_polygons/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/degenerate/disjoint_polygons/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/degenerate/disjoint_polygons)
 
 ## Source and license
 
@@ -93,7 +106,7 @@ Two separated polygons for dissolve and intersection tests that should remain no
 - [Self-Intersecting Polygon](self_intersecting_polygon.md) -- `self_intersecting_polygon`
 - [Unclosed Ring Polygon](unclosed_ring_polygon.md) -- `unclosed_ring_polygon`
 - [Classic Antimeridian Polygon](classic_antimeridian_polygon.md) -- `classic_antimeridian_polygon`
-- [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 
 <script type="application/ld+json">
 {
@@ -134,7 +147,12 @@ Two separated polygons for dissolve and intersection tests that should remain no
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.0 20.0 1.0 24.0"
+    },
+    "name": "Near the origin (synthetic, no real-world location)"
   }
 }
 </script>

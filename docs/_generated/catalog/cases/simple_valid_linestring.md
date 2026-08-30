@@ -14,8 +14,8 @@ description: "A straightforward LineString in EPSG:4326 used as a baseline for l
 A straightforward LineString in EPSG:4326 used as a baseline for line-loading and geometry-type selection behavior.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: LineString geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of simple_valid_linestring, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of simple_valid_linestring, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 55 L 60 25 L 110 45" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<figcaption>LineString geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A straightforward LineString in EPSG:4326 used as a baseline for line-loading an
 | Format | GeoJSON |
 | Geometry type | LineString |
 | CRS | `EPSG:4326` |
+| Location | Patagonia, Southern Andes (synthetic) &mdash; 72.50&deg;W, 50.90&deg;S &rarr; 71.50&deg;W, 50.60&deg;S |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_simple_valid_linestring(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -74,8 +85,10 @@ Baseline LineString case for selector and loader coverage.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/linestring/geojson/simple_valid_linestring/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/linestring/geojson/simple_valid_linestring/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/linestring/geojson/simple_valid_linestring)
 
 ## Source and license
 
@@ -92,7 +105,7 @@ Baseline LineString case for selector and loader coverage.
 - [Simple Valid MultiPoint](simple_valid_multipoint.md) -- `simple_valid_multipoint`
 - [Simple Valid Point](simple_valid_point.md) -- `simple_valid_point`
 - [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
-- [LineString CSV_WKT Baseline](linestring_csv_wkt_baseline.md) -- `linestring_csv_wkt_baseline`
+- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
 
 <script type="application/ld+json">
 {
@@ -132,7 +145,12 @@ Baseline LineString case for selector and loader coverage.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "-50.9 -72.5 -50.6 -71.5"
+    },
+    "name": "Patagonia, Southern Andes (synthetic)"
   }
 }
 </script>

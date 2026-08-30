@@ -14,8 +14,8 @@ description: "A polygon with a self-touching spike that repairs to a mixed Geome
 A polygon with a self-touching spike that repairs to a mixed GeometryCollection containing both polygonal and linear parts. Useful for testing geometry-fixing helpers that should preserve only polygonal output.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of spike_invalid_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of spike_invalid_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 60 10 L 60 40 L 60 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>Polygon geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A polygon with a self-touching spike that repairs to a mixed GeometryCollection 
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Near the origin (synthetic, no real-world location) &mdash; 0.00&deg;E, 0.00&deg;N &rarr; 4.00&deg;E, 4.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_spike_invalid_polygon(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -78,8 +89,10 @@ which is useful for testing whether repair helpers keep only polygonal output.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/invalid/spike_invalid_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/invalid/spike_invalid_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/invalid/spike_invalid_polygon)
 
 ## Source and license
 
@@ -94,9 +107,9 @@ which is useful for testing whether repair helpers keep only polygonal output.
 
 - [Ambiguous Engine-dependent Polygon](ambiguous_engine_dependent_polygon.md) -- `ambiguous_engine_dependent_polygon`
 - [GeometryCollection Mixed Valid](geometrycollection_mixed_valid.md) -- `geometrycollection_mixed_valid`
+- [Invalid Geometry at Feature 9,999 (GeoPackage)](invalid_geometry_at_scale_gpkg.md) -- `invalid_geometry_at_scale_gpkg`
 - [Self-Intersecting Polygon](self_intersecting_polygon.md) -- `self_intersecting_polygon`
 - [Unclosed Ring Polygon](unclosed_ring_polygon.md) -- `unclosed_ring_polygon`
-- [Classic Antimeridian Polygon](classic_antimeridian_polygon.md) -- `classic_antimeridian_polygon`
 
 <script type="application/ld+json">
 {
@@ -139,7 +152,12 @@ which is useful for testing whether repair helpers keep only polygonal output.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.0 0.0 4.0 4.0"
+    },
+    "name": "Near the origin (synthetic, no real-world location)"
   }
 }
 </script>

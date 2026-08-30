@@ -99,6 +99,21 @@ class TestMatchesSelection:
         sel = SuiteSelection(format="NetCDF")
         assert matches_selection(raster_case, sel) is False
 
+    # -- loader_hint filter (plan 28 phase 2.2) --
+    def test_loader_hint_match(self, vector_case: CaseMetadata):
+        """Test loader hint match."""
+        sel = SuiteSelection(loader_hint="geopandas")
+        assert matches_selection(vector_case, sel) is True
+
+    def test_loader_hint_mismatch(self, vector_case: CaseMetadata):
+        """Test loader hint mismatch."""
+        sel = SuiteSelection(loader_hint="rasterio")
+        assert matches_selection(vector_case, sel) is False
+
+    def test_loader_hint_unset_matches_anything(self, raster_case: CaseMetadata):
+        """Test an unset loader_hint stays inert, as every other filter does."""
+        assert matches_selection(raster_case, SuiteSelection()) is True
+
     # -- size_class filter --
     def test_size_class_match(self, vector_case: CaseMetadata):
         """Test size class match."""
@@ -199,10 +214,35 @@ class TestSelectCases:
         assert all(c.category == "raster" for c in result)
 
     def test_select_by_category_netcdf(self, all_cases: list[CaseMetadata]):
-        """Test select by category netcdf."""
+        """Test select by category netcdf.
+
+        Derived from the corpus rather than hardcoded: this asserted ``== 1``
+        back when netcdf had exactly one case, so plan 34 adding two broke a
+        test of the *selector* for a reason that had nothing to do with it.
+        """
+        expected = [c for c in all_cases if c.category == "netcdf"]
         result = select_cases(all_cases, category="netcdf")
-        assert len(result) == 1
-        assert result[0].id == "latlon_small"
+
+        assert len(result) == len(expected)
+        assert all(c.category == "netcdf" for c in result)
+        assert "latlon_small" in {c.id for c in result}
+
+    def test_select_by_loader_hint(self, all_cases: list[CaseMetadata]):
+        """Test the keyword reaches matches_selection, like every other filter."""
+        expected = [c for c in all_cases if c.loader_hint == "rasterio"]
+        result = select_cases(all_cases, loader_hint="rasterio")
+
+        assert result
+        assert len(result) == len(expected)
+        assert all(c.loader_hint == "rasterio" for c in result)
+
+    def test_loader_hint_keyword_composes_with_others(
+        self, all_cases: list[CaseMetadata]
+    ):
+        """Test it narrows alongside another filter rather than replacing it."""
+        result = select_cases(all_cases, loader_hint="geopandas", format="GPKG")
+        assert result
+        assert all(c.loader_hint == "geopandas" and c.format == "GPKG" for c in result)
 
     def test_select_all_bundled(self, all_cases: list[CaseMetadata]):
         """Test select all bundled."""

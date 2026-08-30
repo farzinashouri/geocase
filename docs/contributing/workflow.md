@@ -6,7 +6,7 @@ This document describes the current state of the GeoCase project and the workflo
 
 ## Current status
 
-GeoCase has a complete folder structure, 135 bundled cases, and fully implemented metadata, catalog, runtime, assertion, loader, and plugin layers, with 1701 passing tests.
+GeoCase has a complete folder structure, 154 bundled cases, and fully implemented metadata, catalog, runtime, assertion, loader, and plugin layers, with 1701 passing tests.
 
 ### Recent updates (April 2026)
 
@@ -109,7 +109,7 @@ the grounds that an empty module implies a commitment the project has not made.
   `tests/unit/test_public_api.py`.
 - **`catalog/validators.py`** was deleted. Nothing imported it.
 - **`cli/`** was deleted along with its broken `[project.scripts]` entry point. There is no
-  CLI in v1.0; see the decision log in [the roadmap](../plans/development-plan.md).
+  CLI in v1.0; see the decision log in [the roadmap](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md).
 - **`storage/`** transport is **deferred to v1.1**, deliberately rather than
   incidentally. Remote cases stay discoverable and raise clear errors, but nothing
   downloads, caches, or unpacks. See

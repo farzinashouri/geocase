@@ -14,8 +14,8 @@ description: "Canonical baseline multipoint stored as binary WKB file for cross-
 Canonical baseline multipoint stored as binary WKB file for cross-format comparison and format-specific loader behavior testing.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a MultiPoint geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a MultiPoint geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="34" cy="30" r="4" fill="var(--gc-diagram-accent)"/><circle cx="62" cy="52" r="4" fill="var(--gc-diagram-accent)"/><circle cx="86" cy="26" r="4" fill="var(--gc-diagram-accent)"/></svg>
-<figcaption>Schematic: MultiPoint geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="MultiPoint geometry of multipoint_wkb_baseline, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>MultiPoint geometry of multipoint_wkb_baseline, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="10" cy="65" r="3" fill="var(--gc-diagram-accent)"/><circle cx="60" cy="40" r="3" fill="var(--gc-diagram-accent)"/><circle cx="110" cy="15" r="3" fill="var(--gc-diagram-accent)"/></svg>
+<figcaption>MultiPoint geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ Canonical baseline multipoint stored as binary WKB file for cross-format compari
 | Format | WKB |
 | Geometry type | MultiPoint |
 | CRS | `EPSG:4326` |
+| Location | Hokkaido, Northern Japan (synthetic) &mdash; 142.40&deg;E, 43.10&deg;N &rarr; 142.80&deg;E, 43.30&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -44,6 +45,16 @@ def test_multipoint_wkb_baseline(geocase_case) -> None:
     assert data is not None
 ```
 
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
+
 ## What this case checks
 
 Provide a canonical multipoint encoded as WKB so format-specific loader behavior can be compared directly against the GeoJSON baseline.
@@ -60,6 +71,7 @@ Provide a canonical multipoint encoded as WKB so format-specific loader behavior
 | `expect_valid_geometry` | yes |
 | `expect_crs` | no |
 | `expected_geometry_types` | `MultiPoint` |
+| `required_drivers` | none &mdash; no OGR driver opens this format (use shapely) |
 
 ## Notes
 
@@ -93,8 +105,10 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Files
 
-- Primary: `geometry.wkb`
-- Notes: `notes.md`
+- Primary: [`geometry.wkb`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipoint/wkb/multipoint_wkb_baseline/geometry.wkb)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipoint/wkb/multipoint_wkb_baseline/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/multipoint/wkb/multipoint_wkb_baseline)
 
 ## Source and license
 
@@ -153,7 +167,12 @@ geometry is derived from `params.canonical_source_case_id`
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "43.1 142.4 43.3 142.8"
+    },
+    "name": "Hokkaido, Northern Japan (synthetic)"
   }
 }
 </script>

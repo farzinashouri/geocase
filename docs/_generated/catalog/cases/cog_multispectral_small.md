@@ -14,8 +14,8 @@ description: "A four-band Cloud-Optimized GeoTIFF (blue, green, red, NIR) with N
 A four-band Cloud-Optimized GeoTIFF (blue, green, red, NIR) with NoData, internal tiling and one overview level. Exercises COG structure validation.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 4 bands, 64x64" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 4 bands, 64x64</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="40.0" y="14.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="34.0" y="20.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="28.0" y="26.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="22.0" y="32.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="36.5" y1="32.0" x2="36.5" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="51.0" y1="32.0" x2="51.0" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="65.5" y1="32.0" x2="65.5" y2="66.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="22.0" y1="43.3" x2="80.0" y2="43.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="22.0" y1="54.7" x2="80.0" y2="54.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><rect x="23.0" y="55.7" width="12.5" height="9.3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg>
-<figcaption>Schematic: 4 bands, 64x64 px, uint16, sentinel NoData. Drawn from metadata, not from the pixels.</figcaption>
+<img class="gc-diagram gc-preview" src="../../previews/cog_multispectral_small.png" alt="Pixels of cog_multispectral_small, a 64x64 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>4 bands, 64x64 px, uint16, sentinel NoData. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
 </figure>
 
 | Property | Value |
@@ -24,6 +24,7 @@ A four-band Cloud-Optimized GeoTIFF (blue, green, red, NIR) with NoData, interna
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Southern Italy / Sicily (synthetic, UTM 33N) &mdash; 15.00&deg;E, 40.65&deg;N &rarr; 15.01&deg;E, 40.65&deg;N |
 | Test tier | integration |
 | Size class | tiny |
 | Storage class | bundled |
@@ -42,6 +43,16 @@ def test_cog_multispectral_small(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -81,7 +92,9 @@ Confirm GeoCase recognises a tiled, overview-bearing multispectral GeoTIFF as CO
 
 ## Files
 
-- Primary: `cog_multispectral_small.tif`
+- Primary: [`cog_multispectral_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/cog_multispectral_small/cog_multispectral_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/cog_multispectral_small)
 
 ## Source and license
 
@@ -144,7 +157,12 @@ Confirm GeoCase recognises a tiled, overview-bearing multispectral GeoTIFF as CO
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "40.645091 15.0 40.650857 15.00757"
+    },
+    "name": "Southern Italy / Sicily (synthetic, UTM 33N)"
   }
 }
 </script>

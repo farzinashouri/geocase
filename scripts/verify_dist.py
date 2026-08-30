@@ -44,9 +44,22 @@ CASE_INDEX_PATH = PACKAGE_ROOT / "metadata" / "case-index.yaml"
 #: tree as 4.2 MB, but that is 4 KB block padding across 572 tiny files, not
 #: bytes that reach an artifact.) The release plan guessed 8 MB from an
 #: assumption that the data sat on top of a 458 KB wheel; that would have let a
-#: 4x regression through unnoticed. 2 MB keeps ~4x headroom over the real number
-#: while still catching an accidental bundling of uncompressed fixtures or a
-#: stray extended-manifest payload.
+#: 4x regression through unnoticed. 2 MB caught an accidental bundling of
+#: uncompressed fixtures or a stray extended-manifest payload with ~4x headroom.
+#:
+#: **The headroom is no longer 4x.** Plan 28 phase 3 added three 10,000-feature
+#: vector cases, taking the payload tree to 5.1 MB and the wheel to **1.25 MB**
+#: -- 61% of this ceiling still free, but a third of what it was. Those cases
+#: buy something no small fixture can (a defect past a batch boundary), and the
+#: budget was checked before they landed rather than after. But the next case of
+#: that size is a decision about this ceiling, not a routine addition: at ~800 KB
+#: of wheel per trio, one more would leave under 500 KB. That is the point to
+#: put large cases behind a remote manifest instead of in the wheel.
+#:
+#: The ceiling itself is deliberately *not* raised to make room. It is the only
+#: thing standing between the catalog and a slow slide into a distribution
+#: nobody wants to install, and raising it whenever it binds would make it
+#: decorative.
 _MAX_ARTIFACT_BYTES: dict[str, int] = {
     "wheel": 2 * 1024 * 1024,
     "sdist": 2 * 1024 * 1024,

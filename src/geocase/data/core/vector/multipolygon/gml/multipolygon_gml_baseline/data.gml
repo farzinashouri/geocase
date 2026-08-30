@@ -5,12 +5,12 @@
      xsi:schemaLocation="http://ogr.maptools.org/ data.xsd"
      xmlns:ogr="http://ogr.maptools.org/"
      xmlns:gml="http://www.opengis.net/gml/3.2">
-  <gml:boundedBy><gml:Envelope srsName="urn:ogc:def:crs:EPSG::4326"><gml:lowerCorner>50 10</gml:lowerCorner><gml:upperCorner>50.5 11.5</gml:upperCorner></gml:Envelope></gml:boundedBy>
-                                                                                                                                                                      
+  <gml:boundedBy><gml:Envelope srsName="urn:ogc:def:crs:EPSG::4326"><gml:lowerCorner>68 -96</gml:lowerCorner><gml:upperCorner>68.5 -94.5</gml:upperCorner></gml:Envelope></gml:boundedBy>
+                                                                                                                                                                    
   <ogr:featureMember>
     <ogr:data gml:id="data.0">
-      <gml:boundedBy><gml:Envelope srsName="urn:ogc:def:crs:EPSG::4326"><gml:lowerCorner>50 10</gml:lowerCorner><gml:upperCorner>50.5 11.5</gml:upperCorner></gml:Envelope></gml:boundedBy>
-      <ogr:geometryProperty><gml:MultiSurface srsName="urn:ogc:def:crs:EPSG::4326" gml:id="data.geom.0"><gml:surfaceMember><gml:Polygon gml:id="data.geom.0.0"><gml:exterior><gml:LinearRing><gml:posList>50 10 50.0 10.5 50.5 10.5 50.5 10.0 50 10</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></gml:surfaceMember><gml:surfaceMember><gml:Polygon gml:id="data.geom.0.1"><gml:exterior><gml:LinearRing><gml:posList>50 11 50.0 11.5 50.5 11.5 50.5 11.0 50 11</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></gml:surfaceMember></gml:MultiSurface></ogr:geometryProperty>
+      <gml:boundedBy><gml:Envelope srsName="urn:ogc:def:crs:EPSG::4326"><gml:lowerCorner>68 -96</gml:lowerCorner><gml:upperCorner>68.5 -94.5</gml:upperCorner></gml:Envelope></gml:boundedBy>
+      <ogr:geometryProperty><gml:MultiSurface srsName="urn:ogc:def:crs:EPSG::4326" gml:id="data.geom.0"><gml:surfaceMember><gml:Polygon gml:id="data.geom.0.0"><gml:exterior><gml:LinearRing><gml:posList>68 -96 68.0 -95.5 68.5 -95.5 68.5 -96 68 -96</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></gml:surfaceMember><gml:surfaceMember><gml:Polygon gml:id="data.geom.0.1"><gml:exterior><gml:LinearRing><gml:posList>68 -95 68.0 -94.5 68.5 -94.5 68.5 -95 68 -95</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></gml:surfaceMember></gml:MultiSurface></ogr:geometryProperty>
       <ogr:id>1</ogr:id>
       <ogr:name>multipolygon_gml_baseline</ogr:name>
     </ogr:data>

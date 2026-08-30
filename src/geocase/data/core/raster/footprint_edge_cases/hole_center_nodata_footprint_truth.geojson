@@ -1,0 +1,67 @@
+{
+  "crs": {
+    "properties": {
+      "name": "EPSG:32633"
+    },
+    "type": "name"
+  },
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              400000.0,
+              4300000.0
+            ],
+            [
+              400000.0,
+              4299640.0
+            ],
+            [
+              400360.0,
+              4299640.0
+            ],
+            [
+              400360.0,
+              4300000.0
+            ],
+            [
+              400000.0,
+              4300000.0
+            ]
+          ],
+          [
+            [
+              400120.0,
+              4299880.0
+            ],
+            [
+              400240.0,
+              4299880.0
+            ],
+            [
+              400240.0,
+              4299760.0
+            ],
+            [
+              400120.0,
+              4299760.0
+            ],
+            [
+              400120.0,
+              4299880.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "case_id": "hole_center_nodata"
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "hole_center_nodata_footprint_truth",
+  "type": "FeatureCollection"
+}

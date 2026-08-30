@@ -14,8 +14,8 @@ description: "An RGB GeoTIFF whose bounds straddle the antimeridian at +180 long
 An RGB GeoTIFF whose bounds straddle the antimeridian at +180 longitude. Exercises bounds normalization and antimeridian splitting on raster inputs.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 3 bands, 16x16" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 3 bands, 16x16</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="37.0" y="17.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-muted)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><rect x="25.0" y="29.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="39.5" y1="29.0" x2="39.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="54.0" y1="29.0" x2="54.0" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="68.5" y1="29.0" x2="68.5" y2="63.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="40.3" x2="83.0" y2="40.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="25.0" y1="51.7" x2="83.0" y2="51.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg>
-<figcaption>Schematic: 3 bands, 16x16 px, uint8. Drawn from metadata, not from the pixels.</figcaption>
+<img class="gc-diagram gc-preview" src="../../previews/optical_dateline_small.png" alt="Pixels of optical_dateline_small, a 16x16 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>3 bands, 16x16 px, uint8. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
 </figure>
 
 | Property | Value |
@@ -24,6 +24,7 @@ An RGB GeoTIFF whose bounds straddle the antimeridian at +180 longitude. Exercis
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:4326` |
+| Location | Antimeridian, North Pacific &mdash; 179.90&deg;E, 0.68&deg;N &rarr; 179.78&deg;W, 1.00&deg;N (crosses the antimeridian &mdash; the box runs east from the first corner, over 180&deg;) |
 | Test tier | integration |
 | Size class | tiny |
 | Storage class | bundled |
@@ -42,6 +43,16 @@ def test_optical_dateline_small(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -72,7 +83,9 @@ Confirm GeoCase handles an RGB optical scene whose extent crosses the antimeridi
 
 ## Files
 
-- Primary: `optical_dateline_small.tif`
+- Primary: [`optical_dateline_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/optical_dateline_small/optical_dateline_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/optical_dateline_small)
 
 ## Source and license
 
@@ -133,7 +146,12 @@ Confirm GeoCase handles an RGB optical scene whose extent crosses the antimeridi
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "0.68 179.9 1.0 -179.78"
+    },
+    "name": "Antimeridian, North Pacific"
   }
 }
 </script>

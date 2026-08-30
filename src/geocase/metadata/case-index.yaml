@@ -1,6 +1,8 @@
 schema_version: '1.0'
 cases:
+- path: data/core/netcdf/cf_time_ordering_netcdf/case.yaml
 - path: data/core/netcdf/latlon_small/case.yaml
+- path: data/core/netcdf/ndvi_packed_netcdf/case.yaml
 - path: data/core/raster/cog_multispectral_small/case.yaml
 - path: data/core/raster/cog_singleband_small/case.yaml
 - path: data/core/raster/dem_nan_nodata_small/case.yaml
@@ -19,6 +21,7 @@ cases:
 - path: data/core/raster/geotiff_nodata_small/case.yaml
 - path: data/core/raster/geotiff_nodata_small_shifted/case.yaml
 - path: data/core/raster/geotiff_utm_boundary/case.yaml
+- path: data/core/raster/landcover_ambiguous_zero_small/case.yaml
 - path: data/core/raster/landcover_small/case.yaml
 - path: data/core/raster/multispectral_mixed_resolution_small/case.yaml
 - path: data/core/raster/multispectral_s2_like_small/case.yaml
@@ -30,6 +33,9 @@ cases:
 - path: data/core/raster/optical_rgb_small/case.yaml
 - path: data/core/raster/sar_dualpol_small/case.yaml
 - path: data/core/raster/sar_vv_small/case.yaml
+- path: data/core/raster/transform_conventions/case_bottom_up_dem_small.yaml
+- path: data/core/raster/transform_conventions/case_pixel_is_area_dem_small.yaml
+- path: data/core/raster/transform_conventions/case_pixel_is_point_dem_small.yaml
 - path: data/core/raster/water_mask_small/case.yaml
 - path: data/core/vector/geometrycollection/geojson/case.yaml
 - path: data/core/vector/linestring/csv_wkt/linestring_csv_wkt_baseline/case.yaml
@@ -89,15 +95,19 @@ cases:
 - path: data/core/vector/point/wkt/point_wkt_baseline/case.yaml
 - path: data/core/vector/polygon/csv_wkt/polygon_csv_wkt_baseline/case.yaml
 - path: data/core/vector/polygon/flatgeobuf/polygon_flatgeobuf_baseline/case.yaml
+- path: data/core/vector/polygon/geojson/dense_ring_polygon_4k/case.yaml
+- path: data/core/vector/polygon/geojson/fractal_coastline_polygon/case.yaml
 - path: data/core/vector/polygon/geojson/simple_valid_polygon/case.yaml
 - path: data/core/vector/polygon/geopackage/polygon_geopackage_baseline/case.yaml
 - path: data/core/vector/polygon/gml/polygon_gml_baseline/case.yaml
+- path: data/core/vector/polygon/gpkg/dense_ring_polygon_4k_gpkg/case.yaml
 - path: data/core/vector/polygon/kml/polygon_kml_baseline/case.yaml
 - path: data/core/vector/polygon/parquet/polygon_parquet_baseline/case.yaml
 - path: data/core/vector/polygon/shapefile/polygon_shapefile_baseline/case.yaml
 - path: data/core/vector/polygon/sqlite/polygon_sqlite_baseline/case.yaml
 - path: data/core/vector/polygon/wkb/polygon_wkb_baseline/case.yaml
 - path: data/core/vector/polygon/wkt/polygon_wkt_baseline/case.yaml
+- path: data/core/vector/special/crs/crs_mismatch_overlay_pair/case.yaml
 - path: data/core/vector/special/crs/equator_crossing_line/case.yaml
 - path: data/core/vector/special/crs/equator_polygon/case.yaml
 - path: data/core/vector/special/crs/north_pole_point/case.yaml
@@ -107,7 +117,11 @@ cases:
 - path: data/core/vector/special/crs/south_pole_point/case.yaml
 - path: data/core/vector/special/crs/south_pole_polygon/case.yaml
 - path: data/core/vector/special/crs/svalbard_special_zone_polygon/case.yaml
+- path: data/core/vector/special/crs/utm_zone_1n_small/case.yaml
 - path: data/core/vector/special/crs/utm_zone_33_polygon/case.yaml
+- path: data/core/vector/special/crs/utm_zone_33n_to_32n_pair/case.yaml
+- path: data/core/vector/special/crs/utm_zone_56s_small/case.yaml
+- path: data/core/vector/special/crs/utm_zone_boundary_straddle/case.yaml
 - path: data/core/vector/special/crs/web_mercator_baseline/case.yaml
 - path: data/core/vector/special/dateline/antimeridian_crossing_line/case.yaml
 - path: data/core/vector/special/dateline/classic_antimeridian_polygon/case.yaml
@@ -117,6 +131,8 @@ cases:
 - path: data/core/vector/special/dateline/wrapped_longitude_point/case.yaml
 - path: data/core/vector/special/degenerate/degenerate_but_parseable_line/case.yaml
 - path: data/core/vector/special/degenerate/disjoint_polygons/case.yaml
+- path: data/core/vector/special/dimensionality/polygon_z_gpkg/case.yaml
+- path: data/core/vector/special/dimensionality/polygon_z_wkb/case.yaml
 - path: data/core/vector/special/empty/empty_geometry_gpkg/case.yaml
 - path: data/core/vector/special/empty/empty_polygon/case.yaml
 - path: data/core/vector/special/encoding/format_limited_kml_case/case.yaml
@@ -135,3 +151,6 @@ cases:
 - path: data/core/vector/special/precision/format_limited_precision_polygon/case.yaml
 - path: data/core/vector/special/precision/nearby_points_cluster/case.yaml
 - path: data/core/vector/special/precision/precision_loss_geojson_roundtrip/case.yaml
+- path: data/core/vector/special/scale/invalid_geometry_at_scale_gpkg/case.yaml
+- path: data/core/vector/special/scale/mixed_timezone_after_batch_gpkg/case.yaml
+- path: data/core/vector/special/scale/null_after_batch_boundary_gpkg/case.yaml

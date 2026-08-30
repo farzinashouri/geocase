@@ -14,8 +14,8 @@ description: "A simple rectangle straddling the equator in EPSG:4326, spanning l
 A simple rectangle straddling the equator in EPSG:4326, spanning latitudes -5 to 5 and longitudes -10 to 10. This exercises hemisphere-boundary logic in spatial operations -- sign changes in latitude, UTM zone selection, and area calculations that cross from the southern to northern hemisphere.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of equator_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of equator_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 10 65 L 110 65 L 110 15 L 10 15 L 10 65 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>Polygon geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A simple rectangle straddling the equator in EPSG:4326, spanning latitudes -5 to
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Equator at the prime meridian (synthetic) &mdash; 10.00&deg;W, 5.00&deg;S &rarr; 10.00&deg;E, 5.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_equator_polygon(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -102,8 +113,10 @@ projection choice is minimal but the equator-crossing property is present.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/equator_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/equator_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/crs/equator_polygon)
 
 ## Source and license
 
@@ -118,9 +131,9 @@ projection choice is minimal but the equator-crossing property is present.
 
 - [North Pole Polygon](north_pole_polygon.md) -- `north_pole_polygon`
 - [South Pole Polygon](south_pole_polygon.md) -- `south_pole_polygon`
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 - [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 - [Equator Crossing Line](equator_crossing_line.md) -- `equator_crossing_line`
-- [Rasterize Match UTM33 Polygon](rasterize_match_utm33_polygon.md) -- `rasterize_match_utm33_polygon`
 
 <script type="application/ld+json">
 {
@@ -163,7 +176,12 @@ projection choice is minimal but the equator-crossing property is present.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "-5.0 -10.0 5.0 10.0"
+    },
+    "name": "Equator at the prime meridian (synthetic)"
   }
 }
 </script>

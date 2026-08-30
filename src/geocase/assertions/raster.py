@@ -243,3 +243,92 @@ def assert_colormap_present(
         src.colormap(band)
     except (ValueError, KeyError):
         raise AssertionError(msg or f"Raster band {band} has no colormap") from None
+
+
+def assert_scale_factor(
+    src: Any,
+    expected: float,
+    *,
+    band: int = 1,
+    msg: str | None = None,
+) -> None:
+    """Assert the band declares a scale factor of *expected*.
+
+    Values stored packed (an ``int16`` NDVI scaled by 1e-4, say) are physically
+    meaningless until the scale is applied. A consumer that ignores it reads
+    plausible integers and never notices — which is why the declaration is
+    worth gating.
+
+    Raises:
+        AssertionError: If the band's scale differs from *expected*.
+    """
+    actual = src.scales[band - 1]
+    if float(actual) != float(expected):
+        raise AssertionError(
+            msg or f"Expected scale factor {expected} on band {band}, got {actual}"
+        )
+
+
+def transform_signs(src: Any) -> list[str]:
+    """Describe a raster's affine transform as a list of sign properties.
+
+    Returns some of ``"positive_e"``, ``"negative_e"`` and ``"rotated"``. A
+    rotated affine carries non-zero ``b``/``d`` in addition to a ``e`` sign,
+    which is why this is a list and not a single value.
+    """
+    transform = src.transform
+    signs = ["positive_e" if transform.e > 0 else "negative_e"]
+    if transform.b != 0 or transform.d != 0:
+        signs.append("rotated")
+    return signs
+
+
+def assert_transform_signs(
+    src: Any,
+    expected: list[str],
+    *,
+    msg: str | None = None,
+) -> None:
+    """Assert the raster's affine transform has the declared sign properties.
+
+    ``rasterio.transform.from_origin`` always produces a negative ``e``
+    (north-up, row 0 northernmost), so a consumer that hardcodes that
+    assumption passes every fixture built with it. A bottom-up raster — one
+    with positive ``e``, origin at the bottom-left — then loads mirrored
+    vertically, producing a plausible image of the wrong place.
+
+    Raises:
+        AssertionError: If the observed sign properties differ.
+    """
+    actual = transform_signs(src)
+    if sorted(actual) != sorted(expected):
+        raise AssertionError(
+            msg
+            or f"Expected transform signs {sorted(expected)}, got {sorted(actual)} "
+            f"(transform={src.transform!r})"
+        )
+
+
+def assert_pixel_anchor(
+    src: Any,
+    expected: str,
+    *,
+    msg: str | None = None,
+) -> None:
+    """Assert the raster's ``AREA_OR_POINT`` convention is *expected*.
+
+    ``"area"`` means the transform's coordinates name pixel *corners*;
+    ``"point"`` means they name pixel *centres*. The difference is half a
+    pixel, and it is invisible to a shape, CRS or checksum check.
+
+    GDAL omits the tag entirely for the area convention, so the default here is
+    load-bearing: reading the tag without one yields ``None`` and a guess.
+
+    Raises:
+        AssertionError: If the file's convention differs from *expected*.
+    """
+    actual = str(src.tags().get("AREA_OR_POINT", "Area")).lower()
+    if actual != str(expected).lower():
+        raise AssertionError(
+            msg or f"Expected pixel anchor {expected!r}, got {actual!r}"
+        )

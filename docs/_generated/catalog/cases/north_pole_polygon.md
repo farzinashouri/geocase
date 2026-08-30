@@ -14,8 +14,8 @@ description: "A polygon encircling the north pole in EPSG:4326. Its area and cen
 A polygon encircling the north pole in EPSG:4326. Its area and centroid are wrong in any projection treating latitude/longitude as planar coordinates.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of north_pole_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of north_pole_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 60 41.53 L 110 39.86 L 60 38.47 L 10 39.86 L 60 41.53 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>Polygon geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A polygon encircling the north pole in EPSG:4326. Its area and centroid are wron
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | North Pole &mdash; 90.00&deg;W, 84.00&deg;N &rarr; 90.00&deg;E, 89.50&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_north_pole_polygon(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -102,8 +113,10 @@ The ring is wound counter-clockwise (right-hand rule) and encloses the pole.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/north_pole_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/north_pole_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/crs/north_pole_polygon)
 
 ## Source and license
 
@@ -120,7 +133,7 @@ The ring is wound counter-clockwise (right-hand rule) and encloses the pole.
 - [North Pole Point](north_pole_point.md) -- `north_pole_point`
 - [Equator-Crossing Polygon](equator_polygon.md) -- `equator_polygon`
 - [South Pole Point](south_pole_point.md) -- `south_pole_point`
-- [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 
 <script type="application/ld+json">
 {
@@ -165,7 +178,12 @@ The ring is wound counter-clockwise (right-hand rule) and encloses the pole.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "84.0 -90.0 89.5 90.0"
+    },
+    "name": "North Pole"
   }
 }
 </script>

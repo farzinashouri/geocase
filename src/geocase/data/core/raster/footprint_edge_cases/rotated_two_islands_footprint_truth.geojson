@@ -1,0 +1,71 @@
+{
+  "crs": {
+    "properties": {
+      "name": "EPSG:32633"
+    },
+    "type": "name"
+  },
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              [
+                1180.0,
+                1880.0
+              ],
+              [
+                1200.0,
+                1800.0
+              ],
+              [
+                1140.0,
+                1815.0
+              ],
+              [
+                1120.0,
+                1895.0
+              ],
+              [
+                1180.0,
+                1880.0
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                1060.0,
+                1985.0
+              ],
+              [
+                1075.0,
+                1925.0
+              ],
+              [
+                1015.0,
+                1940.0
+              ],
+              [
+                1000.0,
+                2000.0
+              ],
+              [
+                1060.0,
+                1985.0
+              ]
+            ]
+          ]
+        ],
+        "type": "MultiPolygon"
+      },
+      "properties": {
+        "case_id": "rotated_two_islands"
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "rotated_two_islands_footprint_truth",
+  "type": "FeatureCollection"
+}

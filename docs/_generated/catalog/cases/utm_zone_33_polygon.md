@@ -14,8 +14,8 @@ description: "A valid polygon in WGS84 whose centroid falls inside UTM zone 33N.
 A valid polygon in WGS84 whose centroid falls inside UTM zone 33N. Useful for baseline CRS and EPSG zone tests.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a Polygon geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a Polygon geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polygon points="28,22 92,30 84,62 34,58" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: Polygon geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Polygon geometry of utm_zone_33_polygon, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Polygon geometry of utm_zone_33_polygon, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 30 70 L 90 70 L 90 10 L 30 10 L 30 70 Z" fill="var(--gc-diagram-fill)" fill-rule="evenodd" stroke="var(--gc-diagram-stroke)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+<figcaption>Polygon geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A valid polygon in WGS84 whose centroid falls inside UTM zone 33N. Useful for ba
 | Format | GeoJSON |
 | Geometry type | Polygon |
 | CRS | `EPSG:4326` |
+| Location | Denmark / Baltic (synthetic, UTM 33N) &mdash; 13.00&deg;E, 55.00&deg;N &rarr; 14.00&deg;E, 56.00&deg;N |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_utm_zone_33_polygon(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -74,8 +85,10 @@ A baseline WGS84 polygon whose representative point falls in UTM zone 33N.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/utm_zone_33_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/utm_zone_33_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/crs/utm_zone_33_polygon)
 
 ## Source and license
 
@@ -88,11 +101,11 @@ A baseline WGS84 polygon whose representative point falls in UTM zone 33N.
 
 ## Related cases
 
+- [UTM Zone 1N Polygon](utm_zone_1n_small.md) -- `utm_zone_1n_small`
+- [UTM Zone 33N / 32N Adjacent Pair](utm_zone_33n_to_32n_pair.md) -- `utm_zone_33n_to_32n_pair`
+- [UTM Zone 56S Polygon (Sydney)](utm_zone_56s_small.md) -- `utm_zone_56s_small`
+- [UTM Zone Boundary Straddle](utm_zone_boundary_straddle.md) -- `utm_zone_boundary_straddle`
 - [Svalbard Special Zone Polygon](svalbard_special_zone_polygon.md) -- `svalbard_special_zone_polygon`
-- [Rasterize Match UTM33 Polygon](rasterize_match_utm33_polygon.md) -- `rasterize_match_utm33_polygon`
-- [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
-- [Dateline Points Pair](dateline_points_pair.md) -- `dateline_points_pair`
-- [Equator Crossing Line](equator_crossing_line.md) -- `equator_crossing_line`
 
 <script type="application/ld+json">
 {
@@ -133,7 +146,12 @@ A baseline WGS84 polygon whose representative point falls in UTM zone 33N.
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "55.0 13.0 56.0 14.0"
+    },
+    "name": "Denmark / Baltic (synthetic, UTM 33N)"
   }
 }
 </script>

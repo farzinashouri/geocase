@@ -141,6 +141,42 @@ properties:
     type: string
     description: Declared CRS identifier, usually EPSG or OGC form.
 
+  extent:
+    type: object
+    description: >
+      WGS84 bounding box of the case's data. Generated from the real bytes by
+      scripts/catalog_extent.py -- do not hand-edit. `west` greater than `east`
+      is valid and means the box crosses the antimeridian.
+    required:
+      - west
+      - south
+      - east
+      - north
+    properties:
+      west:
+        type: number
+        minimum: -180
+        maximum: 180
+      south:
+        type: number
+        minimum: -90
+        maximum: 90
+      east:
+        type: number
+        minimum: -180
+        maximum: 180
+      north:
+        type: number
+        minimum: -90
+        maximum: 90
+    additionalProperties: false
+
+  region:
+    type: string
+    description: >
+      Short human-readable place label, hand-written. Say so when the placement
+      is synthetic, e.g. "Central Europe (synthetic)".
+
   files:
     type: object
     required:
@@ -233,6 +269,70 @@ properties:
         type: boolean
       is_cog:
         type: boolean
+      expected_transform_signs:
+        type: array
+        items:
+          type: string
+          enum:
+            - positive_e
+            - negative_e
+            - rotated
+      expected_pixel_anchor:
+        type: string
+        enum:
+          - area
+          - point
+
+      # OGR driver prerequisites for an *external* consumer (pyogrio, fiona,
+      # ogr2ogr) — not for geocase, which reads every vector case without OGR.
+      # A driver name means "install this plugin"; the empty string means no
+      # OGR driver exists (a bare WKB/WKT geometry blob).
+      required_drivers:
+        type: array
+        items:
+          type: string
+
+      # How a curated-failure case is expected to fail. A vocabulary rather
+      # than an exception class, because the class belongs to the consumer.
+      # Only meaningful alongside `expect_loadable: false`; AssertionHints
+      # rejects it on a loadable case.
+      expected_error_kind:
+        type: string
+        enum:
+          - unparseable_geometry
+          - unsupported_format
+          - missing_driver
+          - invalid_crs
+          - invalid_topology
+
+  # Consumer disagreements already investigated, so a repeat differential run
+  # reports them as `known` rather than as a fresh failure. A record, not an
+  # assertion: nothing gates whether it still reproduces, because that depends
+  # on the reader the user has installed. Must stay in step with
+  # `KnownDivergence` in geocase/catalog/models.py.
+  known_divergences:
+    type: array
+    items:
+      type: object
+      required:
+        - consumer
+        - description
+      properties:
+        consumer:
+          type: string
+          description: The library that diverges, e.g. 'pyogrio'.
+        version_range:
+          type: string
+          description: >
+            Where it was observed, as free text ('>=0.8', 'GDAL 3.13.3').
+            Free text because the relevant version is often a transitive one.
+        description:
+          type: string
+          description: What differs, in a sentence a reader can act on.
+        upstream_url:
+          type: string
+          description: The filed issue or PR.
+      additionalProperties: false
 
   params:
     type: object

@@ -14,8 +14,8 @@ description: "A LineString crossing the antimeridian (180° longitude). Naive co
 A LineString crossing the antimeridian (180° longitude). Naive code draws it the wrong way around the globe and computes a ~40,000 km length.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic of a LineString geometry" xmlns="http://www.w3.org/2000/svg"><title>Schematic of a LineString geometry</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><polyline points="20,58 46,30 72,50 98,22" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-<figcaption>Schematic: LineString geometry. Shape is illustrative, not the fixture's coordinates.</figcaption>
+<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="LineString geometry of antimeridian_crossing_line, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>LineString geometry of antimeridian_crossing_line, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><path d="M 110 40.14 L 10 40.14" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<figcaption>LineString geometry, rendered from the case's actual geometry. Scale is normalized to the viewport and is not comparable between cases.</figcaption>
 </figure>
 
 | Property | Value |
@@ -25,6 +25,7 @@ A LineString crossing the antimeridian (180° longitude). Naive code draws it th
 | Format | GeoJSON |
 | Geometry type | LineString |
 | CRS | `EPSG:4326` |
+| Location | Antimeridian, North Pacific &mdash; 179.50&deg;E, 20.00&deg;N &rarr; 179.50&deg;W, 20.00&deg;N (crosses the antimeridian &mdash; the box runs east from the first corner, over 180&deg;) |
 | Test tier | unit |
 | Size class | tiny |
 | Storage class | bundled |
@@ -43,6 +44,16 @@ def test_antimeridian_crossing_line(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -99,8 +110,10 @@ A line crosses the antimeridian if:
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dateline/antimeridian_crossing_line/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dateline/antimeridian_crossing_line/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/dateline/antimeridian_crossing_line)
 
 ## Source and license
 
@@ -160,7 +173,12 @@ A line crosses the antimeridian if:
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:4326"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "20.0 179.5 20.0 -179.5"
+    },
+    "name": "Antimeridian, North Pacific"
   }
 }
 </script>

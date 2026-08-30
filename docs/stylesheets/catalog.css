@@ -6,17 +6,60 @@
  */
 
 [data-md-color-scheme="default"] {
+	--md-primary-fg-color: #000;
+	--md-primary-fg-color--light: #1a1a1a;
+	--md-primary-fg-color--dark: #000;
 	--gc-diagram-stroke: #00695c;
 	--gc-diagram-fill: rgba(0, 150, 136, 0.18);
 	--gc-diagram-accent: #00796b;
 	--gc-diagram-muted: rgba(0, 150, 136, 0.07);
+	--gc-map-ocean: #eef3f4;
+	--gc-map-land: #cfd9da;
+	--gc-map-grid: #ffffff;
+	--gc-map-edge: #00695c;
+	--gc-map-marker: #00796b;
+	--gc-map-extent: #009688;
+	--gc-map-label: #ffffff;
 }
 
 [data-md-color-scheme="slate"] {
+	--md-primary-fg-color: #000;
+	--md-primary-fg-color--light: #1a1a1a;
+	--md-primary-fg-color--dark: #000;
 	--gc-diagram-stroke: #4db6ac;
 	--gc-diagram-fill: rgba(77, 182, 172, 0.22);
 	--gc-diagram-accent: #80cbc4;
 	--gc-diagram-muted: rgba(77, 182, 172, 0.09);
+	--gc-map-ocean: #1b2426;
+	--gc-map-land: #37474f;
+	--gc-map-grid: #263238;
+	--gc-map-edge: #4db6ac;
+	--gc-map-marker: #80cbc4;
+	--gc-map-extent: #4db6ac;
+	--gc-map-label: #10191a;
+}
+
+/* The header uses the wordmark without a separate icon. */
+.md-header__button.md-logo {
+	display: none;
+}
+
+.gc-header-wordmark {
+	display: block;
+	margin-left: -0.75rem;
+	width: 145px;
+	height: auto;
+}
+
+.gc-sidebar-brand {
+	display: block;
+	margin: 1rem 1rem 0.75rem 0.3rem;
+}
+
+.gc-sidebar-brand img {
+	display: block;
+	width: 100%;
+	height: auto;
 }
 
 .gc-figure {
@@ -31,6 +74,18 @@
 	width: 180px;
 	max-width: 100%;
 	height: auto;
+}
+
+/* Raster pixel previews. The PNG is already upscaled nearest-neighbour by the
+   generator; this keeps the browser from undoing that with a smooth resample
+   when the element's CSS width differs from the file's pixel width. A blurred
+   preview implies a resolution these 16x16 fixtures do not have. */
+
+.gc-preview {
+	image-rendering: pixelated;
+	/* The previews are square-ish and blocky; a border keeps a mostly-dark
+	   one from bleeding into the figure's background in dark mode. */
+	border: 1px solid var(--md-default-fg-color--lightest);
 }
 
 .gc-figure figcaption {
@@ -96,4 +151,240 @@
 	font-size: 0.68rem;
 	font-family: var(--md-code-font-family);
 	color: var(--md-default-fg-color--light);
+}
+
+/* Compare-all-cases table.
+ *
+ * Seven columns will not fit a phone, so the table scrolls inside its own
+ * wrapper rather than forcing the page body to scroll horizontally.
+ */
+
+.gc-compare-controls {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5em;
+	margin: 1.2em 0 0.8em;
+}
+
+.gc-compare-search,
+.gc-compare-filter {
+	padding: 0.35em 0.6em;
+	border: 1px solid var(--md-default-fg-color--lighter);
+	border-radius: 4px;
+	background: var(--md-default-bg-color);
+	color: var(--md-default-fg-color);
+	font-size: 0.72rem;
+}
+
+.gc-compare-search {
+	flex: 1 1 16em;
+	min-width: 12em;
+}
+
+.gc-compare-count {
+	margin-left: auto;
+	font-size: 0.68rem;
+	color: var(--md-default-fg-color--light);
+}
+
+.gc-compare-wrap {
+	overflow-x: auto;
+}
+
+table.gc-compare {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.7rem;
+}
+
+table.gc-compare th,
+table.gc-compare td {
+	padding: 0.45em 0.6em;
+	border-bottom: 1px solid var(--md-default-fg-color--lightest);
+	text-align: left;
+	vertical-align: middle;
+}
+
+table.gc-compare th[data-sort] {
+	cursor: pointer;
+	white-space: nowrap;
+	user-select: none;
+}
+
+table.gc-compare th[data-sort]:hover {
+	color: var(--md-accent-fg-color);
+}
+
+table.gc-compare th[data-sort][aria-sort="ascending"]::after {
+	content: " \25B2";
+}
+
+table.gc-compare th[data-sort][aria-sort="descending"]::after {
+	content: " \25BC";
+}
+
+.gc-compare-preview {
+	width: 76px;
+}
+
+.gc-compare-preview .gc-diagram {
+	display: block;
+	width: 64px;
+	height: auto;
+}
+
+.gc-compare-id {
+	font-size: 0.62rem;
+	color: var(--md-default-fg-color--light);
+}
+
+.gc-compare-risks {
+	max-width: 18em;
+	color: var(--md-default-fg-color--light);
+}
+
+/* World maps on the compare page.
+ *
+ * Full width rather than the schematics' fixed 180px: these are locator maps
+ * carrying 100+ markers, and at thumbnail size the clusters would overlap
+ * each other and the point of drawing them separately would be lost.
+ */
+.gc-map-figure {
+	text-align: left;
+}
+
+.gc-worldmap {
+	display: block;
+	width: 100%;
+	max-width: 720px;
+	height: auto;
+	margin: 0 auto;
+	border-radius: 3px;
+}
+
+/* Markers are the one clickable thing on the map: clicking filters the table
+   to the cases stacked here, which is the only practical way to work through a
+   36-case marker -- and, for a lone marker, the way to reach that one row. So
+   they get a pointer, not the help cursor. */
+.gc-map-marker {
+	cursor: pointer;
+}
+
+.gc-map-marker:hover circle {
+	fill-opacity: 1;
+}
+
+/* Every marker is keyboard-reachable, so every marker needs a visible ring:
+   tabbing to a control that gives no sign it has focus is a defect. SVG
+   ignores `outline` inconsistently, so the ring is drawn on the circle. */
+.gc-map-marker:focus {
+	outline: none;
+}
+
+.gc-map-marker:focus-visible circle {
+	fill-opacity: 1;
+	stroke: var(--md-accent-fg-color, #1a73e8);
+	stroke-width: 2;
+}
+
+/* The count sits on top of its marker, so it must never swallow the tooltip. */
+.gc-map-count {
+	pointer-events: none;
+	font-family: var(--md-text-font-family, sans-serif);
+}
+
+/* Footprints filter to their case, exactly as the marker over them does, so
+   they show the same pointer. Not `help`: the question-mark cursor promised a
+   native tooltip that barely worked, and it is the styled one that answers. */
+.gc-map-extent-group {
+	cursor: pointer;
+}
+
+.gc-map-extent-group:hover rect {
+	fill-opacity: 0.6;
+}
+
+.gc-map-extent-group:focus {
+	outline: none;
+}
+
+.gc-map-extent-group:focus-visible rect {
+	fill-opacity: 0.6;
+	stroke: var(--md-accent-fg-color, #1a73e8);
+	stroke-width: 2;
+}
+
+/* A pole cap's band is bbox arithmetic, not the polygon's shape. Dashing it
+   says "provisional" before the reader reaches the tooltip that explains why. */
+.gc-map-polar {
+	stroke-dasharray: 3 2;
+	fill-opacity: 0.18;
+}
+
+/* Set by catalog-compare.js when the map points at a row. */
+tr.gc-row-highlight > td {
+	background: var(--md-accent-fg-color--transparent);
+}
+
+.gc-map-filter-chip {
+	margin-left: 0.6em;
+	font-size: 0.75rem;
+}
+
+.gc-map-filter-chip button {
+	margin-left: 0.4em;
+	border: none;
+	background: none;
+	color: var(--md-accent-fg-color);
+	cursor: pointer;
+	font: inherit;
+	text-decoration: underline;
+}
+
+/* The map tooltip.
+ *
+ * An HTML element rather than the SVG <title> the maps still carry as a
+ * no-JS fallback: a native tooltip waits about a second before appearing,
+ * cannot wrap, and truncates a long cluster list -- so on the one element
+ * where the text matters most, it showed the least. This one appears
+ * immediately and is positioned against the pointer by catalog-compare.js.
+ */
+.gc-map-tooltip {
+	position: fixed;
+	z-index: 10;
+	max-width: 22rem;
+	padding: 0.4rem 0.6rem;
+	border-radius: 3px;
+	background: var(--md-default-bg-color);
+	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+	color: var(--md-default-fg-color);
+	font-size: 0.7rem;
+	line-height: 1.45;
+	/* The cursor is always somewhere over the map; a tooltip that could take
+	   the cursor would flicker as it stole its own trigger's hover. */
+	pointer-events: none;
+}
+
+.gc-map-tooltip[hidden] {
+	display: none;
+}
+
+.gc-map-tooltip-head {
+	display: block;
+	margin-bottom: 0.15rem;
+	font-weight: 600;
+}
+
+.gc-map-tooltip-ids {
+	display: block;
+	font-family: var(--md-code-font-family, monospace);
+	/* Long ids wrap rather than forcing the tooltip wider than its max-width. */
+	overflow-wrap: anywhere;
+}
+
+.gc-map-tooltip-hint {
+	display: block;
+	margin-top: 0.25rem;
+	opacity: 0.75;
 }

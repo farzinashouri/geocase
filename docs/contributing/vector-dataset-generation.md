@@ -322,6 +322,48 @@ inside a baseline family.
 
 ---
 
+## The Large Cases
+
+Three cases under `vector/special/scale/` hold ~10,000 features each, against one
+for every baseline and at most four elsewhere in the catalog:
+
+| Case | Features | What only a full read sees |
+|---|---|---|
+| `invalid_geometry_at_scale_gpkg` | 10,000 | a self-intersecting bowtie at index 9,999 |
+| `null_after_batch_boundary_gpkg` | 10,001 | the first NULL, after 10,000 non-NULL integers |
+| `mixed_timezone_after_batch_gpkg` | 10,001 | a UTC offset that changes only at the last row |
+
+The size is not the point; **discriminating power** is. A probe for `skip_features`,
+`max_features`, Arrow batch chunking or a paged read still *executes* against a
+one-feature fixture — it simply cannot fail, because with one feature every batch
+boundary is the same boundary and every partial read is the full read. Each of these
+puts its one defect past the boundary, so a consumer that reads a prefix reports clean
+and a consumer that reads everything does not.
+
+They are built by `_large_specs()` / `_write_large()` in
+`scripts/generate_vector_fixtures.py` and covered by the same `--check` gate as
+everything else here, with their own fingerprint: comparing 10,000 WKB blobs produces
+an unreadable diff that says nothing about *what* changed, so `_fingerprint_large`
+compares the schema, the bounds, and the **defect itself** — the property a bad
+regeneration would actually destroy. Removing the bowtie makes `--check` report
+`invalid_rows: expected [9999], got []`.
+
+### Adding another one
+
+Weigh it against the wheel first. These three take the payload tree from 2.1 MB to
+5.1 MB and the wheel from 456 KB to 1.25 MB, against `verify_dist.py`'s 2 MB ceiling —
+so roughly one more trio fits, and the one after that belongs in a remote manifest
+instead. The ceiling is deliberately not raised to make room.
+
+Then: give the case `size_class: small`, declare `params.expected_feature_count` (the
+generator reads its size from there, so the metadata and the content gate cannot
+disagree), add the id to `_LARGE_CASE_IDS`, and give it an attribute recipe in
+`_large_frame` plus a defect clause in `_fingerprint_large`. Write it with
+`SPATIAL_INDEX=NO` unless the index is the subject — the R-tree costs ~750 KB on 10,000
+features.
+
+---
+
 ## Multi-Format Strategy for Special Cases
 
 Most special datasets test **geometry behaviors** that are independent of storage format. Don't duplicate geometry-behavior cases across formats.

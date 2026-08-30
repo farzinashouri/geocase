@@ -14,8 +14,8 @@ description: "A single-band uint8 GeoTIFF whose overviews live in a sibling ``.o
 A single-band uint8 GeoTIFF whose overviews live in a sibling ``.ovr`` sidecar rather than inside the primary file. Exercises external-overview detection and sidecar handling.
 
 <figure class="gc-figure">
-<svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Schematic raster: 1 band, 64x64" xmlns="http://www.w3.org/2000/svg"><title>Schematic raster: 1 band, 64x64</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><rect x="31.0" y="23.0" width="58" height="34" rx="2" fill="var(--gc-diagram-fill)" stroke="var(--gc-diagram-stroke)" stroke-width="1.5"/><line x1="45.5" y1="23.0" x2="45.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="60.0" y1="23.0" x2="60.0" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="74.5" y1="23.0" x2="74.5" y2="57.0" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="34.3" x2="89.0" y2="34.3" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/><line x1="31.0" y1="45.7" x2="89.0" y2="45.7" stroke="var(--gc-diagram-stroke)" stroke-width="0.5" opacity="0.4"/></svg>
-<figcaption>Schematic: 1 band, 64x64 px, uint8. Drawn from metadata, not from the pixels.</figcaption>
+<img class="gc-diagram gc-preview" src="../../previews/geotiff_external_overviews_small.png" alt="Pixels of geotiff_external_overviews_small, a 64x64 raster, with NoData in magenta" loading="lazy" decoding="async">
+<figcaption>1 band, 64x64 px, uint8. Rendered from the case's actual pixels, contrast-stretched for display; NoData is shown in magenta.</figcaption>
 </figure>
 
 | Property | Value |
@@ -24,6 +24,7 @@ A single-band uint8 GeoTIFF whose overviews live in a sibling ``.ovr`` sidecar r
 | Category | raster |
 | Format | GeoTIFF |
 | CRS | `EPSG:32633` |
+| Location | Southern Italy / Sicily (synthetic, UTM 33N) &mdash; 15.00&deg;E, 40.65&deg;N &rarr; 15.01&deg;E, 40.65&deg;N |
 | Test tier | integration |
 | Size class | tiny |
 | Storage class | bundled |
@@ -42,6 +43,16 @@ def test_geotiff_external_overviews_small(geocase_case) -> None:
     data = geocase_case.load()
     assert data is not None
 ```
+
+## Use GeoCase in your tests
+
+Install the complete set of vector, raster, and NetCDF dependencies:
+
+```bash
+pip install "geocase[all]"
+```
+
+[View GeoCase on PyPI](https://pypi.org/project/geocase/).
 
 ## What this case checks
 
@@ -72,8 +83,10 @@ Confirm GeoCase reads external ``.ovr`` overviews transparently and treats the s
 
 ## Files
 
-- Primary: `geotiff_external_overviews_small.tif`
-- Sidecar: `geotiff_external_overviews_small.tif.ovr`
+- Primary: [`geotiff_external_overviews_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_external_overviews_small/geotiff_external_overviews_small.tif)
+- Sidecar: [`geotiff_external_overviews_small.tif.ovr`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_external_overviews_small/geotiff_external_overviews_small.tif.ovr)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_external_overviews_small)
 
 ## Source and license
 
@@ -90,7 +103,7 @@ Confirm GeoCase reads external ``.ovr`` overviews transparently and treats the s
 - [COG Single-Band Small](cog_singleband_small.md) -- `cog_singleband_small`
 - [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
 - [DEM Small](dem_small.md) -- `dem_small`
-- [Land Cover Small](landcover_small.md) -- `landcover_small`
+- [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
 
 <script type="application/ld+json">
 {
@@ -133,7 +146,12 @@ Confirm GeoCase reads external ``.ovr`` overviews transparently and treats the s
       "@type": "PropertyValue",
       "name": "coordinateReferenceSystem",
       "value": "EPSG:32633"
-    }
+    },
+    "geo": {
+      "@type": "GeoShape",
+      "box": "40.645091 15.0 40.650857 15.00757"
+    },
+    "name": "Southern Italy / Sicily (synthetic, UTM 33N)"
   }
 }
 </script>
