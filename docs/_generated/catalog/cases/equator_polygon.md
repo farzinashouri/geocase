@@ -131,9 +131,9 @@ projection choice is minimal but the equator-crossing property is present.
 
 - [North Pole Polygon](north_pole_polygon.md) -- `north_pole_polygon`
 - [South Pole Polygon](south_pole_polygon.md) -- `south_pole_polygon`
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 - [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 - [Equator Crossing Line](equator_crossing_line.md) -- `equator_crossing_line`
-- [Rasterize Match UTM33 Polygon](rasterize_match_utm33_polygon.md) -- `rasterize_match_utm33_polygon`
 
 <script type="application/ld+json">
 {

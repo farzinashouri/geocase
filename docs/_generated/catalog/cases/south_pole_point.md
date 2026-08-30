@@ -106,7 +106,7 @@ Point exactly at the geographic south pole for polar edge-case coverage.
 - [South Pole Polygon](south_pole_polygon.md) -- `south_pole_polygon`
 - [North Pole Polygon](north_pole_polygon.md) -- `north_pole_polygon`
 - [Web Mercator Baseline Point](web_mercator_baseline.md) -- `web_mercator_baseline`
-- [Dateline Chain Cluster](dateline_chain_cluster.md) -- `dateline_chain_cluster`
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 
 <script type="application/ld+json">
 {

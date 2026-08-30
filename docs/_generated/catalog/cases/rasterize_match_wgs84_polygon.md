@@ -103,10 +103,10 @@ A WGS84 polygon that overlaps the bundled `geotiff_utm_boundary` raster after re
 ## Related cases
 
 - [Rasterize Match UTM33 Polygon](rasterize_match_utm33_polygon.md) -- `rasterize_match_utm33_polygon`
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 - [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 - [Web Mercator Baseline Point](web_mercator_baseline.md) -- `web_mercator_baseline`
 - [Equator-Crossing Polygon](equator_polygon.md) -- `equator_polygon`
-- [GeoTIFF UTM Boundary](geotiff_utm_boundary.md) -- `geotiff_utm_boundary`
 
 <script type="application/ld+json">
 {

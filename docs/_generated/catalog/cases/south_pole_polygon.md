@@ -128,7 +128,7 @@ projected 2-D for a south-polar view).
 - [South Pole Point](south_pole_point.md) -- `south_pole_point`
 - [Equator-Crossing Polygon](equator_polygon.md) -- `equator_polygon`
 - [North Pole Point](north_pole_point.md) -- `north_pole_point`
-- [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 
 <script type="application/ld+json">
 {

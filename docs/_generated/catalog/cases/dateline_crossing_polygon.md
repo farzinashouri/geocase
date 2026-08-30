@@ -124,10 +124,10 @@ Antimeridian stress case for longitude wrapping and bounds logic.
 ## Related cases
 
 - [Classic Antimeridian Polygon](classic_antimeridian_polygon.md) -- `classic_antimeridian_polygon`
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 - [Dateline Points Pair](dateline_points_pair.md) -- `dateline_points_pair`
 - [Rasterize Match WGS84 Polygon](rasterize_match_wgs84_polygon.md) -- `rasterize_match_wgs84_polygon`
 - [Dateline Chain Cluster](dateline_chain_cluster.md) -- `dateline_chain_cluster`
-- [UTM Zone 1N Polygon](utm_zone_1n_small.md) -- `utm_zone_1n_small`
 
 <script type="application/ld+json">
 {

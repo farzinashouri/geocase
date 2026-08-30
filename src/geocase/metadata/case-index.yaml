@@ -107,6 +107,7 @@ cases:
 - path: data/core/vector/polygon/sqlite/polygon_sqlite_baseline/case.yaml
 - path: data/core/vector/polygon/wkb/polygon_wkb_baseline/case.yaml
 - path: data/core/vector/polygon/wkt/polygon_wkt_baseline/case.yaml
+- path: data/core/vector/special/crs/crs_mismatch_overlay_pair/case.yaml
 - path: data/core/vector/special/crs/equator_crossing_line/case.yaml
 - path: data/core/vector/special/crs/equator_polygon/case.yaml
 - path: data/core/vector/special/crs/north_pole_point/case.yaml

@@ -508,6 +508,9 @@ def check_vector_content(case_dir: Path, metadata: CaseMetadata) -> list[str]:
     if "axis_order" in metadata.risk_types:
         errors.extend(_check_authority_axis_order(case_dir, metadata))
 
+    if "crs_mismatch" in metadata.risk_types:
+        errors.extend(_check_crs_mismatch(case_dir, metadata))
+
     return errors
 
 
@@ -580,6 +583,69 @@ def _check_authority_axis_order(case_dir: Path, metadata: CaseMetadata) -> list[
                 "axis_order",
                 f"declares axis_order, but the first ordinate {first} is not a "
                 f"latitude in [{extent.south}, {extent.north}]",
+            )
+        )
+    return errors
+
+
+def _check_crs_mismatch(case_dir: Path, metadata: CaseMetadata) -> list[str]:
+    """Back the ``crs_mismatch`` risk type with the two files' actual bytes.
+
+    A mismatch is a relationship between two inputs, so unlike every other
+    check here this one reads the sidecar as well as the primary. The claim
+    being gated is that the sidecar *declares* a geographic CRS while
+    *holding* projected coordinates -- if a later regeneration ever wrote the
+    sidecar honestly, the case would silently stop testing anything.
+    """
+    import json as _json
+
+    errors: list[str] = []
+    sidecars = metadata.files.sidecars
+    if not sidecars:
+        errors.append(
+            _err(
+                metadata,
+                "crs_mismatch",
+                "declares crs_mismatch, but ships no sidecar to disagree with "
+                "the primary; a mismatch needs two layers",
+            )
+        )
+        return errors
+
+    path = case_dir / sidecars[0]
+    layer = _json.loads(path.read_text(encoding="utf-8"))
+
+    declared = (
+        layer.get("crs", {}).get("properties", {}).get("name", "")
+        if isinstance(layer.get("crs"), dict)
+        else ""
+    )
+    if "4326" not in declared and "CRS84" not in declared:
+        errors.append(
+            _err(
+                metadata,
+                "crs_mismatch",
+                f"sidecar {sidecars[0]} declares {declared!r}; the case's trap "
+                "requires it to claim a geographic CRS",
+            )
+        )
+
+    coords: list[list[float]] = []
+    for feature in layer.get("features", []):
+        geometry = feature.get("geometry") or {}
+        for ring in geometry.get("coordinates", []):
+            coords.extend(ring)
+    if not coords:
+        errors.append(_err(metadata, "crs_mismatch", "sidecar has no coordinates"))
+        return errors
+
+    if all(abs(x) <= 180.0 and abs(y) <= 90.0 for x, y in coords):
+        errors.append(
+            _err(
+                metadata,
+                "crs_mismatch",
+                "sidecar ordinates are all within degree range, so it does not "
+                "actually disagree with its declared CRS",
             )
         )
     return errors

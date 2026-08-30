@@ -17,8 +17,8 @@ collapsed. Sequencing that used to live in `execution-order.md` is folded in bel
 
 | | |
 |---|---|
-| Version | `1.0.0rc2` in this repository; `1.0.0rc1` is published on [PyPI](https://pypi.org/project/geocase/). |
-| Catalog | **153 cases** (vector, raster, NetCDF), 5.1 MB bundled, gated in CI. |
+| Version | `1.0.0rc3` in this repository; `1.0.0rc1` is published on [PyPI](https://pypi.org/project/geocase/). |
+| Catalog | **154 cases** (vector, raster, NetCDF), 5.1 MB bundled, gated in CI. |
 | Gates | `catalog`, `tests` (3.11 + 3.14), `lint`, `typecheck`, `docs` — all green. |
 | Docs site | 188 generated pages with `schema.org/Dataset` JSON-LD. GitHub Pages deployment is configured; enable Pages in repository settings to serve it. |
 | Users | Zero confirmed adopters. One prospective adopter (S2/Prithvi change detection) identified but not yet asked. |
@@ -124,8 +124,10 @@ Named here so it is not lost, and not started:
   case declares an `axis_order` or `crs_mismatch` risk type** — which became
   [Plan 27](27-close-plan-26-findings.md) §1.1. **`axis_order` is now closed** by
   [Plan 34](34-close-reviewed-catalog-gaps.md) §4.2: the six GML baselines already carried
-  authority-order coordinates on disk and now declare and gate the property. **`crs_mismatch`
-  remains owed** and should land before Plan 24 deploys, since the README leads with the term.
+  authority-order coordinates on disk and now declare and gate the property. **`crs_mismatch` is
+  now closed** by [Plan 36](36-rc3-release-runbook-and-crs-mismatch.md) §2:
+  `crs_mismatch_overlay_pair` is the catalog's first two-layer case, and the term the README
+  leads with now has a case behind it.
 - **Gaps assessed and deliberately not closed by [Plan 34](34-close-reviewed-catalog-gaps.md)**,
   from an external expert's review of the catalog — its Phase 5 records each with reasons.
   Two are genuinely deferred rather than declined: **alpha-band-as-nodata**, which needs a v1.1

@@ -1,6 +1,6 @@
 # Plan 35 — Compare Page: Map Interaction, Per-File Downloads, and the Browse Link
 
-> **Status: implemented 2026-08-30.** All four phases. Four scoped fixes to the
+> **Status: implemented 2026-08-30.** All four phases, plus a Phase 5 added from using the page (§5.1 footprints filter, §5.2 clipped markers, §5.3 the root `<title>`). Four scoped fixes to the
 > published compare page and its two coverage maps, all arising from reading
 > the shipped page rather than from a review. Three are defects; the fourth is
 > a link.
@@ -254,6 +254,28 @@ edge. It caught six, not the four found by hand — the north-pole markers at
 
 Regenerates all 213 catalog pages, since the SVG changes.
 
+### 5.3 The map root's `<title>` is suppressed as well — done
+
+Phase 1 removed the `<title>` from every footprint and marker, but queried only
+`[data-case-id], [data-case-ids]` — and `world_map()` also titles the `<svg>`
+root ("Vector coverage: where 113 cases sit on Earth"). A native `<title>`
+covers its whole subtree, so removing the children's promoted the root's: it
+became the tooltip for *every* hover anywhere on the map, including hovers over
+the elements Phase 1 had just cleaned. That is the stray dark tooltip — the
+browser's own chrome, ignoring the site theme, appearing after its ~1s delay on
+top of the styled one already up. Phase 1's own gate could not see it: it
+asserted only that `aria-label` and `removeChild` appear *somewhere* in the
+script.
+
+The selector gains `.gc-worldmap` itself. The promotion to `aria-label` becomes
+conditional on the element not already having one — the root is labelled by the
+generator, and that label names what the image *is* ("world map of 113 case
+locations") where the `<title>` is prose about it. Footprints and markers carry
+no `aria-label`, so for them the promotion is unchanged.
+
+Gated by `test_the_map_root_title_is_suppressed_too()`, which pins the selector
+rather than the presence of the two method names.
+
 ## Verification
 
 ```bash
@@ -269,8 +291,9 @@ Then in a browser (`mkdocs serve`, open `/_generated/catalog/compare/`):
 
 1. Hover a cluster — exactly one tooltip, the white-background one. Hold for two
    seconds and confirm no native tooltip follows it.
-2. Hover a footprint — one tooltip, its row highlights, the cursor stays
-   default, and clicking does nothing.
+2. Hover a footprint (`south_pole_polygon`) — one tooltip, its row highlights,
+   the cursor is a pointer, and clicking filters the table to that case.
+   Superseded §2.1's hover-only footprint; see §5.1.
 3. Click a single-case marker (`antimeridian_crossing_line` sits alone at the
    right edge) — the table filters to one row, the chip reads "Showing 1 case
    from the map", and "clear" restores the full table.

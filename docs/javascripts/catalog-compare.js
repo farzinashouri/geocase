@@ -198,18 +198,26 @@
 
     // --- the native tooltip ------------------------------------------------
     //
-    // The generator emits an SVG <title> on every hoverable group: with JS off
-    // it is the only tooltip there is, so it stays in the document. With JS on
-    // it doubles up -- the browser draws it, after its ~1s delay, on top of
-    // the styled div that has been visible since the pointer arrived. So
-    // remove it here, and move its text to aria-label so the element keeps the
-    // accessible name the <title> was providing. The tooltip div stays
-    // aria-hidden: the text is still exposed exactly once.
+    // The generator emits an SVG <title> on every hoverable group *and* on the
+    // <svg> root: with JS off they are the only tooltips there are, so they
+    // stay in the document. With JS on they double up -- the browser draws
+    // one, after its ~1s delay, on top of the styled div that has been visible
+    // since the pointer arrived. So remove them here, and move the text to
+    // aria-label so each element keeps the accessible name its <title> was
+    // providing. The tooltip div stays aria-hidden: the text is still exposed
+    // exactly once.
+    //
+    // The root matters as much as the children. A native <title> covers its
+    // whole subtree, so once the footprint and marker titles were gone the
+    // root's -- "Vector coverage: where 91 cases sit on Earth" -- took over
+    // for every hover anywhere on the map, including hovers over the very
+    // elements whose titles had just been removed. That is the stray tooltip:
+    // unstyled, ignoring the theme, and timed to surface over the styled one.
 
     Array.prototype.slice
       .call(
         document.querySelectorAll(
-          ".gc-worldmap [data-case-id], .gc-worldmap [data-case-ids]",
+          ".gc-worldmap, .gc-worldmap [data-case-id], .gc-worldmap [data-case-ids]",
         ),
       )
       .forEach(function (node) {
@@ -225,7 +233,12 @@
           return;
         }
         var text = title.textContent.trim();
-        if (text) {
+        // Only when the element has no name of its own. The <svg> root is
+        // already labelled by the generator, and that label names what the
+        // image *is* ("world map of 91 case locations") where the <title> is
+        // prose about it; the footprints and markers carry no aria-label, so
+        // for them this is the only thing keeping the name alive.
+        if (text && !node.getAttribute("aria-label")) {
           node.setAttribute("aria-label", text);
         }
         title.parentNode.removeChild(title);

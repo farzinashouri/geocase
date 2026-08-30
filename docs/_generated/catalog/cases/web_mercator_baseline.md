@@ -102,11 +102,11 @@ Baseline EPSG:3857 point for projected-vector coverage.
 
 ## Related cases
 
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 - [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 - [Rasterize Match WGS84 Polygon](rasterize_match_wgs84_polygon.md) -- `rasterize_match_wgs84_polygon`
 - [Equator Crossing Line](equator_crossing_line.md) -- `equator_crossing_line`
 - [North Pole Point](north_pole_point.md) -- `north_pole_point`
-- [Parquet Mixed Schema Attributes](parquet_mixed_schema_attributes.md) -- `parquet_mixed_schema_attributes`
 
 <script type="application/ld+json">
 {

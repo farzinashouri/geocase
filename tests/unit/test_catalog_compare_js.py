@@ -134,3 +134,30 @@ def test_clusters_get_a_pointer_cursor() -> None:
     assert "cursor: pointer" in block.group(1), (
         "clusters are clickable but do not show a pointer"
     )
+
+
+def test_the_map_root_title_is_suppressed_too() -> None:
+    """The ``<svg>`` root carries a ``<title>``, and it was the one left behind.
+
+    ``world_map()`` titles the root element -- "Vector coverage: where 91
+    cases sit on Earth" -- as the map's no-JS accessible name. The
+    suppression loop originally queried only ``[data-case-id]`` and
+    ``[data-case-ids]``, so it stripped every footprint and marker title and
+    left the root's in place. A native ``<title>`` applies to the whole
+    subtree, so the root's took over as soon as the child titles were gone:
+    hovering *any* part of the map, including a footprint, raised the
+    browser's own tooltip after its delay, on top of the styled one that had
+    been up since the pointer arrived. The root gets the same treatment as
+    its children -- text to ``aria-label``, element removed.
+    """
+    source = SCRIPT.read_text(encoding="utf-8")
+
+    selector = re.search(
+        r'document\.querySelectorAll\(\s*"([^"]*gc-worldmap[^"]*)"', source
+    )
+    assert selector is not None, "the title-suppression query is gone"
+    assert ".gc-worldmap," in selector.group(1).replace(" ", ""), (
+        "the suppression selector never matches the .gc-worldmap root itself, "
+        "so the root <title> survives and the browser draws it over the "
+        "styled tooltip"
+    )

@@ -9,6 +9,28 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **`crs_mismatch_overlay_pair` (153 → 154)** — plan 36 phase 2, executing plan 27
+  §1.1. `crs_mismatch` sat in the README's opening prose and in the catalog's
+  pre-committed search vocabulary while **no case declared it**: the nearest
+  candidates (`rasterize_match_wgs84_polygon`, `web_mercator_baseline`) are
+  single-layer, and a CRS mismatch is a *relationship between two inputs* that one
+  file cannot express. The new case is **the catalog's first two-layer case** — one
+  footprint in southeastern Norway written twice, as a WGS84 primary and a sidecar
+  holding UTM 33N metres while declaring EPSG:4326. Both files are individually
+  well-formed and parse without warning; the defect exists only in the pair.
+  Reprojecting the sidecar by its true EPSG lands it on the reference to within
+  **0.0004 m**, while trusting its declaration puts it **3359 km** away, silently —
+  an overlay or spatial join returns empty, which reads as "no features intersect"
+  rather than as an error.
+
+  Ships as **one case with a sidecar** rather than two cross-referencing cases: a
+  relationship split across two independently-selectable ids can be selected apart,
+  and a selector returning half a relationship is a footgun. `files.sidecars`
+  already supported this, so no model change was needed. `_check_crs_mismatch()` in
+  `catalog/content.py` backs the risk type against the bytes — the only content
+  check that reads a sidecar as well as a primary — and fails if the sidecar is ever
+  rewritten with honest degrees.
+
 - **Three large curated vector cases (150 → 153)** — plan 28 phase 3. Every vector case
   in the catalog held at most 4 features, and 74 held exactly one, which made probes for
   `skip_features`, `max_features`, Arrow batch chunking and paged reads *execute without

@@ -106,7 +106,7 @@ Two separated polygons for dissolve and intersection tests that should remain no
 - [Self-Intersecting Polygon](self_intersecting_polygon.md) -- `self_intersecting_polygon`
 - [Unclosed Ring Polygon](unclosed_ring_polygon.md) -- `unclosed_ring_polygon`
 - [Classic Antimeridian Polygon](classic_antimeridian_polygon.md) -- `classic_antimeridian_polygon`
-- [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
+- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 
 <script type="application/ld+json">
 {
