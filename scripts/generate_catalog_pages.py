@@ -37,11 +37,19 @@ DEFAULT_SITE_URL = os.environ.get(
     "GEOCASE_SITE_URL", "https://farzinashouri.github.io/geocase"
 )
 
+# Where a case page's Files section points to fetch the actual bytes. Links
+# target ``main``, not a pinned sha: the docs site tracks the released branch,
+# and a sha would rot on every data change. Override with GEOCASE_REPO_URL (or
+# --repo-url) only as part of a deliberate migration, then regenerate.
+DEFAULT_REPO_URL = os.environ.get(
+    "GEOCASE_REPO_URL", "https://github.com/farzinashouri/geocase"
+)
+
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from geocase.catalog.registry import get_registry  # noqa: E402
-from geocase.catalog.roots import case_roots_by_id  # noqa: E402
+from geocase.catalog.roots import case_roots_by_id, package_root  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -547,12 +555,57 @@ def _install_cta() -> list[str]:
     ]
 
 
+def _repo_relative(case_dir: Path) -> str:
+    """Return ``case_dir`` as a repository-relative posix path.
+
+    Built on the same root resolution the registry uses, which is what makes
+    the nested vector layout (``data/core/vector/polygon/<id>``) come out right
+    without a second lookup table.
+    """
+    return "src/geocase/" + case_dir.relative_to(package_root()).as_posix()
+
+
+def _files_section(case: Any, case_dir: Path | None, repo_url: str) -> list[str]:
+    """Render the Files section, linking each file to its bytes on GitHub.
+
+    ``case_dir`` is ``None`` for a manifest-backed (remote) case, which has no
+    directory in this repository; those fall back to naming the files.
+    """
+    lines = ["## Files", ""]
+
+    if case_dir is None:
+        lines.append(f"- Primary: `{case.files.primary}`")
+        for sidecar in getattr(case.files, "sidecars", []):
+            lines.append(f"- Sidecar: `{sidecar}`")
+        if getattr(case.files, "notes", None):
+            lines.append(f"- Notes: `{_collapse(str(case.files.notes))}`")
+        lines.append("")
+        return lines
+
+    relative = _repo_relative(case_dir)
+
+    def link(name: str) -> str:
+        return f"[`{name}`]({repo_url}/raw/main/{relative}/{name})"
+
+    lines.append(f"- Primary: {link(str(case.files.primary))}")
+    for sidecar in getattr(case.files, "sidecars", []):
+        lines.append(f"- Sidecar: {link(str(sidecar))}")
+    if getattr(case.files, "notes", None):
+        # Named for completeness only; its body is rendered above under Notes.
+        lines.append(f"- Notes: {link(_collapse(str(case.files.notes)))}")
+    lines.append("")
+    lines.append(f"[Browse this case on GitHub]({repo_url}/tree/main/{relative})")
+    lines.append("")
+    return lines
+
+
 def _render_case_page(
     case: Any,
     all_cases: list[Any],
     site_url: str,
     hub_risks: set[str],
     case_dir: Path | None = None,
+    repo_url: str = DEFAULT_REPO_URL,
 ) -> str:
     """Render the full markdown page for a single case."""
     lines = _front_matter(case.title, _meta_description(case))
@@ -629,15 +682,7 @@ def _render_case_page(
             lines.append(f"- `{capability}`")
         lines.append("")
 
-    lines.append("## Files")
-    lines.append("")
-    lines.append(f"- Primary: `{case.files.primary}`")
-    for sidecar in getattr(case.files, "sidecars", []):
-        lines.append(f"- Sidecar: `{sidecar}`")
-    if getattr(case.files, "notes", None):
-        # Named for completeness only; its body is rendered above under Notes.
-        lines.append(f"- Notes: `{_collapse(str(case.files.notes))}`")
-    lines.append("")
+    lines.extend(_files_section(case, case_dir, repo_url))
 
     source = getattr(case, "source", None)
     if source is not None and (source.name or source.license or source.url):
@@ -1006,7 +1051,9 @@ def _render_index(
     return "\n".join(lines).rstrip() + "\n"
 
 
-def build_pages(cases: list[Any], site_url: str) -> dict[str, str]:
+def build_pages(
+    cases: list[Any], site_url: str, repo_url: str = DEFAULT_REPO_URL
+) -> dict[str, str]:
     """Build every catalog page as a mapping of relative path to content."""
     by_risk: dict[str, list[Any]] = defaultdict(list)
     by_format: dict[str, list[Any]] = defaultdict(list)
@@ -1027,7 +1074,7 @@ def build_pages(cases: list[Any], site_url: str) -> dict[str, str]:
     case_dirs = case_roots_by_id()
     for case in cases:
         pages[f"cases/{case.id}.md"] = _render_case_page(
-            case, cases, site_url, hub_risks, case_dirs.get(case.id)
+            case, cases, site_url, hub_risks, case_dirs.get(case.id), repo_url
         )
 
     for risk in sorted(hub_risks):
@@ -1119,6 +1166,11 @@ def parse_args() -> argparse.Namespace:
         help="Canonical site URL used in JSON-LD.",
     )
     parser.add_argument(
+        "--repo-url",
+        default=DEFAULT_REPO_URL,
+        help="Repository URL the Files section links case data files into.",
+    )
+    parser.add_argument(
         "--check",
         action="store_true",
         help="Verify the committed pages match the catalog instead of writing them.",
@@ -1146,7 +1198,7 @@ def main() -> int:
         )
         return 1
 
-    pages = build_pages(cases, args.site_url.rstrip("/"))
+    pages = build_pages(cases, args.site_url.rstrip("/"), args.repo_url.rstrip("/"))
 
     if args.check:
         problems = check_pages(pages, args.output_root)

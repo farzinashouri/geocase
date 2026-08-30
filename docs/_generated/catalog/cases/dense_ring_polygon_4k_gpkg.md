@@ -102,8 +102,10 @@ hand-authored single-feature GeoJSON files and this geometry is generated. The
 
 ## Files
 
-- Primary: `dense_ring.gpkg`
-- Notes: `notes.md`
+- Primary: [`dense_ring.gpkg`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/polygon/gpkg/dense_ring_polygon_4k_gpkg/dense_ring.gpkg)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/polygon/gpkg/dense_ring_polygon_4k_gpkg/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/polygon/gpkg/dense_ring_polygon_4k_gpkg)
 
 ## Source and license
 

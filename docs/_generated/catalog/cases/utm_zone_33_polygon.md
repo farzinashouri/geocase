@@ -85,8 +85,10 @@ A baseline WGS84 polygon whose representative point falls in UTM zone 33N.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/utm_zone_33_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/utm_zone_33_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/crs/utm_zone_33_polygon)
 
 ## Source and license
 

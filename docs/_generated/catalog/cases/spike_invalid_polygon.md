@@ -89,8 +89,10 @@ which is useful for testing whether repair helpers keep only polygonal output.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/invalid/spike_invalid_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/invalid/spike_invalid_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/invalid/spike_invalid_polygon)
 
 ## Source and license
 

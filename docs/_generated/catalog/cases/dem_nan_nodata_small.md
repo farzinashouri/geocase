@@ -86,7 +86,9 @@ Confirm GeoCase detects NaN-encoded NoData in a float DEM rather than treating N
 
 ## Files
 
-- Primary: `dem_nan_nodata_small.tif`
+- Primary: [`dem_nan_nodata_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/dem_nan_nodata_small/dem_nan_nodata_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/dem_nan_nodata_small)
 
 ## Source and license
 

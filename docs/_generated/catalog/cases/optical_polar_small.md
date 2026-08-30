@@ -83,7 +83,9 @@ Confirm GeoCase handles an RGB optical scene in a polar stereographic CRS.
 
 ## Files
 
-- Primary: `optical_polar_small.tif`
+- Primary: [`optical_polar_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/optical_polar_small/optical_polar_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/optical_polar_small)
 
 ## Source and license
 

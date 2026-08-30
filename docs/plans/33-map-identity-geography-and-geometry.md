@@ -97,20 +97,25 @@ Fixed by splitting the two affordances rather than adding to them:
   immediately, wraps, follows the cursor, and flips back inside the viewport at
   the edges. The SVG `<title>` stays as the no-JS fallback, and the tooltip is
   `aria-hidden` so a screen reader does not hear the same text twice.
-- **Footprints are hover-only** (`cursor: default`, no click, no `role`). They
-  name their case and highlight its table row.
-- **Clicking survives on multi-case cluster markers only**, where filtering the
-  table is the one action a click pays for -- a 36-case marker cannot be read
-  any other way. A single-case marker is hover-only too, since it has nothing
-  to filter down to.
+- ~~**Footprints are hover-only** (`cursor: default`, no click, no `role`).~~
+  **Reversed by [Plan 35](35-compare-page-map-interaction-and-downloads.md)
+  Phase 5.1** — footprints filter to their case like everything else. In use,
+  the largest target on the map doing nothing under the cursor read as the map
+  being broken; the objection recorded here was really to a footprint that
+  *navigated away*, which filtering is not.
+- ~~**Clicking survives on multi-case cluster markers only** … A single-case
+  marker is hover-only too, since it has nothing to filter down to.~~
+  **Reversed by [Plan 35](35-compare-page-map-interaction-and-downloads.md)
+  Phase 2** — filtering to one row is how a reader gets from a dot on the map
+  to that case's row and link.
 - Cluster lists cap at **8 ids then a count**, with `_MAX_LABELLED_IDS` in
   `catalog_svg.py` and `MAX_LISTED_IDS` in the script kept in step so the
   fallback and the tooltip say the same thing.
 
-Gated by `test_only_clusters_are_clickable`, which reads the delimited
-clickable region of the script and fails if a footprint selector reappears in
-it, plus CSS gates asserting footprints do not claim the help cursor and
-clusters do show a pointer.
+~~Gated by `test_only_clusters_are_clickable`~~ — that gate is now
+`test_footprints_are_clickable`, asserting the opposite; the CSS gate still
+bans the help cursor but requires a pointer on footprints too. See
+[Plan 35](35-compare-page-map-interaction-and-downloads.md) Phase 5.1.
 
 ---
 

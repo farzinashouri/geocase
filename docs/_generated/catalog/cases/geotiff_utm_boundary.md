@@ -106,8 +106,10 @@ issues in zone-edge workflows.
 
 ## Files
 
-- Primary: `utm_boundary.tif`
-- Notes: `notes.md`
+- Primary: [`utm_boundary.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_utm_boundary/utm_boundary.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_utm_boundary/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_utm_boundary)
 
 ## Source and license
 

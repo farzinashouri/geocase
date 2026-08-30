@@ -109,8 +109,10 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Files
 
-- Primary: `data.kml`
-- Notes: `notes.md`
+- Primary: [`data.kml`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipolygon/kml/multipolygon_kml_baseline/data.kml)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipolygon/kml/multipolygon_kml_baseline/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/multipolygon/kml/multipolygon_kml_baseline)
 
 ## Source and license
 

@@ -196,95 +196,115 @@
       tooltip.hidden = true;
     }
 
-    // --- footprints: hover only --------------------------------------------
+    // --- the native tooltip ------------------------------------------------
     //
-    // A footprint names its case and highlights its row. It is deliberately
-    // NOT clickable: the mixed affordance (help cursor plus a click that
-    // jumped the page) is what made the maps feel unpredictable.
+    // The generator emits an SVG <title> on every hoverable group: with JS off
+    // it is the only tooltip there is, so it stays in the document. With JS on
+    // it doubles up -- the browser draws it, after its ~1s delay, on top of
+    // the styled div that has been visible since the pointer arrived. So
+    // remove it here, and move its text to aria-label so the element keeps the
+    // accessible name the <title> was providing. The tooltip div stays
+    // aria-hidden: the text is still exposed exactly once.
 
+    Array.prototype.slice
+      .call(
+        document.querySelectorAll(
+          ".gc-worldmap [data-case-id], .gc-worldmap [data-case-ids]",
+        ),
+      )
+      .forEach(function (node) {
+        var title = null;
+        for (var i = 0; i < node.childNodes.length; i += 1) {
+          var child = node.childNodes[i];
+          if (child.nodeType === 1 && child.nodeName.toLowerCase() === "title") {
+            title = child;
+            break;
+          }
+        }
+        if (!title) {
+          return;
+        }
+        var text = title.textContent.trim();
+        if (text) {
+          node.setAttribute("aria-label", text);
+        }
+        title.parentNode.removeChild(title);
+      });
+
+    // --- map targets: hover and click ---------------------------------------
+    //
+    // CLICKABLE-START -- everything on the map that names a case filters to
+    // it, footprints included. Plan 33 made the footprint hover-only, which
+    // left the *largest* target on the map -- and the one a reader aims at
+    // first -- as the one thing that did nothing when pressed. Its objection
+    // was really to a footprint that navigated away; filtering is the same
+    // action the marker over it performs, so the two now agree.
+
+    function bindTarget(node, ids, isCluster) {
+      if (!ids.length) {
+        return;
+      }
+
+      node.tabIndex = 0;
+      node.setAttribute("role", "button");
+
+      var hint =
+        ids.length > 1
+          ? "Click to filter the table to these cases"
+          : "Click to filter the table to this case";
+
+      node.addEventListener("mouseenter", function (event) {
+        highlight(ids, true);
+        showTooltip(ids, isCluster, hint, event);
+      });
+      node.addEventListener("mousemove", positionTooltip);
+      node.addEventListener("mouseleave", function () {
+        highlight(ids, false);
+        hideTooltip();
+      });
+
+      node.addEventListener("focus", function () {
+        highlight(ids, true);
+      });
+      node.addEventListener("blur", function () {
+        highlight(ids, false);
+        hideTooltip();
+      });
+
+      function activate() {
+        mapFilter = {};
+        ids.forEach(function (id) {
+          mapFilter[id] = true;
+        });
+        hideTooltip();
+        apply();
+      }
+
+      node.addEventListener("click", activate);
+      node.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          activate();
+        }
+      });
+    }
+
+    // A footprint carries one id and reads as itself, so its tooltip shows the
+    // bare case name rather than the "N cases here" cluster head.
     Array.prototype.slice
       .call(document.querySelectorAll(".gc-worldmap [data-case-id]"))
       .forEach(function (node) {
         var ids = (node.dataset.caseId || "").split(/\s+/).filter(Boolean);
-        if (!ids.length) {
-          return;
-        }
-
-        node.addEventListener("mouseenter", function (event) {
-          highlight(ids, true);
-          showTooltip(ids, false, "", event);
-        });
-        node.addEventListener("mousemove", positionTooltip);
-        node.addEventListener("mouseleave", function () {
-          highlight(ids, false);
-          hideTooltip();
-        });
+        bindTarget(node, ids, false);
       });
 
-    // --- clusters: hover and click -----------------------------------------
-    //
-    // CLICKABLE-START -- clusters are the only pressable thing on the map.
-    // Filtering the table is the one action that pays for a click here:
-    // a 36-case marker cannot be read any other way.
-
+    // A marker stands for everything stacked at one point: one case or
+    // thirty-six, and a 36-case cluster cannot be read any other way.
     Array.prototype.slice
       .call(document.querySelectorAll(".gc-worldmap [data-case-ids]"))
       .forEach(function (node) {
         var ids = (node.dataset.caseIds || "").split(/\s+/).filter(Boolean);
-        if (!ids.length) {
-          return;
-        }
-
-        var isCluster = ids.length > 1;
-        // A one-case marker has nothing to filter down to, so it stays a
-        // hover target and never claims to be a button.
-        if (isCluster) {
-          node.tabIndex = 0;
-          node.setAttribute("role", "button");
-        } else {
-          node.style.cursor = "default";
-        }
-
-        var hint = isCluster ? "Click to filter the table to these cases" : "";
-
-        node.addEventListener("mouseenter", function (event) {
-          highlight(ids, true);
-          showTooltip(ids, isCluster, hint, event);
-        });
-        node.addEventListener("mousemove", positionTooltip);
-        node.addEventListener("mouseleave", function () {
-          highlight(ids, false);
-          hideTooltip();
-        });
-
-        if (!isCluster) {
-          return;
-        }
-
-        node.addEventListener("focus", function () {
-          highlight(ids, true);
-        });
-        node.addEventListener("blur", function () {
-          highlight(ids, false);
-          hideTooltip();
-        });
-
-        function activate() {
-          mapFilter = {};
-          ids.forEach(function (id) {
-            mapFilter[id] = true;
-          });
-          hideTooltip();
-          apply();
-        }
-
-        node.addEventListener("click", activate);
-        node.addEventListener("keydown", function (event) {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            activate();
-          }
-        });
+        bindTarget(node, ids, ids.length > 1);
       });
     // CLICKABLE-END
 

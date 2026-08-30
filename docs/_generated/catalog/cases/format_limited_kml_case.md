@@ -132,8 +132,10 @@ Three simple WGS 84 polygons (rectangular zones) across northern Europe.
 
 ## Files
 
-- Primary: `zones.kml`
-- Notes: `notes.md`
+- Primary: [`zones.kml`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/format_limited_kml_case/zones.kml)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/format_limited_kml_case/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/encoding/format_limited_kml_case)
 
 ## Source and license
 

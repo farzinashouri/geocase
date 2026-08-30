@@ -87,8 +87,10 @@ Two points on either side of the antimeridian that are geographically near each 
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dateline/dateline_points_pair/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dateline/dateline_points_pair/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/dateline/dateline_points_pair)
 
 ## Source and license
 

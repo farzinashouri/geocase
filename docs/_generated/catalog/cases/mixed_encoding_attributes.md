@@ -107,8 +107,10 @@ robustness (`UTF-8`, `Latin-1`, `Windows-1252` style content).
 
 ## Files
 
-- Primary: `mixed_attrs.gpkg`
-- Notes: `notes.md`
+- Primary: [`mixed_attrs.gpkg`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/mixed_encoding_attributes/mixed_attrs.gpkg)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/mixed_encoding_attributes/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/encoding/mixed_encoding_attributes)
 
 ## Source and license
 

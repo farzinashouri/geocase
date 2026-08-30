@@ -113,8 +113,10 @@ The ring is wound counter-clockwise (right-hand rule) and encloses the pole.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/north_pole_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/north_pole_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/crs/north_pole_polygon)
 
 ## Source and license
 

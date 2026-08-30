@@ -88,7 +88,9 @@ Confirm GeoCase preserves a dual-pol VV/VH SAR scene, its band ordering, and ban
 
 ## Files
 
-- Primary: `sar_dualpol_small.tif`
+- Primary: [`sar_dualpol_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/sar_dualpol_small/sar_dualpol_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/sar_dualpol_small)
 
 ## Source and license
 

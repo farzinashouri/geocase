@@ -124,8 +124,10 @@ against a file whose dimensions are genuinely non-conventional.
 
 ## Files
 
-- Primary: `latlon_sample.nc`
-- Notes: `notes.md`
+- Primary: [`latlon_sample.nc`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/netcdf/latlon_small/latlon_sample.nc)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/netcdf/latlon_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/netcdf/latlon_small)
 
 ## Source and license
 

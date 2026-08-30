@@ -137,12 +137,14 @@ internationalization bugs in geospatial workflows.
 
 ## Files
 
-- Primary: `legacy_encoding.shp`
-- Sidecar: `legacy_encoding.dbf`
-- Sidecar: `legacy_encoding.shx`
-- Sidecar: `legacy_encoding.prj`
-- Sidecar: `legacy_encoding.cpg`
-- Notes: `notes.md`
+- Primary: [`legacy_encoding.shp`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy/legacy_encoding.shp)
+- Sidecar: [`legacy_encoding.dbf`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy/legacy_encoding.dbf)
+- Sidecar: [`legacy_encoding.shx`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy/legacy_encoding.shx)
+- Sidecar: [`legacy_encoding.prj`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy/legacy_encoding.prj)
+- Sidecar: [`legacy_encoding.cpg`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy/legacy_encoding.cpg)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/encoding/shapefile_encoding_legacy)
 
 ## Source and license
 

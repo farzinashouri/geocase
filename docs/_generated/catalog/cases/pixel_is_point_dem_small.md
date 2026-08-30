@@ -151,8 +151,10 @@ property the corpus always had into one it declares.
 
 ## Files
 
-- Primary: `pixel_is_point_dem_small.tif`
-- Notes: `notes.md`
+- Primary: [`pixel_is_point_dem_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/transform_conventions/pixel_is_point_dem_small.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/transform_conventions/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/transform_conventions)
 
 ## Source and license
 

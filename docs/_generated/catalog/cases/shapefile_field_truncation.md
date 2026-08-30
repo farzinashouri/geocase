@@ -128,11 +128,13 @@ Other formats (GeoJSON, GPKG, Parquet) do not have this limitation.
 
 ## Files
 
-- Primary: `truncated_fields.shp`
-- Sidecar: `truncated_fields.dbf`
-- Sidecar: `truncated_fields.shx`
-- Sidecar: `truncated_fields.prj`
-- Notes: `notes.md`
+- Primary: [`truncated_fields.shp`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_field_truncation/truncated_fields.shp)
+- Sidecar: [`truncated_fields.dbf`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_field_truncation/truncated_fields.dbf)
+- Sidecar: [`truncated_fields.shx`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_field_truncation/truncated_fields.shx)
+- Sidecar: [`truncated_fields.prj`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_field_truncation/truncated_fields.prj)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_field_truncation/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/encoding/shapefile_field_truncation)
 
 ## Source and license
 

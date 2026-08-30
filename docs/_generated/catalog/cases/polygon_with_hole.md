@@ -107,8 +107,10 @@ Exercises interior-ring handling. The polygon is valid but contains one hole.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/holes/polygon_with_hole/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/holes/polygon_with_hole/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/holes/polygon_with_hole)
 
 ## Source and license
 

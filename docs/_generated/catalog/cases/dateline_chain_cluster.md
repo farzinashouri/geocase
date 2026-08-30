@@ -89,8 +89,10 @@ clustering can incorrectly split them into multiple clusters.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dateline/dateline_chain_cluster/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dateline/dateline_chain_cluster/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/dateline/dateline_chain_cluster)
 
 ## Source and license
 

@@ -89,7 +89,9 @@ Confirm GeoCase preserves a scaled int16 NDVI product, its scale factor, and its
 
 ## Files
 
-- Primary: `ndvi_scaled_int16_small.tif`
+- Primary: [`ndvi_scaled_int16_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/ndvi_scaled_int16_small/ndvi_scaled_int16_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/ndvi_scaled_int16_small)
 
 ## Source and license
 

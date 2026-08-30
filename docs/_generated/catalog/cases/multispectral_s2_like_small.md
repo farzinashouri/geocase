@@ -121,8 +121,10 @@ Multispectral baseline for validating four-band uint16 reflectance handling.
 
 ## Files
 
-- Primary: `multispectral_s2_like_small.tif`
-- Notes: `notes.md`
+- Primary: [`multispectral_s2_like_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/multispectral_s2_like_small/multispectral_s2_like_small.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/multispectral_s2_like_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/multispectral_s2_like_small)
 
 ## Source and license
 

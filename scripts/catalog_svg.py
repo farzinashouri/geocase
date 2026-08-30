@@ -713,17 +713,27 @@ def world_map(cases: list[Any], title: str) -> str:
         # The marker grows with the count, but as a square root: area, not
         # radius, should track how many cases are stacked here.
         radius = 3.5 + min(count, 40) ** 0.5
-        x, y = _n(cluster["x"]), _n(cluster["y"])
+        # Clamp the centre inward by the radius. The pole and antimeridian
+        # cases centre exactly on the boundary -- a south-pole cluster at
+        # y=MAP_HEIGHT, the dateline ones at x=MAP_WIDTH -- so half of each
+        # circle rendered outside the viewBox and only the inner half was a
+        # hit target. The nudge is at most one radius, far below the accuracy
+        # a marker at this scale claims.
+        cx = min(max(cluster["x"], radius), MAP_WIDTH - radius)
+        cy = min(max(cluster["y"], radius), MAP_HEIGHT - radius)
         lines.append(
             f'<g class="gc-map-marker" data-case-ids="'
             f'{" ".join(str(member.id) for member in members)}">'
             f"<title>{_map_escape(_cluster_label(members))}"
-            f'</title><circle cx="{x}" cy="{y}" r="{_n(radius)}" {_MAP_MARKER} '
-            'fill-opacity="0.75" stroke="var(--gc-map-edge)" stroke-width="1"/>'
+            f'</title><circle cx="{_n(cx)}" cy="{_n(cy)}" r="{_n(radius)}" '
+            f'{_MAP_MARKER} fill-opacity="0.75" stroke="var(--gc-map-edge)" '
+            'stroke-width="1"/>'
         )
         if count > 1:
+            # The label rides the clamped centre, not the raw one, or a nudged
+            # marker would leave its own count behind on the edge.
             lines.append(
-                f'<text class="gc-map-count" x="{x}" y="{_n(cluster["y"] + 3)}" '
+                f'<text class="gc-map-count" x="{_n(cx)}" y="{_n(cy + 3)}" '
                 f'text-anchor="middle" font-size="9" font-weight="600" '
                 f"{_MAP_LABEL}>{count}</text>"
             )

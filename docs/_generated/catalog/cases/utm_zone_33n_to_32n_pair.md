@@ -118,8 +118,10 @@ hazard -- one polygon extending past its own zone's edge.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/utm_zone_33n_to_32n_pair/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/utm_zone_33n_to_32n_pair/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/crs/utm_zone_33n_to_32n_pair)
 
 ## Source and license
 

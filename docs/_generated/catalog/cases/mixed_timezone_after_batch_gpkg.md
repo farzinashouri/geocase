@@ -157,8 +157,10 @@ by ~40%.
 
 ## Files
 
-- Primary: `mixed_timezone.gpkg`
-- Notes: `notes.md`
+- Primary: [`mixed_timezone.gpkg`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/scale/mixed_timezone_after_batch_gpkg/mixed_timezone.gpkg)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/scale/mixed_timezone_after_batch_gpkg/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/scale/mixed_timezone_after_batch_gpkg)
 
 ## Source and license
 

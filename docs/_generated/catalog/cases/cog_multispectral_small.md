@@ -92,7 +92,9 @@ Confirm GeoCase recognises a tiled, overview-bearing multispectral GeoTIFF as CO
 
 ## Files
 
-- Primary: `cog_multispectral_small.tif`
+- Primary: [`cog_multispectral_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/cog_multispectral_small/cog_multispectral_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/cog_multispectral_small)
 
 ## Source and license
 

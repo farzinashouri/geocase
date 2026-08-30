@@ -107,8 +107,10 @@ running edge-case scenarios.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/polygon/geojson/simple_valid_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/polygon/geojson/simple_valid_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/polygon/geojson/simple_valid_polygon)
 
 ## Source and license
 

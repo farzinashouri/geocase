@@ -85,8 +85,10 @@ A projected polygon that lies within the bundled `geotiff_utm_boundary` raster e
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/rasterize_match_utm33_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/rasterize_match_utm33_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/crs/rasterize_match_utm33_polygon)
 
 ## Source and license
 

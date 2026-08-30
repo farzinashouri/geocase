@@ -114,8 +114,10 @@ True-colour optical baseline for validating multi-band uint8 raster handling.
 
 ## Files
 
-- Primary: `optical_rgb_small.tif`
-- Notes: `notes.md`
+- Primary: [`optical_rgb_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/optical_rgb_small/optical_rgb_small.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/optical_rgb_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/optical_rgb_small)
 
 ## Source and license
 

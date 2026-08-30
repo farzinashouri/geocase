@@ -1,8 +1,32 @@
 # Plan 35 — Compare Page: Map Interaction, Per-File Downloads, and the Browse Link
 
-> **Status: proposed 2026-08-30.** Four scoped fixes to the published compare
-> page and its two coverage maps, all arising from reading the shipped page
-> rather than from a review. Three are defects; the fourth is a link.
+> **Status: implemented 2026-08-30.** All four phases. Four scoped fixes to the
+> published compare page and its two coverage maps, all arising from reading
+> the shipped page rather than from a review. Three are defects; the fourth is
+> a link.
+>
+> **Amended 2026-08-30 after use, by the user's decision: footprints are
+> clickable too.** Phase 2 as written kept Plan 33's split — markers press,
+> footprints only hover — and that is what shipped first. Using it showed the
+> split was the actual complaint: the footprint is the *largest* target on the
+> map and the one a reader aims at first, so the polygon doing nothing under
+> the cursor reads as the map being broken, whichever affordance the CSS
+> advertises. Plan 33's objection was to a footprint that *navigated away*, not
+> to one that filters like everything else, and a polygon and the marker over
+> it denote the same case. Both loops now bind through one `bindTarget()`;
+> `test_footprints_are_not_clickable` is replaced by
+> `test_footprints_are_clickable`, and the CSS gate now demands a pointer
+> cursor rather than forbidding one. See Phase 5.
+>
+> **Two things turned out differently from the plan.** §2.3 asked whether an
+> inherited `:focus-visible` outline already covered the markers: it does not —
+> `catalog.css` carried **no focus rule at all**, so the ring is new, and it is
+> drawn on the marker's `circle` rather than as an `outline`, which SVG honours
+> inconsistently. And the Verification block's `ruff … scripts` is not a gate
+> this repository passes: `scripts/` is outside the lint scope CLAUDE.md
+> defines (`ruff check src tests`) and carries 37 pre-existing errors. The
+> committed gate — `ruff format --check src tests && ruff check src tests` —
+> is green, and `generate_catalog_pages.py` is `ruff format`-clean.
 
 ## Context
 
@@ -61,7 +85,7 @@ belongs with it.
 
 ## Phase 1 — One tooltip, not two
 
-### 1.1 Failing test
+### 1.1 Failing test — done
 
 `tests/unit/test_catalog_compare_js.py` is a source-text gate — see its module
 docstring: the behaviour needs a browser, so what is gated is the contract.
@@ -69,7 +93,7 @@ Add `test_compare_js_suppresses_the_native_title()`, asserting the script both
 removes the `<title>` element and transfers its text to `aria-label`. Watch it
 fail against the current script.
 
-### 1.2 Implementation
+### 1.2 Implementation — done
 
 In `catalog-compare.js`, before the footprint and cluster loops, walk
 `.gc-worldmap [data-case-id], .gc-worldmap [data-case-ids]`; for each node, take
@@ -95,7 +119,7 @@ no-JS fallback even though it is removed at runtime.
 
 ## Phase 2 — Every marker filters
 
-### 2.1 Failing tests
+### 2.1 Failing tests — done
 
 `test_only_clusters_are_clickable` encodes the policy being reversed, in its
 name and its docstring. Split it:
@@ -107,7 +131,7 @@ name and its docstring. Split it:
 - `test_every_marker_is_clickable()` — new, asserting the clickable region
   carries no `isCluster` early-return guard.
 
-### 2.2 Implementation
+### 2.2 Implementation — done
 
 In the `[data-case-ids]` loop:
 
@@ -125,7 +149,7 @@ In the `[data-case-ids]` loop:
 `renderChip()` already renders the singular ("Showing 1 case from the map") and
 `apply()` is set-based, so nothing else changes.
 
-### 2.3 Focus visibility
+### 2.3 Focus visibility — done
 
 Single-case markers become focusable for the first time. Check
 `docs/stylesheets/catalog.css:269-286` for an inherited `:focus-visible`
@@ -134,7 +158,7 @@ control with no visible focus ring is a defect, not a detail.
 
 ## Phase 3 — Per-file download links on case pages
 
-### 3.1 Failing test
+### 3.1 Failing test — done
 
 Add a test that renders one case page through the generator and asserts the
 Files section contains a
@@ -143,7 +167,7 @@ for `case.files.primary`, rather than a bare code span.
 `tests/unit/test_catalog_diagrams.py` is the nearest existing home; a sibling
 module for the page generator is equally acceptable.
 
-### 3.2 Implementation
+### 3.2 Implementation — done
 
 In `scripts/generate_catalog_pages.py`:
 
@@ -168,7 +192,7 @@ In `scripts/generate_catalog_pages.py`:
 Link to `main`, not a pinned commit: the docs site tracks the released branch,
 and a sha would rot on every data change.
 
-### 3.3 Regeneration
+### 3.3 Regeneration — done
 
 Generated artifacts are gated, so all 187 case pages regenerate and are
 committed. Under the conda `geocase` env:
@@ -178,7 +202,7 @@ python scripts/generate_catalog_pages.py
 python scripts/generate_catalog_pages.py --check
 ```
 
-## Phase 4 — The home-page Browse link
+## Phase 4 — The home-page Browse link — done
 
 `docs/index.md:29` retargets to the compare page:
 
@@ -188,6 +212,47 @@ python scripts/generate_catalog_pages.py --check
 
 The catalog hub stays reachable from the `mkdocs.yml` nav ("Browse Cases") and
 from the compare page itself, so nothing is orphaned.
+
+## Phase 5 — Every map target filters, and none are clipped — done
+
+Added after Phases 1–4 shipped, from using the page. Two defects, one of them
+the reason Phase 2 read as not working at all.
+
+### 5.1 Footprints filter too — done
+
+Reverses the Plan 33 split this plan's Phase 2 had preserved. The two loops in
+`catalog-compare.js` were near-identical apart from the click half, so they
+collapse into one `bindTarget(node, ids, isCluster)` called once per element
+kind. `isCluster` survives only to choose the tooltip head — a footprint reads
+as itself, a cluster as "N cases here".
+
+- `test_only_clusters_are_clickable` → `test_footprints_are_clickable`,
+  asserting `data-case-id]` *is* inside the `CLICKABLE-START/END` region.
+- `test_footprints_do_not_get_a_help_cursor` → `test_footprints_get_a_pointer_cursor`:
+  the rule still bans `cursor: help`, but now requires `cursor: pointer`.
+- `.gc-map-extent-group` gets the pointer and a `:focus-visible` ring on its
+  `rect`, matching the marker treatment from §2.3.
+
+### 5.2 Markers no longer hang off the edge — done
+
+`world_map()` placed a cluster at its raw centroid, so the cases that sit
+*exactly* on the boundary — the south pole at `y=MAP_HEIGHT`, the north pole at
+`y=0`, the dateline cases at `x=MAP_WIDTH` and `x=0` — rendered half outside the
+viewBox, leaving only the inner half as a hit target. That is why
+`antimeridian_crossing_line`, the marker this plan's own Verification step told
+the reader to click, was the least clickable thing on the map.
+
+`scripts/catalog_svg.py` clamps the centre into `[radius, MAP_* - radius]`, and
+the count label follows the clamped centre so a nudged marker does not leave its
+own number behind. The nudge is at most one radius (~4–10 px on a 720×360 map),
+far below the positional accuracy a cluster marker claims.
+
+Gated by `test_world_map_keeps_every_marker_inside_the_viewport()`, which parses
+every marker circle out of the full-catalog SVG and asserts none crosses an
+edge. It caught six, not the four found by hand — the north-pole markers at
+`y=0` had not been noticed.
+
+Regenerates all 213 catalog pages, since the SVG changes.
 
 ## Verification
 

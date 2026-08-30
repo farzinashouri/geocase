@@ -87,8 +87,10 @@ Zero-length LineString that parses successfully but is geometrically degenerate.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/degenerate/degenerate_but_parseable_line/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/degenerate/degenerate_but_parseable_line/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/degenerate/degenerate_but_parseable_line)
 
 ## Source and license
 

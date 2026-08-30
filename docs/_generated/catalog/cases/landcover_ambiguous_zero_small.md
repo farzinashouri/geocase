@@ -135,8 +135,10 @@ why every fixture must sit inside the regeneration gate.
 
 ## Files
 
-- Primary: `landcover_ambiguous_zero_small.tif`
-- Notes: `notes.md`
+- Primary: [`landcover_ambiguous_zero_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/landcover_ambiguous_zero_small/landcover_ambiguous_zero_small.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/landcover_ambiguous_zero_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/landcover_ambiguous_zero_small)
 
 ## Source and license
 

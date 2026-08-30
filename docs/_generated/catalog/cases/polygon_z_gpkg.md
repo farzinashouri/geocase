@@ -139,8 +139,10 @@ types, geometry, SRID, size) rather than bytes.
 
 ## Files
 
-- Primary: `geometry.gpkg`
-- Notes: `notes.md`
+- Primary: [`geometry.gpkg`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dimensionality/polygon_z_gpkg/geometry.gpkg)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dimensionality/polygon_z_gpkg/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/dimensionality/polygon_z_gpkg)
 
 ## Source and license
 

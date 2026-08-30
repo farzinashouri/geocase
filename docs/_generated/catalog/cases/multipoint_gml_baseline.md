@@ -139,9 +139,11 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Files
 
-- Primary: `data.gml`
-- Sidecar: `data.xsd`
-- Notes: `notes.md`
+- Primary: [`data.gml`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipoint/gml/multipoint_gml_baseline/data.gml)
+- Sidecar: [`data.xsd`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipoint/gml/multipoint_gml_baseline/data.xsd)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipoint/gml/multipoint_gml_baseline/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/multipoint/gml/multipoint_gml_baseline)
 
 ## Source and license
 

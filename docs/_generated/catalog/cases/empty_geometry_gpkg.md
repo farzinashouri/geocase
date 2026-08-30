@@ -150,8 +150,10 @@ This case is **GeoPackage-specific** because of SQLite's explicit NULL handling.
 
 ## Files
 
-- Primary: `empty_geom.gpkg`
-- Notes: `notes.md`
+- Primary: [`empty_geom.gpkg`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/empty/empty_geometry_gpkg/empty_geom.gpkg)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/empty/empty_geometry_gpkg/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/empty/empty_geometry_gpkg)
 
 ## Source and license
 

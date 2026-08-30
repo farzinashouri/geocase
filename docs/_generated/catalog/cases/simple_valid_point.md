@@ -85,8 +85,10 @@ Baseline Point case for selector, loader, and cross-format coverage.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/point/geojson/simple_valid_point/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/point/geojson/simple_valid_point/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/point/geojson/simple_valid_point)
 
 ## Source and license
 

@@ -85,8 +85,10 @@ Baseline MultiPolygon case for multipart polygon coverage.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipolygon/geojson/simple_valid_multipolygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipolygon/geojson/simple_valid_multipolygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/multipolygon/geojson/simple_valid_multipolygon)
 
 ## Source and license
 

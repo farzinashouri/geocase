@@ -83,8 +83,10 @@ Confirm GeoCase reads external ``.ovr`` overviews transparently and treats the s
 
 ## Files
 
-- Primary: `geotiff_external_overviews_small.tif`
-- Sidecar: `geotiff_external_overviews_small.tif.ovr`
+- Primary: [`geotiff_external_overviews_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_external_overviews_small/geotiff_external_overviews_small.tif)
+- Sidecar: [`geotiff_external_overviews_small.tif.ovr`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_external_overviews_small/geotiff_external_overviews_small.tif.ovr)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_external_overviews_small)
 
 ## Source and license
 

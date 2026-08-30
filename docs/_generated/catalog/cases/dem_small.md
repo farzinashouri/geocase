@@ -116,8 +116,10 @@ NaN NoData semantics.
 
 ## Files
 
-- Primary: `dem_small.tif`
-- Notes: `notes.md`
+- Primary: [`dem_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/dem_small/dem_small.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/dem_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/dem_small)
 
 ## Source and license
 

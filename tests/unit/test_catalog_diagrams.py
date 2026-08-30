@@ -457,3 +457,38 @@ def test_thumbnail_decimates_a_dense_geometry() -> None:
     assert thinned[0] == dense[0]
     assert thinned[-1] == dense[-1], "decimation must keep the ring closed"
     assert _decimate(dense[:50]) == dense[:50], "short rings must pass through"
+
+
+def test_world_map_keeps_every_marker_inside_the_viewport() -> None:
+    """A marker clipped by the edge is a marker the reader cannot click.
+
+    The pole and antimeridian cases sit exactly on the viewBox boundary --
+    ``south_pole_polygon`` centres at y=360 on a 360-tall map, the dateline
+    cases at x=720 on a 720-wide one -- so half of each circle rendered
+    outside the image and only the inner half was a hit target. Clamping the
+    centre inward by the radius is what makes them pressable.
+    """
+    from catalog_svg import (  # type: ignore[import-not-found]
+        MAP_HEIGHT,
+        MAP_WIDTH,
+        world_map,
+    )
+
+    svg = world_map(list(get_registry().list_cases()), "All cases")
+
+    circles = re.findall(
+        r'<g class="gc-map-marker"[^>]*>.*?<circle cx="([0-9.]+)" '
+        r'cy="([0-9.]+)" r="([0-9.]+)"',
+        svg,
+    )
+    assert circles, "no markers were drawn"
+
+    clipped = [
+        (cx, cy, r)
+        for cx, cy, r in circles
+        if float(cx) - float(r) < 0
+        or float(cx) + float(r) > MAP_WIDTH
+        or float(cy) - float(r) < 0
+        or float(cy) + float(r) > MAP_HEIGHT
+    ]
+    assert not clipped, f"{len(clipped)} marker(s) hang outside the viewBox: {clipped}"

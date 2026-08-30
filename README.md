@@ -43,7 +43,7 @@ ship as a versioned dependency instead of a folder nobody remembers the provenan
 give a coding assistant something to reach for instead of inventing a fixture that agrees with
 the bug.)
 
-> Status: **1.0.0rc1 is available on [PyPI](https://pypi.org/project/geocase/)**; this repository contains the next release candidate (`1.0.0rc2`). The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 153 bundled cases, 5.1 MB. Remote dataset transport is deferred to v1.1; see the [changelog](CHANGELOG.md).
+> Status: **1.0.0rc1 is available on [PyPI](https://pypi.org/project/geocase/)**; this repository contains the next release candidate (`1.0.0rc3`). The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 153 bundled cases, 5.1 MB. Remote dataset transport is deferred to v1.1; see the [changelog](CHANGELOG.md).
 
 ## Quick Start
 

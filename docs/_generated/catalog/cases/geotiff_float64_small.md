@@ -95,8 +95,10 @@ Single-band `float64` raster for validating high-precision floating-point dtype 
 
 ## Files
 
-- Primary: `float64_sample.tif`
-- Notes: `notes.md`
+- Primary: [`float64_sample.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_float64_small/float64_sample.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_float64_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_float64_small)
 
 ## Source and license
 

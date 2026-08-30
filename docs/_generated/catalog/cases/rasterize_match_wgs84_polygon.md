@@ -86,8 +86,10 @@ A WGS84 polygon that overlaps the bundled `geotiff_utm_boundary` raster after re
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/rasterize_match_wgs84_polygon/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/crs/rasterize_match_wgs84_polygon/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/crs/rasterize_match_wgs84_polygon)
 
 ## Source and license
 

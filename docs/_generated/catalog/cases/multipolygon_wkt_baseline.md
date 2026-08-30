@@ -105,8 +105,10 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Files
 
-- Primary: `geometry.wkt`
-- Notes: `notes.md`
+- Primary: [`geometry.wkt`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipolygon/wkt/multipolygon_wkt_baseline/geometry.wkt)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipolygon/wkt/multipolygon_wkt_baseline/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/multipolygon/wkt/multipolygon_wkt_baseline)
 
 ## Source and license
 

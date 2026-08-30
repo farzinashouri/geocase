@@ -136,8 +136,10 @@ GeoJSON's human-readable text format trades some precision for readability.
 
 ## Files
 
-- Primary: `high_precision_points.geojson`
-- Notes: `notes.md`
+- Primary: [`high_precision_points.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/precision/precision_loss_geojson_roundtrip/high_precision_points.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/precision/precision_loss_geojson_roundtrip/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/precision/precision_loss_geojson_roundtrip)
 
 ## Source and license
 

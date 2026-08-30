@@ -85,8 +85,10 @@ Baseline MultiPoint case for multi-point coverage.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipoint/geojson/simple_valid_multipoint/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/multipoint/geojson/simple_valid_multipoint/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/multipoint/geojson/simple_valid_multipoint)
 
 ## Source and license
 

@@ -108,8 +108,10 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Files
 
-- Primary: `polygon.wkb`
-- Notes: `notes.md`
+- Primary: [`polygon.wkb`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/polygon/wkb/polygon_wkb_baseline/polygon.wkb)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/polygon/wkb/polygon_wkb_baseline/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/polygon/wkb/polygon_wkb_baseline)
 
 ## Source and license
 

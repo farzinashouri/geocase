@@ -156,12 +156,14 @@ assert it at all.
 
 ## Files
 
-- Primary: `ring_orientation.shp`
-- Sidecar: `ring_orientation.dbf`
-- Sidecar: `ring_orientation.shx`
-- Sidecar: `ring_orientation.prj`
-- Sidecar: `ring_orientation.cpg`
-- Notes: `notes.md`
+- Primary: [`ring_orientation.shp`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_ring_orientation/ring_orientation.shp)
+- Sidecar: [`ring_orientation.dbf`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_ring_orientation/ring_orientation.dbf)
+- Sidecar: [`ring_orientation.shx`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_ring_orientation/ring_orientation.shx)
+- Sidecar: [`ring_orientation.prj`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_ring_orientation/ring_orientation.prj)
+- Sidecar: [`ring_orientation.cpg`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_ring_orientation/ring_orientation.cpg)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/shapefile_ring_orientation/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/encoding/shapefile_ring_orientation)
 
 ## Source and license
 

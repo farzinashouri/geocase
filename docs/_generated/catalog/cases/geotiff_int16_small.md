@@ -95,8 +95,10 @@ Single-band `int16` raster for validating signed integer raster dtype handling.
 
 ## Files
 
-- Primary: `int16_sample.tif`
-- Notes: `notes.md`
+- Primary: [`int16_sample.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_int16_small/int16_sample.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_int16_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_int16_small)
 
 ## Source and license
 

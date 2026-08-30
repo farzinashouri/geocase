@@ -88,7 +88,9 @@ Confirm GeoCase preserves a multispectral stack assembled from bands of differin
 
 ## Files
 
-- Primary: `multispectral_mixed_resolution_small.tif`
+- Primary: [`multispectral_mixed_resolution_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/multispectral_mixed_resolution_small/multispectral_mixed_resolution_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/multispectral_mixed_resolution_small)
 
 ## Source and license
 

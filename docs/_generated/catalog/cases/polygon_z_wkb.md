@@ -134,8 +134,10 @@ pure Python with no driver in the loop, so `--check` compares it byte-for-byte.
 
 ## Files
 
-- Primary: `geometry.wkb`
-- Notes: `notes.md`
+- Primary: [`geometry.wkb`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dimensionality/polygon_z_wkb/geometry.wkb)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/dimensionality/polygon_z_wkb/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/dimensionality/polygon_z_wkb)
 
 ## Source and license
 

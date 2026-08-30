@@ -116,8 +116,10 @@ Binary mask baseline for validating mask-style raster handling and nodata logic.
 
 ## Files
 
-- Primary: `water_mask_small.tif`
-- Notes: `notes.md`
+- Primary: [`water_mask_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/water_mask_small/water_mask_small.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/water_mask_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/water_mask_small)
 
 ## Source and license
 

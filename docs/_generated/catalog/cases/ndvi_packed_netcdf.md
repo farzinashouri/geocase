@@ -117,8 +117,10 @@ the pair exists to find.
 
 ## Files
 
-- Primary: `ndvi_packed.nc`
-- Notes: `notes.md`
+- Primary: [`ndvi_packed.nc`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/netcdf/ndvi_packed_netcdf/ndvi_packed.nc)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/netcdf/ndvi_packed_netcdf/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/netcdf/ndvi_packed_netcdf)
 
 ## Source and license
 

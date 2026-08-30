@@ -42,21 +42,58 @@ def test_compare_js_builds_an_html_tooltip() -> None:
     assert "clientX" in source and "clientY" in source
 
 
-def test_only_clusters_are_clickable() -> None:
-    """Footprints are read, not pressed -- the mixed affordance was the bug.
+def test_compare_js_suppresses_the_native_title() -> None:
+    """Two tooltips per hover is one too many; the HTML one is the keeper.
 
-    A ``help`` cursor says "hover me" and ``role="button"`` says "click me".
-    Putting both on one element is what made clicking a footprint feel like a
-    misfire, so the click affordance now belongs to cluster markers alone.
+    The generator's ``<title>`` is the no-JS fallback, so it stays in the SVG.
+    When the script runs it removes the element -- otherwise the browser draws
+    its own tooltip on top of the styled one -- and moves the text to
+    ``aria-label`` so the accessible name survives the removal.
     """
     source = SCRIPT.read_text(encoding="utf-8")
 
-    assert 'role", "button"' in source or "role='button'" in source, (
-        "clusters must still announce themselves as pressable"
+    assert "aria-label" in source, (
+        "removing <title> without an aria-label drops the accessible name"
     )
-    # The selector that gets the click handlers must not pick up footprints.
-    assert "gc-map-extent-group" not in _clickable_region(source), (
-        "footprints are inside the clickable branch again"
+    assert "removeChild" in source or "remove()" in source, (
+        "the native <title> is never removed, so both tooltips still show"
+    )
+
+
+def test_footprints_are_clickable() -> None:
+    """Everything on the map that names a case filters to it.
+
+    This reverses Plan 33's split affordance, which made the footprint --
+    the *largest* target on the map, and the one a reader aims at first --
+    the one thing that did nothing when pressed. A polygon and the marker
+    over it stand for the same case, so they perform the same action; the
+    original "mixed affordance" objection was really about a footprint that
+    *navigated away*, not about one that filters like everything else.
+    """
+    source = SCRIPT.read_text(encoding="utf-8")
+    region = _clickable_region(source)
+
+    assert 'role", "button"' in source or "role='button'" in source, (
+        "map targets must announce themselves as pressable"
+    )
+    assert "data-case-id]" in region, (
+        "footprints are outside the clickable branch, so they cannot filter"
+    )
+
+
+def test_every_marker_is_clickable() -> None:
+    """Filtering to one row is a real action, so a lone marker filters too.
+
+    A reader who has just filtered by a cluster and then clicks its neighbour
+    reads a dead marker as broken, not as a considered omission.
+    """
+    region = _clickable_region(SCRIPT.read_text(encoding="utf-8"))
+
+    assert "if (!isCluster)" not in region, (
+        "a single-case marker is still short-circuited out of the click path"
+    )
+    assert 'node.style.cursor = "default"' not in region, (
+        "single-case markers still override the pointer cursor"
     )
 
 
@@ -70,12 +107,19 @@ def _clickable_region(source: str) -> str:
     return source[start:end]
 
 
-def test_footprints_do_not_get_a_help_cursor() -> None:
-    """The question-mark cursor was promising a native tooltip that barely worked."""
+def test_footprints_get_a_pointer_cursor() -> None:
+    """They filter now, so they must look like they do.
+
+    Not ``help``: the question-mark cursor promised a native tooltip that
+    barely worked, and it is the styled one that answers the hover.
+    """
     css = STYLES.read_text(encoding="utf-8")
 
     block = re.search(r"\.gc-map-extent-group\s*\{([^}]*)\}", css)
     assert block, "the footprint rule is gone"
+    assert "cursor: pointer" in block.group(1), (
+        "footprints are clickable but do not show a pointer"
+    )
     assert "cursor: help" not in block.group(1), (
         "footprints still claim the help cursor"
     )

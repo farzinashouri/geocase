@@ -127,8 +127,10 @@ demonstrate them.
 
 ## Files
 
-- Primary: `cf_time_ordering.nc`
-- Notes: `notes.md`
+- Primary: [`cf_time_ordering.nc`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/netcdf/cf_time_ordering_netcdf/cf_time_ordering.nc)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/netcdf/cf_time_ordering_netcdf/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/netcdf/cf_time_ordering_netcdf)
 
 ## Source and license
 

@@ -95,8 +95,10 @@ Single-band `int32` raster for validating wide integer raster dtype handling.
 
 ## Files
 
-- Primary: `int32_sample.tif`
-- Notes: `notes.md`
+- Primary: [`int32_sample.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_int32_small/int32_sample.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_int32_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_int32_small)
 
 ## Source and license
 

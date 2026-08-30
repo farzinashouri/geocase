@@ -111,8 +111,10 @@ Derived-index baseline for validating float32 NDVI-style raster handling.
 
 ## Files
 
-- Primary: `ndvi_small.tif`
-- Notes: `notes.md`
+- Primary: [`ndvi_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/ndvi_small/ndvi_small.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/ndvi_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/ndvi_small)
 
 ## Source and license
 

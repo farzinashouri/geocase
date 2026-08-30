@@ -107,8 +107,10 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Files
 
-- Primary: `geometry.feather`
-- Notes: `notes.md`
+- Primary: [`geometry.feather`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/point/feather/point_feather_baseline/geometry.feather)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/point/feather/point_feather_baseline/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/point/feather/point_feather_baseline)
 
 ## Source and license
 

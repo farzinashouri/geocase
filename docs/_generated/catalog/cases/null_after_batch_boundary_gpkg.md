@@ -126,8 +126,10 @@ Written with `SPATIAL_INDEX=NO`; see the sibling case's notes for why.
 
 ## Files
 
-- Primary: `null_after_boundary.gpkg`
-- Notes: `notes.md`
+- Primary: [`null_after_boundary.gpkg`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/scale/null_after_batch_boundary_gpkg/null_after_boundary.gpkg)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/scale/null_after_batch_boundary_gpkg/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/scale/null_after_batch_boundary_gpkg)
 
 ## Source and license
 

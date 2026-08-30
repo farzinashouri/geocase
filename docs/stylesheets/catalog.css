@@ -263,9 +263,10 @@ table.gc-compare th[data-sort][aria-sort="descending"]::after {
 	border-radius: 3px;
 }
 
-/* Clusters are the one clickable thing on the map: clicking filters the table
+/* Markers are the one clickable thing on the map: clicking filters the table
    to the cases stacked here, which is the only practical way to work through a
-   36-case marker. So they get a pointer, not the help cursor. */
+   36-case marker -- and, for a lone marker, the way to reach that one row. So
+   they get a pointer, not the help cursor. */
 .gc-map-marker {
 	cursor: pointer;
 }
@@ -274,22 +275,44 @@ table.gc-compare th[data-sort][aria-sort="descending"]::after {
 	fill-opacity: 1;
 }
 
+/* Every marker is keyboard-reachable, so every marker needs a visible ring:
+   tabbing to a control that gives no sign it has focus is a defect. SVG
+   ignores `outline` inconsistently, so the ring is drawn on the circle. */
+.gc-map-marker:focus {
+	outline: none;
+}
+
+.gc-map-marker:focus-visible circle {
+	fill-opacity: 1;
+	stroke: var(--md-accent-fg-color, #1a73e8);
+	stroke-width: 2;
+}
+
 /* The count sits on top of its marker, so it must never swallow the tooltip. */
 .gc-map-count {
 	pointer-events: none;
 	font-family: var(--md-text-font-family, sans-serif);
 }
 
-/* Footprints are read, not pressed. They name their case on hover and
-   highlight its table row; they carry no click action, so they must not
-   advertise one -- a help cursor over something that also navigated on click
-   was the mixed signal that made the map feel broken. */
+/* Footprints filter to their case, exactly as the marker over them does, so
+   they show the same pointer. Not `help`: the question-mark cursor promised a
+   native tooltip that barely worked, and it is the styled one that answers. */
 .gc-map-extent-group {
-	cursor: default;
+	cursor: pointer;
 }
 
 .gc-map-extent-group:hover rect {
 	fill-opacity: 0.6;
+}
+
+.gc-map-extent-group:focus {
+	outline: none;
+}
+
+.gc-map-extent-group:focus-visible rect {
+	fill-opacity: 0.6;
+	stroke: var(--md-accent-fg-color, #1a73e8);
+	stroke-width: 2;
 }
 
 /* A pole cap's band is bbox arithmetic, not the polygon's shape. Dashing it

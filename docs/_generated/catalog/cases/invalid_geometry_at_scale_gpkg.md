@@ -128,8 +128,10 @@ The R-tree is covered deliberately by the SpatiaLite cases, at one feature each.
 
 ## Files
 
-- Primary: `invalid_at_scale.gpkg`
-- Notes: `notes.md`
+- Primary: [`invalid_at_scale.gpkg`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/scale/invalid_geometry_at_scale_gpkg/invalid_at_scale.gpkg)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/scale/invalid_geometry_at_scale_gpkg/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/scale/invalid_geometry_at_scale_gpkg)
 
 ## Source and license
 

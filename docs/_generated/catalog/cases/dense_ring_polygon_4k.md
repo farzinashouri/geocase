@@ -121,8 +121,10 @@ well as through hand-written JSON.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/polygon/geojson/dense_ring_polygon_4k/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/polygon/geojson/dense_ring_polygon_4k/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/polygon/geojson/dense_ring_polygon_4k)
 
 ## Source and license
 

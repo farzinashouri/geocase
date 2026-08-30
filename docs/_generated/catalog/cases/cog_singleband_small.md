@@ -86,7 +86,9 @@ Confirm GeoCase recognises an internally tiled, overview-bearing single-band Geo
 
 ## Files
 
-- Primary: `cog_singleband_small.tif`
+- Primary: [`cog_singleband_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/cog_singleband_small/cog_singleband_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/cog_singleband_small)
 
 ## Source and license
 

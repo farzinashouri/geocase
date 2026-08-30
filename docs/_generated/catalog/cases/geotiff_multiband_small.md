@@ -108,8 +108,10 @@ Three-band raster baseline for validating multi-band read behavior.
 
 ## Files
 
-- Primary: `multiband_sample.tif`
-- Notes: `notes.md`
+- Primary: [`multiband_sample.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_multiband_small/multiband_sample.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_multiband_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_multiband_small)
 
 ## Source and license
 

@@ -83,7 +83,9 @@ Confirm GeoCase handles an RGB optical scene whose extent crosses the antimeridi
 
 ## Files
 
-- Primary: `optical_dateline_small.tif`
+- Primary: [`optical_dateline_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/optical_dateline_small/optical_dateline_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/optical_dateline_small)
 
 ## Source and license
 

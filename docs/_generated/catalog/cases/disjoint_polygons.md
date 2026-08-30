@@ -86,8 +86,10 @@ Two separated polygons for dissolve and intersection tests that should remain no
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/degenerate/disjoint_polygons/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/degenerate/disjoint_polygons/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/degenerate/disjoint_polygons)
 
 ## Source and license
 

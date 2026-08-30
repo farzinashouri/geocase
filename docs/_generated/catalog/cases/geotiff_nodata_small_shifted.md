@@ -89,8 +89,10 @@ from true pixel-lattice compatibility.
 
 ## Files
 
-- Primary: `nodata_sample_shifted.tif`
-- Notes: `notes.md`
+- Primary: [`nodata_sample_shifted.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_nodata_small_shifted/nodata_sample_shifted.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_nodata_small_shifted/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_nodata_small_shifted)
 
 ## Source and license
 

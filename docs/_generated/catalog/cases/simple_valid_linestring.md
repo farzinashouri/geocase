@@ -85,8 +85,10 @@ Baseline LineString case for selector and loader coverage.
 
 ## Files
 
-- Primary: `geometry.geojson`
-- Notes: `notes.md`
+- Primary: [`geometry.geojson`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/linestring/geojson/simple_valid_linestring/geometry.geojson)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/linestring/geojson/simple_valid_linestring/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/linestring/geojson/simple_valid_linestring)
 
 ## Source and license
 

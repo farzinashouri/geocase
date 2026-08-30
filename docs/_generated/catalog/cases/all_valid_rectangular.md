@@ -158,8 +158,10 @@ case's stated purpose. See `docs/plans/28-validate-geocase.md` Phase 1 and
 
 ## Files
 
-- Primary: `all_valid_rectangular.tif`
-- Notes: `notes.md`
+- Primary: [`all_valid_rectangular.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/footprint_edge_cases/all_valid_rectangular.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/footprint_edge_cases/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/footprint_edge_cases)
 
 ## Source and license
 

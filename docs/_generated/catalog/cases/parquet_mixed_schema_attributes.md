@@ -116,8 +116,10 @@ Four simple WGS 84 points along a NE diagonal across northern Europe.
 
 ## Files
 
-- Primary: `mixed_attrs.parquet`
-- Notes: `notes.md`
+- Primary: [`mixed_attrs.parquet`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/parquet_mixed_schema_attributes/mixed_attrs.parquet)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/vector/special/encoding/parquet_mixed_schema_attributes/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/vector/special/encoding/parquet_mixed_schema_attributes)
 
 ## Source and license
 

@@ -86,7 +86,9 @@ Confirm GeoCase preserves a single-band VV SAR amplitude scene and its band nami
 
 ## Files
 
-- Primary: `sar_vv_small.tif`
+- Primary: [`sar_vv_small.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/sar_vv_small/sar_vv_small.tif)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/sar_vv_small)
 
 ## Source and license
 

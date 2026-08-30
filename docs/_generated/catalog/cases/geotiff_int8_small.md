@@ -95,8 +95,10 @@ Single-band `int8` raster for validating narrow signed integer dtype handling.
 
 ## Files
 
-- Primary: `int8_sample.tif`
-- Notes: `notes.md`
+- Primary: [`int8_sample.tif`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_int8_small/int8_sample.tif)
+- Notes: [`notes.md`](https://github.com/farzinashouri/geocase/raw/main/src/geocase/data/core/raster/geotiff_int8_small/notes.md)
+
+[Browse this case on GitHub](https://github.com/farzinashouri/geocase/tree/main/src/geocase/data/core/raster/geotiff_int8_small)
 
 ## Source and license
 
