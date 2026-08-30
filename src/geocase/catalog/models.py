@@ -170,6 +170,17 @@ NodataConvention = Literal["sentinel", "nan", "mask", "none"]
 PixelAnchor = Literal["area", "point"]
 
 
+#: The ``required_drivers`` entry meaning "no OGR driver opens this at all".
+#:
+#: A WKB or WKT case is a bare geometry blob — a byte string or a text string
+#: with no container, no schema and no header — so there is no driver to
+#: install and no GDAL build that would help. The empty string is deliberately
+#: falsy, so ``all(d in available for d in required_drivers)`` excludes such a
+#: case for every possible ``available`` set, without the consumer needing to
+#: know the sentinel exists.
+NO_OGR_DRIVER = ""
+
+
 class AssertionHints(BaseModel):
     expect_loadable: bool = True
     expect_valid_geometry: bool | None = None
@@ -198,6 +209,23 @@ class AssertionHints(BaseModel):
     # "rotated".
     expected_transform_signs: list[str] | None = None
     expected_pixel_anchor: PixelAnchor | None = None
+
+    # OGR driver prerequisites (plan 28 phase 2.1). Additive with an empty
+    # default, so every existing case.yaml stays valid.
+    #
+    # This describes what an **OGR-based consumer** — pyogrio, fiona, ogr2ogr —
+    # needs installed before the case will open *for them*. It is not a
+    # statement about geocase: ``VectorCase.load()`` reads every bundled vector
+    # case without OGR (shapely for WKB/WKT, geopandas' Arrow readers for
+    # Parquet/Feather/Arrow), which is why nothing here affects ``load_case``.
+    #
+    # Three tiers:
+    #   ``[]``                 stock GDAL opens it; nothing to check.
+    #   ``["Parquet"]``        needs an optional plugin (libgdal-arrow-parquet);
+    #                          check against ``pyogrio.list_drivers()`` or
+    #                          ``fiona.supported_drivers`` and skip if absent.
+    #   ``[NO_OGR_DRIVER]``    no driver exists at any build configuration.
+    required_drivers: list[str] = Field(default_factory=list)
 
 
 class CaseMetadata(BaseModel):
@@ -255,6 +283,7 @@ class SuiteSelection(BaseModel):
     test_tier: TestTier | None = None
     storage_class: StorageClass | None = None
     format: FormatType | None = None
+    loader_hint: LoaderHint | None = None
     tags_any: list[str] = Field(default_factory=list)
     tags_all: list[str] = Field(default_factory=list)
     risk_types_any: list[str] = Field(default_factory=list)

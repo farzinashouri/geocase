@@ -73,6 +73,7 @@ Provide a canonical polygon encoded as WKT so plain-text geometry loading can be
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
+| `required_drivers` | none &mdash; no OGR driver opens this format (use shapely) |
 
 ## Notes
 

@@ -71,6 +71,7 @@ Provide a canonical multipoint encoded as WKB so format-specific loader behavior
 | `expect_valid_geometry` | yes |
 | `expect_crs` | no |
 | `expected_geometry_types` | `MultiPoint` |
+| `required_drivers` | none &mdash; no OGR driver opens this format (use shapely) |
 
 ## Notes
 

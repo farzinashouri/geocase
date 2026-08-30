@@ -73,6 +73,7 @@ Provide a canonical polygon encoded as GeoParquet so columnar vector loading can
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
+| `required_drivers` | `Parquet` |
 
 ## Notes
 

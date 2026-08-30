@@ -35,7 +35,29 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   literal. Public assertions `assert_transform_signs`, `assert_pixel_anchor` and
   `assert_scale_factor`.
 
+- **`AssertionHints.required_drivers`** (plan 28 phase 2.1) — additive, defaults to
+  `[]`. Declares the OGR driver an *external* consumer (pyogrio, fiona, `ogr2ogr`)
+  needs before a case will open for them. It says nothing about GeoCase, which reads
+  every vector case without OGR. Populated on the 20 vector cases a stock GDAL build
+  cannot open: the 7 Parquet/Feather/Arrow/GeoArrow cases name `Parquet` / `Arrow`
+  (the optional `libgdal-arrow-parquet` plugin), and the 13 WKB/WKT bare-geometry
+  cases declare the new `NO_OGR_DRIVER` sentinel — the empty string, deliberately
+  falsy — because no driver exists for them at any build configuration. An external
+  validation run had logged all 20 as spurious failures. `loader_hint` cannot express
+  this: it marks all 113 vector cases `geopandas`.
+
+- **`loader_hint` filter** (plan 28 phase 2.2) on `list_cases()`, `select_cases()`,
+  `matches_selection()` and `SuiteSelection`. Additive and keyword-only.
+
 ### Changed
+
+- **`list_cases(format="vector")` now raises a redirecting `ValueError`** instead of a
+  raw pydantic `ValidationError` reciting all 17 `FormatType` literals (plan 28 phase
+  2.3). Passing any of the four `Category` values — `"vector"`, `"raster"`,
+  `"netcdf"`, `"satellite"` — to `format` gets a message pointing at `category=`
+  instead. The `format` parameter keeps its name; renaming it would break the v1.0
+  keyword surface to fix a message. Both before and after are exceptions, so the only
+  code affected is code catching `ValidationError` specifically.
 
 - **(data) `latlon_sample.nc` was replaced.** It was the only fixture in the repository
   that could not be regenerated: its temperature values were unseeded random floats

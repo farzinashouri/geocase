@@ -289,6 +289,20 @@ def _case_grid(cases: list[Any], href_prefix: str, preview_prefix: str) -> list[
     return ['<div class="gc-grid">', *cards, "</div>", ""]
 
 
+def _required_drivers_cell(drivers: list[str]) -> str:
+    """Render ``required_drivers`` as prose an OGR consumer can act on.
+
+    The empty-string sentinel (``NO_OGR_DRIVER``) would otherwise render as an
+    empty pair of backticks, which tells the reader nothing. It carries the
+    most useful sentence on the page for a WKB/WKT case, so it gets words.
+    """
+    if not drivers:
+        return ""
+    if drivers == [""]:
+        return "none &mdash; no OGR driver opens this format (use shapely)"
+    return ", ".join(f"`{driver}`" for driver in drivers if driver)
+
+
 def _assertion_rows(case: Any) -> list[tuple[str, str]]:
     """Return the populated assertion hints as (label, value) pairs."""
     assertions = getattr(case, "assertions", None)
@@ -298,6 +312,12 @@ def _assertion_rows(case: Any) -> list[tuple[str, str]]:
     dumped = assertions.model_dump(exclude_none=True)
     rows: list[tuple[str, str]] = []
     for key, value in dumped.items():
+        if key == "required_drivers":
+            rendered = _required_drivers_cell(value)
+            if not rendered:
+                continue
+            rows.append((f"`{key}`", rendered))
+            continue
         if isinstance(value, list):
             if not value:
                 continue

@@ -73,6 +73,7 @@ Provide a canonical multiline encoded as GeoParquet so multipart columnar line l
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `MultiLineString` |
+| `required_drivers` | `Parquet` |
 
 ## Notes
 

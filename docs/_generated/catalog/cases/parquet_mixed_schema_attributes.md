@@ -75,6 +75,7 @@ Detect loaders that silently downcast Parquet nullable integer columns to float6
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
+| `required_drivers` | `Parquet` |
 
 ## Notes
 

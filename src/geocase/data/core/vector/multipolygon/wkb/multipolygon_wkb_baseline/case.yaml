@@ -60,6 +60,10 @@ assertions:
   expect_crs: false
   expected_geometry_types:
     - MultiPolygon
+  # No OGR driver opens a bare geometry blob; an OGR consumer must skip
+  # this case. geocase itself reads it with shapely. See plan 28 phase 2.1.
+  required_drivers:
+    - ""
 
 params:
   canonical_source_case_id: simple_valid_multipolygon

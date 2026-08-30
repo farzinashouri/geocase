@@ -73,6 +73,7 @@ Provide a canonical point encoded as Arrow IPC so the explicit Arrow loader path
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
+| `required_drivers` | `Arrow` |
 
 ## Notes
 

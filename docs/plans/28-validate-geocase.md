@@ -1,6 +1,7 @@
 # Plan 28 — Vector-First: Trust the Corpus, Then Sharpen It
 
-> **Status: Phase 1 implemented 2026-08-28; Phases 2–5 proposed.**
+> **Status: Phase 1 implemented 2026-08-28; Phase 2.1–2.3 implemented 2026-08-29;
+> Phases 2.4–2.6, 3, 4 and 5 proposed.**
 
 ## Context
 
@@ -174,7 +175,7 @@ footprint and the risk-type check. Restored byte-identical afterwards.
 
 Everything here is a direct ask from the run that said "worth shipping".
 
-### 2.1 Driver prerequisites — kill the 18% first-contact failure rate
+### 2.1 Driver prerequisites — kill the 18% first-contact failure rate — **done**
 
 **Failing test** in `tests/unit/test_public_api.py`: cases whose format is Parquet/Arrow/GeoArrow/Feather expose a checkable driver requirement; WKB/WKT cases declare they are not OGR-openable.
 
@@ -182,13 +183,84 @@ Add `required_drivers: list[str] = []` to `AssertionHints` in [src/geocase/catal
 
 **Also needed, because `loader_hint` cannot do this job:** the 12 WKB/WKT cases are bare geometry blobs no OGR tool can open, and `loader_hint` marks all 104 vector cases `geopandas`. Either correct those 12 to a `shapely`-shaped hint or express it via `required_drivers` — decide during implementation, but the filter must actually separate them, which today it does not.
 
-### 2.2 `loader_hint` filter on `list_cases`
+### 2.2 `loader_hint` filter on `list_cases` — **done**
 
 Additive `loader_hint: LoaderHint | None = None` on `SuiteSelection`, `matches_selection`, `select_cases`, `list_cases`. `LoaderHint` already exists and is exported. Purely additive. Only useful once 2.1 makes the hints discriminating.
 
-### 2.3 `format="vector"` redirecting error
+### 2.3 `format="vector"` redirecting error — **done**
 
 **Failing test:** `list_cases(format="vector")` raises an error whose message says `category='vector'`. A pre-check in [src/geocase/api/public.py](https://github.com/farzinashouri/geocase/blob/main/src/geocase/api/public.py) intercepts the `Category` literals before pydantic sees them. **Do not rename `format` to `file_format`** — a v1.0 break for a message problem. ~10 lines removes the library's worst first impression.
+
+### Phase 2.1–2.3 outcome (recorded 2026-08-29)
+
+Implemented in the order 2.3 → 2.1 → 2.2, since 2.2 is inert until 2.1 makes
+the metadata discriminate.
+
+**The counts in this plan's Context section are stale and were re-measured.**
+Plans 32 and 34 landed between writing and implementing, taking the catalog
+from 135 to **150** cases. The corrected figures: **113 vector** cases (not
+104), of which **20** cannot be opened by an OGR consumer — **13 WKB/WKT**
+(not 12; `polygon_z_wkb` arrived with Plan 34) and **7** Arrow-family.
+`loader_hint` is still an exact 1:1 proxy for `category`
+(113 `geopandas` / 34 `rasterio` / 3 `xarray`), so §2.2's premise held.
+
+**The premise correction from Phase 1 was re-verified rather than assumed.**
+A probe read every vector case twice — once through `pyogrio.read_info`, once
+through `VectorCase.load()`. OGR fails exactly those 20; `VectorCase.load()`
+opens **all 113**. (The one other load failure, `unclosed_ring_polygon`, is a
+curated `expect_loadable: false` case and is correct.) So `required_drivers` is
+documented throughout as *consumer* discoverability, never as a geocase
+limitation. Notably the conda `geocase` env is itself missing the Arrow/Parquet
+OGR drivers, so the field describes a live condition on the dev machine, not a
+hypothetical one.
+
+**§2.1's open decision — `required_drivers` vs. a corrected `loader_hint` —
+resolved in favour of `required_drivers` alone.** `loader_hint` is not a label:
+`loaders/generic.py` dispatches on it, and it is exported in `__all__` as the
+`LoaderHint` literal. Adding a `shapely` member would be a v1.0 schema change
+plus a new dispatch branch, to express something `required_drivers` states
+directly and more precisely — it also distinguishes *why* a case is closed to
+OGR (no driver exists at all vs. an installable plugin is missing), which a
+loader hint cannot. `loader_hint` stays `geopandas` for all 113, which is
+accurate: `VectorCase.load()` does return a `GeoDataFrame` for every one.
+
+**Three tiers, and the sentinel is the design.** `NO_OGR_DRIVER = ""` is a new
+module-level constant in `catalog/models.py`. The empty string is deliberately
+falsy so the natural consumer filter —
+`all(d in available for d in case.assertions.required_drivers)` — excludes
+bare-blob cases for *every* possible `available` set, with no need to know the
+sentinel exists. The `TestTheFilterActuallySeparates` test class is the plan's
+own acceptance bar written down: the three tiers must partition the 113 vector
+cases and none may be empty.
+
+What differed from the plan:
+
+- **The catalog page generator needed a change the plan did not anticipate.**
+  `_assertion_rows` renders any populated hint automatically, so
+  `[NO_OGR_DRIVER]` came out as an empty pair of backticks — the least useful
+  cell on the page, on the cases where it carries the most information. Added
+  `_required_drivers_cell` to render it as "none — no OGR driver opens this
+  format (use shapely)", and to stay silent for the `[]` majority.
+- **`list_cases`'s docstring now warns against the obvious misreading of
+  2.2.** Having just shipped a `loader_hint` filter, the natural user error is
+  to reach for it to answer "can my reader open this?" — which it cannot. The
+  docstring points at `required_drivers` with a worked `pyogrio.list_drivers()`
+  example.
+- **2.3 rejects all four `Category` literals, not just `"vector"`**, and a test
+  pins that `format="Nonsense"` still raises the pydantic `ValidationError`, so
+  the pre-check does not swallow unrelated bad input.
+- The `case.schema.yaml` `assertions` block gained `required_drivers` too —
+  `test_assertion_properties_match_assertion_hints_fields` gates schema and
+  model against each other, so the field could not land in one alone.
+
+**Gates green** (conda `geocase`, Python 3.14): all ten catalog gates
+(`build_case_index --check`, `validate_catalog`, `validate_case_content`,
+`catalog_extent --check`, the four fixture generators `--check`,
+`generate_checksums --check`, `generate_catalog_pages --check`,
+`generate_raster_previews --check`), both coverage matrices regenerated,
+`pytest tests` (**1897 passed, 37 skipped**), `pytest examples` (**1389 passed,
+36 skipped, 57 xfailed**), `ruff format --check`, `ruff check`, `mypy src`
+(99 files, clean — `catalog.*` and `api.*` are strict), `mkdocs build --strict`.
 
 ### 2.4 Expected-error taxonomy — make failure *mode* assertable
 
@@ -255,7 +327,7 @@ The rio-tiler run's recommendations are sound *for raster* and stay sequenced be
 
 | Change | Risk |
 |---|---|
-| `AssertionHints` new optional fields (`required_drivers`, `expected_error_kind`) | **None** — pydantic defaults |
+| `AssertionHints` new optional fields (`required_drivers`, `expected_error_kind`) | **None** — pydantic defaults. `required_drivers` landed 2026-08-29 with a `[]` default; `expected_error_kind` belongs to 2.4 and is not built. |
 | `CaseMetadata.known_divergences` | **None** — additive, defaults to `[]` |
 | `SuiteSelection.loader_hint` | **None** — additive, keyword-only |
 | `geocase.differential` submodule | **None** — new module, not in `__all__` (`geocase.raster` / `geocase.assertions` set this precedent) |

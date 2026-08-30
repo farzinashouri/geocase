@@ -283,6 +283,15 @@ properties:
           - area
           - point
 
+      # OGR driver prerequisites for an *external* consumer (pyogrio, fiona,
+      # ogr2ogr) — not for geocase, which reads every vector case without OGR.
+      # A driver name means "install this plugin"; the empty string means no
+      # OGR driver exists (a bare WKB/WKT geometry blob).
+      required_drivers:
+        type: array
+        items:
+          type: string
+
   params:
     type: object
     additionalProperties: true

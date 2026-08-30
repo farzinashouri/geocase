@@ -73,6 +73,7 @@ Provide a canonical point encoded as Feather so Arrow-backed point loading can b
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
+| `required_drivers` | `Arrow` |
 
 ## Notes
 

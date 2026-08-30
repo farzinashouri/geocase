@@ -95,6 +95,14 @@ class TestListCases:
         assert all(case.category == "raster" for case in rasters)
         assert len(rasters) < len(geocase.list_cases())
 
+    def test_loader_hint_filters_the_catalog(self):
+        """Test the plan 28 phase 2.2 filter reaches the public API."""
+        rasterio_cases = geocase.list_cases(loader_hint="rasterio")
+
+        assert rasterio_cases
+        assert all(case.loader_hint == "rasterio" for case in rasterio_cases)
+        assert len(rasterio_cases) < len(geocase.list_cases())
+
     def test_results_are_sorted_by_id(self):
         """Test the order is stable across calls."""
         ids = [case.id for case in geocase.list_cases()]
@@ -110,9 +118,7 @@ class TestCategoryPassedAsFormat:
     pre-check turns that into a redirect. See Plan 28 phase 2.3.
     """
 
-    @pytest.mark.parametrize(
-        "category", ["vector", "raster", "netcdf", "satellite"]
-    )
+    @pytest.mark.parametrize("category", ["vector", "raster", "netcdf", "satellite"])
     def test_a_category_passed_as_format_redirects(self, category: str):
         """Test each Category literal names category= in the error."""
         with pytest.raises(ValueError) as excinfo:

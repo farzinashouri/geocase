@@ -20,6 +20,7 @@ from geocase.catalog.models import (
     CaseMetadata,
     Category,
     FormatType,
+    LoaderHint,
     SizeClass,
     StorageClass,
     SuiteSelection,
@@ -77,6 +78,7 @@ def list_cases(
     test_tier: TestTier | None = None,
     storage_class: StorageClass | None = None,
     format: FormatType | None = None,
+    loader_hint: LoaderHint | None = None,
     size_class: SizeClass | None = None,
     tags_any: list[str] | None = None,
     tags_all: list[str] | None = None,
@@ -89,10 +91,28 @@ def list_cases(
     Called with no arguments, returns the whole bundled catalog. The keyword
     filters are the same ones a suite's ``selection`` block uses.
 
+    ``loader_hint`` names the reader geocase itself dispatches to, which is a
+    proxy for ``category`` — every vector case is ``geopandas``. To ask the
+    different question *"can my OGR-based reader open this?"*, filter on
+    :attr:`~geocase.catalog.models.AssertionHints.required_drivers` instead::
+
+        available = set(pyogrio.list_drivers())
+        openable = [
+            case
+            for case in geocase.list_cases(category="vector")
+            if all(d in available for d in case.assertions.required_drivers)
+        ]
+
     Returns:
         Matching :class:`~geocase.catalog.models.CaseMetadata`, *not*
         loadable case objects — see :func:`load_case`.
+
+    Raises:
+        ValueError: If a case *category* ("vector", "raster", "netcdf",
+            "satellite") is passed to ``format``; the message redirects to
+            ``category=``.
     """
+    _reject_category_as_format(format)
     return select_cases(
         get_registry().list_cases(),
         selection,
@@ -101,6 +121,7 @@ def list_cases(
         test_tier=test_tier,
         storage_class=storage_class,
         format=format,
+        loader_hint=loader_hint,
         size_class=size_class,
         tags_any=tags_any,
         tags_all=tags_all,

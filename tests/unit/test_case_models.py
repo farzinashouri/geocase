@@ -291,6 +291,20 @@ class TestSupportingModels:
         assert ah.expect_loadable is True
         assert ah.expect_nodata is None
 
+    def test_required_drivers_defaults_to_empty(self):
+        """Defaults required_drivers to [], so existing case.yaml stays valid."""
+        assert AssertionHints().required_drivers == []
+
+    def test_required_drivers_accepts_driver_names(self):
+        """Stores the OGR driver names a consumer needs before opening a case."""
+        ah = AssertionHints(required_drivers=["Parquet"])
+        assert ah.required_drivers == ["Parquet"]
+
+    def test_required_drivers_rejects_a_bare_string(self):
+        """Rejects a scalar: the field is a list even when there is one driver."""
+        with pytest.raises(ValidationError):
+            AssertionHints(required_drivers="Parquet")
+
 
 # ===================================================================
 # SuiteSelection

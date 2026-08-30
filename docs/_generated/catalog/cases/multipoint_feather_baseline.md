@@ -73,6 +73,7 @@ Provide a canonical multipoint encoded as Feather so Arrow-backed multipart poin
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `MultiPoint` |
+| `required_drivers` | `Arrow` |
 
 ## Notes
 

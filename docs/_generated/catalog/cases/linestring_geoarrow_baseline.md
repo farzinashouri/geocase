@@ -73,6 +73,7 @@ Provide a canonical line encoded as GeoArrow IPC so Arrow-native geometry loadin
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `LineString` |
+| `required_drivers` | `Arrow` |
 
 ## Notes
 

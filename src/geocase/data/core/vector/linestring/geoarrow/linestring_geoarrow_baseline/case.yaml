@@ -61,6 +61,10 @@ assertions:
   expected_epsg: 4326
   expected_geometry_types:
     - LineString
+  # Needs the optional GDAL Arrow/Parquet plugin (libgdal-arrow-parquet);
+  # geocase itself reads this without OGR. See plan 28 phase 2.1.
+  required_drivers:
+    - Arrow
 
 params:
   canonical_source_case_id: simple_valid_linestring

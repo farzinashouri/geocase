@@ -212,6 +212,53 @@ assertions:
     - Polygon
 ```
 
+#### Vector cases: declare `required_drivers` when OGR cannot open the file
+
+`required_drivers` answers one question, for one audience: **what must a
+consumer using pyogrio, fiona, or `ogr2ogr` have installed before this case will
+open for them?**
+
+It says nothing about GeoCase. `VectorCase.load()` reads every bundled vector
+case without touching OGR -- WKB and WKT go through shapely, and
+Parquet/Feather/Arrow through geopandas' own Arrow readers. The field exists
+because an external validation run logged 20 cases as failures when the real
+answer was "you need a driver we never told you about".
+
+Three tiers, so a consumer can filter before reading:
+
+```yaml
+assertions:
+  # Omit the field entirely: a stock GDAL build opens this.
+  # (GeoJSON, GPKG, Shapefile, KML, GML, SQLite, FlatGeobuf, CSV_WKT)
+
+  # Needs an optional GDAL plugin -- libgdal-arrow-parquet.
+  required_drivers:
+    - Parquet        # Parquet cases
+    - Arrow          # Feather / Arrow / GeoArrow cases
+
+  # No OGR driver exists at any build configuration: the payload is a bare
+  # geometry blob with no container. WKB and WKT cases declare this.
+  required_drivers:
+    - ""
+```
+
+The empty string is the `NO_OGR_DRIVER` sentinel from
+`geocase.catalog.models`. It is deliberately falsy, so the natural filter
+excludes those cases without the consumer needing to know the sentinel exists:
+
+```python
+available = set(pyogrio.list_drivers())
+openable = [
+    case
+    for case in geocase.list_cases(category="vector")
+    if all(d in available for d in case.assertions.required_drivers)
+]
+```
+
+Note that `loader_hint` cannot answer this question -- it names the reader
+GeoCase dispatches to, so every vector case is `geopandas` regardless of what
+OGR can do with it.
+
 #### Raster cases: always declare `expected_shape`
 
 For a raster case, declare the pixel dimensions as `[height, width]` (bands are

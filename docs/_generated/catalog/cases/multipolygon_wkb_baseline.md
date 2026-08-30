@@ -71,6 +71,7 @@ Provide a canonical multipolygon encoded as WKB so format-specific loader behavi
 | `expect_valid_geometry` | yes |
 | `expect_crs` | no |
 | `expected_geometry_types` | `MultiPolygon` |
+| `required_drivers` | none &mdash; no OGR driver opens this format (use shapely) |
 
 ## Notes
 

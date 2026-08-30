@@ -70,6 +70,7 @@ Verify that the third ordinate survives a WKB round trip and is not silently dro
 | `expect_loadable` | yes |
 | `expect_valid_geometry` | yes |
 | `expected_geometry_types` | `Polygon` |
+| `required_drivers` | none &mdash; no OGR driver opens this format (use shapely) |
 
 ## Notes
 
