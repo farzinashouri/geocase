@@ -69,6 +69,22 @@ def _point(x, y):
     }
 
 
+def _unclosed_ring():
+    """A polygon whose exterior ring's last position is not its first.
+
+    Shapely raises ``GEOSException`` building the ring, before any validity
+    question arises -- the shape ``unclosed_ring_polygon`` ships.
+    """
+    return {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [[[0, 0], [1, 0], [1, 1], [0, 1]]],
+        },
+    }
+
+
 # --- 1.1 / 1.2.1: phantom nodata ------------------------------------------
 
 
@@ -307,6 +323,100 @@ def test_expect_loadable_false_that_really_fails_passes(tmp_path):
     (tmp_path / "v.geojson").write_text("{ this is not json")
     meta = _vector_metadata("truly_broken", "v.geojson", expect_loadable=False)
     assert check_case_content(tmp_path, meta) == []
+
+
+# --- 2.4: expected_error_kind -- the failure *mode* is assertable ----------
+
+
+def test_declared_error_kind_matching_the_real_failure_passes(tmp_path):
+    """A case that fails the way it says it will is green."""
+    pytest.importorskip("geopandas")
+    from geocase.catalog.content import check_case_content
+
+    _write_geojson(tmp_path / "v.geojson", [_unclosed_ring()])
+    meta = _vector_metadata(
+        "unclosed",
+        "v.geojson",
+        expect_loadable=False,
+        expected_error_kind="unparseable_geometry",
+    )
+    assert check_case_content(tmp_path, meta) == []
+
+
+def test_declared_error_kind_that_the_data_does_not_produce_is_an_error(tmp_path):
+    """Failing for the wrong reason is exactly what the taxonomy exists to catch."""
+    pytest.importorskip("geopandas")
+    from geocase.catalog.content import check_case_content
+
+    _write_geojson(tmp_path / "v.geojson", [_unclosed_ring()])
+    meta = _vector_metadata(
+        "mislabelled",
+        "v.geojson",
+        expect_loadable=False,
+        expected_error_kind="invalid_crs",
+    )
+    errors = check_case_content(tmp_path, meta)
+
+    assert any("expected_error_kind" in e for e in errors)
+    assert any("unparseable_geometry" in e for e in errors)
+
+
+def test_error_kind_is_not_checked_when_the_case_declares_none(tmp_path):
+    """The field is optional: an undeclared failure mode is not a finding."""
+    pytest.importorskip("geopandas")
+    from geocase.catalog.content import check_case_content
+
+    (tmp_path / "v.geojson").write_text("{ this is not json")
+    meta = _vector_metadata("undeclared", "v.geojson", expect_loadable=False)
+    assert check_case_content(tmp_path, meta) == []
+
+
+class TestClassifyError:
+    """The exception -> vocabulary mapping, on real consumer exceptions."""
+
+    def test_a_geos_exception_is_unparseable_geometry(self):
+        """shapely's GEOSException maps to unparseable_geometry by *type*."""
+        errors = pytest.importorskip("shapely.errors")
+        from geocase.catalog.content import classify_error
+
+        exc = errors.GEOSException(
+            "IllegalArgumentException: Points of LinearRing "
+            "do not form a closed linestring"
+        )
+        assert classify_error(exc) == "unparseable_geometry"
+
+    def test_a_json_decode_error_is_unparseable_geometry(self):
+        """A payload that is not even parseable text fails the same way."""
+        from geocase.catalog.content import classify_error
+
+        exc = json.JSONDecodeError("Expecting value", "{ bad", 2)
+        assert classify_error(exc) == "unparseable_geometry"
+
+    def test_a_missing_driver_message_is_missing_driver(self):
+        """pyogrio's 'not recognized as a supported file format' maps across."""
+        from geocase.catalog.content import classify_error
+
+        exc = RuntimeError("'x.parquet' not recognized as a supported file format.")
+        assert classify_error(exc) == "missing_driver"
+
+    def test_an_unrecognised_exception_classifies_as_none(self):
+        """An unmapped failure is not silently forced into the vocabulary."""
+        from geocase.catalog.content import classify_error
+
+        assert classify_error(ZeroDivisionError("division by zero")) is None
+
+
+def test_every_curated_failure_case_declares_how_it_fails():
+    """The corpus half of 2.4: expect_loadable: false must name its mode."""
+    import geocase
+
+    undeclared = [
+        c.id
+        for c in geocase.list_cases()
+        if c.assertions.expect_loadable is False
+        and c.assertions.expected_error_kind is None
+    ]
+    assert undeclared == []
 
 
 # --- 1.2.6: footprint derived from the actual mask ------------------------

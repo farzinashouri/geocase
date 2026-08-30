@@ -75,6 +75,7 @@ Expose loaders or validators that silently accept unclosed polygon rings, which 
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
+| `expected_error_kind` | `unparseable_geometry` |
 
 ## Notes
 

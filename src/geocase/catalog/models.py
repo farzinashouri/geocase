@@ -181,6 +181,36 @@ PixelAnchor = Literal["area", "point"]
 NO_OGR_DRIVER = ""
 
 
+#: How a curated-failure case is expected to fail (plan 28 phase 2.4).
+#:
+#: A small vocabulary rather than concrete exception classes, because the class
+#: is the *consumer's*: the same unclosed ring surfaces as ``GEOSException``
+#: from shapely, ``DataSourceError`` from pyogrio and ``ValueError`` from
+#: pandas. Naming any of them would pin geocase's metadata to one reader's
+#: internals. A harness that could previously assert only *that* a case failed
+#: can now assert *how*, which is what separates "failed for the curated
+#: reason" from "the driver is missing" and from "the consumer has a new bug".
+#:
+#: * ``unparseable_geometry`` -- the bytes do not yield a geometry at all
+#:   (an unclosed ring, a truncated WKB, malformed JSON). No validity question
+#:   arises, because nothing was constructed.
+#: * ``unsupported_format`` -- the container is understood but this variant is
+#:   not (an unhandled dialect, an unreadable encoding).
+#: * ``missing_driver`` -- the reader has no driver installed for the format.
+#:   Distinct from the others in that installing something is the fix; see
+#:   ``required_drivers``, which lets a consumer predict this before reading.
+#: * ``invalid_crs`` -- the CRS definition itself cannot be constructed.
+#: * ``invalid_topology`` -- the geometry constructs but the operation rejects
+#:   it (a self-intersection an engine refuses rather than repairs).
+ExpectedErrorKind = Literal[
+    "unparseable_geometry",
+    "unsupported_format",
+    "missing_driver",
+    "invalid_crs",
+    "invalid_topology",
+]
+
+
 class AssertionHints(BaseModel):
     expect_loadable: bool = True
     expect_valid_geometry: bool | None = None
@@ -226,6 +256,27 @@ class AssertionHints(BaseModel):
     #                          ``fiona.supported_drivers`` and skip if absent.
     #   ``[NO_OGR_DRIVER]``    no driver exists at any build configuration.
     required_drivers: list[str] = Field(default_factory=list)
+
+    # How this case fails, for the cases that are *meant* to (plan 28 phase
+    # 2.4). Additive with a ``None`` default, so every existing case.yaml stays
+    # valid. See :data:`ExpectedErrorKind` for the vocabulary and why it is a
+    # vocabulary rather than an exception class.
+    expected_error_kind: ExpectedErrorKind | None = None
+
+    @model_validator(mode="after")
+    def validate_error_kind_needs_a_failure(self) -> AssertionHints:
+        """A failure mode on a loadable case describes an event that never occurs.
+
+        Without this, ``expected_error_kind`` could be attached to any case and
+        nothing would ever evaluate it -- the "declared but ungated" shape that
+        the content gate exists to close.
+        """
+        if self.expected_error_kind is not None and self.expect_loadable is not False:
+            raise ValueError(
+                f"expected_error_kind={self.expected_error_kind!r} requires "
+                "expect_loadable: false -- a case that loads has no failure mode"
+            )
+        return self
 
 
 class CaseMetadata(BaseModel):

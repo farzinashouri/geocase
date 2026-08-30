@@ -259,6 +259,66 @@ Note that `loader_hint` cannot answer this question -- it names the reader
 GeoCase dispatches to, so every vector case is `geopandas` regardless of what
 OGR can do with it.
 
+#### Failure cases: `expect_loadable` × `expect_valid_geometry`
+
+These two booleans read like one axis and are not. Together they name four
+cells, and **each cell needs a different assertion from the consumer**:
+
+| `expect_loadable` | `expect_valid_geometry` | What the case is | What you assert |
+|---|---|---|---|
+| `true` | `true` | An ordinary well-formed case. | `assert_valid_geometry(gdf)` |
+| `true` | `false` | It loads. The geometry is either OGC-invalid (a bowtie) or OGC-valid but semantically wrong (null island, a lat/lon swap). | `assert not geom.is_valid`, **or** a domain check -- read the case's `risk_types` to tell which. |
+| `false` | `false` | It never constructs. The reader raises before validity can be asked. | `pytest.raises(...)` |
+| `false` | `true` | Contradictory -- do not write it. |  |
+
+The third row is the one that catches people out. `unclosed_ring_polygon` and
+`self_intersecting_polygon` both declare `expect_valid_geometry: false`, but
+the first raises `GEOSException` from shapely and the second returns a
+perfectly ordinary object whose `.is_valid` is `False`. A harness that writes
+`assert not geom.is_valid` for both fails on the first for the wrong reason.
+
+Note the asymmetry in row two: GeoCase's content gate enforces
+`expect_valid_geometry: true` but **not** `false`, because `false` carries
+those two distinct meanings and asserting invalidity would fail the
+semantically-wrong-but-OGC-valid cases for a schema limitation rather than a
+data defect.
+
+#### Failure cases: declare `expected_error_kind`
+
+When a case declares `expect_loadable: false`, also say **how** it fails:
+
+```yaml
+assertions:
+  expect_loadable: false
+  expected_error_kind: unparseable_geometry
+```
+
+Without this, a harness can assert only *that* the case failed -- so "failed
+for the curated reason", "failed because a driver is missing", and "failed
+because the consumer has a new bug" are indistinguishable, and the case gives
+a green light in all three.
+
+The vocabulary is deliberately small, and deliberately *not* exception class
+names: the class is the consumer's, and the same unclosed ring surfaces as
+`GEOSException` from shapely, `DataSourceError` from pyogrio and `ValueError`
+from pandas.
+
+| Kind | Means |
+|---|---|
+| `unparseable_geometry` | The bytes yield no geometry at all -- an unclosed ring, a truncated WKB, malformed JSON. Nothing was constructed, so no validity question arises. |
+| `unsupported_format` | The container is understood but this variant is not. |
+| `missing_driver` | The reader has no driver for the format. Installing something is the fix -- see `required_drivers`, which lets a consumer predict this *before* reading. |
+| `invalid_crs` | The CRS definition itself will not construct. |
+| `invalid_topology` | The geometry constructs, but the operation rejects it rather than repairing it. |
+
+The field is gated in both directions. `AssertionHints` rejects it on a case
+that is not `expect_loadable: false` -- a loadable case has no failure mode to
+declare -- and `scripts/validate_case_content.py` opens the file, catches what
+it raises, and reports a finding if the observed failure does not match the
+declared kind. A declaration nothing evaluates is the defect the content gate
+exists to close, so the taxonomy is checked against real bytes like every
+other assertion.
+
 #### Raster cases: always declare `expected_shape`
 
 For a raster case, declare the pixel dimensions as `[height, width]` (bands are

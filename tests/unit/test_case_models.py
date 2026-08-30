@@ -305,6 +305,27 @@ class TestSupportingModels:
         with pytest.raises(ValidationError):
             AssertionHints(required_drivers="Parquet")
 
+    def test_expected_error_kind_defaults_to_none(self):
+        """Defaults expected_error_kind to None, so existing case.yaml stays valid."""
+        assert AssertionHints().expected_error_kind is None
+
+    def test_expected_error_kind_accepts_a_vocabulary_term(self):
+        """Stores how a curated-failure case is expected to fail."""
+        ah = AssertionHints(
+            expect_loadable=False, expected_error_kind="unparseable_geometry"
+        )
+        assert ah.expected_error_kind == "unparseable_geometry"
+
+    def test_expected_error_kind_rejects_an_exception_class_name(self):
+        """Rejects consumer-specific exception names: the field is a vocabulary."""
+        with pytest.raises(ValidationError):
+            AssertionHints(expect_loadable=False, expected_error_kind="GEOSException")
+
+    def test_expected_error_kind_requires_a_case_that_actually_fails(self):
+        """Rejects a failure mode on a case declared loadable -- it never fails."""
+        with pytest.raises(ValidationError, match="expect_loadable"):
+            AssertionHints(expected_error_kind="unparseable_geometry")
+
 
 # ===================================================================
 # SuiteSelection

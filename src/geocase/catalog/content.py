@@ -32,7 +32,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from geocase.catalog.models import CaseMetadata
+from geocase.catalog.models import CaseMetadata, ExpectedErrorKind
 
 __all__ = [
     "check_case_content",
@@ -40,6 +40,7 @@ __all__ = [
     "check_netcdf_content",
     "check_raster_content",
     "check_vector_content",
+    "classify_error",
 ]
 
 
@@ -798,6 +799,101 @@ def check_extent(case_dir: Path, metadata: CaseMetadata) -> list[str]:
     return errors
 
 
+# --- 2.4: expected-error taxonomy -----------------------------------------
+
+
+#: Exception *type* names that identify a failure mode on their own.
+#:
+#: Matched on the unqualified class name and on the names of its bases, so a
+#: consumer's subclass (``pyogrio.errors.DataSourceError`` derives from
+#: ``DataLayerError``) resolves the same way as the base it derives from.
+_ERROR_KIND_BY_TYPE: dict[str, ExpectedErrorKind] = {
+    # shapely: raised while *constructing* a geometry, so nothing exists to
+    # ask a validity question about.
+    "GEOSException": "unparseable_geometry",
+    "ShapelyError": "unparseable_geometry",
+    "WKBReadingError": "unparseable_geometry",
+    "WKTReadingError": "unparseable_geometry",
+    # json / pandas: the payload is not even parseable text.
+    "JSONDecodeError": "unparseable_geometry",
+    "ParserError": "unparseable_geometry",
+    # pyproj / rasterio: the CRS definition itself will not construct.
+    "CRSError": "invalid_crs",
+    "ProjError": "invalid_crs",
+    "TopologicalError": "invalid_topology",
+}
+
+#: Substrings of an exception *message* that identify a failure mode.
+#:
+#: Needed because the informative exceptions in this space are frequently a
+#: bare ``RuntimeError`` or ``DataSourceError`` carrying GDAL's own wording —
+#: the type says nothing and only the message discriminates. Checked in order,
+#: lowercased, and only after the type table misses.
+_ERROR_KIND_BY_MESSAGE: tuple[tuple[str, ExpectedErrorKind], ...] = (
+    ("not recognized as a supported file format", "missing_driver"),
+    ("unable to find driver", "missing_driver"),
+    ("driver is not available", "missing_driver"),
+    ("no such file or directory", "missing_driver"),
+    ("unsupported", "unsupported_format"),
+    ("unrecognized", "unsupported_format"),
+    ("not supported", "unsupported_format"),
+    ("linearring", "unparseable_geometry"),
+    ("closed linestring", "unparseable_geometry"),
+    ("parse", "unparseable_geometry"),
+    ("expecting value", "unparseable_geometry"),
+    ("crs", "invalid_crs"),
+    ("self-intersection", "invalid_topology"),
+    ("topolog", "invalid_topology"),
+)
+
+
+def classify_error(exc: BaseException) -> ExpectedErrorKind | None:
+    """Map a consumer's exception onto the :data:`ExpectedErrorKind` vocabulary.
+
+    Returns ``None`` for anything the vocabulary does not cover. That is
+    deliberate: forcing an unrecognised failure into the nearest term would
+    make the gate green for a case failing in a way nobody has looked at, which
+    is the exact defect this module exists to close. An unmapped exception on a
+    case that declares a kind is therefore reported, not excused.
+
+    Type is consulted before message, because a type is a much stronger signal
+    than a substring — but most of GDAL's failures arrive as a bare
+    ``RuntimeError``, so the message table carries the real weight.
+    """
+    for klass in type(exc).__mro__:
+        kind = _ERROR_KIND_BY_TYPE.get(klass.__name__)
+        if kind is not None:
+            return kind
+
+    message = str(exc).lower()
+    for needle, kind in _ERROR_KIND_BY_MESSAGE:
+        if needle in message:
+            return kind
+    return None
+
+
+def _check_expected_error_kind(metadata: CaseMetadata, exc: BaseException) -> list[str]:
+    """Check the exception a curated-failure case raised against its declaration."""
+    declared = metadata.assertions.expected_error_kind
+    if declared is None:
+        return []
+
+    observed = classify_error(exc)
+    if observed == declared:
+        return []
+
+    detail = (
+        f"observed {observed!r}" if observed else "the failure matched no known kind"
+    )
+    return [
+        _err(
+            metadata,
+            "expected_error_kind",
+            f"declared {declared!r}, but {detail}: {type(exc).__name__}: {exc}",
+        )
+    ]
+
+
 # --- dispatch -------------------------------------------------------------
 
 
@@ -819,8 +915,12 @@ def check_case_content(case_dir: Path, metadata: CaseMetadata) -> list[str]:
     if metadata.assertions.expect_loadable is False:
         try:
             _load_for_category(case_dir, metadata)
-        except Exception:
-            return []
+        except Exception as exc:
+            # 2.4 — it failed, which 1.2.5 already required. Now check that it
+            # failed the way the case says it does: "failed for the curated
+            # reason" and "failed because the reader changed underneath us"
+            # were previously indistinguishable, and only the first is green.
+            return _check_expected_error_kind(metadata, exc)
         return [
             _err(
                 metadata,

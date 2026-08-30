@@ -1,7 +1,7 @@
 # Plan 28 — Vector-First: Trust the Corpus, Then Sharpen It
 
 > **Status: Phase 1 implemented 2026-08-28; Phase 2.1–2.3 implemented 2026-08-29;
-> Phases 2.4–2.6, 3, 4 and 5 proposed.**
+> Phase 2.4 implemented 2026-08-30; Phases 2.5–2.6, 3, 4 and 5 proposed.**
 
 ## Context
 
@@ -262,13 +262,78 @@ What differed from the plan:
 36 skipped, 57 xfailed**), `ruff format --check`, `ruff check`, `mypy src`
 (99 files, clean — `catalog.*` and `api.*` are strict), `mkdocs build --strict`.
 
-### 2.4 Expected-error taxonomy — make failure *mode* assertable
+### 2.4 Expected-error taxonomy — make failure *mode* assertable — **done**
 
 Today a harness can assert *that* a case failed, never *how*, so it cannot distinguish "failed for the curated reason" from "the driver is missing" from "the consumer has a new bug". During the pyogrio run that distinction was made by hand for all 20 failures.
 
 `ExpectedErrorKind = Literal["unparseable_geometry", "unsupported_format", "missing_driver", "invalid_crs", "invalid_topology"]` as an optional field on `AssertionHints` — a small vocabulary, not concrete exception classes, since those are consumer-specific. Phase 1's content gate then asserts the case *actually* fails that way; the two phases reinforce.
 
 Also document the `expect_loadable` × `expect_valid_geometry` pair as a matrix with the assertion each cell implies (this is the docs answer to the cut in 1.6).
+
+### Phase 2.4 outcome (recorded 2026-08-30)
+
+Shipped as planned: the five-member `ExpectedErrorKind` literal and
+`AssertionHints.expected_error_kind` (additive, `None` default), the content
+gate asserting the observed failure matches the declaration, and the
+`expect_loadable` × `expect_valid_geometry` matrix in
+[docs/adding-a-case.md](../adding-a-case.md).
+
+**The corpus's curated-failure surface is exactly one case.** The plan reads as
+though there were a set to annotate; a survey found `unclosed_ring_polygon` is
+the only case in all 150 declaring `expect_loadable: false`. So the metadata
+pass was one line, and the field's value is almost entirely forward-looking —
+it constrains what Phase 3's ~10k-feature cases and every future failure case
+must declare, rather than retro-labelling a backlog. The corresponding test
+(`test_every_curated_failure_case_declares_how_it_fails`) is written as a
+corpus invariant over `list_cases()` rather than a fixed id list, so the next
+`expect_loadable: false` case cannot land undeclared.
+
+What differed from the plan:
+
+- **The field is gated in *both* directions, which the plan did not ask for.**
+  A model validator rejects `expected_error_kind` on any case that is not
+  `expect_loadable: false`. Without it the field could be attached to a case
+  that never fails, and nothing would ever evaluate it — the
+  declared-but-ungated shape that Phase 1's gate and plan 27 §1.2 both exist to
+  close. Declaring a failure mode for an event that cannot occur is the same
+  defect class as declaring nodata with zero nodata pixels.
+- **`classify_error` consults the exception *type* before its message.** The
+  plan specified the vocabulary but not how an observed failure maps onto it.
+  A type is the stronger signal (`GEOSException` is unambiguous), but most of
+  GDAL's informative failures arrive as a bare `RuntimeError` whose message is
+  the only discriminator, so both tables are needed and the message table
+  carries the real weight. `classify_error` returns `None` for anything
+  unmapped rather than snapping to the nearest term — forcing an unrecognised
+  failure into the vocabulary would make the gate green for a case failing in
+  a way nobody has looked at, which is precisely the defect being closed. It
+  is exported from `geocase.catalog.content` so a consumer's own harness can
+  use the same mapping the gate uses.
+- **`ExpectedErrorKind` is not added to `__all__`.** It follows the
+  `PixelAnchor` (plan 34) and `NO_OGR_DRIVER` (§2.1) precedent: importable from
+  `geocase.catalog.models`, not a v1.0 surface commitment. `NodataConvention`
+  is exported only because it predates that precedent.
+- **The matrix documents an asymmetry the plan treated as settled.** Writing
+  the four cells out made explicit that row two (`true`/`false`) is itself two
+  populations — OGC-invalid vs. OGC-valid-but-semantically-wrong — which is why
+  1.6 cut the tri-state field and why the gate enforces
+  `expect_valid_geometry: true` but not `false`. The matrix says so rather than
+  leaving a reader to infer it from the gate's silence, and
+  `docs/contributing/testing-edge-cases.md` links to it, since that page tells
+  authors to branch on `expect_valid_geometry` alone.
+- **The catalog page generator needed no change**, unlike §2.1: a scalar
+  literal renders correctly through `_assertion_rows`' default path.
+
+**End-to-end proof:** flipping `unclosed_ring_polygon`'s declaration to
+`invalid_crs` makes `validate_case_content.py --only unclosed_ring_polygon`
+report `declared 'invalid_crs', but observed 'unparseable_geometry':
+GEOSException: IllegalArgumentException: Points of LinearRing do not form a
+closed linestring`. Restored afterwards.
+
+**Gates green** (conda `geocase`, Python 3.14): all ten catalog gates, both
+coverage matrices regenerated (no diff), `pytest tests` (**1909 passed, 37
+skipped** — 12 new), `pytest examples` (**1389 passed, 36 skipped, 57
+xfailed**), `ruff format --check`, `ruff check`, `mypy src` (99 files),
+`mkdocs build --strict`.
 
 ### 2.5 `known_divergences` — make repeat runs cumulative
 
@@ -327,7 +392,7 @@ The rio-tiler run's recommendations are sound *for raster* and stay sequenced be
 
 | Change | Risk |
 |---|---|
-| `AssertionHints` new optional fields (`required_drivers`, `expected_error_kind`) | **None** — pydantic defaults. `required_drivers` landed 2026-08-29 with a `[]` default; `expected_error_kind` belongs to 2.4 and is not built. |
+| `AssertionHints` new optional fields (`required_drivers`, `expected_error_kind`) | **None** — pydantic defaults. `required_drivers` landed 2026-08-29 with a `[]` default; `expected_error_kind` landed 2026-08-30 with a `None` default, plus a validator that rejects it on a case not declared `expect_loadable: false` (no shipped case was affected). |
 | `CaseMetadata.known_divergences` | **None** — additive, defaults to `[]` |
 | `SuiteSelection.loader_hint` | **None** — additive, keyword-only |
 | `geocase.differential` submodule | **None** — new module, not in `__all__` (`geocase.raster` / `geocase.assertions` set this precedent) |

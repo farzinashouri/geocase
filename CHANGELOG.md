@@ -49,6 +49,29 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **`loader_hint` filter** (plan 28 phase 2.2) on `list_cases()`, `select_cases()`,
   `matches_selection()` and `SuiteSelection`. Additive and keyword-only.
 
+- **`AssertionHints.expected_error_kind`** (plan 28 phase 2.4) — additive, defaults to
+  `None`, with a new `ExpectedErrorKind` literal in `geocase.catalog.models`:
+  `unparseable_geometry` | `unsupported_format` | `missing_driver` | `invalid_crs` |
+  `invalid_topology`. A harness could previously assert only *that* a case failed,
+  never *how*, so "failed for the curated reason", "failed because a driver is
+  missing" and "failed because the consumer has a new bug" were indistinguishable —
+  an external validation run had to separate all 20 of its failures by hand. A
+  vocabulary rather than exception classes, since the class belongs to the consumer
+  (the same unclosed ring is `GEOSException` from shapely, `DataSourceError` from
+  pyogrio, `ValueError` from pandas). Gated in both directions: `AssertionHints`
+  rejects the field on a case that is not `expect_loadable: false`, and the content
+  gate opens the file and reports a finding when the observed failure does not match
+  the declared kind, via the new `geocase.catalog.content.classify_error`. Declared on
+  `unclosed_ring_polygon`, the corpus's one `expect_loadable: false` case.
+
+- **The `expect_loadable` × `expect_valid_geometry` matrix** is documented in
+  [docs/adding-a-case.md](docs/adding-a-case.md), with the assertion each cell implies
+  — the documentation answer to a report finding that the two fields read as one axis
+  and are not. `unclosed_ring_polygon` raises before a geometry exists;
+  `self_intersecting_polygon` returns an object whose `.is_valid` is `False`. Both
+  declare `expect_valid_geometry: false`, and a harness that writes
+  `assert not geom.is_valid` for both fails on the first for the wrong reason.
+
 ### Changed
 
 - **`list_cases(format="vector")` now raises a redirecting `ValueError`** instead of a

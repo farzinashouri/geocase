@@ -290,6 +290,12 @@ Each `_perfect` function should be tested against all relevant invalid cases:
 
 The key principle: **metadata declares intent, not runtime inspection**. This keeps test parametrization fast and predictable.
 
+Note that `expect_valid_geometry: false` alone does not tell you which
+assertion to write -- a case that raises on load and a case that returns an
+invalid object both carry it. Read it together with `expect_loadable`, and with
+`expected_error_kind` when the case is a curated failure; see the matrix in
+[Adding a case](../adding-a-case.md#failure-cases-expect_loadable-expect_valid_geometry).
+
 ---
 
 ## Implementation Checklist

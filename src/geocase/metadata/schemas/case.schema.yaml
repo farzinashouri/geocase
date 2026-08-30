@@ -292,6 +292,19 @@ properties:
         items:
           type: string
 
+      # How a curated-failure case is expected to fail. A vocabulary rather
+      # than an exception class, because the class belongs to the consumer.
+      # Only meaningful alongside `expect_loadable: false`; AssertionHints
+      # rejects it on a loadable case.
+      expected_error_kind:
+        type: string
+        enum:
+          - unparseable_geometry
+          - unsupported_format
+          - missing_driver
+          - invalid_crs
+          - invalid_topology
+
   params:
     type: object
     additionalProperties: true
