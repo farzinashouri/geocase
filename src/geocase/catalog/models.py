@@ -211,6 +211,55 @@ ExpectedErrorKind = Literal[
 ]
 
 
+class KnownDivergence(BaseModel):
+    """A catalogued disagreement between two ways of reading the same case.
+
+    Plan 28 phase 2.5. The external pyogrio run found that
+    ``empty_geometry_gpkg`` returns a different row count through pyogrio's
+    Arrow path than through its numpy path, under a spatial filter — a GDAL
+    bug, now filed. It will keep doing that for every user until GDAL fixes it.
+
+    Without somewhere to record that, the next person running a differential
+    harness re-investigates from scratch, and — the expensive part — cannot
+    tell a *newly introduced* consumer bug on the same case from the one
+    already understood. :mod:`geocase.differential` consults this list so a
+    matching divergence is reported as ``known`` rather than as a fresh
+    failure.
+
+    This is a **record, not an assertion**. Nothing in the content gate can
+    verify it: whether the divergence still reproduces depends on the reader
+    the user has installed, not on geocase's bytes. What the corpus gates is
+    only that the record is well-formed — see
+    ``tests/unit/test_known_divergences.py``.
+
+    Attributes:
+        consumer: The library that diverges, e.g. ``"pyogrio"``. Required,
+            because an unattributed record cannot be matched against anything.
+        version_range: Where it was observed, as free text (``">=0.8"``,
+            ``"GDAL 3.13.3"``). Free text rather than a parsed specifier: the
+            relevant version is often a *transitive* one (GDAL under pyogrio)
+            that no Python version specifier addresses.
+        description: What actually differs, in a sentence a reader can act on.
+        upstream_url: The filed issue or PR, so "is this still open?" is one
+            hop away.
+    """
+
+    consumer: str
+    version_range: str | None = None
+    description: str
+    upstream_url: str | None = None
+
+    @field_validator("consumer", "description")
+    @classmethod
+    def validate_not_blank(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError(
+                "KnownDivergence consumer and description cannot be blank -- "
+                "a record nobody can attribute or read is worse than no record"
+            )
+        return value
+
+
 class AssertionHints(BaseModel):
     expect_loadable: bool = True
     expect_valid_geometry: bool | None = None
@@ -312,6 +361,12 @@ class CaseMetadata(BaseModel):
     remote: RemoteInfo | None = None
     source: SourceInfo | None = None
     assertions: AssertionHints = Field(default_factory=AssertionHints)
+
+    # Catalogued consumer disagreements (plan 28 phase 2.5). Additive with an
+    # empty default: ``[]`` means "no divergence has been recorded", never "no
+    # divergence exists". See :class:`KnownDivergence`.
+    known_divergences: list[KnownDivergence] = Field(default_factory=list)
+
     params: dict[str, Any] = Field(default_factory=dict)
 
     @field_validator("id")

@@ -60,6 +60,7 @@ Core data flow — keep this mental model:
 - `cases/` — `BaseCase` subclasses (`vector`, `raster`, `netcdf`) built by `factory.py`; `loaders/` holds the optional-dependency readers (geopandas / rasterio / xarray).
 - `api/public.py` + `api/types.py` — the pinned public surface re-exported from `geocase/__init__.py`. `list_cases`/`get_case` return `CaseMetadata`; `load_case` and the fixtures return `BaseCase`.
 - `assertions/` — reusable checks (crs, footprint, geometry, topology, raster, format compliance) users call in tests.
+- `differential.py` — the *other* testing mode: read every case two ways, compare, report disagreements, so neither path has to be an oracle. This is the mode with external evidence behind it (both defects the pyogrio run found came from comparing a consumer against itself). Consults `CaseMetadata.known_divergences` so a catalogued divergence reports `known` rather than `diverged`. Not in `__all__` — a submodule import, like `geocase.raster`.
 - `raster/` — a dependency-free raster primitive (`primitive.py`, public `.array`/`.transform`/`.crs_wkt`) plus `presets/` (sentinel1/2); `_writer.py` needs the `write` extra.
 - `benchmark/` — separate LLM-benchmark subsystem (tasks, prompts, runners, grading). Not part of the library's compatibility promise.
 - Case data lives in `src/geocase/data/core/{vector,raster,netcdf}/<case_id>/` as `case.yaml` + payload + `checksums.sha256` + `notes.md`.

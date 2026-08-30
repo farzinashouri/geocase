@@ -75,6 +75,16 @@ Expose loaders that incorrectly handle EMPTY geometries in GeoPackage format. De
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
 
+## Known consumer divergences
+
+Disagreements already investigated on this case. If your reader reproduces one of these, it is catalogued &mdash; not a new finding.
+
+**pyogrio** &mdash; pyogrio >=0.11, GDAL 3.12-3.13 (originates in GDAL)
+
+Under a spatial filter (bbox= or mask=), the Arrow path (use_arrow=True) returns the NULL-geometry row that the numpy path and GDAL's own `ogrinfo -spat` both exclude -- 3 rows against 2. Traced to GPKG's GetArrowStream fast path; only GPKG diverges among GeoJSON, Shapefile and SQLite. A NULL geometry intersects nothing, so the numpy path is the correct one.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/geocase_validate/gdal-issue-draft.md>
+
 ## Notes
 
 ### Purpose

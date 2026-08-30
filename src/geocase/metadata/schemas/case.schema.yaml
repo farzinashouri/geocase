@@ -305,6 +305,35 @@ properties:
           - invalid_crs
           - invalid_topology
 
+  # Consumer disagreements already investigated, so a repeat differential run
+  # reports them as `known` rather than as a fresh failure. A record, not an
+  # assertion: nothing gates whether it still reproduces, because that depends
+  # on the reader the user has installed. Must stay in step with
+  # `KnownDivergence` in geocase/catalog/models.py.
+  known_divergences:
+    type: array
+    items:
+      type: object
+      required:
+        - consumer
+        - description
+      properties:
+        consumer:
+          type: string
+          description: The library that diverges, e.g. 'pyogrio'.
+        version_range:
+          type: string
+          description: >
+            Where it was observed, as free text ('>=0.8', 'GDAL 3.13.3').
+            Free text because the relevant version is often a transitive one.
+        description:
+          type: string
+          description: What differs, in a sentence a reader can act on.
+        upstream_url:
+          type: string
+          description: The filed issue or PR.
+      additionalProperties: false
+
   params:
     type: object
     additionalProperties: true

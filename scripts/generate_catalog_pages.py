@@ -334,6 +334,39 @@ def _assertion_rows(case: Any) -> list[tuple[str, str]]:
     return rows
 
 
+def _known_divergences_section(case: Any) -> list[str]:
+    """Render the catalogued consumer disagreements, if any (plan 28 §2.5).
+
+    Deliberately its own section rather than a row in the assertions table: a
+    divergence is a paragraph with a link, and it is the thing a reader hitting
+    an unexpected result on this case most needs to see before they start
+    investigating.
+    """
+    divergences = getattr(case, "known_divergences", None)
+    if not divergences:
+        return []
+
+    lines = [
+        "## Known consumer divergences",
+        "",
+        "Disagreements already investigated on this case. If your reader "
+        "reproduces one of these, it is catalogued &mdash; not a new finding.",
+        "",
+    ]
+    for divergence in divergences:
+        header = f"**{divergence.consumer}**"
+        if divergence.version_range:
+            header += f" &mdash; {divergence.version_range}"
+        lines.append(header)
+        lines.append("")
+        lines.append(_collapse(divergence.description))
+        lines.append("")
+        if divergence.upstream_url:
+            lines.append(f"Upstream: <{divergence.upstream_url}>")
+            lines.append("")
+    return lines
+
+
 def _table(headers: tuple[str, str], rows: list[tuple[str, str]]) -> list[str]:
     lines = [f"| {headers[0]} | {headers[1]} |", "|---|---|"]
     lines.extend(f"| {left} | {right} |" for left, right in rows)
@@ -580,6 +613,8 @@ def _render_case_page(
         lines.append("")
         lines.extend(_table(("Assertion", "Expected"), assertion_rows))
         lines.append("")
+
+    lines.extend(_known_divergences_section(case))
 
     # The hand-written prose sits high on the page, right after what the case
     # asserts: it is the part a reader actually reads, and the tables below it

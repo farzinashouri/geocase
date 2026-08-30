@@ -55,15 +55,20 @@ Within that frame, in order:
    rather than spending the immutable `1.0.0`. Includes the README rewrite that leads with a
    concrete failing edge case — which is SEO work, not just persuasion work, because the README
    is the one indexable page GeoCase has.
-2. **Publish the catalog on GitHub Pages.** The existing MkDocs site is the one canonical public
+2. **[Plan 28](28-validate-geocase.md) — vector-first, act on the two external validation
+   runs.** Ahead of the catalog deployment on purpose: a catalog site should not deploy on top
+   of a corpus with a known false-passing case. **Phase 1 (the content gate) and all of Phase 2
+   are implemented**; Phase 3 (large curated vector cases) is the remaining blocking work, and
+   Phases 4–5 are a recorded raster backlog and a positioning pass rather than a queue.
+3. **Publish the catalog on GitHub Pages.** The existing MkDocs site is the one canonical public
    home at `https://farzinashouri.github.io/geocase/`; enable GitHub Pages with GitHub Actions
    in repository settings. [Plan 24](24-catalog-site-on-owned-domain.md)'s Astro/Netlify route
    is superseded.
-3. **[Plan 21](21-adoption-action-plan.md)'s remaining tracks** — the adoption funnel around
+4. **[Plan 21](21-adoption-action-plan.md)'s remaining tracks** — the adoption funnel around
    the release, of which Track A (publish the spec package) is subsumed by Plan 25.
-4. **[Plan 26](26-docs-truth-pass-and-seo-prep.md)** — **complete 2026-08-23, except its
+5. **[Plan 26](26-docs-truth-pass-and-seo-prep.md)** — **complete 2026-08-23, except its
    §3.4 `social` plugin**, which is blocked on `libcairo` and tracked in *Deferred work*.
-5. **[Plan 27](27-close-plan-26-findings.md)** — closes what Plan 26 surfaced but did not
+6. **[Plan 27](27-close-plan-26-findings.md)** — closes what Plan 26 surfaced but did not
    predict. Its Phase 1.1 is the only item here with real leverage and is worth doing *before*
    Plan 24 deploys: the README now leads with four failure modes because Plan 24 pre-commits to
    measuring those four, and two of them have no case in the catalog. Ranking for a query the

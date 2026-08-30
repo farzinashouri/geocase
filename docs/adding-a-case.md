@@ -319,6 +319,42 @@ declared kind. A declaration nothing evaluates is the defect the content gate
 exists to close, so the taxonomy is checked against real bytes like every
 other assertion.
 
+### Recording a consumer divergence: `known_divergences`
+
+`known_divergences` is a **top-level** block (a sibling of `assertions`, not a
+field inside it). It records disagreements between two ways of reading the same
+case that someone has already investigated:
+
+```yaml
+known_divergences:
+  - consumer: pyogrio
+    version_range: "pyogrio >=0.11, GDAL 3.12-3.13 (originates in GDAL)"
+    description: >
+      Under a spatial filter, the Arrow path returns the NULL-geometry row that
+      the numpy path and GDAL's own `ogrinfo -spat` both exclude -- 3 rows
+      against 2.
+    upstream_url: https://github.com/OSGeo/gdal/issues/12345
+```
+
+`consumer` and `description` are required; `version_range` and `upstream_url`
+are optional but strongly worth filling in, since together they answer "is this
+still open?" without re-running anything. `version_range` is free text on
+purpose — the relevant version is often a *transitive* one (GDAL under pyogrio)
+that no Python version specifier addresses.
+
+This is a **record, not an assertion.** Nothing in the content gate verifies
+it, and nothing can: whether the divergence still reproduces depends on the
+reader the user has installed, not on geocase's bytes. What the corpus does
+gate (`tests/unit/test_known_divergences.py`) is that every record is
+attributed and readable.
+
+The payoff is in [`geocase.differential`](testing-your-function-with-geocase.md):
+a divergence matching a record is reported as `known` rather than `diverged`,
+so a repeat run surfaces only what is new. Add a record when you have
+*investigated* a divergence and reached a conclusion about it — an unexplained
+one belongs in the case's `notes.md`, where it reads as an open question rather
+than as a settled non-finding.
+
 #### Raster cases: always declare `expected_shape`
 
 For a raster case, declare the pixel dimensions as `[height, width]` (bands are

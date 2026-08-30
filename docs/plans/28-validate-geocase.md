@@ -1,7 +1,8 @@
 # Plan 28 — Vector-First: Trust the Corpus, Then Sharpen It
 
 > **Status: Phase 1 implemented 2026-08-28; Phase 2.1–2.3 implemented 2026-08-29;
-> Phase 2.4 implemented 2026-08-30; Phases 2.5–2.6, 3, 4 and 5 proposed.**
+> Phases 2.4–2.6 implemented 2026-08-30 (Phase 2 complete); Phases 3, 4 and 5
+> proposed.**
 
 ## Context
 
@@ -335,17 +336,87 @@ skipped** — 12 new), `pytest examples` (**1389 passed, 36 skipped, 57
 xfailed**), `ruff format --check`, `ruff check`, `mypy src` (99 files),
 `mkdocs build --strict`.
 
-### 2.5 `known_divergences` — make repeat runs cumulative
+### 2.5 `known_divergences` — make repeat runs cumulative — **done**
 
 `empty_geometry_gpkg` will diverge between pyogrio's two paths for every user until GDAL fixes it. Without somewhere to record that, the next person re-investigates from scratch and cannot tell a new bug from the catalogued one.
 
 `KnownDivergence(consumer, version_range, description, upstream_url)`; `CaseMetadata.known_divergences: list[KnownDivergence] = []`. Seed it with the `empty_geometry_gpkg` / pyogrio-Arrow finding and the GDAL issue from [gdal-issue-draft.md](../geocase_validate/gdal-issue-draft.md).
 
-### 2.6 Ship the differential-harness recipe
+### 2.6 Ship the differential-harness recipe — **done**
 
 The pyogrio report: *"The most productive thing built here was ~100 lines: read every case two ways, compare, report divergences."* It generalizes to any library with two code paths (numpy vs Arrow, eager vs lazy, C vs pure Python).
 
 Ship it as `src/geocase/differential.py` + a documented example, with `known_divergences` consulted so a matching divergence is reported as `known` rather than `failed`. **Scope it to the vector/two-code-path shape that is actually evidenced** — not the full raster adapter protocol, which belongs to Phase 4.
+
+### Phase 2.5–2.6 outcome (recorded 2026-08-30)
+
+Shipped together, because 2.5 is a record nothing reads until 2.6 reads it and
+2.6's `known` outcome is untestable without 2.5. `KnownDivergence` and
+`CaseMetadata.known_divergences` (additive, `[]` default) seeded on
+`empty_geometry_gpkg`; `geocase.differential` with `compare_case`,
+`compare_cases`, `summarize`, `default_compare` and `DifferentialResult`; the
+guide at [docs/differential-testing.md](../differential-testing.md) and the
+runnable `examples/test_differential_pyogrio.py`.
+
+**The end-to-end proof the Verification section demanded actually ran, and on a
+different GDAL than the original run.** pyogrio 0.12.1 / GDAL 3.12.2 on this
+machine reproduces the divergence — `row count differs: 2 vs 3`, the exact GPKG
+finding — reported as `known` with `consumer="pyogrio"` and as `diverged`
+without it. The original run was GDAL 3.13.3, so the recorded `version_range`
+was widened from one build to `GDAL 3.12-3.13`: what was going to be recorded
+from the report alone would have been narrower than the truth.
+
+What differed from the plan:
+
+- **The harness found the noise the report predicted, and the fix belongs in
+  the default comparison rather than in the example.** The first full run over
+  the corpus reported 7 diverged — all 7 KML cases, `None` on pyogrio's numpy
+  path against `nan` on its Arrow path for the same absent field. The report
+  had called this out in advance as "the kind of noise a differential harness
+  has to be taught to ignore". Left in, it is 7 findings hiding 1; so
+  `default_compare` treats `None` / `NaN` / `NaT` / `NA` as one missing value.
+  It deliberately stops there — `""` and `0` are values a reader genuinely
+  returned, and equating them to absence would hide a real defect. After the
+  change the unfiltered run is 93 agree / 0 diverged, and the one real finding
+  stands alone.
+- **Four outcomes, not the plan's implied three.** `errored` (exactly one path
+  raised) is separated from `diverged` because a crash and a wrong answer need
+  different triage — and it is frequently the most interesting row in a run:
+  the pyogrio `fid_as_index` crash surfaced exactly that way.
+- **Both paths failing *identically* is `agree`, not a divergence.** The plan
+  did not say which, and the wrong choice reports a finding on every
+  `expect_loadable: false` case in the corpus. The two paths agree that the
+  case fails; failing *differently* is what is worth reporting.
+- **`known` matches on the consumer name alone, and only when `consumer=` is
+  passed.** Matching on the description would require the harness to reproduce
+  prose; matching on nothing would let one catalogued fiona quirk silence every
+  future pyogrio finding on the same case, which is the problem 2.5 exists to
+  fix. Omitting `consumer=` opts out entirely — the mode for auditing whether
+  the recorded divergences are still real.
+- **A sentinel was needed inside `default_compare`.** "These are not frames"
+  and "these are frames and they agree" both wanted to be `None`; conflating
+  them sent an equal pair of GeoDataFrames down the scalar path, where the NaN
+  idiom `a != a` is elementwise and its truthiness raises.
+- **`known_divergences` is a top-level `CaseMetadata` field, not an
+  `AssertionHints` one** — as the plan specified, and it matters: `assertions`
+  is what the content gate checks against real bytes, and a divergence is
+  explicitly *not* checkable. Whether it still reproduces depends on the reader
+  the user installed. The catalog page generator therefore needed a new
+  `_known_divergences_section` rather than a row in the assertions table: a
+  divergence is a paragraph with a link, and `_assertion_rows` only walks
+  `AssertionHints`.
+- **The seeded `upstream_url` points at
+  `docs/geocase_validate/gdal-issue-draft.md`, not at a GDAL issue number.**
+  The report says the issue was filed; the number is not recorded anywhere in
+  this tree, and a bare `/issues` list answers nothing. Replace it when the
+  number is known.
+
+**Gates green** (conda `geocase`, Python 3.14): all ten catalog gates, both
+coverage matrices regenerated (no diff), `pytest tests` (**1937 passed, 37
+skipped** — 28 new), `pytest examples` (**1392 passed, 36 skipped, 57
+xfailed** — 3 new), `ruff format --check src tests`, `ruff check src tests`,
+`mypy src` (100 files), `mkdocs build --strict`. One catalog page changed
+(`empty_geometry_gpkg`, gaining the divergences section).
 
 ---
 
@@ -393,9 +464,9 @@ The rio-tiler run's recommendations are sound *for raster* and stay sequenced be
 | Change | Risk |
 |---|---|
 | `AssertionHints` new optional fields (`required_drivers`, `expected_error_kind`) | **None** — pydantic defaults. `required_drivers` landed 2026-08-29 with a `[]` default; `expected_error_kind` landed 2026-08-30 with a `None` default, plus a validator that rejects it on a case not declared `expect_loadable: false` (no shipped case was affected). |
-| `CaseMetadata.known_divergences` | **None** — additive, defaults to `[]` |
+| `CaseMetadata.known_divergences` | **None** — additive, defaults to `[]`. Landed 2026-08-30 with the `KnownDivergence` model; seeded on one case. |
 | `SuiteSelection.loader_hint` | **None** — additive, keyword-only |
-| `geocase.differential` submodule | **None** — new module, not in `__all__` (`geocase.raster` / `geocase.assertions` set this precedent) |
+| `geocase.differential` submodule | **None** — landed 2026-08-30. New module, not in `__all__` (`geocase.raster` / `geocase.assertions` set this precedent) |
 | `list_cases(format="vector")` raises `ValueError` not `ValidationError` | **Low** — both are errors; note in `CHANGELOG.md` |
 | `hole_center_nodata.tif` bytes change | **Behavioural** — checksums change; id/path/filenames stable. Changelog + `notes.md` |
 | `landcover_small` loses `nodata=0`; 4 cases gain real nodata pixels | **Behavioural** — checksums change; regenerate catalog pages |

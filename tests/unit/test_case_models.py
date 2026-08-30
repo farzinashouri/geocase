@@ -12,6 +12,7 @@ from geocase.catalog.models import (
     AssertionHints,
     CaseMetadata,
     FileMap,
+    KnownDivergence,
     RemoteInfo,
     SourceInfo,
     SpatialExtent,
@@ -328,6 +329,75 @@ class TestSupportingModels:
 
 
 # ===================================================================
+# KnownDivergence -- plan 28 phase 2.5
+# ===================================================================
+
+
+class TestKnownDivergence:
+    """A catalogued consumer disagreement, so repeat runs stay cumulative."""
+
+    def test_requires_a_consumer_and_a_description(self):
+        """Both are the minimum for the record to mean anything to a reader."""
+        kd = KnownDivergence(
+            consumer="pyogrio",
+            description="use_arrow=True returns a NULL-geometry row under bbox",
+        )
+        assert kd.consumer == "pyogrio"
+        assert kd.version_range is None
+        assert kd.upstream_url is None
+
+    def test_rejects_a_record_with_no_consumer(self):
+        """An unattributed divergence cannot be matched against anything."""
+        with pytest.raises(ValidationError):
+            KnownDivergence(description="something diverges")
+
+    def test_rejects_a_blank_consumer(self):
+        """Whitespace is not a consumer name."""
+        with pytest.raises(ValidationError):
+            KnownDivergence(consumer="   ", description="something diverges")
+
+    def test_rejects_a_blank_description(self):
+        """A record nobody can read is worse than no record."""
+        with pytest.raises(ValidationError):
+            KnownDivergence(consumer="pyogrio", description="  ")
+
+    def test_carries_a_version_range_and_upstream_link(self):
+        """The two fields that let a reader tell "still open" from "fixed"."""
+        kd = KnownDivergence(
+            consumer="pyogrio",
+            version_range=">=0.8",
+            description="Arrow path keeps NULL geometries under a spatial filter",
+            upstream_url="https://github.com/OSGeo/gdal/issues/1",
+        )
+        assert kd.version_range == ">=0.8"
+        assert kd.upstream_url.endswith("/1")
+
+
+class TestCaseMetadataKnownDivergences:
+    def test_defaults_to_empty(self):
+        """Additive with a [] default, so every existing case.yaml stays valid."""
+        case = CaseMetadata(**_minimal_case())
+        assert case.known_divergences == []
+
+    def test_accepts_records(self):
+        """Stores the catalogued divergences alongside the case they belong to."""
+        case = CaseMetadata(
+            **_minimal_case(
+                known_divergences=[
+                    {
+                        "consumer": "pyogrio",
+                        "version_range": ">=0.8",
+                        "description": "numpy and Arrow paths disagree on row count",
+                        "upstream_url": "https://github.com/OSGeo/gdal/issues/1",
+                    }
+                ]
+            )
+        )
+        assert len(case.known_divergences) == 1
+        assert case.known_divergences[0].consumer == "pyogrio"
+
+
+# ===================================================================
 # SuiteSelection
 # ===================================================================
 
@@ -447,6 +517,12 @@ class TestCaseSchemaMatchesModels:
             self._schema()["properties"]["assertions"]["properties"]
         )
         assert schema_properties == set(AssertionHints.model_fields)
+
+    def test_known_divergence_properties_match_the_model(self) -> None:
+        """Keeps the nested known_divergences item schema in step with the model."""
+        item = self._schema()["properties"]["known_divergences"]["items"]
+        assert set(item["properties"]) == set(KnownDivergence.model_fields)
+        assert set(item["required"]) == {"consumer", "description"}
 
     def test_nodata_convention_enum_matches_literal(self) -> None:
         """Keeps the nested nodata_convention enum in step as well."""

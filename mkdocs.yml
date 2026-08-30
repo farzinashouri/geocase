@@ -70,6 +70,7 @@ nav:
       - Assertions Reference: assertions-reference.md
       - Examples Index: examples-index.md
       - Testing Your Function: testing-your-function-with-geocase.md
+      - Differential Testing: differential-testing.md
       - Parameterized Tests: using-parameterized-tests.md
       - Adding a Case: adding-a-case.md
       - Remote Datasets: remote-datasets.md

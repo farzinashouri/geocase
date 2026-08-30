@@ -64,6 +64,37 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   the declared kind, via the new `geocase.catalog.content.classify_error`. Declared on
   `unclosed_ring_polygon`, the corpus's one `expect_loadable: false` case.
 
+- **`CaseMetadata.known_divergences`** (plan 28 phase 2.5) — additive, defaults to
+  `[]`, holding `KnownDivergence(consumer, version_range, description, upstream_url)`
+  records. A divergence investigated once stays investigated: without it the next
+  person running a differential harness re-investigates from scratch and — the
+  expensive part — cannot tell a newly introduced consumer bug on a case from the one
+  already understood. A *record*, not an assertion: nothing in the content gate can
+  verify it, because whether it still reproduces depends on the reader the user has
+  installed. Seeded on `empty_geometry_gpkg` with the pyogrio Arrow / GPKG
+  spatial-filter finding traced into GDAL's `GetArrowStream`. Rendered as its own
+  "Known consumer divergences" section on the case's catalog page.
+
+- **`geocase.differential`** (plan 28 phase 2.6) — read every case two ways, compare,
+  report the disagreements. `compare_case`, `compare_cases`, `summarize`,
+  `default_compare` and the `DifferentialResult` dataclass. This is the mode with
+  external evidence behind it: both defects an independent validation run found (a
+  pyogrio `read_dataframe` crash, since patched upstream, and the GDAL
+  `GetArrowStream` divergence) came from comparing a consumer against *itself*, not
+  against any assertion GeoCase declares — so neither path needs to be an oracle.
+
+  Four outcomes, kept distinguishable on purpose: `agree` (including both paths
+  failing identically, so a curated-failure case is agreement rather than a finding),
+  `diverged`, `known` (matched against `known_divergences` for the consumer named in
+  `consumer=`), and `errored` (exactly one path raised — a crash and a wrong answer
+  need different triage). Selection keywords are forwarded verbatim to `list_cases`.
+  `default_compare` understands GeoDataFrames row-count-first and treats `None`,
+  `NaN`, `NaT` and `NA` as the same missing value; it stops there, and `compare=`
+  takes your own. Not in `geocase.__all__` — a submodule import, the precedent
+  `geocase.raster` and `geocase.assertions` set. Documented at
+  [docs/differential-testing.md](docs/differential-testing.md) with a runnable
+  `examples/test_differential_pyogrio.py`.
+
 - **The `expect_loadable` × `expect_valid_geometry` matrix** is documented in
   [docs/adding-a-case.md](docs/adding-a-case.md), with the assertion each cell implies
   — the documentation answer to a report finding that the two fields read as one axis
