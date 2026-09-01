@@ -122,11 +122,11 @@ issues in zone-edge workflows.
 
 ## Related cases
 
+- [CRS Family Pair -- Geographic (WGS 84)](crs_family_pair_geographic.md) -- `crs_family_pair_geographic`
+- [CRS Family Pair -- Projected (UTM 33N)](crs_family_pair_projected.md) -- `crs_family_pair_projected`
 - [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 - [Rasterize Match WGS84 Polygon](rasterize_match_wgs84_polygon.md) -- `rasterize_match_wgs84_polygon`
 - [All Valid Rectangular Raster](all_valid_rectangular.md) -- `all_valid_rectangular`
-- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
-- [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
 
 <script type="application/ld+json">
 {

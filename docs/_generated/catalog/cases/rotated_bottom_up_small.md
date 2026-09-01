@@ -191,11 +191,11 @@ property the corpus always had into one it declares.
 
 ## Related cases
 
+- [Rotated Raster with Non-Square Pixels](rotated_nonsquare_small.md) -- `rotated_nonsquare_small`
 - [Steeply Rotated DEM (40-Degree Skew)](rotated_steep_small.md) -- `rotated_steep_small`
 - [Rotated Two Islands With Warped Reference](rotated_two_islands_warped.md) -- `rotated_two_islands_warped`
 - [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 - [Rotated Two Islands Raster](rotated_two_islands.md) -- `rotated_two_islands`
-- [Pixel-Is-Area DEM](pixel_is_area_dem_small.md) -- `pixel_is_area_dem_small`
 
 <script type="application/ld+json">
 {

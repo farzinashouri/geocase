@@ -5,6 +5,8 @@ cases:
 - path: data/core/netcdf/ndvi_packed_netcdf/case.yaml
 - path: data/core/raster/cog_multispectral_small/case.yaml
 - path: data/core/raster/cog_singleband_small/case.yaml
+- path: data/core/raster/crs_family_pair/case_crs_family_pair_geographic.yaml
+- path: data/core/raster/crs_family_pair/case_crs_family_pair_projected.yaml
 - path: data/core/raster/dem_nan_nodata_small/case.yaml
 - path: data/core/raster/dem_small/case.yaml
 - path: data/core/raster/footprint_edge_cases/case_all_valid_rectangular.yaml
@@ -32,12 +34,16 @@ cases:
 - path: data/core/raster/optical_equator_small/case.yaml
 - path: data/core/raster/optical_polar_small/case.yaml
 - path: data/core/raster/optical_rgb_small/case.yaml
+- path: data/core/raster/overlap_group/case_overlap_group_centre.yaml
+- path: data/core/raster/overlap_group/case_overlap_group_north.yaml
+- path: data/core/raster/overlap_group/case_overlap_group_south.yaml
 - path: data/core/raster/sar_dualpol_small/case.yaml
 - path: data/core/raster/sar_vv_small/case.yaml
 - path: data/core/raster/transform_conventions/case_bottom_up_dem_small.yaml
 - path: data/core/raster/transform_conventions/case_pixel_is_area_dem_small.yaml
 - path: data/core/raster/transform_conventions/case_pixel_is_point_dem_small.yaml
 - path: data/core/raster/transform_conventions/case_rotated_bottom_up_small.yaml
+- path: data/core/raster/transform_conventions/case_rotated_nonsquare_small.yaml
 - path: data/core/raster/transform_conventions/case_rotated_steep_small.yaml
 - path: data/core/raster/water_mask_small/case.yaml
 - path: data/core/vector/geometrycollection/geojson/case.yaml

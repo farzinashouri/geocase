@@ -1,6 +1,12 @@
 # Plan 38 — Six Consumers, Eighteen Defects, and the STAC Adapter the Corpus Had to Grow
 
-> **Status: Phase 1 implemented 2026-09-01; Phases 2-5 proposed.** A second external differential run — this
+> **Status: Phases 1-4 implemented 2026-09-01; Phase 5 not started.** Phase 2
+> ships `geocase.stac` plus the guardrails and the common currency; Phase 3
+> ships the option-pair matrix, the CRS-aware predicate and keyed probe
+> explanations; Phase 4 lands six cases (157 -> 163). Phase 5 is upstream
+> filing, which [Plan 39](39-going-public-upstream-first.md) Phase 1 sequences
+> and which is not geocase code. See *Implementation notes* at the foot of this
+> document for what differed from the plan. A second external differential run — this
 > time against **titiler, stackstac, odc-stac, lonboard, geoarrow-python and
 > pyproj** — found **18 defects across 7 libraries**, eleven of them attributable
 > to a specific case. That is [Plan 37](37-raster-signal-and-differential-adapters.md)'s
@@ -313,7 +319,7 @@ eight pages. Full suite 2002 passed / 37 skipped; ruff, mypy and
 
 ---
 
-## Phase 2 — The raster adapter protocol, and the STAC-Item adapter
+## Phase 2 — The raster adapter protocol, and the STAC-Item adapter — **implemented 2026-09-01**
 
 [`differential.py`](../../src/geocase/differential.py) says it is *"scoped to the
 vector / two-code-path shape the evidence covers; the raster adapter protocol is
@@ -324,7 +330,7 @@ the scope note is out of date.
 Plan 37 Phase 2 specifies the array comparator. This phase adds the piece round 2
 proved is missing beneath it.
 
-### 2.1 `geocase.stac` — Items, because two consumers cannot read a file
+### 2.1 `geocase.stac` — Items, because two consumers cannot read a file — **done**
 
 Neither stackstac nor odc-stac can consume a bare GeoTIFF; both take STAC Items.
 The run had to synthesise one per raster case with `rio_stac.create_stac_item`
@@ -355,7 +361,7 @@ Three requirements the run's hand-built version had to learn:
    Both shapes must be reachable so the difference is a *choice* the harness
    records, not a failure it trips over.
 
-### 2.2 Guardrails, because a differential harness can hang or OOM
+### 2.2 Guardrails, because a differential harness can hang or OOM — **done**
 
 The run's first sweep was **killed by the OS after 28 CPU-minutes and 3 GB RSS**,
 and a later one had a case that did not return a geobox in 90 seconds. Both were
@@ -372,7 +378,7 @@ The raster adapter must therefore ship with:
 
 Both are ~15 lines and neither is discoverable until it has cost an afternoon.
 
-### 2.3 Comparison in the common currency
+### 2.3 Comparison in the common currency — **done**
 
 Cross-library raster comparison needs values in one representation. The run
 settled on float64 with nodata folded to NaN, which then requires Plan 37 §2.2's
@@ -382,9 +388,9 @@ adapter, not in each consumer's harness.
 
 ---
 
-## Phase 3 — Ship the comparison, not just the files
+## Phase 3 — Ship the comparison, not just the files — **implemented 2026-09-01**
 
-### 3.1 The option-pair matrix
+### 3.1 The option-pair matrix — **done**
 
 Plan 37 says Phase 2 "must ship documented consumer option-pairs, not just files
 and an array comparator". Round 2 is the evidence for what those pairs are worth:
@@ -402,7 +408,7 @@ The unit-changing CRS target is the one to call out. It is a single option value
 it found a HIGH defect, and it is the one a consumer author is least likely to
 think of testing.
 
-### 3.2 An equality predicate that knows what a CRS is
+### 3.2 An equality predicate that knows what a CRS is — **done**
 
 This is the direct remedy for the five false lonboard findings. `default_compare`
 should not treat `OGC:CRS84` and `EPSG:4326` as different CRSs, and no consumer's
@@ -420,7 +426,7 @@ Ship, with tests:
   this for the same reason: a `mask > 0` comparison stepped over a real defect in
   round 1).
 
-### 3.3 Write down that a divergence needs an explanation, not just a count
+### 3.3 Write down that a divergence needs an explanation, not just a count — **done**
 
 The pyproj sweep fired four probes and all four were expected behaviour —
 longitude wrapping to [−180, 180], the pole's undefined longitude, sub-micrometre
@@ -435,7 +441,7 @@ same four, and the fifth, real one is buried.
 
 ---
 
-## Phase 4 — The four cases this round could not express
+## Phase 4 — The four cases this round could not express — **implemented 2026-09-01**
 
 Three from the corrected gap list, plus one the run exposed. **No new
 `from_origin` EPSG:32633 baselines** — Plan 37 §3 already says the corpus is
@@ -444,7 +450,7 @@ single rotated raster and the single bottom-up raster found four defects between
 them, while the 31 north-up UTM baselines found their defects only in aggregate,
 on an option axis.
 
-### 4.1 A multi-item raster group with overlapping footprints
+### 4.1 A multi-item raster group with overlapping footprints — **done**
 
 The gap with the most attached evidence. Every geocase raster case is one
 standalone file, so the corpus cannot express: stacking order, mosaic
@@ -456,7 +462,7 @@ them a list of one.
 Three or four small rasters sharing a CRS with deliberate partial overlap and
 distinct constant values, so that "which pixel won" is readable by inspection.
 
-### 4.2 Two assets sharing a band alias
+### 4.2 Two assets sharing a band alias — **done**
 
 The corpus-unreachable review finding, made reachable. Two assets in one group
 both declaring `eo:bands` `common_name: "red"` — the ordinary Sentinel-2 shape —
@@ -468,7 +474,7 @@ This is the strongest argument in the round for the corpus growing an
 Item-shaped concept rather than only a file-shaped one, and it should be built
 on top of 4.1 rather than beside it.
 
-### 4.3 A second CRS family in the raster set
+### 4.3 A second CRS family in the raster set — **done**
 
 31 of 34 rasters are EPSG:32633, which makes any "same case, two CRSs" assertion
 untestable and leaves reprojection sweeps leaning entirely on the *target* CRS
@@ -482,7 +488,7 @@ Prefer a **pair with a declared relationship**, following
 a relationship between two inputs is not expressible by two independently
 selectable cases.
 
-### 4.4 A second rotated raster
+### 4.4 A second rotated raster — **done**
 
 `rotated_two_islands` is now 2-for-2 across two runs and three libraries, and it
 is still the only one of its kind. A second — different skew sign, different
@@ -598,3 +604,98 @@ fixture pack is the delivery mechanism that acts on that directly.
 - The upstream test-coverage table in Context is reproducible from the recorded
   commits, and its stated method limit (keyword probe, not semantic audit) is
   carried with it wherever it is quoted.
+
+---
+
+## Implementation notes (2026-09-01)
+
+What differed from the plan as written.
+
+### Phase 2
+
+- **`geocase.stac` emits plain `dict`, not `pystac.Item`.** A STAC Item is
+  JSON, and requiring `pystac` would put a dependency between the corpus and
+  every consumer that does not use it. `pystac.Item.from_dict` accepts what it
+  emits, so nothing is lost. `pystac` is not installed in the conda env and
+  the module works without it.
+- **The asset shape is a three-way choice, not two.** The plan asked for
+  per-band assets *and* a whole-file asset; the implementation adds
+  `assets="both"`, which carries them in one Item. That is what a harness
+  wanting to record the difference as a *choice* rather than trip over it
+  actually needs.
+- **Per-band assets carry a flat `band_index`** alongside the `bands` /
+  `eo:bands` spellings. A per-band asset that does not say which band it is
+  cannot be read back, and the two spec spellings disagree about where the
+  index lives — the same problem `proj:epsg` / `proj:code` has, solved the same
+  way.
+- **`ReaderTimeoutError` uses a thread, not a process.** A thread cannot be
+  killed, so a hung consumer leaks one for the life of the process. That is
+  deliberate: a process pool cannot carry an open dataset handle across the
+  boundary, and the alternative to both is the run dying at case 40 of 154.
+  `shutdown(wait=False)` is load-bearing — waiting would reintroduce exactly
+  the hang the timeout exists to escape.
+- **The two guard exceptions are named `PixelBudgetError` and
+  `ReaderTimeoutError`,** not `PixelBudgetExceeded` / `ReaderTimeout`: ruff's
+  N818 is on for `src/`.
+
+### Phase 3
+
+- **`default_compare` gained a CRS-mapping path** rather than `crs_equal`
+  being a standalone helper only. A predicate the harness does not reach fixes
+  nothing, and the five false lonboard findings came *through* the default
+  comparator. A dict whose keys include `crs` / `proj:code` / `proj:epsg` is
+  compared with `crs_equal` on those keys and `_values_equal` on the rest.
+- **`explain=` is off by default,** and a catalogued `known_divergence` wins
+  when both apply. An explanation that fires unasked is indistinguishable from
+  a comparator bug, and the case-specific record is the more specific
+  statement than the class-wide one.
+- **`ProbeExplanation.matches` takes `(detail, left, right)`,** not just the
+  message. "These two numbers differ by 1e-9" is not decidable from prose,
+  which is the whole point of the float-noise class.
+
+### Phase 4
+
+- **Six cases, not four.** The overlap group is three files (4.1 and 4.2 are
+  one artifact, as the plan asked — 4.2 "should be built on top of 4.1 rather
+  than beside it") and the CRS family pair is two. Plus
+  `rotated_nonsquare_small`. Catalog: 157 -> 163.
+- **The geographic half of the CRS pair is derived, not authored.**
+  `_write_geographic_twin` reprojects the projected half at generation time,
+  following `rotated_two_islands_warped_reference`. A hand-authored twin
+  drifts away from the file it is the twin of, and that drift is what broke
+  `hole_center_nodata`. It is 14x18 rather than 16x16 as a result — a
+  reprojected grid is not the same grid, which is itself the point.
+- **`rotated_nonsquare_small` inverts both axes at once**: skew `b` negative
+  where `rotated_two_islands`' is `+5`, and 30 m x 20 m pixels where the
+  latter's are square. A second sample with the same skew sign would not
+  distinguish "handles rotation" from "handles *this* rotation", which is 4.4's
+  stated purpose.
+- **The overlap group members each carry a nodata corner, at a different
+  corner each.** Not in the plan; it makes a composite's *fill* behaviour
+  visible as well as its ordering, at no cost.
+- **Group and pair membership is declared in `params`** (`group`,
+  `group_members`, `stack_order`, `common_name`; `pair`, `pair_role`), not in a
+  new model field. `CaseMetadata` is a pinned surface and `params` is the
+  documented place for generator-and-relationship facts, so this needed no
+  schema change.
+
+### Verification run
+
+`pytest tests -q` — 2120 passed, 37 skipped. `ruff format --check`,
+`ruff check`, `mypy src`, `mkdocs build --strict` all green. Catalog gates —
+`build_case_index.py --check`, `validate_catalog.py`,
+`validate_case_content.py` (163 cases), `catalog_extent.py --check`,
+`generate_raster_fixtures.py --check`, `generate_checksums.py`,
+`generate_catalog_pages.py`, `generate_raster_previews.py`, both coverage
+matrices — all regenerated and green.
+
+Documented case counts were updated from 157 to 163 in `README.md`,
+`docs/index.md`, `docs/getting-started.md`, `docs/contributing/workflow.md`,
+`docs/contributing/releasing.md`, `docs/contributing/structure-and-planning.md`
+and `recipe/meta.yaml`; `validate_catalog.py` gates that agreement.
+
+New docs: [`docs/stac-items.md`](../stac-items.md) (in the nav under User
+Guides), plus five new sections in
+[`docs/differential-testing.md`](../differential-testing.md) covering the
+guardrails, the common currency, the option matrix, the CRS/geometry predicates
+and the probe explanations.

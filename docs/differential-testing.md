@@ -169,6 +169,134 @@ too much reports a clean run over a corpus it never really examined — the same
 false green the [content gate](adding-a-case.md) exists to prevent on the
 metadata side.
 
+## Guardrails: a harness that dies reports nothing
+
+The round-2 run's first sweep was killed by the OS after 28 CPU-minutes and
+3 GB of RSS, because odc-stac derived a 3.17 x 10^12 pixel grid from an
+antimeridian source. A later sweep had a case that did not return a geobox in
+90 seconds. Both were consumer defects — and in both, the defect destroyed the
+report that would have named it.
+
+`guarded_reader` wraps a reader with the two protections that costs an
+afternoon to discover:
+
+```python
+from geocase.differential import compare_cases, compare_arrays, guarded_reader
+
+results = compare_cases(
+    left=guarded_reader(read_odc, size_probe=probe_geobox, timeout=90),
+    right=guarded_reader(read_stackstac, timeout=90),
+    compare=compare_arrays,
+    consumer="odc-stac",
+    category="raster",
+)
+```
+
+- **A lazy size probe.** `size_probe` is called with the path *before* the
+  reader and returns the shape the read would produce. Over
+  `max_pixels`, the read never happens and `PixelBudgetError` is raised — so
+  the absurd grid is recorded as the finding rather than allocated.
+- **A per-load timeout.** odc-stac's hang happens while *deriving* the geobox,
+  upstream of any shape a size check could see, so a size probe alone does not
+  save the run. Over `timeout` seconds, `ReaderTimeoutError`.
+
+Both surface through `compare_case` as ordinary reader exceptions, which is the
+point: the run continues, and the number appears in the report.
+
+## Comparing rasters in a common currency
+
+Cross-library raster comparison needs values in one representation.
+`to_common_currency` is the one the round-2 run settled on — float64, with
+nodata folded to NaN — and it pairs with `compare_arrays`, whose NaN-equals-NaN
+rule is what makes two readers' different fill values agree instead of
+producing a finding per nodata pixel:
+
+```python
+from geocase.differential import compare_arrays, to_common_currency
+
+left = to_common_currency(odc_array, nodata=-9999)
+right = to_common_currency(stackstac_array, nodata=0)
+compare_arrays(left, right)  # None
+```
+
+It absorbs one trap in particular: `.filled(np.nan)` on an **integer** masked
+array raises, so the cast to float64 has to precede the fill. That belongs in
+the adapter, not in every consumer's harness.
+
+## Vary an option, not just a library
+
+Round 2 is the evidence for what an option axis is worth. **odc-stac's HIGH
+defect needed `crs=`**, **stackstac's needed `dtype=`**, and odc-stac's
+scale/offset defect needed a scaled case *and* a second library. A sweep
+varying only library-against-library on a plain read finds none of the three.
+
+The eight axes that run used ship as data, in `OPTION_PAIRS`:
+
+```python
+from geocase.differential import option_pairs
+
+for pair in option_pairs(found_defect=True):
+    print(pair.name, pair.left, "vs", pair.right, "--", pair.evidence)
+```
+
+`default`, `explicit_crs`, `resolution`, `bounds`, `nodata`, `dtype`,
+`resampling`, `chunking`. The option *keys* follow odc-stac / stackstac
+spelling; map them if your consumer names things differently — the value here
+is the enumeration of axes, not the keyword strings.
+
+The one to call out is the **unit-changing CRS target**. It is a single option
+value, it found a HIGH defect, and it is the axis a consumer author is least
+likely to think of testing. The
+[CRS family pair](_generated/catalog/cases/crs_family_pair_projected.md) makes
+it assertable from inside the corpus as well.
+
+## A predicate that knows what a CRS is
+
+Round 2 produced **five false findings** against lonboard for one reason: the
+harness thought `OGC:CRS84` and `EPSG:4326` were different CRSs. `crs_equal`
+is the remedy, and `default_compare` uses it on any CRS-shaped mapping:
+
+```python
+from geocase.differential import crs_equal
+
+crs_equal("OGC:CRS84", "EPSG:4326")   # True
+crs_equal(4326, "epsg:4326")          # True
+crs_equal("EPSG:4326", "EPSG:32633")  # False
+crs_equal(None, "EPSG:4326")          # False -- a missing CRS is not every CRS
+```
+
+Geometries need the same care in a different place. `compare_geometries`
+distinguishes **NULL** from **EMPTY** from a **NaN-coordinate** geometry,
+because round 2 produced three separate defects living exactly in the gaps
+between those three. A comparator that folds them into "missing" reports
+agreement on all three; one that folds them into "different" reports a finding
+on every curated empty geometry in the corpus.
+
+## Explain a divergence class once
+
+The pyproj sweep fired four probes and all four were expected behaviour:
+longitude wrapping to [-180, 180], the pole's undefined longitude,
+sub-micrometre float noise, and a probe that cannot discriminate when source
+and target CRS are the same. Without a record, every run re-investigates the
+same four and the fifth, real one is buried.
+
+`known_divergences` does this for *cases*; `PROBE_EXPLANATIONS` does it for
+*classes*. Pass `explain=True` and a matched divergence is reported as `known`
+with its explanation attached:
+
+```python
+results = compare_cases(left=..., right=..., explain=True, category="vector")
+
+for result in results:
+    if result.outcome == "known" and result.probe_explanation:
+        print(result.case_id, result.probe_explanation.key)  # e.g. longitude_wrap
+```
+
+It is off by default: a caller who did not ask should see the raw divergence,
+because an explanation that fires unasked is indistinguishable from a
+comparator bug. A catalogued `known_divergence` still wins when both apply,
+because it is the more specific statement.
+
 ## Where the corpus pays off
 
 The distribution of the pyogrio run's findings is the most useful thing it
@@ -184,3 +312,4 @@ If you are choosing where to point a differential harness first, start with
 - [Case discovery](case-discovery.md) — the selectors `compare_cases` forwards to
 - [Adding a case](adding-a-case.md) — `required_drivers`, `known_divergences`
 - [Testing your function](testing-your-function-with-geocase.md) — the declared-assertion mode
+- [STAC Items](stac-items.md) — feeding stackstac and odc-stac from the corpus
