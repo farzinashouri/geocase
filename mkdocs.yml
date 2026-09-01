@@ -58,6 +58,7 @@ nav:
   - Home: index.md
   - Getting Started: getting-started.md
   - Philosophy: philosophy.md
+  - Validation Report: validation.md
   - Catalog:
       - Browse Cases: _generated/catalog/index.md
       - Compare All Cases: _generated/catalog/compare.md
