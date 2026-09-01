@@ -59,7 +59,7 @@ twine check dist/*
 
 `verify_dist.py` fails loudly if:
 
-- any of the 154 cases in `case-index.yaml` is missing from the wheel, or ships
+- any of the 157 cases in `case-index.yaml` is missing from the wheel, or ships
   metadata with no data payload (`verify_dist.py` reads the count from the index;
   this figure is gated against the registry by `scripts/validate_catalog.py`);
 - the sdist is missing `src/geocase/data`, `src/geocase/metadata`, or `tests`;
@@ -119,7 +119,7 @@ pip install --index-url https://test.pypi.org/simple/ \
 python -c "import geocase; print(geocase.__version__, len(geocase.__all__))"  # 1.0.0rc1 27
 # bundled data really materialised, not just importable
 python -c "import geocase; c = geocase.load_case('cog_multispectral_small'); print(c.primary_path.exists())"
-python -c "import geocase; print(len(geocase.list_cases()))"   # 154
+python -c "import geocase; print(len(geocase.list_cases()))"   # 157
 pytest --collect-only 2>&1 | head   # plugin registers
 ```
 

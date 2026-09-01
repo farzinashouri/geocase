@@ -1,6 +1,6 @@
 # Plan 38 — Six Consumers, Eighteen Defects, and the STAC Adapter the Corpus Had to Grow
 
-> **Status: proposed 2026-08-31.** A second external differential run — this
+> **Status: Phase 1 implemented 2026-09-01; Phases 2-5 proposed.** A second external differential run — this
 > time against **titiler, stackstac, odc-stac, lonboard, geoarrow-python and
 > pyproj** — found **18 defects across 7 libraries**, eleven of them attributable
 > to a specific case. That is [Plan 37](37-raster-signal-and-differential-adapters.md)'s
@@ -218,12 +218,14 @@ Phase 4 builds the three that are real and adds a fourth the round exposed.
 
 ## Phase 1 — Record the divergences, and gate the conventions that paid
 
+*Implemented 2026-09-01.*
+
 Every finding below is a consumer defect, not a corpus defect, so nothing in
 `case.yaml` is wrong. What is missing is the record, so a repeat run reports
 `known` rather than re-deriving — which is what `CaseMetadata.known_divergences`
 exists for.
 
-### 1.1 Record the seven case-attributable consumer divergences (TDD)
+### 1.1 Record the seven case-attributable consumer divergences (TDD) — done
 
 **Failing test first:** extend `tests/unit/test_known_divergences.py` to assert a
 record with the named `consumer` on each of:
@@ -248,7 +250,7 @@ since `_match_known` matches on that alone.
 case-attributable (see *the honest part* above), and a `known_divergences` entry
 on an arbitrary case would be a false claim about which case found what.
 
-### 1.2 Gate the conventions, not just the findings
+### 1.2 Gate the conventions, not just the findings — done
 
 Plan 37 §1.3 proposes `tests/unit/test_transform_conventions.py` for the rotated
 and bottom-up affines. Round 2 makes that gate more valuable than Plan 37 could
@@ -264,12 +266,50 @@ proved load-bearing, each read from the real bytes:
   Normalising it to the wrapped form would silently move it onto the code path
   titiler already handles.
 
-### 1.3 Regenerate and re-gate
+### 1.3 Regenerate and re-gate — done
 
 `known_divergences` is part of the model, so run
 `scripts/build_case_index.py --check`, `scripts/validate_catalog.py`,
 `scripts/validate_case_content.py` and `scripts/generate_catalog_pages.py --check`;
 regenerate and commit what they name.
+
+
+**As built.** Ten records over eight cases, not seven — the heading undercounts
+its own table, which lists nine rows over eight cases and gives `empty_polygon`
+two consumers. `TestRoundTwoConsumerDivergences` in
+`tests/unit/test_known_divergences.py` parametrises the full set and adds the
+negative gate the phase asks for: no case may attribute a divergence to
+`stackstac`. `TestTheRestOfTheCorpus` previously asserted `empty_geometry_gpkg`
+was the *only* case with records, so it was widened to the eight-case set rather
+than deleted — the property it protects (a record means a real finding, not a
+default) still holds.
+
+Two departures from the brief, both forced by what is actually on disk:
+
+- The `rio-tiler` record Plan 37 §1.1 was to add does **not** exist: Plan 37 is
+  still `proposed`. The `titiler` record on `rotated_two_islands` names
+  rio-tiler's `io/rasterio.py:100` guard as the root cause in its description,
+  so the attribution is not lost, but it does not yet *join* a sibling record.
+- `landcover_ambiguous_zero_small` gets no record of its own. The plan's table
+  names only `landcover_small` for the titiler colormap defect; the second case
+  is named in that record's description instead, since the two share one defect
+  and a duplicate record would double-count it.
+
+The conventions gate landed as a new
+[`tests/unit/test_transform_conventions.py`](../../tests/unit/test_transform_conventions.py)
+— Plan 37 §1.3 proposes the same file, so implementing that phase should extend
+this one rather than create it. Every property is read from the real bytes via
+`rasterio`, never from `case.yaml`, since a regeneration would rewrite the
+declaration and the byte is what has to keep the property. All four hold on the
+current corpus: `ndvi_scaled_int16_small` scales `(0.0001,)`,
+`multispectral_s2_like_small` offsets `(-0.1,) * 4`, both `landcover_*` cases
+carry a colormap, and `optical_dateline_small` has `bounds.right == 180.22`.
+
+`build_case_index.py --check`, `validate_catalog.py` and
+`validate_case_content.py` were already clean — `known_divergences` is metadata
+the content gate does not open bytes for. `generate_catalog_pages.py` regenerated
+eight pages. Full suite 2002 passed / 37 skipped; ruff, mypy and
+`mkdocs build --strict` clean.
 
 ---
 

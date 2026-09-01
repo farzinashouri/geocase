@@ -71,3 +71,14 @@ assertions:
 
 params:
   generator: scripts/generate_raster_fixtures.py
+# Plan 38 phase 1.1 -- recorded from the 2026-08-31 six-consumer differential
+# run.
+known_divergences:
+  - consumer: titiler
+    version_range: "titiler 0.24 / rio-tiler 8.x, GDAL 3.12.2"
+    description: >
+      /preview.npy and /preview.tif return the dataset's colormap applied as
+      RGB rather than the class codes, so the categorical values are
+      unrecoverable from the response. Applies equally to
+      landcover_ambiguous_zero_small.
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md

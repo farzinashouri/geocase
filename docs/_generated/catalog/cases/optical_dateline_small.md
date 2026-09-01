@@ -76,6 +76,16 @@ Confirm GeoCase handles an RGB optical scene whose extent crosses the antimeridi
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `red`, `green`, `blue` |
 
+## Known consumer divergences
+
+Disagreements already investigated on this case. If your reader reproduces one of these, it is catalogued &mdash; not a new finding.
+
+**titiler** &mdash; titiler 0.24 / rio-tiler 8.x, GDAL 3.12.2
+
+TileJSON bounds/center and /info.geojson carry longitudes greater than 180 for this unwrapped antimeridian-crossing raster, which is out of spec for both formats. bounds_to_geometry handles only the wrapped (minx > maxx) convention.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md>
+
 ## Required capabilities
 
 - `load`

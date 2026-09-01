@@ -50,3 +50,19 @@ assertions:
   expected_epsg: 4326
   expected_geometry_types:
     - Polygon
+# Plan 38 phase 1.1 -- recorded from the 2026-08-31 six-consumer differential
+# run.
+known_divergences:
+  - consumer: lonboard
+    version_range: "lonboard 0.11, geoarrow-pyarrow 0.5"
+    description: >
+      from_geopandas on an all-empty geometry frame raises
+      ValueError: 0-length dimension rather than producing an empty layer.
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md
+  - consumer: geoarrow-pyarrow
+    version_range: "geoarrow-pyarrow 0.5"
+    description: >
+      as_geoarrow raises an internal AttributeError on an all-empty frame,
+      because infer_type_common returns pa.null() and the caller assumes a
+      geometry type.
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md

@@ -52,12 +52,24 @@ class TestTheSeededRecord:
 
 
 class TestTheRestOfTheCorpus:
-    """An empty default everywhere else, so ``[]`` keeps meaning "not seen"."""
+    """An empty default outside the recorded runs, so ``[]`` keeps meaning
+    "not seen"."""
 
-    def test_every_other_case_declares_none(self, cases: list[geocase.CaseMetadata]):
-        """Test the metadata pass touched only the case with a real finding."""
+    def test_only_the_cases_with_real_findings_declare_records(
+        self, cases: list[geocase.CaseMetadata]
+    ):
+        """Test the metadata pass touched only cases with a real finding."""
         declared = {c.id for c in cases if c.known_divergences}
-        assert declared == {"empty_geometry_gpkg"}
+        assert declared == {
+            "empty_geometry_gpkg",
+            "rotated_two_islands",
+            "bottom_up_dem_small",
+            "ndvi_scaled_int16_small",
+            "landcover_small",
+            "optical_dateline_small",
+            "empty_polygon",
+            "geometrycollection_mixed_valid",
+        }
 
     def test_every_declared_record_is_attributed_and_described(
         self, cases: list[geocase.CaseMetadata]
@@ -67,3 +79,98 @@ class TestTheRestOfTheCorpus:
             for divergence in case.known_divergences:
                 assert divergence.consumer.strip()
                 assert divergence.description.strip()
+
+
+class TestRoundTwoConsumerDivergences:
+    """Plan 38 phase 1.1 -- the 2026-08-31 six-consumer differential run.
+
+    Ten records over eight cases. Each is a *consumer* defect found by a
+    specific case, so the record belongs on that case: a repeat run reports
+    ``known`` instead of re-deriving the same investigation, and a genuinely
+    new defect on the same case stays distinguishable.
+
+    The two stackstac defects the same run found are deliberately absent. One
+    fires on any STAC Item and the other on all 34 rasters identically, so
+    neither is attributable to a case; recording them here would be a false
+    claim about which case found what.
+    """
+
+    EXPECTED = {
+        ("rotated_two_islands", "titiler"),
+        ("bottom_up_dem_small", "titiler"),
+        ("bottom_up_dem_small", "rio-stac"),
+        ("ndvi_scaled_int16_small", "odc-stac"),
+        ("landcover_small", "titiler"),
+        ("optical_dateline_small", "titiler"),
+        ("empty_geometry_gpkg", "lonboard"),
+        ("empty_polygon", "lonboard"),
+        ("empty_polygon", "geoarrow-pyarrow"),
+        ("geometrycollection_mixed_valid", "geoarrow-pyarrow"),
+    }
+
+    @pytest.mark.parametrize(("case_id", "consumer"), sorted(EXPECTED))
+    def test_the_case_records_the_consumer_that_diverged(
+        self, case_id: str, consumer: str
+    ):
+        """Test each round-2 finding is attributed to the case that found it."""
+        case = geocase.get_case(case_id)
+        matches = [d for d in case.known_divergences if d.consumer == consumer]
+        assert matches, f"{case_id} must record a divergence for {consumer}"
+
+    def test_no_stackstac_record_is_attributed_to_any_case(
+        self, cases: list[geocase.CaseMetadata]
+    ):
+        """Test the two non-case-attributable defects are not claimed by a case."""
+        for case in cases:
+            for divergence in case.known_divergences:
+                assert divergence.consumer != "stackstac", (
+                    f"{case.id} claims a stackstac defect that fires on every "
+                    "input -- not a case-attributable finding"
+                )
+
+    def test_every_round_two_record_names_the_versions_observed(self):
+        """Test each record answers "is this still open?" without a re-run."""
+        for case_id, consumer in self.EXPECTED:
+            case = geocase.get_case(case_id)
+            for divergence in case.known_divergences:
+                if divergence.consumer == consumer:
+                    assert divergence.version_range
+
+
+class TestRoundOneConsumerDivergences:
+    """Plan 37 phase 1.1 -- the 2026-08-31 four-consumer differential run.
+
+    The run that produced Plan 37: rio-tiler 9.4.3 returns geographically wrong
+    pixels for a rotated affine, and inverted bounds for a bottom-up one. Both
+    are silent, and both were found by the corpus's only case carrying the
+    convention.
+
+    Recorded separately from the round-2 titiler records even though titiler
+    republishes the same two rio-tiler defects over HTTP. ``_match_known``
+    matches on consumer name alone, so a titiler record does not excuse a
+    rio-tiler run: without its own record, a differential run passing
+    ``consumer="rio-tiler"`` reports both as new findings and re-derives an
+    investigation that is already closed.
+    """
+
+    EXPECTED = {
+        ("rotated_two_islands", "rio-tiler"),
+        ("bottom_up_dem_small", "rio-tiler"),
+    }
+
+    @pytest.mark.parametrize(("case_id", "consumer"), sorted(EXPECTED))
+    def test_the_case_records_the_consumer_that_diverged(
+        self, case_id: str, consumer: str
+    ):
+        """Test each round-1 finding is attributed to the case that found it."""
+        case = geocase.get_case(case_id)
+        matches = [d for d in case.known_divergences if d.consumer == consumer]
+        assert matches, f"{case_id} must record a divergence for {consumer}"
+
+    def test_every_round_one_record_names_the_version_observed(self):
+        """Test each record answers "is this still open?" without a re-run."""
+        for case_id, consumer in self.EXPECTED:
+            case = geocase.get_case(case_id)
+            for divergence in case.known_divergences:
+                if divergence.consumer == consumer:
+                    assert "9.4.3" in divergence.version_range

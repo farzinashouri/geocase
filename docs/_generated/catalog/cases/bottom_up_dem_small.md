@@ -78,6 +78,28 @@ Verify that a consumer reads row order from the transform rather than assuming n
 | `expected_transform_signs` | `positive_e` |
 | `expected_pixel_anchor` | `area` |
 
+## Known consumer divergences
+
+Disagreements already investigated on this case. If your reader reproduces one of these, it is catalogued &mdash; not a new finding.
+
+**rio-tiler** &mdash; rio-tiler 9.4.3, GDAL 3.12.2
+
+The positive-e affine is valid and rasterio reads it, but rio-tiler propagates the inverted BoundingBox (bottom > top) onto Reader.bounds, so bounds[3] - bounds[1] is negative. feature() then raises WindowError while part() over the identical area succeeds. reader.py:487 calls windows.from_bounds with no ordering normalisation, and reader.py:58 computes y_res = (bounds[3] - bounds[1]) / height with no abs().
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/37-raster-signal-and-differential-adapters.md>
+
+**titiler** &mdash; titiler 0.24 / rio-tiler 8.x, GDAL 3.12.2
+
+/cog/info returns bounds with miny > maxy for the bottom-up (positive e) affine, and the normalised /cog/bbox request built from those bounds then returns HTTP 500 rather than the window.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md>
+
+**rio-stac** &mdash; rio-stac 0.11, GDAL 3.12.2
+
+create_stac_item writes proj:bbox unnormalised for the bottom-up affine, so the Item is invalid per the projection extension even though the WGS84 bbox it writes alongside is correct.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md>
+
 ## Notes
 
 Three fixtures covering two georeferencing conventions that nearly every
@@ -136,6 +158,30 @@ a `KeyError`, and one using `.get()` without a default gets `None` and guesses.
 - `src.tags().get("AREA_OR_POINT", "Area")` — **with** the default.
 - Order bounds explicitly rather than assuming `bottom < top`.
 
+### Widening the axis (plan 37 phase 3)
+
+The external validation runs of 2026-08-31 found real defects in rio-tiler,
+titiler and rio-stac, and every one of them came from a *transform convention*
+rather than a format baseline. At that point the corpus held exactly one
+rotated raster and exactly one bottom-up raster — a sample size of one per
+axis, each of which paid on its first run. Two cases here widen it:
+
+- **`rotated_bottom_up_small`** carries both conventions at once: non-zero
+  `b`/`d` skew terms *and* a positive `e`. rio-tiler's two defects have
+  adjacent root causes and a single `WarpedVRT` guard addresses both, so a case
+  carrying only one convention cannot distinguish a complete fix from a partial
+  one. Its rows are flipped for the same reason `bottom_up_dem_small`'s are:
+  the file has to describe the same *ground*, not the same array. Flipping the
+  transform sign alone yields a file that is internally consistent and
+  geographically upside down.
+- **`rotated_steep_small`** rotates by roughly 40°, against `rotated_two_islands`'
+  ~14°. At that angle a north-up assumption misplaces the grid's far corner by
+  about ten cells rather than one, so a differential report shows the magnitude
+  and *direction* of a consumer's error instead of something that reads as a
+  one-pixel edge effect.
+
+Both reuse the `affine_transform_bug` risk type rather than minting new terms.
+
 ### Related
 
 `rotated_two_islands` and `nonsquare_diagonal_sparse` also carry non-default
@@ -169,9 +215,9 @@ property the corpus always had into one it declares.
 
 - [Pixel-Is-Area DEM](pixel_is_area_dem_small.md) -- `pixel_is_area_dem_small`
 - [Pixel-Is-Point DEM](pixel_is_point_dem_small.md) -- `pixel_is_point_dem_small`
+- [Rotated Bottom-Up DEM (Skew and Positive Y Resolution)](rotated_bottom_up_small.md) -- `rotated_bottom_up_small`
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
 - [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
-- [DEM Small](dem_small.md) -- `dem_small`
 
 <script type="application/ld+json">
 {

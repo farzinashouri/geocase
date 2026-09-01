@@ -151,6 +151,31 @@ that drifted raster, so the two agreed with each other while contradicting the
 case's stated purpose. See `docs/plans/28-validate-geocase.md` Phase 1 and
 `docs/plans/32-footprint-truth-and-ambiguous-zero.md` Phase 1.
 
+
+### `rotated_two_islands_warped` — the answer, shipped with the question
+
+A rotated affine has no correct north-up reading, so a consumer compared only
+against *itself* can agree with itself and still be geographically wrong. That
+is precisely how rio-tiler 9.4.3 failed: `read()`, `part()` and `preview()`
+returned 9, 4 and 9 valid pixels for `rotated_two_islands` against a `WarpedVRT`
+reference of 7 — three different answers, no error, no warning.
+
+Every validation run to date had to hand-build that `WarpedVRT` before it could
+say which answer was right. `rotated_two_islands_warped` ships it: the same
+rotated islands as the primary, plus `rotated_two_islands_warped_reference.tif`,
+the materialized north-up warp, as a sidecar. Following the
+`crs_mismatch_overlay_pair` precedent (plan 36 §2), the defect lives in the
+*relationship* between two files — each reads cleanly on its own, and the
+disagreement is the finding.
+
+The reference is derived from the primary's own bytes by
+`scripts/generate_raster_fixtures.py`, not authored, so it cannot drift away
+from the source it is the answer to.
+
+This is a **separate case** rather than a sidecar bolted onto
+`rotated_two_islands`. That case's value is that a consumer meets a rotated
+affine with no reference at all; handing it one changes what it tests.
+
 ## Required capabilities
 
 - `load`

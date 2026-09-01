@@ -77,6 +77,16 @@ Confirm GeoCase preserves a categorical land-cover raster and its colormap. Ever
 | `expected_band_names` | `landcover` |
 | `expected_colormap_present` | yes |
 
+## Known consumer divergences
+
+Disagreements already investigated on this case. If your reader reproduces one of these, it is catalogued &mdash; not a new finding.
+
+**titiler** &mdash; titiler 0.24 / rio-tiler 8.x, GDAL 3.12.2
+
+/preview.npy and /preview.tif return the dataset's colormap applied as RGB rather than the class codes, so the categorical values are unrecoverable from the response. Applies equally to landcover_ambiguous_zero_small.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md>
+
 ## Required capabilities
 
 - `load`

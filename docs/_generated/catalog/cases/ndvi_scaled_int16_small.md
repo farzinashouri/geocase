@@ -81,6 +81,16 @@ Confirm GeoCase preserves a scaled int16 NDVI product, its scale factor, and its
 | `expected_band_names` | `ndvi` |
 | `expected_scale_factor` | `0.0001` |
 
+## Known consumer divergences
+
+Disagreements already investigated on this case. If your reader reproduces one of these, it is catalogued &mdash; not a new finding.
+
+**odc-stac** &mdash; odc-stac 0.3.x, GDAL 3.12.2
+
+The declared STAC raster:bands scale is dropped at _mdtools.py:125-131, so loaded values are raw DN -- a 10 000x difference against stackstac, which applies it. Silent: no warning is emitted.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md>
+
 ## Required capabilities
 
 - `load`

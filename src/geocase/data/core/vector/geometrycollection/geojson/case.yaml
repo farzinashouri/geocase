@@ -63,3 +63,13 @@ assertions:
 
 params:
   expected_feature_count: 1
+# Plan 38 phase 1.1 -- recorded from the 2026-08-31 six-consumer differential
+# run.
+known_divergences:
+  - consumer: geoarrow-pyarrow
+    version_range: "geoarrow-pyarrow 0.5"
+    description: >
+      as_geoarrow builds the extension name geoarrow.geometrycollection, which
+      geoarrow's own C core then rejects with errno 22, instead of falling back
+      to WKB as the docstring promises.
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md

@@ -43,10 +43,38 @@ Pass ``consumer=`` to opt into that: a record only excuses the consumer it was
 recorded against, or one catalogued quirk would silence every future finding on
 the same case.
 
+The same shape works on rasters, using :func:`compare_arrays` in place of
+:func:`default_compare`. A raster reader is already a :data:`Reader` — a
+callable taking the primary file's path — so nothing else changes::
+
+    from rio_tiler.io import Reader
+
+    from geocase.differential import compare_arrays, compare_cases
+
+    def read_native(path):
+        with Reader(path) as src:
+            return src.read().data
+
+    def read_part(path):
+        with Reader(path) as src:
+            return src.part(src.geographic_bounds).data
+
+    results = compare_cases(
+        left=read_native,
+        right=read_part,
+        compare=compare_arrays,
+        consumer="rio-tiler",
+        category="raster",
+    )
+
+That pair is not an illustration: it is what found rio-tiler's rotated-affine
+defect on ``rotated_two_islands``, where ``read()`` returned 9 valid pixels and
+``part()`` 4 against a ``WarpedVRT`` reference of 7, silently. Compare masks in
+their own call — values and masks are separate findings, and that case diverged
+on both.
+
 Deliberately **not** in ``geocase.__all__``: it is a submodule import, the same
-precedent :mod:`geocase.raster` and :mod:`geocase.assertions` set. Scoped to
-the vector / two-code-path shape the evidence covers; the raster adapter
-protocol is Phase 4 and is not started.
+precedent :mod:`geocase.raster` and :mod:`geocase.assertions` set.
 """
 
 from __future__ import annotations
@@ -61,6 +89,7 @@ from geocase.catalog.models import CaseMetadata, KnownDivergence
 __all__ = [
     "DifferentialResult",
     "Outcome",
+    "compare_arrays",
     "compare_case",
     "compare_cases",
     "default_compare",
@@ -226,6 +255,124 @@ def default_compare(left: Any, right: Any) -> str | None:
     if _values_equal(left, right):
         return None
     return f"results differ: {_describe(left)} vs {_describe(right)}"
+
+
+def compare_arrays(left: Any, right: Any) -> str | None:
+    """Compare two array-shaped results, or ``None`` if they agree.
+
+    The raster counterpart to :func:`default_compare`, with the same
+    ``str | None`` contract, so it drops straight into ``compare=`` on
+    :func:`compare_case` and :func:`compare_cases` with no other change::
+
+        from functools import partial
+
+        from rio_tiler.io import Reader
+
+        from geocase.differential import compare_arrays, compare_cases
+
+        def read_native(path):
+            with Reader(path) as src:
+                return src.read().data
+
+        def read_part(path):
+            with Reader(path) as src:
+                return src.part(src.geographic_bounds).data
+
+        results = compare_cases(
+            left=read_native,
+            right=read_part,
+            compare=compare_arrays,
+            consumer="rio-tiler",
+            category="raster",
+        )
+
+    That exact pair found the rotated-affine defect on ``rotated_two_islands``:
+    ``read()`` returned 9 valid pixels and ``part()`` 4, against a ``WarpedVRT``
+    reference of 7, with no error and no warning from either path.
+
+    Three behaviours are load-bearing, each because the hand-written harness
+    that found the defects got it wrong first:
+
+    * **Shape is checked before contents.** A cell-by-cell report on arrays of
+      different shape is unreadable, and the shapes are the whole finding.
+    * **NaN compares equal to NaN in the same position.** ``np.array_equal``
+      calls every NaN-nodata raster diverged; two of that run's three initial
+      findings were this and nothing else. A NaN against a number, or a NaN
+      that *moved*, is still a divergence.
+    * **Comparison is by equality, never truthiness.** A mask of 255 against a
+      mask of 1 is a real difference — it is rio-tiler's ``ImageData.mask``
+      contract defect — and the harness's ``mask > 0`` stepped over it because
+      truthiness is correct at every dtype.
+
+    Values and masks are separate findings and should be compared separately;
+    ``rotated_two_islands`` diverged on both, and a comparator handed only the
+    values reports half the defect. Pass the mask arrays in their own
+    :func:`compare_cases` call, or read with ``masked=True`` — a masked array's
+    mask is compared here as part of the value, and data under the mask is
+    ignored, which is what makes two different fill values agree.
+
+    Args:
+        left: One array-shaped result. Anything ``numpy.asanyarray`` accepts,
+            including a nested sequence or a masked array.
+        right: The other.
+
+    Returns:
+        A description of the first difference, or ``None`` if they agree.
+
+    Raises:
+        ImportError: If numpy is not installed. Raster comparison is
+            array comparison; there is no meaningful fallback.
+    """
+    import numpy as np
+
+    left_array = np.asanyarray(left)
+    right_array = np.asanyarray(right)
+
+    if left_array.shape != right_array.shape:
+        return f"shape differs: {left_array.shape} vs {right_array.shape}"
+
+    left_mask = np.ma.getmaskarray(left_array)
+    right_mask = np.ma.getmaskarray(right_array)
+    if not np.array_equal(left_mask, right_mask):
+        differing = int(np.count_nonzero(left_mask != right_mask))
+        index = tuple(int(i) for i in np.argwhere(left_mask != right_mask)[0])
+        return (
+            f"mask differs in {differing} cell(s); first at {index}: "
+            f"{bool(left_mask[index])} vs {bool(right_mask[index])}"
+        )
+
+    left_values = np.ma.getdata(left_array)
+    right_values = np.ma.getdata(right_array)
+
+    # Equality, not truthiness: a 255 mask against a 1 mask is a real finding.
+    # NaN never equals itself, so tolerate it only where *both* sides are NaN —
+    # a NaN that moved is still a divergence.
+    unequal = left_values != right_values
+    both_nan = _nan_positions(left_values) & _nan_positions(right_values)
+    unequal = unequal & ~both_nan & ~left_mask
+
+    if not unequal.any():
+        return None
+
+    differing = int(np.count_nonzero(unequal))
+    index = tuple(int(i) for i in np.argwhere(unequal)[0])
+    return (
+        f"values differ in {differing} cell(s); first at {index}: "
+        f"{left_values[index]!r} vs {right_values[index]!r}"
+    )
+
+
+def _nan_positions(array: Any) -> Any:
+    """A boolean array marking NaN cells, ``False`` everywhere at integer dtype.
+
+    ``np.isnan`` raises a ``TypeError`` on integer and object arrays rather
+    than returning all-``False``, and a raster corpus carries plenty of both.
+    """
+    import numpy as np
+
+    if array.dtype.kind in "fc":
+        return np.isnan(array)
+    return np.zeros(array.shape, dtype=bool)
 
 
 def _match_known(

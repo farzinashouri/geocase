@@ -73,6 +73,16 @@ Ensure GeometryCollection features can be indexed and loaded without being coerc
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `GeometryCollection` |
 
+## Known consumer divergences
+
+Disagreements already investigated on this case. If your reader reproduces one of these, it is catalogued &mdash; not a new finding.
+
+**geoarrow-pyarrow** &mdash; geoarrow-pyarrow 0.5
+
+as_geoarrow builds the extension name geoarrow.geometrycollection, which geoarrow's own C core then rejects with errno 22, instead of falling back to WKB as the docstring promises.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md>
+
 ## Notes
 
 Valid mixed GeometryCollection case for loader and metadata coverage.

@@ -11,6 +11,7 @@ cases:
 - path: data/core/raster/footprint_edge_cases/case_hole_center_nodata.yaml
 - path: data/core/raster/footprint_edge_cases/case_nonsquare_diagonal_sparse.yaml
 - path: data/core/raster/footprint_edge_cases/case_rotated_two_islands.yaml
+- path: data/core/raster/footprint_edge_cases/case_rotated_two_islands_warped.yaml
 - path: data/core/raster/footprint_edge_cases/case_thin_corridor_shape.yaml
 - path: data/core/raster/geotiff_external_overviews_small/case.yaml
 - path: data/core/raster/geotiff_float64_small/case.yaml
@@ -36,6 +37,8 @@ cases:
 - path: data/core/raster/transform_conventions/case_bottom_up_dem_small.yaml
 - path: data/core/raster/transform_conventions/case_pixel_is_area_dem_small.yaml
 - path: data/core/raster/transform_conventions/case_pixel_is_point_dem_small.yaml
+- path: data/core/raster/transform_conventions/case_rotated_bottom_up_small.yaml
+- path: data/core/raster/transform_conventions/case_rotated_steep_small.yaml
 - path: data/core/raster/water_mask_small/case.yaml
 - path: data/core/vector/geometrycollection/geojson/case.yaml
 - path: data/core/vector/linestring/csv_wkt/linestring_csv_wkt_baseline/case.yaml

@@ -76,3 +76,14 @@ params:
   # GDAL band scale here and in a CF variable attribute there, and libraries
   # routinely handle one and not the other.
   analogous_case_id: ndvi_packed_netcdf
+# Plan 38 phase 1.1 -- recorded from the 2026-08-31 six-consumer differential
+# run. This case carries the scale/offset axis in its STAC encoding; the CF
+# encoding of the same concept lives on ndvi_packed_netcdf.
+known_divergences:
+  - consumer: odc-stac
+    version_range: "odc-stac 0.3.x, GDAL 3.12.2"
+    description: >
+      The declared STAC raster:bands scale is dropped at _mdtools.py:125-131,
+      so loaded values are raw DN -- a 10 000x difference against stackstac,
+      which applies it. Silent: no warning is emitted.
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md

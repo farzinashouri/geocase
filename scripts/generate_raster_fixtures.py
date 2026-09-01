@@ -24,6 +24,7 @@ covers them identically.
 from __future__ import annotations
 
 import argparse
+import math
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -77,6 +78,12 @@ class RasterSpec:
     # matters: GDAL omits it for the area convention, so a pixel-anchor pair
     # has to write both sides explicitly to be a real differential.
     tags: dict[str, str] = field(default_factory=dict)
+    # Emit ``<stem>_warped.tif``: this fixture's own ``WarpedVRT``, materialized
+    # as the declared correct answer for a rotated affine. Derived from the
+    # same bytes rather than authored, so the reference cannot drift away from
+    # the source it is the answer to (the drift that broke
+    # ``hole_center_nodata``, see ``_footprint_edge_specs``).
+    emit_warped_reference: bool = False
 
     def array(self) -> np.ndarray:
         return np.stack(self.bands).astype(self.dtype)
@@ -211,8 +218,38 @@ def _transform_convention_specs() -> list[RasterSpec]:
             **kwargs,
         )
 
+    # Plan 37 Phase 3 -- widening the axis that paid. Of 34 rasters, exactly
+    # one was rotated and exactly one bottom-up, and each found a defect on
+    # the first run. A sample size of one per axis is what these two widen.
+
+    # rotated_bottom_up_small -- both conventions at once. rio-tiler's two
+    # defects have adjacent root causes and one WarpedVRT guard fixes both, so
+    # only a case carrying both can tell a complete fix from a partial one.
+    # The rows are flipped for the same reason bottom_up_dem_small's are: the
+    # file has to describe the same ground, not the same array.
+    rotated_bottom_up = np.flipud(north_up).copy()
+    rotated_bottom_up_transform = Affine(pixel, 8.0, left, 8.0, pixel, bottom)
+
+    # rotated_steep_small -- ~40 degrees, against rotated_two_islands' ~14. At
+    # that angle a north-up assumption misplaces the far corner by several
+    # cells rather than one, so a report shows the *direction* of the error
+    # instead of something that reads as an edge effect.
+    angle = math.radians(40.0)
+    rotated_steep_transform = Affine(
+        pixel * math.cos(angle),
+        -pixel * math.sin(angle),
+        left,
+        -pixel * math.sin(angle),
+        -pixel * math.cos(angle),
+        top,
+    )
+
     return [
         _spec("bottom_up_dem_small", bottom_up, bottom_up_transform),
+        _spec(
+            "rotated_bottom_up_small", rotated_bottom_up, rotated_bottom_up_transform
+        ),
+        _spec("rotated_steep_small", north_up, rotated_steep_transform),
         # The anchor pair. "Area" is written explicitly rather than left to
         # GDAL's default so that both files make a positive statement.
         _spec(
@@ -467,6 +504,7 @@ def _footprint_edge_specs() -> list[RasterSpec]:
         transform: Any,
         *,
         emit_footprint: bool = False,
+        emit_warped_reference: bool = False,
     ) -> RasterSpec:
         return RasterSpec(
             case_id=case_id,
@@ -477,6 +515,7 @@ def _footprint_edge_specs() -> list[RasterSpec]:
             transform=transform,
             case_dir=_FOOTPRINT_DIR,
             emit_footprint=emit_footprint,
+            emit_warped_reference=emit_warped_reference,
         )
 
     # Every case emits its own mask-exact ``_footprint_truth.geojson`` (Plan 32
@@ -520,6 +559,19 @@ def _footprint_edge_specs() -> list[RasterSpec]:
             corridor,
             from_origin(700000.0, 5100000.0, 25.0, 25.0),
             emit_footprint=True,
+        ),
+        # Plan 37 Phase 3 -- the same rotated islands, shipped with their own
+        # WarpedVRT as the declared correct answer. A pair expressing a
+        # relationship between two inputs, following the
+        # ``crs_mismatch_overlay_pair`` precedent (Plan 36 §2). Deliberately a
+        # separate case rather than a sidecar bolted onto rotated_two_islands:
+        # that case's value is that a consumer meets a rotated affine with no
+        # reference at all, and handing it one changes what it tests.
+        _spec(
+            "rotated_two_islands_warped",
+            islands,
+            Affine(20.0, 5.0, 1000.0, -5.0, -20.0, 2000.0),
+            emit_warped_reference=True,
         ),
     ]
 
@@ -625,6 +677,30 @@ def _synth_specs() -> list[SynthSpec]:
     ]
 
 
+def _write_warped_reference(spec: RasterSpec, raster_path: Path) -> Path:
+    """Derive ``<stem>_warped.tif`` -- the north-up answer to a rotated source.
+
+    A rotated affine has no correct north-up reading, so a consumer checked
+    only against itself can agree with itself and still be wrong; that is
+    exactly how rio-tiler's ``read()``/``part()``/``preview()`` disagreed three
+    ways with no error. All three validation runs had to hand-build this
+    ``WarpedVRT`` before they could say which answer was right. Shipping it
+    beside the source makes the right answer part of the case.
+    """
+    from rasterio.vrt import WarpedVRT
+
+    stem = raster_path.stem.removesuffix("_warped")
+    dest = raster_path.with_name(f"{stem}_warped_reference.tif")
+    with rasterio.open(raster_path) as src, WarpedVRT(src) as vrt:
+        profile = vrt.profile
+        profile.update(driver="GTiff")
+        with rasterio.open(dest, "w", **profile) as out:
+            out.write(vrt.read())
+            if src.nodata is not None:
+                out.nodata = src.nodata
+    return dest
+
+
 def _write_raster(spec: RasterSpec, dest: Path) -> None:
     """Write *spec* to *dest* with explicit, deterministic profile."""
     array = spec.array()
@@ -710,6 +786,8 @@ def _emit(spec: RasterSpec | SynthSpec, dest: Path) -> list[Path]:
     written = [dest]
     if spec.emit_footprint:
         written.append(_write_footprint(spec, dest))
+    if spec.emit_warped_reference:
+        written.append(_write_warped_reference(spec, dest))
     return written
 
 
