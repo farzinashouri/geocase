@@ -88,6 +88,16 @@ known_divergences:
     # at the report that was filed rather than at a bare issue list. Replace it
     # with the issue URL once that is known.
     upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/geocase_validate/gdal-issue-draft.md
+  - consumer: lonboard
+    version_range: "lonboard 0.11, geoarrow-pyarrow 0.5"
+    # Plan 38 phase 1.1 -- a second, independent finding on the same case, from
+    # the 2026-08-31 six-consumer run. Distinct from the pyogrio record above:
+    # this one is about the export side, not the spatial-filter read.
+    description: >
+      from_geopandas emits no Arrow validity bitmap, so a NULL geometry is
+      indistinguishable from a geometry with NaN coordinates. geopandas' own
+      Arrow export, which does set the bitmap, is the reference.
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md
 
 params:
   row_count: 4

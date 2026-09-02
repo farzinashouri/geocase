@@ -85,6 +85,12 @@ Under a spatial filter (bbox= or mask=), the Arrow path (use_arrow=True) returns
 
 Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/geocase_validate/gdal-issue-draft.md>
 
+**lonboard** &mdash; lonboard 0.11, geoarrow-pyarrow 0.5
+
+from_geopandas emits no Arrow validity bitmap, so a NULL geometry is indistinguishable from a geometry with NaN coordinates. geopandas' own Arrow export, which does set the bitmap, is the reference.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md>
+
 ## Notes
 
 ### Purpose

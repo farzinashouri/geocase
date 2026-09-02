@@ -69,3 +69,31 @@ assertions:
   expected_transform_signs:
     - positive_e
   expected_pixel_anchor: area
+# Plan 38 phase 1.1 -- recorded from the 2026-08-31 six-consumer differential
+# run. Two independent consumers mishandle this case's bottom-up affine.
+known_divergences:
+  # Plan 37 phase 1.1 -- the 2026-08-31 four-consumer run.
+  - consumer: rio-tiler
+    version_range: "rio-tiler 9.4.3, GDAL 3.12.2"
+    description: >
+      The positive-e affine is valid and rasterio reads it, but rio-tiler
+      propagates the inverted BoundingBox (bottom > top) onto Reader.bounds, so
+      bounds[3] - bounds[1] is negative. feature() then raises WindowError while
+      part() over the identical area succeeds. reader.py:487 calls
+      windows.from_bounds with no ordering normalisation, and reader.py:58
+      computes y_res = (bounds[3] - bounds[1]) / height with no abs().
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/37-raster-signal-and-differential-adapters.md
+  - consumer: titiler
+    version_range: "titiler 0.24 / rio-tiler 8.x, GDAL 3.12.2"
+    description: >
+      /cog/info returns bounds with miny > maxy for the bottom-up (positive e)
+      affine, and the normalised /cog/bbox request built from those bounds then
+      returns HTTP 500 rather than the window.
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md
+  - consumer: rio-stac
+    version_range: "rio-stac 0.11, GDAL 3.12.2"
+    description: >
+      create_stac_item writes proj:bbox unnormalised for the bottom-up affine,
+      so the Item is invalid per the projection extension even though the
+      WGS84 bbox it writes alongside is correct.
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md

@@ -70,3 +70,29 @@ params:
   recorded_gdal_footprint: rotated_two_islands_footprint_gdal_hull.geojson
   # Measured on the mask-exact truth footprint: 0.375.
   min_rect_ratio: 0.35
+# Plan 38 phase 1.1 -- recorded from the 2026-08-31 six-consumer differential
+# run. Consumer defects, not corpus defects: nothing above is wrong.
+known_divergences:
+  # Plan 37 phase 1.1 -- the 2026-08-31 four-consumer run. Recorded separately
+  # from the titiler record below: _match_known matches on consumer name alone,
+  # so a titiler record does not excuse a rio-tiler run.
+  - consumer: rio-tiler
+    version_range: "rio-tiler 9.4.3, GDAL 3.12.2"
+    description: >
+      Reader.read(), .part() and .preview() all return geographically wrong
+      pixels for this rotated affine, silently. Against a WarpedVRT reference
+      of 7 valid pixels they return 9, 4 and 9 respectively -- three different
+      answers, no error and no warning. io/rasterio.py:100 wraps a dataset in a
+      WarpedVRT only if gcps are present, and models.py:606 builds
+      ImageData.transform from from_bounds(), which is north-up by
+      construction; nothing inspects transform.b or transform.d.
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/37-raster-signal-and-differential-adapters.md
+  - consumer: titiler
+    version_range: "titiler 0.24 / rio-tiler 8.x, GDAL 3.12.2"
+    description: >
+      /cog/preview serves the raw, unwarped array while /cog/info reports
+      north-up bounds for it, so the pixels and the georeferencing disagree:
+      13 valid pixels against a WarpedVRT reference of 10. The root cause is
+      rio-tiler's io/rasterio.py:100 guard, which does not treat a rotated
+      affine as requiring a warp.
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md

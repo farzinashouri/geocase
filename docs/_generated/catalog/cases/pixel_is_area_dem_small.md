@@ -136,6 +136,30 @@ a `KeyError`, and one using `.get()` without a default gets `None` and guesses.
 - `src.tags().get("AREA_OR_POINT", "Area")` — **with** the default.
 - Order bounds explicitly rather than assuming `bottom < top`.
 
+### Widening the axis (plan 37 phase 3)
+
+The external validation runs of 2026-08-31 found real defects in rio-tiler,
+titiler and rio-stac, and every one of them came from a *transform convention*
+rather than a format baseline. At that point the corpus held exactly one
+rotated raster and exactly one bottom-up raster — a sample size of one per
+axis, each of which paid on its first run. Two cases here widen it:
+
+- **`rotated_bottom_up_small`** carries both conventions at once: non-zero
+  `b`/`d` skew terms *and* a positive `e`. rio-tiler's two defects have
+  adjacent root causes and a single `WarpedVRT` guard addresses both, so a case
+  carrying only one convention cannot distinguish a complete fix from a partial
+  one. Its rows are flipped for the same reason `bottom_up_dem_small`'s are:
+  the file has to describe the same *ground*, not the same array. Flipping the
+  transform sign alone yields a file that is internally consistent and
+  geographically upside down.
+- **`rotated_steep_small`** rotates by roughly 40°, against `rotated_two_islands`'
+  ~14°. At that angle a north-up assumption misplaces the grid's far corner by
+  about ten cells rather than one, so a differential report shows the magnitude
+  and *direction* of a consumer's error instead of something that reads as a
+  one-pixel edge effect.
+
+Both reuse the `affine_transform_bug` risk type rather than minting new terms.
+
 ### Related
 
 `rotated_two_islands` and `nonsquare_diagonal_sparse` also carry non-default

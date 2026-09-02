@@ -58,6 +58,7 @@ nav:
   - Home: index.md
   - Getting Started: getting-started.md
   - Philosophy: philosophy.md
+  - Validation Report: validation.md
   - Catalog:
       - Browse Cases: _generated/catalog/index.md
       - Compare All Cases: _generated/catalog/compare.md
@@ -71,6 +72,7 @@ nav:
       - Examples Index: examples-index.md
       - Testing Your Function: testing-your-function-with-geocase.md
       - Differential Testing: differential-testing.md
+      - STAC Items: stac-items.md
       - Parameterized Tests: using-parameterized-tests.md
       - Adding a Case: adding-a-case.md
       - Remote Datasets: remote-datasets.md

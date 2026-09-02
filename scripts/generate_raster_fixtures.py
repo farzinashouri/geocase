@@ -24,6 +24,7 @@ covers them identically.
 from __future__ import annotations
 
 import argparse
+import math
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -77,6 +78,17 @@ class RasterSpec:
     # matters: GDAL omits it for the area convention, so a pixel-anchor pair
     # has to write both sides explicitly to be a real differential.
     tags: dict[str, str] = field(default_factory=dict)
+    # Emit ``<stem>_warped.tif``: this fixture's own ``WarpedVRT``, materialized
+    # as the declared correct answer for a rotated affine. Derived from the
+    # same bytes rather than authored, so the reference cannot drift away from
+    # the source it is the answer to (the drift that broke
+    # ``hole_center_nodata``, see ``_footprint_edge_specs``).
+    emit_warped_reference: bool = False
+    # Emit ``<case_id_with _projected -> _geographic>.tif``: this fixture
+    # reprojected to EPSG:4326. Derived from the same bytes rather than
+    # authored, so the geographic half of the CRS-family pair cannot drift
+    # away from the projected half it is the twin of.
+    emit_geographic_twin: bool = False
 
     def array(self) -> np.ndarray:
         return np.stack(self.bands).astype(self.dtype)
@@ -152,6 +164,8 @@ def _specs() -> list[RasterSpec]:
         *_priority_2_4_specs(),
         *_footprint_edge_specs(),
         *_transform_convention_specs(),
+        *_overlap_group_specs(),
+        *_crs_family_specs(),
     ]
 
 
@@ -211,8 +225,39 @@ def _transform_convention_specs() -> list[RasterSpec]:
             **kwargs,
         )
 
+    # Plan 37 Phase 3 -- widening the axis that paid. Of 34 rasters, exactly
+    # one was rotated and exactly one bottom-up, and each found a defect on
+    # the first run. A sample size of one per axis is what these two widen.
+
+    # rotated_bottom_up_small -- both conventions at once. rio-tiler's two
+    # defects have adjacent root causes and one WarpedVRT guard fixes both, so
+    # only a case carrying both can tell a complete fix from a partial one.
+    # The rows are flipped for the same reason bottom_up_dem_small's are: the
+    # file has to describe the same ground, not the same array.
+    rotated_bottom_up = np.flipud(north_up).copy()
+    rotated_bottom_up_transform = Affine(pixel, 8.0, left, 8.0, pixel, bottom)
+
+    # rotated_steep_small -- ~40 degrees, against rotated_two_islands' ~14. At
+    # that angle a north-up assumption misplaces the far corner by several
+    # cells rather than one, so a report shows the *direction* of the error
+    # instead of something that reads as an edge effect.
+    angle = math.radians(40.0)
+    rotated_steep_transform = Affine(
+        pixel * math.cos(angle),
+        -pixel * math.sin(angle),
+        left,
+        -pixel * math.sin(angle),
+        -pixel * math.cos(angle),
+        top,
+    )
+
     return [
         _spec("bottom_up_dem_small", bottom_up, bottom_up_transform),
+        _spec(
+            "rotated_bottom_up_small", rotated_bottom_up, rotated_bottom_up_transform
+        ),
+        _spec("rotated_steep_small", north_up, rotated_steep_transform),
+        _rotated_nonsquare_spec(),
         # The anchor pair. "Area" is written explicitly rather than left to
         # GDAL's default so that both files make a positive statement.
         _spec(
@@ -467,6 +512,7 @@ def _footprint_edge_specs() -> list[RasterSpec]:
         transform: Any,
         *,
         emit_footprint: bool = False,
+        emit_warped_reference: bool = False,
     ) -> RasterSpec:
         return RasterSpec(
             case_id=case_id,
@@ -477,6 +523,7 @@ def _footprint_edge_specs() -> list[RasterSpec]:
             transform=transform,
             case_dir=_FOOTPRINT_DIR,
             emit_footprint=emit_footprint,
+            emit_warped_reference=emit_warped_reference,
         )
 
     # Every case emits its own mask-exact ``_footprint_truth.geojson`` (Plan 32
@@ -521,7 +568,182 @@ def _footprint_edge_specs() -> list[RasterSpec]:
             from_origin(700000.0, 5100000.0, 25.0, 25.0),
             emit_footprint=True,
         ),
+        # Plan 37 Phase 3 -- the same rotated islands, shipped with their own
+        # WarpedVRT as the declared correct answer. A pair expressing a
+        # relationship between two inputs, following the
+        # ``crs_mismatch_overlay_pair`` precedent (Plan 36 §2). Deliberately a
+        # separate case rather than a sidecar bolted onto rotated_two_islands:
+        # that case's value is that a consumer meets a rotated affine with no
+        # reference at all, and handing it one changes what it tests.
+        _spec(
+            "rotated_two_islands_warped",
+            islands,
+            Affine(20.0, 5.0, 1000.0, -5.0, -20.0, 2000.0),
+            emit_warped_reference=True,
+        ),
     ]
+
+
+#: Directory shared by the multi-item raster group. Plan 38 Phase 4.1/4.2:
+#: these are siblings whose whole value is what happens *across* them, so like
+#: the footprint edge cases they share a folder.
+_GROUP_DIR = "overlap_group"
+
+#: Directory shared by the CRS-family pair. Plan 38 Phase 4.3.
+_CRS_FAMILY_DIR = "crs_family_pair"
+
+
+def _overlap_group_specs() -> list[RasterSpec]:
+    """Three overlapping rasters — the corpus's first multi-item group.
+
+    Plan 38 Phase 4.1 and 4.2. Every other raster case is one standalone file,
+    so the corpus could not express stacking order, mosaic compositing,
+    temporal grouping, or two assets in one Item. ``odc.stac.load`` and
+    ``stackstac.stack`` both take a *sequence* of Items and their whole reason
+    for existing is what happens across that sequence; round 2 could only ever
+    hand them a list of one.
+
+    Four properties are load-bearing and each is gated in
+    ``tests/unit/test_raster_groups.py``:
+
+    * **Partial overlap.** Disjoint members never composite; identical members
+      make compositing unobservable.
+    * **A shared pixel grid.** Off-grid members turn every compositing
+      difference into a resampling difference, which is a different finding on
+      a different axis.
+    * **Distinct constant values.** "Which pixel won" is then readable by
+      inspection rather than by arithmetic.
+    * **Two members claiming ``common_name: red``** (Phase 4.2) — the ordinary
+      Sentinel-2 shape, so that a consumer resolving the alias silently to the
+      first candidate is *visible*. odc-stac does exactly that today and the
+      source carries its own ``# maybe warn about ambiguity?`` note.
+    """
+    size = 12
+    pixel = 30.0
+    left = 500000.0
+    top = 4500000.0
+
+    # Each member is shifted by 6 cells — half its width — so consecutive
+    # members overlap in exactly half their area, on grid.
+    step = 6 * pixel
+
+    def _member(name: str, index: int, value: float) -> RasterSpec:
+        array = np.full((size, size), value, dtype="float32")
+        # One nodata corner per member, at a *different* corner each time, so
+        # a composite's fill behaviour is visible as well as its ordering.
+        corner = [(0, 0), (0, size - 1), (size - 1, 0)][index]
+        array[corner] = -9999.0
+        return RasterSpec(
+            case_id=name,
+            primary=f"{name}.tif",
+            bands=[array],
+            dtype="float32",
+            nodata=-9999.0,
+            crs="EPSG:32633",
+            transform=Affine(
+                pixel, 0.0, left + index * step, 0.0, -pixel, top - index * step
+            ),
+            case_dir=_GROUP_DIR,
+            band_names=["red" if index in (0, 1) else "nir"],
+        )
+
+    return [
+        _member("overlap_group_north", 0, 10.0),
+        _member("overlap_group_centre", 1, 20.0),
+        _member("overlap_group_south", 2, 30.0),
+    ]
+
+
+def _crs_family_specs() -> list[RasterSpec]:
+    """The same footprint in a projected CRS and in a geographic one.
+
+    Plan 38 Phase 4.3. 31 of 34 rasters were EPSG:32633, which made any
+    "same case, two CRSs" assertion untestable and left reprojection sweeps
+    leaning entirely on the *target* CRS for variation. This pair makes the
+    unit-change axis that caught odc-stac's HIGH defect assertable from inside
+    the corpus rather than only via an external consumer's option.
+
+    A declared pair rather than two independently selectable cases, following
+    ``utm_zone_33n_to_32n_pair`` and ``crs_mismatch_overlay_pair``: a
+    divergence that is a relationship between two inputs is not expressible by
+    two cases that do not know about each other.
+
+    The geographic half is written by warping the projected half rather than
+    authored, for the reason ``rotated_two_islands_warped_reference`` is: a
+    hand-authored twin drifts away from the file it is the twin of, and that
+    drift is what broke ``hole_center_nodata``.
+    """
+    size = 16
+    pixel = 30.0
+    left = 500000.0
+    top = 4500000.0
+
+    ramp = np.arange(size * size, dtype="float32").reshape(size, size)
+    ramp[0, 0] = -9999.0
+
+    return [
+        RasterSpec(
+            case_id="crs_family_pair_projected",
+            primary="crs_family_pair_projected.tif",
+            bands=[ramp],
+            dtype="float32",
+            nodata=-9999.0,
+            crs="EPSG:32633",
+            transform=Affine(pixel, 0.0, left, 0.0, -pixel, top),
+            case_dir=_CRS_FAMILY_DIR,
+            band_names=["elevation"],
+            emit_geographic_twin=True,
+        )
+    ]
+
+
+def _rotated_nonsquare_spec() -> RasterSpec:
+    """A second rotated raster: opposite skew sign, non-square pixels.
+
+    Plan 38 Phase 4.4. ``rotated_two_islands`` is 2-for-2 across two runs and
+    three libraries and was still the only one of its kind, so "handles
+    rotation" and "handles *this* rotation" were indistinguishable. Its skew
+    ``b`` is positive and its pixels are square; this one inverts both.
+
+    Non-square pixels are folded in deliberately: a scalar ``resolution=``
+    cannot express them, so a harness passing one silently squares the grid.
+    ``nonsquare_diagonal_sparse`` exposes that already, but only while
+    north-up; this makes it reachable while rotated, which is the combination
+    the round-2 harness actually hit.
+    """
+    size = 12
+    x_pixel = 30.0
+    y_pixel = 20.0  # deliberately not x_pixel: see the docstring
+    left = 500000.0
+    top = 4500000.0
+
+    array = np.arange(size * size, dtype="float32").reshape(size, size)
+    array[0, 0] = -9999.0
+
+    angle = math.radians(25.0)
+    # b is negative here; rotated_two_islands' b is +5. One sample cannot tell
+    # "handles rotation" from "handles this rotation", and a second sample with
+    # the same sign would not either.
+    transform = Affine(
+        x_pixel * math.cos(angle),
+        -y_pixel * math.sin(angle),
+        left,
+        x_pixel * math.sin(angle),
+        -y_pixel * math.cos(angle),
+        top,
+    )
+
+    return RasterSpec(
+        case_id="rotated_nonsquare_small",
+        primary="rotated_nonsquare_small.tif",
+        bands=[array],
+        dtype="float32",
+        nodata=-9999.0,
+        crs="EPSG:32633",
+        transform=transform,
+        case_dir=_TRANSFORM_DIR,
+        band_names=["elevation"],
+    )
 
 
 def _write_footprint(spec: RasterSpec, raster_path: Path) -> Path:
@@ -625,6 +847,72 @@ def _synth_specs() -> list[SynthSpec]:
     ]
 
 
+def _write_warped_reference(spec: RasterSpec, raster_path: Path) -> Path:
+    """Derive ``<stem>_warped.tif`` -- the north-up answer to a rotated source.
+
+    A rotated affine has no correct north-up reading, so a consumer checked
+    only against itself can agree with itself and still be wrong; that is
+    exactly how rio-tiler's ``read()``/``part()``/``preview()`` disagreed three
+    ways with no error. All three validation runs had to hand-build this
+    ``WarpedVRT`` before they could say which answer was right. Shipping it
+    beside the source makes the right answer part of the case.
+    """
+    from rasterio.vrt import WarpedVRT
+
+    stem = raster_path.stem.removesuffix("_warped")
+    dest = raster_path.with_name(f"{stem}_warped_reference.tif")
+    with rasterio.open(raster_path) as src, WarpedVRT(src) as vrt:
+        profile = vrt.profile
+        profile.update(driver="GTiff")
+        with rasterio.open(dest, "w", **profile) as out:
+            out.write(vrt.read())
+            if src.nodata is not None:
+                out.nodata = src.nodata
+    return dest
+
+
+def _write_geographic_twin(spec: RasterSpec, raster_path: Path) -> Path:
+    """Reproject *raster_path* to EPSG:4326 beside it — Plan 38 Phase 4.3.
+
+    The geographic half of the CRS-family pair is *derived*, not authored, for
+    the reason ``_write_warped_reference`` exists: a hand-authored twin drifts
+    away from the file it is the twin of, and the two halves only mean
+    anything together if they describe the same ground.
+    """
+    from rasterio.warp import calculate_default_transform, reproject
+
+    dest = raster_path.with_name(
+        raster_path.name.replace("_projected", "_geographic")
+    )
+    with rasterio.open(raster_path) as src:
+        transform, width, height = calculate_default_transform(
+            src.crs, "EPSG:4326", src.width, src.height, *src.bounds
+        )
+        profile = src.profile.copy()
+        profile.update(
+            driver="GTiff",
+            crs="EPSG:4326",
+            transform=transform,
+            width=width,
+            height=height,
+        )
+        with rasterio.open(dest, "w", **profile) as out:
+            reproject(
+                source=rasterio.band(src, 1),
+                destination=rasterio.band(out, 1),
+                src_transform=src.transform,
+                src_crs=src.crs,
+                dst_transform=transform,
+                dst_crs="EPSG:4326",
+                resampling=Resampling.nearest,
+                src_nodata=src.nodata,
+                dst_nodata=src.nodata,
+            )
+            if src.descriptions[0]:
+                out.set_band_description(1, src.descriptions[0])
+    return dest
+
+
 def _write_raster(spec: RasterSpec, dest: Path) -> None:
     """Write *spec* to *dest* with explicit, deterministic profile."""
     array = spec.array()
@@ -710,6 +998,10 @@ def _emit(spec: RasterSpec | SynthSpec, dest: Path) -> list[Path]:
     written = [dest]
     if spec.emit_footprint:
         written.append(_write_footprint(spec, dest))
+    if spec.emit_warped_reference:
+        written.append(_write_warped_reference(spec, dest))
+    if spec.emit_geographic_twin:
+        written.append(_write_geographic_twin(spec, dest))
     return written
 
 

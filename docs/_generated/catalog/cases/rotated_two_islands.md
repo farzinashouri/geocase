@@ -59,7 +59,7 @@ Validate footprint extraction under rotated transform and disconnected valid pix
 
 ## Risk types covered
 
-- `affine_transform_bug`
+- [`affine_transform_bug`](../risk/affine-transform-bug.md)
 - [`footprint_generation_error`](../risk/footprint-generation-error.md)
 
 ## Expected behavior
@@ -70,6 +70,22 @@ Validate footprint extraction under rotated transform and disconnected valid pix
 | `expect_crs` | yes |
 | `expected_shape` | `[8, 8]` |
 | `expected_transform_signs` | `negative_e`, `rotated` |
+
+## Known consumer divergences
+
+Disagreements already investigated on this case. If your reader reproduces one of these, it is catalogued &mdash; not a new finding.
+
+**rio-tiler** &mdash; rio-tiler 9.4.3, GDAL 3.12.2
+
+Reader.read(), .part() and .preview() all return geographically wrong pixels for this rotated affine, silently. Against a WarpedVRT reference of 7 valid pixels they return 9, 4 and 9 respectively -- three different answers, no error and no warning. io/rasterio.py:100 wraps a dataset in a WarpedVRT only if gcps are present, and models.py:606 builds ImageData.transform from from_bounds(), which is north-up by construction; nothing inspects transform.b or transform.d.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/37-raster-signal-and-differential-adapters.md>
+
+**titiler** &mdash; titiler 0.24 / rio-tiler 8.x, GDAL 3.12.2
+
+/cog/preview serves the raw, unwarped array while /cog/info reports north-up bounds for it, so the pixels and the georeferencing disagree: 13 valid pixels against a WarpedVRT reference of 10. The root cause is rio-tiler's io/rasterio.py:100 guard, which does not treat a rotated affine as requiring a warp.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md>
 
 ## Notes
 
@@ -152,6 +168,31 @@ that drifted raster, so the two agreed with each other while contradicting the
 case's stated purpose. See `docs/plans/28-validate-geocase.md` Phase 1 and
 `docs/plans/32-footprint-truth-and-ambiguous-zero.md` Phase 1.
 
+
+### `rotated_two_islands_warped` — the answer, shipped with the question
+
+A rotated affine has no correct north-up reading, so a consumer compared only
+against *itself* can agree with itself and still be geographically wrong. That
+is precisely how rio-tiler 9.4.3 failed: `read()`, `part()` and `preview()`
+returned 9, 4 and 9 valid pixels for `rotated_two_islands` against a `WarpedVRT`
+reference of 7 — three different answers, no error, no warning.
+
+Every validation run to date had to hand-build that `WarpedVRT` before it could
+say which answer was right. `rotated_two_islands_warped` ships it: the same
+rotated islands as the primary, plus `rotated_two_islands_warped_reference.tif`,
+the materialized north-up warp, as a sidecar. Following the
+`crs_mismatch_overlay_pair` precedent (plan 36 §2), the defect lives in the
+*relationship* between two files — each reads cleanly on its own, and the
+disagreement is the finding.
+
+The reference is derived from the primary's own bytes by
+`scripts/generate_raster_fixtures.py`, not authored, so it cannot drift away
+from the source it is the answer to.
+
+This is a **separate case** rather than a sidecar bolted onto
+`rotated_two_islands`. That case's value is that a consumer meets a rotated
+affine with no reference at all; handing it one changes what it tests.
+
 ## Required capabilities
 
 - `load`
@@ -180,7 +221,7 @@ case's stated purpose. See `docs/plans/28-validate-geocase.md` Phase 1 and
 - [Hole Center NoData Raster](hole_center_nodata.md) -- `hole_center_nodata`
 - [Nonsquare Diagonal Sparse Raster](nonsquare_diagonal_sparse.md) -- `nonsquare_diagonal_sparse`
 - [Thin Corridor Shape Raster](thin_corridor_shape.md) -- `thin_corridor_shape`
-- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
+- [Rotated Bottom-Up DEM (Skew and Positive Y Resolution)](rotated_bottom_up_small.md) -- `rotated_bottom_up_small`
 
 <script type="application/ld+json">
 {

@@ -1,6 +1,12 @@
 # Plan 37 — The Raster Corpus Earns Its Keep: Two rio-tiler Defects, and the Differential Adapter They Unblock
 
-> **Status: proposed 2026-08-31.** An external differential run against four
+> **Status: Phases 1-3 implemented 2026-09-01; Phase 4 not started.** Phase 1
+> records both rio-tiler divergences and gates the two affines; Phase 2 ships
+> `compare_arrays`; Phase 3 lands the three cases (154 -> 157). Phase 4 is
+> upstream filing, which [Plan 39](39-going-public-upstream-first.md) Phase 1
+> sequences ahead of it and which is not geocase code. See *Implementation
+> notes* at the foot of this document for what differed from the plan.
+> An external differential run against four
 > consumers — pyogrio, rio-tiler, geocube, fiona — found **two real defects in
 > rio-tiler 9.4.3**, and both came from the **raster** corpus. That is the
 > signal [Plan 28](28-validate-geocase.md) Phase 4 was waiting for and
@@ -183,7 +189,7 @@ The two findings are consumer defects, not corpus defects, so nothing in
 them as `known` rather than re-deriving them, which is exactly what
 `CaseMetadata.known_divergences` exists for.
 
-### 1.1 Record both, keyed on the consumer (TDD)
+### 1.1 Record both, keyed on the consumer (TDD) -- **done**
 
 **Failing test first:** `tests/unit/test_known_divergences.py` — assert that
 `get_case("rotated_two_islands").known_divergences` contains a record with
@@ -198,14 +204,14 @@ wording and field use.
 `_match_known` matches on consumer name alone, so both records must name
 `rio-tiler` exactly as a differential run's `consumer=` argument will.
 
-### 1.2 Regenerate and re-gate
+### 1.2 Regenerate and re-gate -- **done**
 
 `known_divergences` is part of the model, so the per-case catalog pages and the
 content gate both move. Run `scripts/build_case_index.py --check`,
 `scripts/validate_catalog.py`, `scripts/validate_case_content.py` and
 `scripts/generate_catalog_pages.py --check`; regenerate and commit what they name.
 
-### 1.3 Land the reproductions as fixtures, not prose
+### 1.3 Land the reproductions as fixtures, not prose -- **done**
 
 **Failing test first:** `tests/unit/test_transform_conventions.py` — assert that
 `rotated_two_islands` has non-zero `transform.b`/`transform.d`, and that
@@ -245,7 +251,7 @@ Three things it got wrong on the first pass are the design requirements:
 - **Shape mismatch must short-circuit**, exactly as `_frames_differ` checks shape
   before contents, or the reported difference is unreadable.
 
-### 2.2 `compare_arrays` (TDD)
+### 2.2 `compare_arrays` (TDD) -- **done**
 
 **Failing test first:** `tests/unit/test_differential_raster.py` — two arrays
 equal but for a NaN in the same position compare **equal**; two differing in one
@@ -256,7 +262,7 @@ Add `compare_arrays(left, right)` to `differential.py` beside `default_compare`,
 returning the same `str | None` contract so it drops into `compare_case`'s
 `compare=` parameter with no change to `compare_case` itself.
 
-### 2.3 A raster reader signature
+### 2.3 A raster reader signature -- **done**
 
 `Reader` is `Callable[[Path], Any]` and already fits — a raster reader is a
 callable taking the primary file's path. Confirm with a test that
@@ -284,7 +290,7 @@ combines rotation with a bottom-up affine, none carries a rotation large enough
 to move a pixel more than one cell at the corpus's 8–16 px sizes, and none pairs
 a rotated source with its correctly-warped reference.
 
-### 3.2 Add, in this order (TDD, one failing content-gate assertion each)
+### 3.2 Add, in this order (TDD, one failing content-gate assertion each) -- **done**
 
 1. **`rotated_bottom_up_small`** — both conventions at once. rio-tiler's two
    defects have adjacent root causes and a single `WarpedVRT` guard fixes both;
@@ -375,3 +381,65 @@ python /Users/farzinashouri/projects/geocase_validation/findings/repro_riotiler_
 Phase 3 lands 154 → **157** cases; the count gate fires in seven files
 ([Plan 36](36-rc3-release-runbook-and-crs-mismatch.md) §2 measured this) and each
 must be updated.
+
+
+---
+
+## Implementation notes (2026-09-01)
+
+What differed from the plan as written.
+
+**Phase 1 had partly landed under Plan 38, and the gap was invisible.** The
+round-2 pass added `titiler` and `rio-stac` records to `rotated_two_islands` and
+`bottom_up_dem_small`, so both cases had a non-empty `known_divergences` and
+looked done. Neither carried a **`rio-tiler`** record. `_match_known` matches on
+consumer name alone, so a differential run passing `consumer="rio-tiler"` -- the
+run this plan exists to serve -- would have reported both defects as new and
+re-derived a closed investigation. The records are now separate and explicit,
+gated by `TestRoundOneConsumerDivergences` in
+`tests/unit/test_known_divergences.py`. *A case with a divergence record for
+some other consumer is not the same as a case with a record for yours.*
+
+**Phase 2 landed as specified.** No change was needed to `compare_case`,
+`compare_cases` or `Outcome`, as the plan predicted. `compare_arrays` was added
+beside `default_compare` with the same `str | None` contract, plus a private
+`_nan_positions` helper -- `np.isnan` raises `TypeError` on integer and object
+arrays rather than returning all-`False`, and a raster corpus carries plenty of
+both. Two behaviours beyond the plan's three:
+
+- **Masked arrays are handled.** `rasterio.read(masked=True)` returns them
+  routinely, so the mask is compared first and as its own finding, and data
+  *under* the mask is ignored. Two masked arrays whose fill values differ under
+  an identical mask therefore agree -- otherwise every `-9999` vs `nan` fill
+  pairing reports as a divergence, which is the same class of noise as the
+  NaN-vs-NaN mistake.
+- **The detail reports the count of differing cells**, not only the first index.
+  `rotated_two_islands` diverged on 17 of 64 pixels; "1 cell" and "17 cells"
+  need different triage and the first index alone does not distinguish them.
+
+**Phase 3's third case is a separate case, not a sidecar.** The plan said
+`rotated_two_islands_warped` ships "beside" `rotated_two_islands`. It is a
+distinct case id with the warped reference as its own sidecar, because adding a
+reference to `rotated_two_islands` would change what that case tests -- its
+value is that a consumer meets a rotated affine with **no** reference at all,
+which is the condition under which rio-tiler returned three different answers.
+`RasterSpec` gained `emit_warped_reference`, so the reference is derived from
+the primary's own bytes rather than authored and cannot drift from the source it
+is the answer to.
+
+**Measured, not assumed:** `rotated_steep_small` displaces the far corner by
+**10.07 cells** against a north-up reading (the plan asked for "several"), and
+`rotated_bottom_up_small` by 3.2 cells while also carrying `e > 0`. Both are
+asserted from the real bytes in `tests/unit/test_transform_conventions.py`
+rather than from `case.yaml`.
+
+**The count gate fired in exactly the seven files Plan 36 §2 measured** --
+`README.md`, `docs/contributing/{releasing,structure-and-planning,workflow}.md`,
+`docs/getting-started.md`, `docs/index.md`, `recipe/meta.yaml` -- all updated
+154 -> 157.
+
+**Phase 4 is not started.** §4.1 (upstream filing) is sequenced by
+[Plan 39](39-going-public-upstream-first.md) Phase 1, which deliberately puts
+filing ahead of the rest of that plan; §4.2 (recording the run beside the other
+two, and correcting Plan 28's verdict table) and §4.3 (the one-line fiona note
+in `docs/dataset-catalog.md`) remain open.

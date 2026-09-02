@@ -73,6 +73,22 @@ Confirm that geometry utilities gracefully handle Polygon EMPTY inputs.
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Polygon` |
 
+## Known consumer divergences
+
+Disagreements already investigated on this case. If your reader reproduces one of these, it is catalogued &mdash; not a new finding.
+
+**lonboard** &mdash; lonboard 0.11, geoarrow-pyarrow 0.5
+
+from_geopandas on an all-empty geometry frame raises ValueError: 0-length dimension rather than producing an empty layer.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md>
+
+**geoarrow-pyarrow** &mdash; geoarrow-pyarrow 0.5
+
+as_geoarrow raises an internal AttributeError on an all-empty frame, because infer_type_common returns pa.null() and the caller assumes a geometry type.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md>
+
 ## Notes
 
 Used for functions that should accept or short-circuit on an empty polygon geometry.

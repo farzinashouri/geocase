@@ -106,7 +106,7 @@ A WGS84 polygon that overlaps the bundled `geotiff_utm_boundary` raster after re
 - [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 - [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 - [Web Mercator Baseline Point](web_mercator_baseline.md) -- `web_mercator_baseline`
-- [Equator-Crossing Polygon](equator_polygon.md) -- `equator_polygon`
+- [CRS Family Pair -- Geographic (WGS 84)](crs_family_pair_geographic.md) -- `crs_family_pair_geographic`
 
 <script type="application/ld+json">
 {
