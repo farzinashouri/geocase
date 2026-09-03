@@ -44,13 +44,38 @@ pip install -e ".[dev]"
 
 ### Installed package usage
 
-To install the latest published release with all data-type extras:
+There are two supported install shapes. Pick by whether you already have a geospatial stack.
+
+**Greenfield** — no geo stack yet, let pip build one:
 
 ```bash
 pip install "geocase[all]"
 ```
 
-If you only need a subset in the future, optional extras may let you keep your environment smaller.
+**Existing geo stack** — you already have GDAL, geopandas or rasterio, from conda, system
+packages, or a `--system-site-packages` venv:
+
+```bash
+pip install geocase
+```
+
+Plain `geocase` is enough to enumerate, select and resolve every case. It pulls in only
+`pydantic`, `pyyaml` and `geofacts`, and `case.primary_path` is an ordinary filesystem path,
+so you read the file with the readers you already have:
+
+```python
+import geocase
+from osgeo import gdal
+
+case = geocase.load_case("rotated_two_islands")
+ds = gdal.Open(str(case.primary_path))       # no optional dependency needed
+```
+
+The extras exist for the convenience loaders — `case.load()` returning a GeoDataFrame,
+`case.read()` returning an array — not for reading the files at all.
+
+`[all]` re-resolves numpy and pandas and can shadow or break a working geospatial
+environment. Use it only in a greenfield one.
 
 ---
 
@@ -105,6 +130,29 @@ This runs once per matching case.
 - `geocase` gives one resolved case per test invocation.
 - `geocase_case` gives exactly one resolved case and is convenient for single-case tests.
 - `geocase_cases` gives all resolved cases as a list.
+
+---
+
+## Start here: the georeferencing conventions suite
+
+If you are new to GeoCase and want the shortest path from install to a real
+finding, run this suite first:
+
+```python
+@pytest.mark.geocase_suite("georeferencing-conventions")
+def test_georeferencing(geocase) -> None:
+    ...
+```
+
+It gathers the affine-transform and footprint cases that live in three
+different corpus directories — rotated geotransforms, bottom-up rasters,
+pixel-is-area versus pixel-is-point anchoring, footprints over sparse or
+holed coverage, and antimeridian bounds. Every defect reported by the most
+recent external consumer came from this axis, and none of these cases are
+ones a team tends to construct for itself.
+
+The cases read as ordinary files: `case.primary_path` is a filesystem path,
+so `gdal.Open` works with no optional dependency installed.
 
 ---
 

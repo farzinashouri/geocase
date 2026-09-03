@@ -10,6 +10,17 @@ GeoCase is an open geospatial testing toolkit and case catalog for realistic, re
 
 Most spatial tests use overly simple geometries or ad hoc local files. GeoCase provides a curated catalog of compact but behaviorally meaningful cases that can be selected into pytest suites by metadata such as category, risk type, test tier, format, and storage class.
 
+Most of the catalog is about **geometry, CRS and georeferencing conventions** — rotated
+geotransforms, bottom-up rasters, pixel-is-area versus pixel-is-point anchoring, antimeridian
+footprints, CRS mismatch, EPSG axis order, NoData. Radiometric conventions for Sentinel-1 and
+Sentinel-2 are one vertical inside that, not the thesis.
+
+**It works with plain GDAL.** `case.primary_path` is an ordinary filesystem path, so
+`gdal.Open` reads a case directly, and the base install needs only `pydantic`, `pyyaml` and
+`geofacts`. The extras are for the convenience loaders, not for reading the files. If your
+codebase moves pixels and geometry around on a GDAL-native stack, you are the audience this
+corpus serves best.
+
 ## Core ideas
 
 - **Cases, not random files**  

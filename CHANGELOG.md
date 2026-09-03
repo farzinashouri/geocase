@@ -150,6 +150,34 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   declare `expect_valid_geometry: false`, and a harness that writes
   `assert not geom.is_valid` for both fails on the first for the wrong reason.
 
+### Fixed
+
+- **`pip install "geocase[all]"` could break a working geospatial environment**
+  (plan 40 phase 1). Installed into a venv created with `--system-site-packages`
+  over **GDAL 3.6.2 / geopandas 0.12.2 / scipy 1.10.1**, it resolved **numpy
+  2.4.6** — incompatible with that scipy — shadowed the system geopandas and
+  pandas, and left pandas unimportable:
+
+  ```
+  ImportError: C extension: None not built
+  ```
+
+  Every optional dependency is now bounded at the next major
+  (`geopandas>=0.14,<2`, `shapely>=2.0,<3`, `pyarrow>=14.0,<23`,
+  `rasterio>=1.3,<2`, `xarray>=2023.1,<2027`, `netCDF4>=1.6,<2`, and likewise
+  for the `bench`, `dev` and `docs` groups), so a future major cannot be pulled
+  in silently.
+
+  **Bounds alone do not prevent this**, and the fix that matters is knowing
+  which install to run. There are two supported shapes, now documented in
+  `README.md` and `docs/getting-started.md`: `pip install "geocase[all]"` for a
+  **greenfield** environment, and plain **`pip install geocase`** when you
+  already have a geo stack. The plain install is enough to enumerate, select and
+  resolve every case — verified against a clean interpreter with numpy,
+  rasterio, geopandas and xarray all absent — because `case.primary_path` is an
+  ordinary filesystem path and `gdal.Open` reads it directly. The extras are the
+  convenience loaders, not how a case is read.
+
 ### Changed
 
 - **`list_cases(format="vector")` now raises a redirecting `ValueError`** instead of a

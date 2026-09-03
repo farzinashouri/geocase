@@ -32,9 +32,52 @@ Nothing raises and nothing warns — the number is simply wrong, and it stays wr
 into the report. The only thing that catches it is a test file that actually has NoData in it.
 
 That is what GeoCase is: 163 curated vector, raster and NetCDF files, each one built around a
-failure mode that survives code review. **NoData** averaged into a statistic; geometry crossing
-the **antimeridian** and coming back as a ring around the globe; a **CRS mismatch** between two
-layers that overlay perfectly on screen; EPSG **axis order** flipping latitude and longitude.
+failure mode that survives code review.
+
+Most of them are about **geometry, CRS and georeferencing conventions** — the assumptions a
+codebase makes about where a pixel or a vertex actually is:
+
+- a **rotated geotransform**, where the shortcut inverse matrix everyone writes is wrong, and
+  wrong quietly;
+- a **bottom-up raster** with a positive `e` term, read upside down without a single warning;
+- **pixel-is-area versus pixel-is-point** anchoring, a half-pixel shift that survives review;
+- geometry crossing the **antimeridian** and coming back as a ring around the globe, or a
+  footprint reaching lon 180.22 that sends a tile request to a tile that does not exist;
+- a **CRS mismatch** between two layers that overlay perfectly on screen;
+- EPSG **axis order** flipping latitude and longitude;
+- **NoData** averaged into a statistic, as above.
+
+Radiometric conventions for Sentinel-1 and Sentinel-2 — scale factors, BOA offsets, dB
+conversion — are one vertical inside that, machine-checked against
+[`geofacts`](https://github.com/farzinashouri/geofacts). They are not the thesis.
+
+If your codebase moves pixels and geometry around and reads them with plain GDAL, you are the
+audience this corpus serves best.
+
+### Works with plain GDAL
+
+`case.primary_path` is an ordinary filesystem path. `gdal.Open` just works, and the base install
+needs only `pydantic`, `pyyaml` and `geofacts` — no rasterio, no geopandas, no xarray:
+
+```python
+import geocase
+from osgeo import gdal
+
+case = geocase.load_case("rotated_two_islands")
+ds = gdal.Open(str(case.primary_path))
+print(ds.GetGeoTransform())
+```
+
+The extras exist for the convenience loaders (`case.load()`, `case.read()`), not for reading the
+files. Enumerating, selecting and resolving cases needs no optional dependency at all.
+
+The `georeferencing-conventions` suite is the shortest path from install to a real finding:
+
+```python
+@pytest.mark.geocase_suite("georeferencing-conventions")
+def test_georeferencing(geocase) -> None:
+    ...
+```
 
 The realistic alternative is not "no tests" — it is the `test_data/sample.tif` someone exported
 once and the `numpy` arrays each test improvises. Those pass because they were chosen by the same
@@ -55,11 +98,24 @@ For local development in this repo:
 pip install -e ".[dev]"
 ```
 
-Install the latest published release from PyPI:
+There are two supported install shapes, and picking the right one matters.
+
+**Greenfield** — no geospatial stack yet, let pip build one:
 
 ```bash
 pip install "geocase[all]"
 ```
+
+**You already have a working geo stack** — GDAL, geopandas, rasterio, whether from conda,
+system packages or a `--system-site-packages` venv:
+
+```bash
+pip install geocase
+```
+
+Plain `geocase` is enough to enumerate, select and resolve every case, because `primary_path`
+is just a path and you already have the readers. Use it. `[all]` re-resolves numpy and pandas
+and can shadow or break a working stack — it is for greenfield environments only.
 
 A conda-forge feedstock does not exist yet. When one does, installing from it
 will not carry the extras, since bundling GDAL would make the conda package far

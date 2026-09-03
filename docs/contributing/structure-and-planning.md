@@ -382,7 +382,9 @@ Why it exists: gives one deterministic place to discover all cases.
 
 ### `metadata/suite-index.yaml` ✅
 
-Master list of suite definition file paths (currently 3 suites: `core-vector`, `crs-edge-cases`, `raster-nodata`).
+Master list of suite definition file paths (currently 7 suites: `core-vector`, `crs-edge-cases`, `raster-nodata`,
+`vector-topology`, `vector-crs-edge`, `vector-schema-encoding`,
+`georeferencing-conventions`).
 
 Why it exists: same idea, but for suites.
 

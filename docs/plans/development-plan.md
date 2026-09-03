@@ -76,6 +76,58 @@ Within that frame, in order:
    measuring those four, and two of them have no case in the catalog. Ranking for a query the
    catalog cannot answer spends a first impression on a miss.
 
+### Round 3 and round 4 feedback, sequenced (added 2026-09-03)
+
+Two consumer reports arrived back to back and became
+[Plan 40](40-round-3-packaging-truth-and-vocabulary.md) (external, full Python geo stack) and
+[Plan 41](41-positioning-and-the-geometry-thesis.md) (internal, GDAL-only). They are separate
+plans because the audiences and theses differ; only the install-story prose overlaps, and
+Plan 41 §2.3 owns it while Plan 40 §1.3 references it.
+
+The order below is **not** the plan-number order. It is cheapest-first among the items with
+evidence of cost, and it front-loads the two phases that are pure documentation:
+
+1. **[Plan 41](41-positioning-and-the-geometry-thesis.md) Phases 1–2 — the suite and the
+   positioning.** An afternoon, no corpus churn, no regeneration cascade. This is first because
+   it is the only work with a *measured* adoption cost: one reporter evaluated the described
+   library and said no before reversing on the shipped one, two prior evaluations rejected
+   geocase as "pixel-moving, GDAL-native" — the audience it serves best — and a fourth nearly
+   did not run it because `requires_dist` hides that `gdal.Open` works on a base install.
+   Every other item here improves the package for people who already installed it.
+2. **[Plan 40](40-round-3-packaging-truth-and-vocabulary.md) Phase 1 — the `[all]` regression.**
+   The only item either report calls urgent. It breaks working geospatial environments, which is
+   worse than any missing feature, and it is self-contained.
+3. **[Plan 41](41-positioning-and-the-geometry-thesis.md) Phase 6 — cite two, not four.**
+   No code, gates on nothing, and it must land **before**
+   [Plan 39](39-going-public-upstream-first.md) Phase 4 broadcasts. Round 4 volunteered the
+   subtraction this project should have made itself; publishing a gross count that deflates
+   under a stranger's scrutiny is worse than publishing the smaller one that does not.
+4. **[Plan 40](40-round-3-packaging-truth-and-vocabulary.md) Phase 2 — ground truth.** The
+   substantive deliverable of either plan, and the one that changes what geocase *is*: a case
+   carrying the answer is an oracle a consumer cannot hand-roll, because computing the right
+   answer for a tricky file is the hard part. Larger than the phases above (model, gate,
+   generator, CI, docs) which is why it is not first, but it is the highest-value work.
+5. **[Plan 41](41-positioning-and-the-geometry-thesis.md) Phase 3 — the two best cases hand over
+   their findings.** Deliberately after Plan 40 §2, so `optical_dateline_small` and
+   `rotated_two_islands` carry typed fields rather than `params` keys needing later migration.
+6. **[Plan 40](40-round-3-packaging-truth-and-vocabulary.md) Phase 3 — the risk vocabulary.**
+   The largest blast radius of any item: it rewrites case metadata, touches a pinned v1.0
+   selector surface, and cascades through every generated artifact. It waits until the cheap
+   wins are banked and until Plan 40 Phase 5's changelog convention exists to record it —
+   this is exactly the class of change that reddened a downstream canary at rc3 with no signal
+   why.
+7. **[Plan 40](40-round-3-packaging-truth-and-vocabulary.md) Phases 4–5, then
+   [Plan 41](41-positioning-and-the-geometry-thesis.md) Phases 4–5.** Single-variable cases and
+   the changelog convention; then the `case_id` alias and the dependency-floor CI job. Phase 5
+   of Plan 41 is last in the whole sequence because no consumer has been bitten by it — every
+   other item here comes from something that already happened.
+
+Two ordering constraints worth stating explicitly, since they are not obvious from the plan
+documents alone: Plan 41 §1.2 should define suite membership by **risk family** rather than an
+id list if Plan 40 §3 has already landed, so the suite does not go stale as cases are added;
+and Plan 40 §3's renames must be recorded under Plan 40 §5's changelog convention, so §5 lands
+first if the two are separated.
+
 **Archived 2026-08-24, per [Plan 25](25-ship-geocase-as-a-package.md) §9:**
 [Plan 17](archive/17-throughput-automation-and-corpus-as-input.md) (benchmark throughput) and
 [Plan 18](archive/18-eo-product-fixtures.md) (EO product fixtures, absorbed by Plan 20) were
