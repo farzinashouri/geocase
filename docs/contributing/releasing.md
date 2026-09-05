@@ -94,10 +94,17 @@ bump, not just an rc tag — `verify_dist.py` enforces that the tag and
 `pyproject.toml` agree:
 
 ```bash
-# set version = "1.0.0rc1" in pyproject.toml, commit
-git tag -a v1.0.0rc1 -m "GeoCase 1.0.0rc1"
-git push origin v1.0.0rc1
+# set version = "1.0.1rc1" in pyproject.toml, commit
+git tag -a v1.0.1rc1 -m "GeoCase 1.0.1rc1"
+git push origin v1.0.1rc1
 ```
+
+!!! note "rc numbers are spent too"
+
+    `1.0.0rc1`, `1.0.0rc2` and `1.0.0rc3` were used in the run-up to 1.0.0 and are
+    on PyPI. TestPyPI is a separate registry but the same rule applies there: a
+    version, once uploaded, cannot be reused. Pick the next unused rc for the
+    version you are actually rehearsing.
 
 Pushing the tag runs the `build` job automatically. The `publish-testpypi` job
 then waits on the `testpypi` environment — **approve it** from the run's page in
@@ -115,8 +122,8 @@ Verify the result in a clean environment:
 ```bash
 python -m venv /tmp/gc && . /tmp/gc/bin/activate
 pip install --index-url https://test.pypi.org/simple/ \
-  --extra-index-url https://pypi.org/simple/ geocase==1.0.0rc1
-python -c "import geocase; print(geocase.__version__, len(geocase.__all__))"  # 1.0.0rc1 27
+  --extra-index-url https://pypi.org/simple/ geocase==1.0.1rc1
+python -c "import geocase; print(geocase.__version__, len(geocase.__all__))"  # 1.0.1rc1 29
 # bundled data really materialised, not just importable
 python -c "import geocase; c = geocase.load_case('cog_multispectral_small'); print(c.primary_path.exists())"
 python -c "import geocase; print(len(geocase.list_cases()))"   # 166

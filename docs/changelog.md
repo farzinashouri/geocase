@@ -28,6 +28,17 @@ the entry verbatim.
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [1.0.0] — 2026-09-05
+
+The first stable release. Everything below landed after the 2026-08-02 feature freeze
+(recorded as [1.0.0-freeze](#100-freeze--2026-08-02) at the bottom of this file) and
+shipped through the release candidates `1.0.0rc1`, `1.0.0rc2` and `1.0.0rc3`, which are
+on PyPI. If you are upgrading from an rc, the entries below are cumulative across all
+three: read **Changed — corpus** first, since that is the section that can change what a
+selector returns.
+
 ### Changed — corpus
 
 - **`risk_types` consolidated to a canonical vocabulary (124 terms → 104)** — plan 40
@@ -495,17 +506,26 @@ repositories no reader can open. Now written as `~/projects/…`.
   `scripts/validate_catalog.py` gates all three against `len(get_registry())` so the number
   cannot drift again.
 
-## [1.0.0] — dated 2026-08-02, **not yet released**
+## [1.0.0-freeze] — 2026-08-02
 
-The feature set below was finalised on 2026-08-02, and that date is what the heading
-records. It is not a publication date: **no GeoCase version has ever been uploaded to
-PyPI or TestPyPI.** Version `0.1.0` was never uploaded either. The heading date will be
-corrected to the real one when the upload happens.
+**Not a published version.** This section records the v1.0 feature freeze: the feature
+set was finalised on 2026-08-02, and that date is what the heading records. Nothing was
+uploaded under this heading. What actually shipped as `1.0.0` is the section above,
+which folds this freeze together with everything the release candidates added; this
+entry is kept because it is where the compatibility promise and the removals were first
+written down.
 
-> **Correction (2026-08-23):** this entry originally claimed 1.0.0 was "the first release
-> published to PyPI". The release process in
-> [Releasing](contributing/releasing.md) is written and gated but has not yet been run;
-> see [Plan 25](https://github.com/farzinashouri/geocase/blob/main/docs/plans/25-ship-geocase-as-a-package.md).
+> **Correction (2026-09-05):** this heading previously read `## [1.0.0] — dated
+> 2026-08-02, **not yet released**` and stated that no GeoCase version had ever been
+> uploaded to PyPI or TestPyPI. That was true when written and is no longer: `1.0.0rc1`,
+> `1.0.0rc2` and `1.0.0rc3` were published to PyPI during August 2026, and `1.0.0`
+> followed on 2026-09-05. Renamed to `1.0.0-freeze` so that exactly one section in this
+> file describes the released `1.0.0`. Version `0.1.0` was never uploaded.
+>
+> An earlier correction (2026-08-23) fixed this entry's original claim that 1.0.0 was
+> "the first release published to PyPI"; see
+> [Plan 25](https://github.com/farzinashouri/geocase/blob/main/docs/plans/25-ship-geocase-as-a-package.md) for the release process that had not
+> yet been run at that point.
 
 ### The compatibility promise
 
@@ -513,8 +533,10 @@ v1.0 makes a stability commitment on **two surfaces only**:
 
 1. **The pytest workflow** — the `geocase_case` / `geocase` fixtures and the
    `geocase_case`, `geocase_suite`, and `geocase_select` markers.
-2. **The public API** — the 27 names exported from `import geocase`, pinned against a
-   literal in `tests/unit/test_public_api.py`.
+2. **The public API** — the names exported from `import geocase`, pinned against a
+   literal in `tests/unit/test_public_api.py`. This surface was 27 names at the freeze
+   and is **29** as released, after Plan 31 added `SpatialExtent` and `Category`. That
+   is an additive change: no name was removed or renamed, so the promise holds.
 
 Everything else — module layout, internal helpers, the shape of `geocase.catalog` — is
 internal and may change in a minor release. The promise is deliberately narrow because
@@ -530,7 +552,8 @@ dishonest.
 
 ### Added
 
-- **Public API** (`import geocase`): a pinned 27-name surface covering case discovery,
+- **Public API** (`import geocase`): a pinned surface — 27 names at this freeze, 29 as
+  released — covering case discovery,
   loading, and inspection — `list_cases`, `get_case`, `load_case`, `show_case`,
   `list_suites`, `get_suite`, `__version__`, the case classes, the metadata models and
   enums, and `RemoteCaseUnavailableError`.

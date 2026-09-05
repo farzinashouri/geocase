@@ -9,7 +9,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "geocase"
-version = "1.0.0rc3"
+version = "1.0.0"
 description = "A curated library of geospatial test cases for automated and parameterized testing."
 readme = "README.md"
 license = "MIT"

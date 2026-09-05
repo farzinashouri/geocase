@@ -105,7 +105,7 @@ the grounds that an empty module implies a commitment the project has not made.
 
 - **`catalog/manifests.py` and `loaders/`** are implemented. `cases/raster.py` routes
   through `loaders/rasterio_loader.py`, which is the single raster load path.
-- **`api/`** is implemented and is the v1.0 compatibility surface — 27 names, pinned by
+- **`api/`** is implemented and is the v1.0 compatibility surface — 29 names, pinned by
   `tests/unit/test_public_api.py`.
 - **`catalog/validators.py`** was deleted. Nothing imported it.
 - **`cli/`** was deleted along with its broken `[project.scripts]` entry point. There is no
