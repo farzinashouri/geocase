@@ -19,6 +19,7 @@ _PUBLIC_SURFACE = sorted(
         "list_cases",
         "get_case",
         "load_case",
+        "risk_types",
         "show_case",
         "list_suites",
         "get_suite",

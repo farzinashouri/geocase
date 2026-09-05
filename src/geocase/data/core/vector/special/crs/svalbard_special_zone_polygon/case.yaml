@@ -20,8 +20,8 @@ tags:
   - special-case
 
 risk_types:
-  - zone_selection
-  - polar_projection_edge_case
+  - crs/zone_selection
+  - extent/polar
 
 behavioral_goal: >
   Confirm that robust UTM-zone logic applies the Svalbard special zone rules.

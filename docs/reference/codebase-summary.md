@@ -187,7 +187,7 @@ Current status:
 ### `src/geocase/api/`
 
 The stable import surface for v1.0, implemented in Step 15. `import geocase` exposes a
-pinned **27-name** `__all__`, asserted against a literal in
+pinned **29-name** `__all__`, asserted against a literal in
 `tests/unit/test_public_api.py` so the surface cannot widen or narrow by accident. The
 compatibility promise for v1.0 covers this surface and the pytest workflow, and nothing
 else.

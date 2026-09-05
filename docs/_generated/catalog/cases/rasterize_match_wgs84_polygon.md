@@ -61,8 +61,8 @@ Confirm that vector geometries in WGS84 can be reprojected to the raster grid CR
 
 ## Risk types covered
 
-- [`rasterization_alignment`](../risk/rasterization-alignment.md)
-- [`reprojection_error`](../risk/reprojection-error.md)
+- [`crs/reprojection_error`](../risk/crs-reprojection-error.md)
+- [`transform/rasterization_alignment`](../risk/transform-rasterization-alignment.md)
 
 ## Expected behavior
 
@@ -123,11 +123,11 @@ A WGS84 polygon that overlaps the bundled `geotiff_utm_boundary` raster after re
   },
   "keywords": [
     "crs",
+    "crs/reprojection_error",
     "polygon",
     "rasterization",
-    "rasterization_alignment",
     "reprojection",
-    "reprojection_error",
+    "transform/rasterization_alignment",
     "vector"
   ],
   "license": "MIT",

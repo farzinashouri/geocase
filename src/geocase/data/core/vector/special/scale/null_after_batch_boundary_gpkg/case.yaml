@@ -25,9 +25,9 @@ tags:
   - procedural
 
 risk_types:
-  - dtype_drift
-  - partial_read_blind_spot
-  - null_empty_conflation
+  - dtype/drift
+  - format/partial_read_blind_spot
+  - geometry/null_empty_conflation
 
 behavioral_goal: >
   Expose consumers whose column dtype depends on how many rows they read.

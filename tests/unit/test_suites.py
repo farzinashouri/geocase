@@ -29,6 +29,7 @@ _CORE_VECTOR_SUITE = _SUITES / "core-vector.yaml"
 _CRS_SUITE = _SUITES / "crs-edge-cases.yaml"
 _NODATA_SUITE = _SUITES / "raster-nodata.yaml"
 _VECTOR_SCHEMA_SUITE = _SUITES / "vector-schema-encoding.yaml"
+_GEOREFERENCING_SUITE = _SUITES / "georeferencing-conventions.yaml"
 
 
 # ---------------------------------------------------------------------------
@@ -220,6 +221,21 @@ class TestLoadAndResolveSuite:
         assert "parquet_mixed_schema_attributes" in ids
         assert "format_limited_kml_case" in ids
 
+    def test_georeferencing_conventions_suite(self, registry: CaseRegistry):
+        """Resolves the georeferencing suite to the transform/footprint set."""
+        resolved = load_and_resolve_suite(_GEOREFERENCING_SUITE, registry)
+        assert resolved.suite_key == "georeferencing-conventions"
+        ids = set(resolved.case_ids)
+        for case_id in (
+            "rotated_two_islands",
+            "bottom_up_dem_small",
+            "hole_center_nodata",
+            "optical_dateline_small",
+            "pixel_is_area_dem_small",
+            "pixel_is_point_dem_small",
+        ):
+            assert case_id in ids, f"{case_id} missing from georeferencing suite"
+
     def test_vector_crs_edge_suite_includes_step3_polar_equator_cases(
         self, registry: CaseRegistry
     ):
@@ -262,6 +278,7 @@ class TestLoadAllSuites:
             "vector-topology",
             "vector-crs-edge",
             "vector-schema-encoding",
+            "georeferencing-conventions",
         }
 
     def test_no_empty_suites(self, registry: CaseRegistry):

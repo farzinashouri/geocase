@@ -59,10 +59,6 @@ pip install "geocase[all]"
 
 Provide a canonical point encoded as a Shapefile so format-specific loader behavior can be compared directly against the GeoJSON baseline.
 
-## Risk types covered
-
-- [`format_comparison`](../risk/format-comparison.md)
-
 ## Expected behavior
 
 | Assertion | Expected |
@@ -117,7 +113,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`baseline` `cross_format_canonical` `point` `shapefile` `valid` `vector`
+`baseline` `cross_format_canonical` `format_comparison` `point` `shapefile` `valid` `vector`
 
 ## Related cases
 

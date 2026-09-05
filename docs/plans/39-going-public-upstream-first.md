@@ -1,8 +1,8 @@
 # Plan 39 — Going Public, Upstream First: The Release, the Site, and the Order the Broadcast Has to Happen In
 
 > **Status: proposed 2026-08-31; Phase 0 done 2026-08-31 (0.1 and 0.2).** Six outward-facing actions were proposed
-> together — cut a version, publish the docs site, contribute upstream, tell the
-> user's manager, write an article, post on LinkedIn. Five of the six are
+> together — cut a version, publish the docs site, contribute upstream, make any
+> private notifications, write an article, post on LinkedIn. Five of the six are
 > **broadcast**; one is substance. This plan sequences them, and its central
 > claim is that the order matters more than any individual item: **the upstream
 > filings must come first, not last**, because they are the only action that
@@ -12,7 +12,7 @@
 > site and a validation report excluded from it. Phase 1 files three of the
 > seventeen drafts and then **waits**. Phase 2 lands the divergence records while
 > the wait runs. Phase 3 cuts `1.0.0`. Phase 4 broadcasts, in a fixed order, with
-> the manager email deliberately ahead of the public posts. Phase 5 records the
+> any private notifications deliberately ahead of the public posts. Phase 5 records the
 > adoption input the round produced and nobody owns.
 >
 > **Phase 0 is done.** GitHub Pages is enabled with source *GitHub Actions*
@@ -42,7 +42,7 @@ correction is load-bearing for the sequencing:
 | Plans 37 and 38 are implemented | **Both are `proposed`.** No `known_divergences` records, no `geocase.stac`, no `compare_arrays`, no new cases. Nothing from either has landed. |
 | "Publish a new version" | **`1.0.0rc3` is already on real PyPI**, not only TestPyPI — `rc1`, `rc2`, `rc3` all published, tagged `v1.0.0rc1..rc3`. So the action is `1.0.0`, not a first release. |
 | "Publish the docs on GitHub Pages" | **`https://farzinashouri.github.io/geocase` returns 404.** `mkdocs.yml` names it as `site_url` and `.github/workflows/pages.yml` is committed and correct; Pages was simply never enabled in repository settings. |
-| "Contribute to the open source libs" | **Nothing has been filed.** 17 ready-to-paste drafts sit in `/Users/farzinashouri/projects/geocase_validator/issues/`, plus 2 round-1 reproductions in `geocase_validation/findings/`. |
+| "Contribute to the open source libs" | **Nothing has been filed.** 17 ready-to-paste drafts sit in `~/projects/geocase_validator/issues/`, plus 2 round-1 reproductions in `geocase_validation/findings/`. |
 
 Three of those four are cheap to fix and one of them — Pages — is a repository
 setting with no code attached. But the fourth is the one this plan is organised
@@ -59,14 +59,14 @@ plainly and this plan adopts it as its premise:
 > written.
 
 Every broadcast item on the list is a claim addressed to a different audience —
-a manager, an editor, a professional network — and each is materially the same
+a private audience, an editor, a professional network — and each is materially the same
 claim: *this corpus finds real bugs in software people depend on.* Today that
 claim rests entirely on the author's own analysis of the author's own corpus.
 One accepted upstream issue converts it into a claim a third party has agreed
 with, in public, with a URL.
 
 The converse is the actual risk. Broadcasting first stakes public credibility —
-and a manager's read of the author's judgement — on a finding set that no
+and a reader's assessment of the author's judgement — on a finding set that no
 maintainer has yet looked at. If two of the three turn out to be known,
 intentional, or wrong, that is a fact worth learning from a GitHub thread rather
 than from a comment under a LinkedIn post. The filings are cheap, already
@@ -167,7 +167,7 @@ things were wrong with where it lived:
 
 That exclusion was correct while the drafts were unfiled and the findings
 unconfirmed. It stops being correct the moment the report is the thing being
-linked from an article, a manager email and a LinkedIn post.
+linked from an article, a private notification and a LinkedIn post.
 
 Three options were considered:
 
@@ -217,7 +217,7 @@ which three and why; this plan changes **when**, not **what**.
 ### 1.1 File exactly three
 
 All 17 drafts are confirmed present in
-`/Users/farzinashouri/projects/geocase_validator/issues/`. File these three:
+`~/projects/geocase_validator/issues/`. File these three:
 
 | draft | why this one |
 |---|---|
@@ -346,7 +346,7 @@ rule exists to prevent.
   waiting for nobody to install it.
 - **An rc cannot be cited.** Every broadcast item in Phase 4 says "pip install
   geocase". `1.0.0rc3` requires `--pre`, which is friction at exactly the moment
-  a reader's interest is highest, and it signals *not finished* to a manager and
+  a reader's interest is highest, and it signals *not finished* to a reader and
   an editor both.
 
 ### 3.2 The one real question: what is in `1.0.0`'s public surface
@@ -408,34 +408,11 @@ Entry condition: Phase 0 done, Phase 1 filed **and** at least two weeks elapsed,
 Phase 3 tagged and on PyPI. The order within this phase is not arbitrary and is
 the second-most important claim in this plan after "upstream first".
 
-### 4.1 The manager email — **before** the public posts
+### 4.1 Private notifications first
 
-Ahead of the article and the post, for two reasons that have nothing to do with
-courtesy:
-
-1. **Employment and IP.** Personal-time work on public open source is
-   ordinarily uncontroversial, but the question of whether an employer has a
-   claim on it, or a policy about publishing under one's own name, is one to
-   surface **privately, by the author, first** — not to have raised by someone
-   else after a LinkedIn post has been seen. If there is any friction, it is far
-   cheaper here.
-2. **A manager who reads about it publicly first has been mildly embarrassed**,
-   and that is a wholly avoidable cost for something that reflects well.
-
-What the email should contain, shortest form that survives:
-
-- **Lead with the outcome, not the project.** *"I found and reported N defects in
-  widely-used geospatial libraries"* — a defect count in named, depended-upon
-  software is legible to a manager in a way "I built a test corpus" is not.
-- **State plainly that it is personal-time work on public open source**, with
-  the PyPI and Pages links. Do not bury this.
-- **Name whichever of the ten libraries are in the team's own stack**, if any.
-  This is the line that turns it from a hobby into demonstrated relevant
-  expertise, and it is the only line that has any chance of changing what work
-  comes the author's way.
-- **Whatever Phase 1.3 recorded**, stated accurately — including "filed, no
-  response yet". A manager who later sees a dispute on one of the three should
-  have heard the caveat from the author first.
+Any private notifications the author needs to make go **before** the public
+posts, not after. The details are the author's own and are deliberately not
+recorded in this repository.
 
 ### 4.2 The article
 
@@ -579,7 +556,7 @@ python scripts/verify_dist.py   # case count 154, wheel/sdist sizes
   and the plans that build them.
 
 **Phase 4**
-- The manager email precedes the article and the post.
+- Any private notifications precede the article and the post.
 - The published report's closing line states what was filed and what came back,
   and no longer says "Nothing has been filed upstream."
 - The coverage-probe table, wherever quoted, carries its stated method limit.
@@ -600,7 +577,7 @@ python scripts/verify_dist.py   # case count 154, wheel/sdist sizes
 | week 1–3 | 2 divergence records + convention gates | blocks Phase 3 |
 | week 1–3 | 1.5 verify the coverage probe | blocks 4.2 |
 | week 3–4 | 3 cut `1.0.0` | blocks Phase 4 |
-| week 4+ | 4.1 manager email | blocks 4.2, 4.3 |
+| week 4+ | 4.1 private notifications | blocks 4.2, 4.3 |
 | week 4+ | 4.2 article, then 4.3 LinkedIn | — |
 | any time | 5 record the fixture-pack decision | no |
 

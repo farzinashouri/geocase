@@ -21,8 +21,7 @@ tags:
   - irregular_geometry
   - procedural
 
-risk_types:
-  - none
+risk_types: []
 
 behavioral_goal: >
   Confirm that a vertex-dense, highly irregular polygon loads and validates

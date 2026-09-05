@@ -31,10 +31,10 @@ tags:
   - procedural
 
 risk_types:
-  - dtype_drift
-  - partial_read_blind_spot
-  - timezone_normalization
-  - spec_nonconformance
+  - attribute/timezone_normalization
+  - dtype/drift
+  - format/partial_read_blind_spot
+  - format/spec_nonconformance
 
 behavioral_goal: >
   Expose consumers that normalize, drop or freeze a UTC offset inferred from

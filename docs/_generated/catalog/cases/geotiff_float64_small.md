@@ -60,9 +60,9 @@ Confirm that 64-bit floating-point rasters open with the correct dtype and prese
 
 ## Risk types covered
 
-- [`dtype_coercion`](../risk/dtype-coercion.md)
-- [`nodata_ignored`](../risk/nodata-ignored.md)
-- [`precision_loss`](../risk/precision-loss.md)
+- [`dtype/coercion`](../risk/dtype-coercion.md)
+- [`nodata/ignored`](../risk/nodata-ignored.md)
+- [`precision/loss`](../risk/precision-loss.md)
 
 ## Expected behavior
 
@@ -73,6 +73,17 @@ Confirm that 64-bit floating-point rasters open with the correct dtype and prese
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
 | `expected_shape` | `[10, 10]` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `7.2590253021` |
+| Mean including NoData | `-192.8661552039` |
+| NoData pixels | `2` |
+| Bounds (case CRS) | `[500000.0, 900.0, 500100.0, 1000.0]` |
 
 ## Notes
 
@@ -132,11 +143,11 @@ Single-band `float64` raster for validating high-precision floating-point dtype 
   },
   "keywords": [
     "dtype",
-    "dtype_coercion",
+    "dtype/coercion",
     "float64",
     "geotiff",
-    "nodata_ignored",
-    "precision_loss",
+    "nodata/ignored",
+    "precision/loss",
     "raster"
   ],
   "license": "MIT",
@@ -149,6 +160,37 @@ Single-band `float64` raster for validating high-precision floating-point dtype 
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "float64_sample.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 7.2590253021
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": -192.8661552039
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 2
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        900.0,
+        500100.0,
+        1000.0
+      ]
     }
   ],
   "spatialCoverage": {

@@ -61,8 +61,8 @@ Expose workflows that assume a polygon read from any format keeps the RFC 7946 r
 
 ## Risk types covered
 
-- [`format_specific`](../risk/format-specific.md)
-- `ring_orientation`
+- [`format/limitation`](../risk/format-limitation.md)
+- [`geometry/ring_orientation`](../risk/geometry-ring-orientation.md)
 
 ## Expected behavior
 
@@ -176,11 +176,11 @@ assert it at all.
 
 ## Related cases
 
+- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
 - [Shapefile Legacy DBF Encoding](shapefile_encoding_legacy.md) -- `shapefile_encoding_legacy`
 - [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
 - [Empty Geometry in GeoPackage](empty_geometry_gpkg.md) -- `empty_geometry_gpkg`
-- [GeoJSON Precision Loss Roundtrip](precision_loss_geojson_roundtrip.md) -- `precision_loss_geojson_roundtrip`
-- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
+- [Format-limited Precision Polygon](format_limited_precision_polygon.md) -- `format_limited_precision_polygon`
 
 <script type="application/ld+json">
 {
@@ -196,7 +196,9 @@ assert it at all.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "format/limitation",
     "format_specific",
+    "geometry/ring_orientation",
     "polygon",
     "ring_orientation",
     "shapefile",

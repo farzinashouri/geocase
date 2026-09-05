@@ -59,10 +59,6 @@ pip install "geocase[all]"
 
 Provide baseline multipolygon coverage for loading and geometry-type selector behavior.
 
-## Risk types covered
-
-- [`none`](../risk/none.md)
-
 ## Expected behavior
 
 | Assertion | Expected |
@@ -101,11 +97,11 @@ Baseline MultiPolygon case for multipart polygon coverage.
 
 ## Related cases
 
-- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
-- [Dense Ring Polygon (4096 vertices, GeoPackage)](dense_ring_polygon_4k_gpkg.md) -- `dense_ring_polygon_4k_gpkg`
-- [Fractal Coastline Polygon](fractal_coastline_polygon.md) -- `fractal_coastline_polygon`
-- [Simple Valid LineString](simple_valid_linestring.md) -- `simple_valid_linestring`
-- [Simple Valid MultiLineString](simple_valid_multilinestring.md) -- `simple_valid_multilinestring`
+- [MultiPolygon CSV WKT Baseline](multipolygon_csv_wkt_baseline.md) -- `multipolygon_csv_wkt_baseline`
+- [MultiPolygon FlatGeobuf Baseline](multipolygon_flatgeobuf_baseline.md) -- `multipolygon_flatgeobuf_baseline`
+- [MultiPolygon GeoPackage Baseline](multipolygon_geopackage_baseline.md) -- `multipolygon_geopackage_baseline`
+- [MultiPolygon GML Baseline](multipolygon_gml_baseline.md) -- `multipolygon_gml_baseline`
+- [MultiPolygon KML Baseline](multipolygon_kml_baseline.md) -- `multipolygon_kml_baseline`
 
 <script type="application/ld+json">
 {
@@ -123,7 +119,6 @@ Baseline MultiPolygon case for multipart polygon coverage.
   "keywords": [
     "multipart",
     "multipolygon",
-    "none",
     "valid",
     "vector"
   ],

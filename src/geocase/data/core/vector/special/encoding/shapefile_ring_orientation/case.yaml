@@ -25,8 +25,8 @@ tags:
   - format_specific
 
 risk_types:
-  - ring_orientation
-  - format_specific
+  - format/limitation
+  - geometry/ring_orientation
 
 behavioral_goal: >
   Expose workflows that assume a polygon read from any format keeps the

@@ -61,9 +61,9 @@ Expose loaders that incorrectly handle EMPTY geometries in GeoPackage format. De
 
 ## Risk types covered
 
-- `empty_geometry_handling`
-- [`format_specific`](../risk/format-specific.md)
-- [`null_empty_conflation`](../risk/null-empty-conflation.md)
+- [`format/limitation`](../risk/format-limitation.md)
+- [`geometry/empty`](../risk/geometry-empty.md)
+- [`geometry/null_empty_conflation`](../risk/geometry-null-empty-conflation.md)
 
 ## Expected behavior
 
@@ -172,11 +172,11 @@ This case is **GeoPackage-specific** because of SQLite's explicit NULL handling.
 
 ## Related cases
 
+- [Empty Polygon](empty_polygon.md) -- `empty_polygon`
+- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
 - [First NULL After 10,000 Non-NULL Values (GeoPackage)](null_after_batch_boundary_gpkg.md) -- `null_after_batch_boundary_gpkg`
 - [GeoJSON Precision Loss Roundtrip](precision_loss_geojson_roundtrip.md) -- `precision_loss_geojson_roundtrip`
 - [Shapefile Legacy DBF Encoding](shapefile_encoding_legacy.md) -- `shapefile_encoding_legacy`
-- [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
-- [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
 
 <script type="application/ld+json">
 {
@@ -193,11 +193,12 @@ This case is **GeoPackage-specific** because of SQLite's explicit NULL handling.
   },
   "keywords": [
     "empty",
-    "empty_geometry_handling",
+    "format/limitation",
     "format_specific",
+    "geometry/empty",
+    "geometry/null_empty_conflation",
     "geometry_special",
     "geopackage",
-    "null_empty_conflation",
     "null_handling",
     "vector"
   ],

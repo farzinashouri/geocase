@@ -55,7 +55,7 @@ Verify that latitude/longitude dimensions are correctly identified, fill values 
 
 ## Risk types covered
 
-- [`nodata_ignored`](../risk/nodata-ignored.md)
+- [`nodata/ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -165,7 +165,7 @@ against a file whose dimensions are genuinely non-conventional.
     "masking",
     "netcdf",
     "nodata",
-    "nodata_ignored"
+    "nodata/ignored"
   ],
   "license": "MIT",
   "creator": {

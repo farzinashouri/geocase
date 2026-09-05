@@ -23,7 +23,7 @@ tags:
   - antimeridian
 
 risk_types:
-  - zone_selection
+  - crs/zone_selection
 
 behavioral_goal: >
   Confirm that a projected polygon in the first UTM zone reprojects to WGS84

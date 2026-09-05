@@ -24,8 +24,7 @@ tags:
   - utm_zone_boundary
 
 risk_types:
-  - utm_zone_mismatch
-  - zone_selection
+  - crs/zone_selection
 
 behavioral_goal: >
   Confirm that the same ground footprint reprojected via two adjacent UTM

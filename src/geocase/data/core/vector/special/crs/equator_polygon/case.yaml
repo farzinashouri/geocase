@@ -24,8 +24,8 @@ tags:
   - edge_case
 
 risk_types:
-  - hemisphere_boundary
-  - utm_zone_ambiguity
+  - crs/zone_selection
+  - extent/equatorial
 
 behavioral_goal: >
   Ensure polygon-based utilities handle geometries that straddle the

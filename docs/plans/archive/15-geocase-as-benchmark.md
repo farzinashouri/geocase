@@ -1,27 +1,27 @@
-# Plan 15 — GeoCase as a benchmark for silent failures in LLM-generated geospatial code
+# Plan 15 — A benchmark for silent failures in LLM-generated geospatial code, built on the catalog
 
-> **Archived — implemented 2026-08-10. Retained as an implementation log.** Phases 1, 3 and a stripped Phase 4 are built. Superseded as strategy by [Plan 20](../20-restart-spec-first.md), which demotes the benchmark from product to instrument.
+> **Archived — implemented 2026-08-10. Retained as an implementation log.** Phases 1, 3 and a stripped Phase 4 are built. The benchmark ships as an additional instrument alongside the library, not in place of it.
 >
 > The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
 
-> **Status: proposed.** This plan executes the salvage path left by
-> [Plan 14](14-reposition-as-correctness-library.md), which its own Step 0 gate rejected.
-> If adopted it supersedes the catalog-as-product framing in
-> [`development-plan.md`](../development-plan.md) and retires most of
+> **Status: proposed.** This plan proposes an **addition**: a benchmark subsystem built on
+> top of the existing catalog, shipped beside the library rather than instead of it.
+> It leaves the catalog, the public API and the pytest workflow in place and unchanged.
 > [Plan 11](11-distribution-pypi-and-conda.md)'s and [Plan 12](12-docs-site-publication.md)'s
-> catalog-shaped scope; [Plan 13](13-cross-format-canonical-convergence.md) becomes optional
-> rather than a precondition, because the benchmark's oracles are computed from first
+> catalog-shaped scope stands; [Plan 13](13-cross-format-canonical-convergence.md) is
+> independent of this work, because the benchmark's oracles are computed from first
 > principles and never read the fixture corpus.
 
 ## Context
 
-[Plan 14](14-reposition-as-correctness-library.md) proposed repositioning GeoCase as a
-correctness library and gated itself on a one-day falsification experiment with a decision
-rule fixed in advance. The gate ran on 2026-08-09 and fired: ten fresh coding agents, given
+An earlier proposal to reposition GeoCase as a correctness library gated itself on a one-day
+falsification experiment with a decision rule fixed in advance. The gate ran on 2026-08-09 and
+fired: ten fresh coding agents, given
 neutral prompts with no hint that edge cases existed, produced **9 of 10 operations fully
 correct** — including the Svalbard UTM exception, the NoData sentinel, the TMS row flip, the
 donut label point, Voronoi cell ordering, and dateline clustering, length and interpolation.
-The library is redundant. Evidence:
+So a *correctness-library* framing — one that assumes models get these operations wrong —
+is not the framing the evidence supports. Evidence:
 `tests/benchmark/agent_baseline/RESULTS.md`.
 
 The one operation that failed is the reason this plan exists. `buffer_m` across the
@@ -33,21 +33,21 @@ defect they had introduced**. Their verification could not see the bug by constr
 
 That is the finding, and it is a finding about *measurement*, not about geospatial. The
 artifact that produced it — neutral prompt → generated module → first-principles oracle →
-`PASS`/`SILENT`/`LOUD`/`MISSING` classification — is the only thing the experiment produced
-positive evidence for. Plan 14 already anticipated this, listing the harness as a
+`PASS`/`SILENT`/`LOUD`/`MISSING` classification — is worth keeping in its own right. An
+earlier proposal already anticipated this, listing the harness as a
 "first-class deliverable… realistically the only marketing channel this project has".
 
-**This plan promotes the instrument to the product.** GeoCase becomes a reproducible
+**This plan adds the instrument alongside the library.** GeoCase gains a reproducible
 benchmark measuring whether LLM coding agents write geospatial code that silently lies,
-across free and paid models, on two execution tracks, publishing a leaderboard.
+across free and paid models, on two execution tracks, publishing a leaderboard — while the
+catalog, the assertions and the pytest workflow continue to serve the users they already have.
 
-**Why this pivot is legitimate where a fourth reframing of the library would not be.** Plan
-14's risk section says plainly: *"If Step 0 fails, stop — do not look for a fourth place to
-put the value."* That injunction targets relocating the *library's* value. This plan does the
-opposite: it abandons the library thesis entirely and keeps only what the experiment
-measured. The distinguishing test is falsifiability under improvement — if next year's models
-score 10/10, a correctness library becomes more pointless, while the benchmark simply
-publishes another data point. It measures the trend instead of betting against it.
+**Why an addition rather than a replacement.** The two surfaces answer different questions and
+share a corpus: the library asks *does your code handle this case*, the benchmark asks *does a
+model's generated code handle it*. Neither answer substitutes for the other, and the benchmark
+is falsifiable under improvement in a way that costs the library nothing — if next year's
+models score 10/10, the benchmark simply publishes another data point while the catalog's value
+to a human writing tests is unchanged.
 
 **Headline metric, everywhere: the silent-failure rate.** Not pass rate. A loud failure is one
 the model's own test run would catch; a silent one is a plausible wrong answer that survives
@@ -57,8 +57,7 @@ which is the gap this project occupies.
 ### Intended outcome
 
 - ~20 tasks, each a neutral prompt plus a first-principles oracle, ~10 ported from Step 0 and
-  ~10 derived from the Group A trap survey in `~/projects/GeoCase_Studies`, classified in
-  [Plan 14](14-reposition-as-correctness-library.md).
+  ~10 derived from the Group A trap survey in `~/projects/GeoCase_Studies`.
 - Two tracks: **bare** (single-shot completion, runs on every model) and **agentic**
   (sandboxed self-verify loop, matching the Step 0 condition).
 - An automated OpenRouter runner covering free and paid models, plus a documented manual
@@ -75,15 +74,15 @@ Four were settled before drafting and the plan is designed within them.
 |---|---|---|
 | Model access | OpenRouter runner **plus** a manual coding-agent-CLI protocol | One key reaches GPT/Gemini/DeepSeek/Qwen/Llama and the free tier uniformly; Claude Code, Cursor and Codex CLI have no equivalent API and must be driven by hand |
 | Execution conditions | Two tracks: **bare** and **agentic** | Bare runs on every model and is maximally comparable; agentic reproduces the Step 0 condition, which is where the `buffer_m` finding lives |
-| Repo pivot | Full, in **two stages** | Stage 1 stands the benchmark up as the product; Stage 2 archives the catalog machinery only once it does |
+| Repo scope | **Additive** | The benchmark is stood up beside the existing library; the catalog machinery, the public API and the pytest workflow stay in place |
 | Leaderboard | GitHub Pages via the existing mkdocs + material setup | Already a CI job; generated pages with a `--check` freshness gate follow the repo's established convention |
 
 Three further decisions are fixed here:
 
 - **Keep the distribution name `geocase`.** It is published, GIS-adjacent, and the benchmark
   is still built from geospatial cases.
-- **Version `2.0.0.dev0` during Stage 1, `2.0.0` at the end of Stage 2.** Stage 2 removes the
-  public API, so the pivot is a major.
+- **Ship as a minor version.** Nothing in the public API is removed, so the benchmark arrives
+  additively behind the `bench` extra rather than as a breaking major.
 - **Benchmark code lives at `src/geocase/benchmark/`,** installable via a `bench` extra, so the
   tasks, graders and runner ship rather than living under `tests/`.
 
@@ -124,8 +123,7 @@ reworking.
 
 **Out of scope until expansion:** the Phase 2 results schema and pin test (keep the raw run
 directories committed so they can be migrated later), the Phase 6 leaderboard and Pages
-deploy, the Phase 7 repositioning and version bump, Phase 8, and all of Stage 2. The catalog
-stays untouched.
+deploy, the Phase 7 documentation pass, and Phase 8. The catalog stays untouched.
 
 **What the one-off deliberately gives up:** reproducibility guarantees for third parties, a
 comparable second run, and the trend-measurement claim. The output is a *report*
@@ -141,13 +139,12 @@ the expansion — hash the prompts into the findings write-up at run time so the
 
 ---
 
-## Stage 1 — the benchmark becomes the product
+## Building the benchmark alongside the library
 
 ### Phase 0 — Plan doc and repositioning decisions
 
-**Files:** create this document; modify [`index.md`](../index.md) (add plan 15; mark plan 14's
-salvage path as executed by it), [`14-reposition-as-correctness-library.md`](14-reposition-as-correctness-library.md)
-(one status line pointing here), `mkdocs.yml` (nav entry).
+**Files:** create this document; modify [`index.md`](../index.md) (add plan 15),
+`mkdocs.yml` (nav entry).
 
 **Verify:** `mkdocs build --strict`.
 
@@ -432,22 +429,21 @@ Fable 5 run as its first row.
 > **USER ACTION U5.** Set the repository's Pages source to "GitHub Actions", and approve the
 > public framing and title of the leaderboard before the first deploy.
 
-### Phase 7 — Stage 1 repositioning
+### Phase 7 — Documenting the addition
 
-- `README.md`, full rewrite: what the benchmark measures, the four-way taxonomy, the headline
+- `README.md` gains a benchmark section: what it measures, the four-way taxonomy, the headline
   finding (`buffer_m` antimeridian, 2/2 trials, invisible to the agents' own geodesic radial
   check), the leaderboard link, how to run both tracks, how to add a task, and how to grade
-  your own implementations against the oracles. The catalog is
-  demoted to a single history paragraph pending Stage 2.
-- `pyproject.toml`: description becomes "A benchmark measuring silent failures in
-  LLM-generated geospatial code"; keywords gain `llm`, `benchmark`, `evaluation`, `agents`;
-  version `2.0.0.dev0`. The `pytest11` entry point and the `Framework :: Pytest` classifier
-  stay until Stage 2.
-- `docs/index.md` becomes benchmark-first.
+  your own implementations against the oracles. The catalog keeps its place at the top — the
+  benchmark is described after it, not in front of it.
+- `pyproject.toml`: keywords gain `llm`, `benchmark`, `evaluation`, `agents`; the `bench`
+  extra is declared. The `pytest11` entry point and the `Framework :: Pytest` classifier stay.
+- `docs/index.md` keeps its catalog-first framing and links the benchmark as an additional
+  surface.
 
 **Verify:** the full local CI — `python -m pytest tests -q`, `ruff format --check src tests`,
 `ruff check src tests`, `mypy src`, `mkdocs build --strict`, and the catalog `--check` scripts,
-which stay green because the catalog is untouched until Stage 2.
+which stay green because the catalog is untouched.
 
 ### Phase 8 (optional) — Contamination hardening
 
@@ -466,39 +462,20 @@ answers. Mitigations in order of cost:
 
 ---
 
-## Stage 2 — Archive the catalog machinery
+## Not adopted — the catalog stays
 
-**Phase 9. Precondition: the leaderboard is live with at least three models across both
-tracks** — that is, after U3 and U4. Nothing here starts before the benchmark stands on its
-own.
+An earlier draft of this plan carried a second stage that would have deleted the public
+catalog surface — the pytest plugin, `geocase.api`, the selectors and suites, `examples/` —
+once the leaderboard was live, and shipped the result as a breaking `2.0.0`.
 
-**Delete** the public catalog surface: `src/geocase/pytest_plugin/` together with the
-`pytest11` entry point, the marker declarations and the `Framework :: Pytest` classifier;
-`src/geocase/api/`; the catalog `suites`, `selectors` and `manifests` public API; the one-line
-assertion modules; `examples/`; `extended-manifests/`; the catalog-page and coverage-matrix
-scripts. Their tests go in the same commit as the code they cover — expect the collected count
-to fall from 1,179 to the benchmark suite plus retained internals.
+**That stage was not adopted, and is recorded here only so the decision is legible.** The
+benchmark is an addition: it earns its place by measuring something the library does not,
+not by taking anything away from it. The catalog, the public API and the pytest workflow are
+what v1.0's compatibility promise covers, and they stay.
 
-**Keep, demoted to private:** `assertions/format_compliance.py` and `assertions/footprint.py`
-per Plan 14's salvage path, plus `cases/`, the catalog loader core, `loaders/` and `data/`,
-consolidated under `geocase._corpus/` — out of the docs and out of the strict mypy gate. The
-corpus-feeding scripts survive only if a benchmark fixture actually uses them; since the
-graders build their fixtures inline, the likely answer is that they do not. This is a decision
-point at execution time, not a foregone conclusion.
-
-**CI:** drop the GDAL-container catalog job, or reduce it to a `_corpus` checksum freshness
-check if `_corpus` survives. The tests and docs jobs remain.
-
-**Docs:** catalog user guides move to `docs/archive/` with tombstone notes; `philosophy.md` is
-rewritten for the benchmark; `CHANGELOG.md` gains the 2.0.0 breaking-change entry.
-
-**Verify:** `python -m pytest tests -q`; `python -m build && python scripts/verify_dist.py`;
-in a clean venv, `pip install dist/*.whl && python -c "import geocase.benchmark"`; and
-`pytest --co -q` in a scratch project to confirm the plugin no longer auto-registers.
-
-> **USER ACTION U6.** Approve the deletion scope — particularly whether `_corpus` survives at
-> all — and settle the PyPI strategy: leave `1.0.0rc1` published with a 2.0 breaking-change
-> notice, or yank it. Decide whether the conda `recipe/` is abandoned.
+What did carry forward from that thinking is narrow and non-destructive: the benchmark lives
+under `src/geocase/benchmark/` behind a `bench` extra, so a user who only wants the fixtures
+never installs it.
 
 ---
 
@@ -526,7 +503,7 @@ in a clean venv, `pip install dist/*.whl && python -c "import geocase.benchmark"
 8. **Self-grading is a side door, not a second product.** Grading human-written modules is
    documented and supported because the CLI gets it for free, but expanding it — new
    signatures on request, adapters for existing codebases, a "correctness suite" framing —
-   is Plan 14's rejected library thesis returning through the back. New coverage arrives
+   would be scope creep into a second product. New coverage arrives
    only as new benchmark tasks, on the benchmark's terms.
 9. **Single-family evidence is the standing weakness.** `RESULTS.md` lists it first: the only
    run so far is Claude, the same family that authored both GeoCase and the harness. Until U3
@@ -575,7 +552,6 @@ python -m build && python scripts/verify_dist.py
 | U3 | 4 | Run the automated shakedown, free then paid; spot-check; commit the runs |
 | U4 | 5 | Run the manual sessions: Claude Code at k=3, Cursor, Codex CLI |
 | U5 | 6 | Enable GitHub Pages via Actions; approve the public framing |
-| U6 | 9 | Approve the Stage 2 deletions and the PyPI/conda strategy |
 
 ---
 
@@ -599,24 +575,20 @@ python -m build && python scripts/verify_dist.py
 - `tests/benchmark/agent_baseline/{prompts,generated,results.json}` →
   `results/runs/2026-08-09_claude-fable-5_agentic-manual/` and the task packages
 - `tests/benchmark/agent_baseline/RESULTS.md` → `docs/benchmark/findings/2026-08-09-claude-fable-5.md`
-- Stage 2: `src/geocase/{cases,catalog,loaders,data}/` and the two kept assertion modules →
-  `src/geocase/_corpus/`
-
 **Modified**
 
-- `pyproject.toml` — description, keywords, version, `bench` extra; Stage 2 removes the
-  `pytest11` entry point and the pytest classifier
-- `mkdocs.yml` — Benchmark nav section; Stage 2 archives the catalog guides
-- `.github/workflows/ci.yml` — leaderboard freshness gate; Stage 2 removes the catalog job
+- `pyproject.toml` — keywords, `bench` extra. The `pytest11` entry point and the pytest
+  classifier stay.
+- `mkdocs.yml` — Benchmark nav section, added beside the catalog guides
+- `.github/workflows/ci.yml` — leaderboard freshness gate, added beside the catalog job
 - `README.md`, `docs/index.md`, `docs/plans/index.md`, `CHANGELOG.md`
 
 **Deleted**
 
 - `tests/benchmark/agent_baseline/` (Phase 2, after migration)
 - `site/` (Phase 6)
-- Stage 2: `src/geocase/pytest_plugin/`, `src/geocase/api/`, catalog suites/selectors/manifests,
-  the one-line assertion modules, `examples/`, `extended-manifests/`, the catalog-page and
-  coverage-matrix scripts, and their tests
+
+Nothing in the catalog, the public API or the pytest plugin is removed.
 
 **External — not modified, but load-bearing**
 

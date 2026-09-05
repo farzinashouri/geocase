@@ -21,8 +21,8 @@ tags:
   - dimension-order
 
 risk_types:
-  - coordinate_order
-  - dimension_mismatch
+  - band/dimension_mismatch
+  - crs/axis_order
 
 behavioral_goal: >
   Verify that dimension order is read from the file rather than assumed,

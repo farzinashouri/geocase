@@ -19,8 +19,8 @@ tags:
   - antimeridian
 
 risk_types:
-  - coordinate_wrapping
-  - bbox_misinterpretation
+  - extent/bbox_misinterpretation
+  - extent/coordinate_wrapping
 
 behavioral_goal: >
   Provide a canonical antimeridian polygon that heuristic crossing checks

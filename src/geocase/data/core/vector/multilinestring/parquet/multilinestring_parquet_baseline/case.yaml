@@ -18,10 +18,10 @@ tags:
   - baseline
   - parquet
   - cross_format_canonical
+  - format_comparison
 
 risk_types:
-  - format_comparison
-  - columnar_storage_behavior
+  - format/columnar_storage_behavior
 
 behavioral_goal: >
   Provide a canonical multiline encoded as GeoParquet so multipart columnar line loading can be compared against GeoJSON and Arrow-backed baselines.

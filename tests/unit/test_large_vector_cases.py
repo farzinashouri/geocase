@@ -180,7 +180,7 @@ def test_mixed_timezone_case_declares_its_gpkg_non_conformance() -> None:
     metadata = _metadata("mixed_timezone_after_batch_gpkg")
 
     assert metadata.params.get("gpkg_datetime_conformant") is False
-    assert "spec_nonconformance" in metadata.risk_types
+    assert "format/spec_nonconformance" in metadata.risk_types
 
 
 def test_mixed_timezone_offsets_are_stored_as_written() -> None:

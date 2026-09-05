@@ -60,8 +60,8 @@ Confirm GeoCase handles an RGB optical scene whose extent crosses the antimeridi
 
 ## Risk types covered
 
-- `antimeridian_split`
-- `bounds_normalization`
+- [`extent/antimeridian`](../risk/extent-antimeridian.md)
+- `extent/bounds_normalization`
 
 ## Expected behavior
 
@@ -76,9 +76,24 @@ Confirm GeoCase handles an RGB optical scene whose extent crosses the antimeridi
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `red`, `green`, `blue` |
 
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| NoData pixels | `0` |
+| Bounds (case CRS) | `[179.9, 0.68, 180.22, 1.0]` |
+
 ## Known consumer divergences
 
 Disagreements already investigated on this case. If your reader reproduces one of these, it is catalogued &mdash; not a new finding.
+
+**naive-tile-indexing** &mdash; any consumer flooring an unwrapped longitude into a tile index
+
+The footprint is unsplit and reaches longitude 180.22, so a consumer that derives a tile index by flooring the eastern bound requests a tile at longitude 180 -- outside the valid range for every tiling scheme, which raises rather than returning empty. Round 4 found this as a real crash, but only after hand-rolling the tile arithmetic to see where the footprint pointed: the geometry was already in the file and was not enough. Split the footprint at the antimeridian, or normalise to the wrapped (minx > maxx) convention, before indexing.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/41-positioning-and-the-geometry-thesis.md>
 
 **titiler** &mdash; titiler 0.24 / rio-tiler 8.x, GDAL 3.12.2
 
@@ -128,10 +143,10 @@ Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "antimeridian_split",
-    "bounds_normalization",
     "delivery:single-file",
     "eo",
+    "extent/antimeridian",
+    "extent/bounds_normalization",
     "geography:dateline",
     "geotiff",
     "optical",
@@ -148,6 +163,25 @@ Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "optical_dateline_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        179.9,
+        0.68,
+        180.22,
+        1.0
+      ]
     }
   ],
   "spatialCoverage": {

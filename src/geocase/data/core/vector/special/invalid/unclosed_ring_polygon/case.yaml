@@ -22,10 +22,10 @@ tags:
   - parse_error
 
 risk_types:
-  - silent_invalid_geometry
-  - ring_closure_error
-  - topology_error
-  - parse_exception
+  - geometry/parse_exception
+  - geometry/ring_closure
+  - geometry/silent_invalid
+  - geometry/topology_error
 
 behavioral_goal: >
   Expose loaders or validators that silently accept unclosed polygon rings,

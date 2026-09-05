@@ -61,9 +61,9 @@ Expose consumers whose column dtype depends on how many rows they read. A schema
 
 ## Risk types covered
 
-- [`dtype_drift`](../risk/dtype-drift.md)
-- [`null_empty_conflation`](../risk/null-empty-conflation.md)
-- [`partial_read_blind_spot`](../risk/partial-read-blind-spot.md)
+- [`dtype/drift`](../risk/dtype-drift.md)
+- [`format/partial_read_blind_spot`](../risk/format-partial-read-blind-spot.md)
+- [`geometry/null_empty_conflation`](../risk/geometry-null-empty-conflation.md)
 
 ## Expected behavior
 
@@ -163,11 +163,11 @@ Written with `SPATIAL_INDEX=NO`; see the sibling case's notes for why.
   },
   "keywords": [
     "batch_boundary",
-    "dtype_drift",
+    "dtype/drift",
+    "format/partial_read_blind_spot",
+    "geometry/null_empty_conflation",
     "large",
-    "null_empty_conflation",
     "null_handling",
-    "partial_read_blind_spot",
     "point",
     "procedural",
     "vector"

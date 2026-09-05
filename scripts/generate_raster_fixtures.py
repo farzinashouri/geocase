@@ -164,6 +164,7 @@ def _specs() -> list[RasterSpec]:
         *_priority_2_4_specs(),
         *_footprint_edge_specs(),
         *_transform_convention_specs(),
+        *_single_variable_specs(),
         *_overlap_group_specs(),
         *_crs_family_specs(),
     ]
@@ -275,9 +276,101 @@ def _transform_convention_specs() -> list[RasterSpec]:
     ]
 
 
+#: Directory holding the single-variable controls (plan 40 phase 4).
+_SINGLE_VARIABLE_DIR = "single_variable"
+
+
+def _single_variable_specs() -> list[RasterSpec]:
+    """One variable each -- the controls for the conventions that paid.
+
+    Plan 40 phase 4. ``rotated_two_islands`` was round 3's one genuine
+    discovery and it bundles rotation *with* sparse islands *with* footprint
+    generation. The reporter wanted rotation alone, against a known-correct
+    bounding box, to prove ``_get_bounds`` wrong without arguing about the
+    islands:
+
+    > A failure with one possible cause is a better bug-finder than a case
+    > combining three risks.
+
+    So each of these differs from a plain north-up square in exactly one
+    respect. A defect that reproduces on the control **and** on the bundled
+    case is localised for free; one that reproduces only on the bundled case
+    says the interaction matters, which is also worth knowing.
+
+    Deliberately **not** new ``from_origin`` baselines: plans 37 §3.3 and 38
+    §4.5 both record that the corpus is thick there and that no format
+    baseline has found anything in three rounds. Two of these three carry a
+    convention no baseline has.
+    """
+    from rasterio.transform import Affine
+
+    size = 8
+    pixel = 20.0
+    left = 300000.0
+    bottom = 5000000.0
+    top = bottom + size * pixel
+
+    # A plain filled ramp. No sentinel, no holes, no islands -- anything that
+    # is not the isolated variable is deliberately absent.
+    filled = np.arange(size * size, dtype="float32").reshape(size, size)
+
+    def _spec(case_id: str, array: np.ndarray, transform: Any, **kwargs: Any):  # type: ignore[no-untyped-def]
+        return RasterSpec(
+            case_id=case_id,
+            primary=f"{case_id}.tif",
+            bands=[array],
+            dtype="float32",
+            crs="EPSG:32633",
+            transform=transform,
+            case_dir=_SINGLE_VARIABLE_DIR,
+            band_names=["value"],
+            **kwargs,
+        )
+
+    # rotated_only_square -- rotation and nothing else. nodata is left None
+    # rather than set-and-unused: a declared sentinel that never appears is
+    # the "declared but ungated" shape plan 28 phase 1 found six times.
+    angle = math.radians(30.0)
+    rotated_transform = Affine(
+        pixel * math.cos(angle),
+        -pixel * math.sin(angle),
+        left,
+        -pixel * math.sin(angle),
+        -pixel * math.cos(angle),
+        top,
+    )
+
+    # nodata_only_dem_small -- one sentinel, north-up, unrotated. The sentinel
+    # sits in the interior rather than on the border so that a consumer
+    # cropping edges cannot skip past it.
+    with_nodata = filled.copy()
+    with_nodata[3, 3] = -9999.0
+    with_nodata[4, 5] = -9999.0
+
+    # bottom_up_only_square -- positive e alone. Rows are flipped for the same
+    # reason bottom_up_dem_small's are: the file must describe the same
+    # ground, not the same array.
+    bottom_up = np.flipud(filled).copy()
+
+    return [
+        _spec("rotated_only_square", filled, rotated_transform),
+        _spec(
+            "nodata_only_dem_small",
+            with_nodata,
+            Affine(pixel, 0.0, left, 0.0, -pixel, top),
+            nodata=-9999.0,
+        ),
+        _spec(
+            "bottom_up_only_square",
+            bottom_up,
+            Affine(pixel, 0.0, left, 0.0, pixel, bottom),
+        ),
+    ]
+
+
 def _priority_2_4_specs() -> list[RasterSpec]:
     """Build the Priority 2–4 raster families (Step 9 of the action plan)."""
-    from rasterio.transform import Affine, from_origin as _origin
+    from rasterio.transform import from_origin as _origin
 
     # -- Priority 2: COG / overviews / compression ------------------------
     # COG scenes are 64x64 so a 16px internal tiling actually registers
@@ -881,9 +974,7 @@ def _write_geographic_twin(spec: RasterSpec, raster_path: Path) -> Path:
     """
     from rasterio.warp import calculate_default_transform, reproject
 
-    dest = raster_path.with_name(
-        raster_path.name.replace("_projected", "_geographic")
-    )
+    dest = raster_path.with_name(raster_path.name.replace("_projected", "_geographic"))
     with rasterio.open(raster_path) as src:
         transform, width, height = calculate_default_transform(
             src.crs, "EPSG:4326", src.width, src.height, *src.bounds

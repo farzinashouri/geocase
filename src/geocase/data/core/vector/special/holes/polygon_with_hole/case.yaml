@@ -20,8 +20,8 @@ tags:
   - interior_ring
 
 risk_types:
-  - incorrect_area
-  - ring_ordering
+  - geometry/ring_orientation
+  - measurement/incorrect_area
 
 behavioral_goal: >
   Verify that inner rings are preserved on load and that area

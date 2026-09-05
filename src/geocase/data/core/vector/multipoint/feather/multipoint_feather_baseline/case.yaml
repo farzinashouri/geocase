@@ -18,10 +18,10 @@ tags:
   - baseline
   - feather
   - cross_format_canonical
+  - format_comparison
 
 risk_types:
-  - format_comparison
-  - columnar_storage_behavior
+  - format/columnar_storage_behavior
 
 behavioral_goal: >
   Provide a canonical multipoint encoded as Feather so Arrow-backed multipart point loading can be compared against GeoJSON and driver-backed baselines.

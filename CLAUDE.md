@@ -35,12 +35,15 @@ python scripts/build_case_index.py --check
 python scripts/validate_catalog.py
 python scripts/validate_case_content.py   # declared assertions vs. real bytes
 python scripts/catalog_extent.py --check  # declared extent vs. real bytes (--write to regenerate)
+python scripts/catalog_truth.py --check   # declared ground truth vs. real bytes (--write to regenerate)
 python scripts/generate_raster_fixtures.py --check
 python scripts/generate_vector_fixtures.py --check
 python scripts/generate_netcdf_fixtures.py --check
 python scripts/generate_checksums.py --check
 python scripts/generate_catalog_pages.py --check
 python scripts/generate_raster_previews.py --check
+python scripts/generate_changelog_page.py --check   # docs/changelog.md vs. CHANGELOG.md
+python scripts/migrate_risk_types.py --check        # every risk_types term is canonical
 python scripts/generate_vector_coverage_matrix.py --output docs/_generated/vector-coverage-matrix.md
 python scripts/generate_raster_coverage_matrix.py --output docs/_generated/raster-coverage-matrix.md
 ```
@@ -70,6 +73,8 @@ Core data flow — keep this mental model:
 ## Conventions that bite
 
 - **Generated artifacts are gated.** `docs/_generated/*`, per-case catalog pages, checksums, and both coverage matrices are compared against a fresh regeneration in CI. Changing a case id, CRS, dtype, or nodata value means regenerating and committing.
+- **Corpus changes are named, never summarized.** Any change to a case's geometry, CRS, dtype, nodata value, id, or `risk_types` is listed in `CHANGELOG.md` **by case id and by what changed** — not as "fixed baseline consistency". The rc1 → rc3 `polygon_*_baseline` fix was correct and silently broke a downstream canary with no signal as to why; a user hitting a break searches for the case id or the error text. The convention is documented at the top of `CHANGELOG.md`.
+- **`risk_types` is a closed vocabulary.** Terms live in `src/geocase/catalog/risk_types.py` as `family/specific`; `validate_catalog.py` rejects anything else. Renaming one requires an entry in `RISK_TYPE_ALIASES` — it is a pinned v1.0 selector surface, so an unaliased rename silently breaks user queries.
 - **Never reformat benchmark artifacts.** `tests/benchmark/agent_baseline/generated` and `results/runs` are excluded from ruff: they must stay byte-identical because their `module_sha256` is recorded provenance.
 - mypy strictness is per-module: `geocase.catalog.*` and `geocase.api.*` are strict; the rest ratchets in v1.1. `tests/` is not typechecked.
 - Adding a case: see [docs/adding-a-case.md](docs/adding-a-case.md) — metadata-first, then `build_case_index.py`, then validate.

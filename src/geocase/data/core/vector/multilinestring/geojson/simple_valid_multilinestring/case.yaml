@@ -18,8 +18,7 @@ tags:
   - valid
   - baseline
 
-risk_types:
-  - none
+risk_types: []
 
 behavioral_goal: >
   Ensure multi-part line geometries are represented in core vector

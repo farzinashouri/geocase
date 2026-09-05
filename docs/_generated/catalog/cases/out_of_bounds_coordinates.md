@@ -61,11 +61,11 @@ Expose code that silently accepts coordinates outside valid geographic ranges. L
 
 ## Risk types covered
 
-- `coordinate_range_error`
-- `lat_lon_swap`
-- `projection_failure`
-- [`silent_invalid_geometry`](../risk/silent-invalid-geometry.md)
-- `spatial_index_failure`
+- `crs/lat_lon_swap`
+- `crs/projection_failure`
+- `extent/coordinate_range_error`
+- `format/spatial_index_failure`
+- [`geometry/silent_invalid`](../risk/geometry-silent-invalid.md)
 
 ## Expected behavior
 
@@ -169,14 +169,15 @@ what makes the swap silent rather than detectable.
   },
   "keywords": [
     "coordinate_error",
-    "coordinate_range_error",
+    "crs/lat_lon_swap",
+    "crs/projection_failure",
+    "extent/coordinate_range_error",
+    "format/spatial_index_failure",
+    "geometry/silent_invalid",
     "invalid",
     "lat_lon_swap",
     "out_of_bounds",
     "point",
-    "projection_failure",
-    "silent_invalid_geometry",
-    "spatial_index_failure",
     "vector"
   ],
   "license": "MIT",

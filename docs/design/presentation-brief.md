@@ -73,10 +73,10 @@ between those two numbers is the argument.
 
 ## Facts that are load-bearing
 
-Use these exactly. They are verified against the repo as of 2026-08-30.
+Use these exactly. They are verified against the repo as of 2026-09-05.
 
-- **153** bundled cases, **5.1 MB** total. Vector, raster, and NetCDF.
-- **1.0.0rc1 on PyPI**; `1.0.0rc2` in progress.
+- **166** bundled cases, **5.1 MB** total. Vector, raster, and NetCDF.
+- **1.0.0 on PyPI** (`pip install geocase`), after the `1.0.0rc1`–`rc3` candidates.
 - Compatibility promise covers exactly **two surfaces**: the pytest workflow
   (fixtures `geocase`, `geocase_case`, `geocase_cases`, `geocase_registry`;
   markers `geocase_case`, `geocase_suite`, `geocase_select`) and `import geocase`.

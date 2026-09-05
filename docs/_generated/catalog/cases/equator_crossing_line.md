@@ -61,8 +61,8 @@ Ensure line-based workflows can process geometries that cross the equator withou
 
 ## Risk types covered
 
-- `coordinate_sign_assumption`
-- `equatorial_boundary_case`
+- `extent/coordinate_sign_assumption`
+- [`extent/equatorial`](../risk/extent-equatorial.md)
 
 ## Expected behavior
 
@@ -122,10 +122,10 @@ Simple LineString crossing the equator for geographic boundary coverage.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "coordinate_sign_assumption",
     "crs",
     "equator",
-    "equatorial_boundary_case",
+    "extent/coordinate_sign_assumption",
+    "extent/equatorial",
     "linestring",
     "valid",
     "vector"

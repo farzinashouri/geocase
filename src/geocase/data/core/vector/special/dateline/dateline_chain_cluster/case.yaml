@@ -20,9 +20,9 @@ tags:
   - transitive_connectivity
 
 risk_types:
-  - coordinate_wrapping
-  - local_projection_distortion
-  - transitive_cluster_split
+  - crs/local_distortion
+  - extent/coordinate_wrapping
+  - geometry/transitive_cluster_split
 
 behavioral_goal: >
   Expose clustering logic that fails to connect a transitive dateline-spanning

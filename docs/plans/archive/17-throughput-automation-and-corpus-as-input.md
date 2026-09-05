@@ -440,9 +440,9 @@ appendix is scheduled**, and it must not be started before the run described bel
 
 ### The question
 
-[Plan 14](14-reposition-as-correctness-library.md) was rejected when its Step 0 gate fired:
-blind agents got **9 of 10** operations correct, so per the pre-committed rule the library
-was redundant. That verdict stands on the evidence it had — but note precisely what that
+An earlier correctness-library proposal was rejected when its Step 0 gate fired:
+blind agents got **9 of 10** operations correct, so per the pre-committed rule that particular
+framing did not carry. That verdict stands on the evidence it had — but note precisely what that
 evidence was: **one frontier model (Claude), on the agentic track, with tools and
 self-verification, n=1 for nine of the ten rows.**
 
@@ -465,9 +465,8 @@ is model capability and part is track. Phase 4 of this plan resolves it directly
 on the bare track, same tasks, same protocol. Until that run exists, "free models need this
 library" is suggestive, not demonstrated, and must not be asserted.
 
-**The pitch that survives is the weaker one Plan 14 already conceded.** Per
-[14-reposition-as-correctness-library.md:126-129](14-reposition-as-correctness-library.md),
-the framing had already moved from *"you didn't know"* to *"this is settled, verified, and
+**The pitch that survives is the weaker one that proposal already conceded.**
+The framing had already moved from *"you didn't know"* to *"this is settled, verified, and
 identical everywhere"* — a claim that never depended on models being ignorant, and so was
 never touched by Step 0. The 2026-08-11 probe data reinforces it: 11 of 11 replies named
 the antimeridian trap unprompted, and the generated code failed anyway. **Knowing the trap

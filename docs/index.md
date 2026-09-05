@@ -1,14 +1,25 @@
 ---
-description: "GeoCase is a pytest plugin and case catalog: 163 curated geospatial test cases covering NoData, antimeridian crossing, CRS mismatch and axis order."
+description: "GeoCase is a pytest plugin and case catalog: 166 curated geospatial test cases covering NoData, antimeridian crossing, CRS mismatch and axis order."
 ---
 
 # GeoCase
 
 GeoCase is an open geospatial testing toolkit and case catalog for realistic, reproducible, parameterized tests.
 
-> Status: **1.0.0rc1 is available on [PyPI](https://pypi.org/project/geocase/)**; this repository contains the next release candidate (`1.0.0rc3`). The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 163 bundled cases, 5.1 MB. Remote dataset transport is deferred to v1.1; see the [changelog](https://github.com/farzinashouri/geocase/blob/main/CHANGELOG.md).
+> Status: **1.0.0 is available on [PyPI](https://pypi.org/project/geocase/)** — `pip install geocase`. The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 166 bundled cases, 5.1 MB. Remote dataset transport is deferred to v1.1; see the [changelog](changelog.md).
 
 Most spatial tests use overly simple geometries or ad hoc local files. GeoCase provides a curated catalog of compact but behaviorally meaningful cases that can be selected into pytest suites by metadata such as category, risk type, test tier, format, and storage class.
+
+Most of the catalog is about **geometry, CRS and georeferencing conventions** — rotated
+geotransforms, bottom-up rasters, pixel-is-area versus pixel-is-point anchoring, antimeridian
+footprints, CRS mismatch, EPSG axis order, NoData. Radiometric conventions for Sentinel-1 and
+Sentinel-2 are one vertical inside that, not the thesis.
+
+**It works with plain GDAL.** `case.primary_path` is an ordinary filesystem path, so
+`gdal.Open` reads a case directly, and the base install needs only `pydantic`, `pyyaml` and
+`geofacts`. The extras are for the convenience loaders, not for reading the files. If your
+codebase moves pixels and geometry around on a GDAL-native stack, you are the audience this
+corpus serves best.
 
 ## Core ideas
 
@@ -26,7 +37,7 @@ Most spatial tests use overly simple geometries or ad hoc local files. GeoCase p
 
 ## Start here
 
-- **[Browse all 163 cases](_generated/catalog/compare.md)** — the case catalog, filterable and sortable, with coverage maps
+- **[Browse all 166 cases](_generated/catalog/compare.md)** — the case catalog, filterable and sortable, with coverage maps
 - New users: [`getting-started.md`](getting-started.md)
 - Testing a real function: [`testing-your-function-with-geocase.md`](testing-your-function-with-geocase.md)
 - Finding cases by metadata: [`case-discovery.md`](case-discovery.md)
@@ -41,7 +52,7 @@ Each folder under `docs/` holds one kind of document:
 - User guides at the top level explain how to select cases, write tests, and use GeoCase day to day.
 - `docs/contributing/` — how to work on GeoCase: workflow, conventions, and maintainer practices.
 - `docs/plans/` — what is planned and in what order, including the [roadmap](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md). Superseded plans stay in `docs/plans/archive/` as an implementation log.
-- `docs/design/` — future-facing designs that are not part of the core workflow.
+- `docs/design/` — future-facing designs for things that do not exist yet, such as a case-recommendation service. Kept in the repository and readable on [GitHub](https://github.com/farzinashouri/geocase/tree/main/docs/design), but not published here, so that a proposal is never mistaken for a shipping feature.
 - `docs/reference/` — descriptive maps of the project as it exists today, such as the [codebase summary](reference/codebase-summary.md).
 - `docs/_generated/` — pages built by scripts and gated in CI; never edit them by hand.
 

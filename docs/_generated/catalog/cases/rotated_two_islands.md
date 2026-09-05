@@ -59,8 +59,8 @@ Validate footprint extraction under rotated transform and disconnected valid pix
 
 ## Risk types covered
 
-- [`affine_transform_bug`](../risk/affine-transform-bug.md)
-- [`footprint_generation_error`](../risk/footprint-generation-error.md)
+- [`footprint/generation_error`](../risk/footprint-generation-error.md)
+- [`transform/rotated`](../risk/transform-rotated.md)
 
 ## Expected behavior
 
@@ -70,6 +70,18 @@ Validate footprint extraction under rotated transform and disconnected valid pix
 | `expect_crs` | yes |
 | `expected_shape` | `[8, 8]` |
 | `expected_transform_signs` | `negative_e`, `rotated` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `100.0` |
+| Mean including NoData | `-6685.265625` |
+| NoData pixels | `43` |
+| Bounds (case CRS) | `[1000.0, 1800.0, 1200.0, 2000.0]` |
+| Pixel to world (row, col, x, y) | `[[0.0, 0.0, 1012.5, 1987.5], [7.0, 7.0, 1187.5, 1812.5], [4.0, 4.0, 1112.5, 1887.5]]` |
 
 ## Known consumer divergences
 
@@ -237,13 +249,13 @@ affine with no reference at all; handing it one changes what it tests.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "affine_transform_bug",
     "edge",
     "footprint",
-    "footprint_generation_error",
+    "footprint/generation_error",
     "geotiff",
     "raster",
-    "rotated"
+    "rotated",
+    "transform/rotated"
   ],
   "license": "MIT",
   "creator": {
@@ -255,6 +267,62 @@ affine with no reference at all; handing it one changes what it tests.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "rotated_two_islands.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 100.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": -6685.265625
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 43
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        1000.0,
+        1800.0,
+        1200.0,
+        2000.0
+      ]
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_pixel_world_pairs",
+      "description": "Pixel to world (row, col, x, y)",
+      "value": [
+        [
+          0.0,
+          0.0,
+          1012.5,
+          1987.5
+        ],
+        [
+          7.0,
+          7.0,
+          1187.5,
+          1812.5
+        ],
+        [
+          4.0,
+          4.0,
+          1112.5,
+          1887.5
+        ]
+      ]
     }
   ],
   "spatialCoverage": {

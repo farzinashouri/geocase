@@ -61,9 +61,9 @@ Detect loaders that assume a single encoding or silently corrupt non-ASCII attri
 
 ## Risk types covered
 
-- [`attribute_loss`](../risk/attribute-loss.md)
-- [`encoding_error`](../risk/encoding-error.md)
-- [`mojibake`](../risk/mojibake.md)
+- [`attribute/encoding_error`](../risk/attribute-encoding-error.md)
+- [`attribute/loss`](../risk/attribute-loss.md)
+- [`attribute/mojibake`](../risk/attribute-mojibake.md)
 
 ## Expected behavior
 
@@ -143,12 +143,12 @@ robustness (`UTF-8`, `Latin-1`, `Windows-1252` style content).
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "attribute_loss",
+    "attribute/encoding_error",
+    "attribute/loss",
+    "attribute/mojibake",
     "attributes",
     "encoding",
-    "encoding_error",
     "i18n",
-    "mojibake",
     "text",
     "vector"
   ],

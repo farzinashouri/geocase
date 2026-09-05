@@ -30,7 +30,7 @@ consumers under Python 3.14.3 / GDAL 3.12.2, using the differential shape
 [`geocase.differential`](../../src/geocase/differential.py) documents: read each
 case two or three ways that must agree, and report the disagreement. Full
 report, harness, frozen per-method results and 16 standalone reproductions are
-in `/Users/farzinashouri/projects/geocase_validator/` (`findings/REPORT.md`,
+in `~/projects/geocase_validator/` (`findings/REPORT.md`,
 `findings/COMPARISON.md`).
 
 | Consumer | Version | Result |
@@ -520,7 +520,7 @@ party having said so**.
 ### 5.1 File a sample, not the whole batch
 
 Seventeen ready-to-paste drafts sit in
-`/Users/farzinashouri/projects/geocase_validator/issues/`. **File three**, not
+`~/projects/geocase_validator/issues/`. **File three**, not
 seventeen:
 
 - `odc-stac-crs-without-resolution-units.md` — the most severe, with a

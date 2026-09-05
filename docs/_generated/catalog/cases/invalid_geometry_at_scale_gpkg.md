@@ -61,8 +61,8 @@ Expose consumers that validate a prefix rather than a dataset: a first-batch rea
 
 ## Risk types covered
 
-- [`partial_read_blind_spot`](../risk/partial-read-blind-spot.md)
-- [`silent_invalid_geometry`](../risk/silent-invalid-geometry.md)
+- [`format/partial_read_blind_spot`](../risk/format-partial-read-blind-spot.md)
+- [`geometry/silent_invalid`](../risk/geometry-silent-invalid.md)
 
 ## Expected behavior
 
@@ -165,12 +165,12 @@ The R-tree is covered deliberately by the SpatiaLite cases, at one feature each.
   },
   "keywords": [
     "batch_boundary",
+    "format/partial_read_blind_spot",
+    "geometry/silent_invalid",
     "invalid",
     "large",
-    "partial_read_blind_spot",
     "polygon",
     "procedural",
-    "silent_invalid_geometry",
     "vector"
   ],
   "license": "MIT",

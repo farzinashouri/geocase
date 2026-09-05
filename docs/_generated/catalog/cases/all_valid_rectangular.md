@@ -59,7 +59,7 @@ Confirm footprint generation returns a clean geometry for a fully valid rectangu
 
 ## Risk types covered
 
-- [`footprint_generation_error`](../risk/footprint-generation-error.md)
+- [`footprint/generation_error`](../risk/footprint-generation-error.md)
 
 ## Expected behavior
 
@@ -68,6 +68,17 @@ Confirm footprint generation returns a clean geometry for a fully valid rectangu
 | `expect_loadable` | yes |
 | `expect_crs` | yes |
 | `expected_shape` | `[12, 12]` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `100.0` |
+| Mean including NoData | `100.0` |
+| NoData pixels | `0` |
+| Bounds (case CRS) | `[500000.0, 4199640.0, 500360.0, 4200000.0]` |
 
 ## Notes
 
@@ -221,7 +232,7 @@ affine with no reference at all; handing it one changes what it tests.
   "keywords": [
     "edge",
     "footprint",
-    "footprint_generation_error",
+    "footprint/generation_error",
     "geotiff",
     "raster",
     "rectangular"
@@ -236,6 +247,37 @@ affine with no reference at all; handing it one changes what it tests.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "all_valid_rectangular.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 100.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 100.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4199640.0,
+        500360.0,
+        4200000.0
+      ]
     }
   ],
   "spatialCoverage": {

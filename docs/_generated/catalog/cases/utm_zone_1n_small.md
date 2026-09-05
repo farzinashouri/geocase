@@ -61,7 +61,7 @@ Confirm that a projected polygon in the first UTM zone reprojects to WGS84 witho
 
 ## Risk types covered
 
-- [`zone_selection`](../risk/zone-selection.md)
+- [`crs/zone_selection`](../risk/crs-zone-selection.md)
 
 ## Expected behavior
 
@@ -146,11 +146,11 @@ which come at the same line from the geographic side.
   "keywords": [
     "antimeridian",
     "crs",
+    "crs/zone_selection",
     "polygon",
     "utm",
     "valid",
-    "vector",
-    "zone_selection"
+    "vector"
   ],
   "license": "MIT",
   "creator": {

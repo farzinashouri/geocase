@@ -60,9 +60,9 @@ Confirm that signed 8-bit integer rasters open with the correct dtype and preser
 
 ## Risk types covered
 
-- [`dtype_coercion`](../risk/dtype-coercion.md)
-- [`nodata_ignored`](../risk/nodata-ignored.md)
-- `overflow_assumption`
+- [`dtype/coercion`](../risk/dtype-coercion.md)
+- `dtype/overflow`
+- [`nodata/ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -73,6 +73,17 @@ Confirm that signed 8-bit integer rasters open with the correct dtype and preser
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
 | `expected_shape` | `[10, 10]` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `-6.3775510204` |
+| Mean including NoData | `-8.23` |
+| NoData pixels | `2` |
+| Bounds (case CRS) | `[500000.0, 900.0, 500100.0, 1000.0]` |
 
 ## Notes
 
@@ -132,11 +143,11 @@ Single-band `int8` raster for validating narrow signed integer dtype handling.
   },
   "keywords": [
     "dtype",
-    "dtype_coercion",
+    "dtype/coercion",
+    "dtype/overflow",
     "geotiff",
     "int8",
-    "nodata_ignored",
-    "overflow_assumption",
+    "nodata/ignored",
     "raster"
   ],
   "license": "MIT",
@@ -149,6 +160,37 @@ Single-band `int8` raster for validating narrow signed integer dtype handling.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "int8_sample.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": -6.3775510204
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": -8.23
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 2
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        900.0,
+        500100.0,
+        1000.0
+      ]
     }
   ],
   "spatialCoverage": {

@@ -61,7 +61,7 @@ Confirm that geometry utilities gracefully handle Polygon EMPTY inputs.
 
 ## Risk types covered
 
-- `empty_geometry`
+- [`geometry/empty`](../risk/geometry-empty.md)
 
 ## Expected behavior
 
@@ -116,11 +116,11 @@ Used for functions that should accept or short-circuit on an empty polygon geome
 
 ## Related cases
 
+- [Empty Geometry in GeoPackage](empty_geometry_gpkg.md) -- `empty_geometry_gpkg`
 - [Polygon CSV WKT Baseline](polygon_csv_wkt_baseline.md) -- `polygon_csv_wkt_baseline`
 - [Polygon FlatGeobuf Baseline](polygon_flatgeobuf_baseline.md) -- `polygon_flatgeobuf_baseline`
 - [Polygon GeoPackage Baseline](polygon_geopackage_baseline.md) -- `polygon_geopackage_baseline`
 - [Polygon GML Baseline](polygon_gml_baseline.md) -- `polygon_gml_baseline`
-- [Polygon KML Baseline](polygon_kml_baseline.md) -- `polygon_kml_baseline`
 
 <script type="application/ld+json">
 {
@@ -138,7 +138,7 @@ Used for functions that should accept or short-circuit on an empty polygon geome
   "keywords": [
     "baseline",
     "empty",
-    "empty_geometry",
+    "geometry/empty",
     "polygon",
     "vector"
   ],

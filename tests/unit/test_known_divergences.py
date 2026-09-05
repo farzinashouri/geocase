@@ -174,3 +174,36 @@ class TestRoundOneConsumerDivergences:
             for divergence in case.known_divergences:
                 if divergence.consumer == consumer:
                     assert "9.4.3" in divergence.version_range
+
+
+class TestRoundFourHandsOverItsFinding:
+    """Plan 41 phase 3.2 -- the case states the *consequence*, not the geometry.
+
+    ``optical_dateline_small`` found a real crash in round 4, but only because
+    the reporter hand-rolled tile-index arithmetic to work out where the
+    footprint pointed. The geometry was already in the file and was not
+    enough: what was missing was the sentence saying what happens to a
+    consumer who floors an unwrapped longitude into a tile index.
+    """
+
+    CASE_ID = "optical_dateline_small"
+
+    def test_a_record_names_naive_tile_indexing(self):
+        """Test the consequence is recorded, not left for the reader to derive."""
+        case = geocase.get_case(self.CASE_ID)
+        matches = [
+            d
+            for d in case.known_divergences
+            if "tile" in d.description.lower() and "180.22" in d.description
+        ]
+        assert matches, (
+            "optical_dateline_small must record that naive floor-based tile "
+            "indexing requests a tile at longitude 180"
+        )
+
+    def test_the_unwrapped_bound_is_stated_as_a_number(self):
+        """A consequence with no number is prose the consumer must re-derive."""
+        case = geocase.get_case(self.CASE_ID)
+        assert any("180.22" in d.description for d in case.known_divergences), (
+            "the record must state the actual eastern bound, not just 'past 180'"
+        )

@@ -64,8 +64,6 @@ nav:
       - Compare All Cases: _generated/catalog/compare.md
       - Vector Coverage Matrix: _generated/vector-coverage-matrix.md
       - Raster Coverage Matrix: _generated/raster-coverage-matrix.md
-  - Benchmark:
-      - Quick Start: benchmark/quickstart.md
   - User Guides:
       - Case Discovery: case-discovery.md
       - Assertions Reference: assertions-reference.md
@@ -77,6 +75,7 @@ nav:
       - Adding a Case: adding-a-case.md
       - Remote Datasets: remote-datasets.md
       - Dataset Catalog: dataset-catalog.md
+  - Changelog: changelog.md
   - Contributing:
       - Workflow: contributing/workflow.md
       - Releasing: contributing/releasing.md
@@ -87,11 +86,6 @@ nav:
       - Testing Edge Cases: contributing/testing-edge-cases.md
       - Raster Dtypes & Radiometric Resolution: contributing/raster-dtypes-and-radiometric-resolution.md
       - Vector Dataset Generation: contributing/vector-dataset-generation.md
-  - Design:
-      - Case Recommendation Service: design/case-recommendation-service.md
-      - Case Recommendation API Spec: design/case-recommendation-api-spec.md
-      - Case Recommendation User Flow: design/case-recommendation-user-flow.md
-      - Database Design: design/database-design.md
   - Reference:
       - Codebase Summary: reference/codebase-summary.md
       - Repository Guide: reference/repository-guide.md
@@ -103,10 +97,24 @@ nav:
 #   plans/            - the planning log, incl. the roadmap and superseded plans
 #   geocase_validate/ - external validation reports and upstream bug drafts
 #   evidence/         - the fixture-interview instrument, not documentation
+#   benchmark/        - the LLM-benchmark subsystem. Not part of the library's
+#                       v1.0 compatibility promise and not mature enough to
+#                       present as a product surface; it stays in the repo and
+#                       is readable on GitHub, but is not published to the site.
+#   design/           - forward-looking designs for a case-recommendation
+#                       service that does not exist. The pages say "proposed",
+#                       but an API spec and a database schema published beside
+#                       a v1.0 release read as shipping features. Also covers
+#                       presentation-brief.md, a brief handed to a design tool
+#                       describing how to pitch GeoCase, which was off-nav but
+#                       still reachable by URL and links to a branch that will
+#                       be deleted.
 exclude_docs: |
   plans/
   geocase_validate/
   evidence/
+  benchmark/
+  design/
 
 # The generated per-case, per-risk and per-format pages ARE published -- they
 # are the catalog -- but reached from the Catalog hub rather than the nav.

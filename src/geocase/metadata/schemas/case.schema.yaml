@@ -105,8 +105,119 @@ properties:
 
   risk_types:
     type: array
+    description: >
+      Failure modes this case is curated around. The vocabulary is
+      canonical and closed -- see src/geocase/catalog/risk_types.py, which
+      is the source of truth this enum is generated from. Terms are
+      family/specific where a family has more than one member; selection
+      matches the full term or the bare family prefix.
     items:
       type: string
+      enum:
+        - attribute/corruption
+        - attribute/encoding_error
+        - attribute/field_name_truncation
+        - attribute/loss
+        - attribute/mojibake
+        - attribute/schema_mismatch
+        - attribute/timezone_normalization
+        - attribute/type_coercion
+        - band/alias_ambiguity
+        - band/dimension_mismatch
+        - band/incorrect_order
+        - band/loss
+        - band/stacking_order_ignored
+        - crs/axis_order
+        - crs/lat_lon_swap
+        - crs/local_distortion
+        - crs/mishandled
+        - crs/mismatch
+        - crs/projected_coordinate_assumption
+        - crs/projection_failure
+        - crs/reprojection_error
+        - crs/units
+        - crs/zone_selection
+        - data/ambiguous_engine_dependent
+        - data/coordinate_edge_case
+        - data/linear_artifacts_after_repair
+        - data/nan_propagation
+        - data/projection_assumptions
+        - data/quality
+        - data/silent_bad_data
+        - dtype/coercion
+        - dtype/drift
+        - dtype/nullable_coercion
+        - dtype/overflow
+        - dtype/range_assumption
+        - dtype/range_truncation
+        - dtype/value_range_violation
+        - extent/antimeridian
+        - extent/bbox_misinterpretation
+        - extent/bounds_normalization
+        - extent/coordinate_range_error
+        - extent/coordinate_sign_assumption
+        - extent/coordinate_wrapping
+        - extent/equatorial
+        - extent/polar
+        - footprint/generation_error
+        - footprint/geocoding_failure
+        - format/arrow_ipc_behavior
+        - format/binary_geometry_parsing
+        - format/columnar_storage_behavior
+        - format/driver_behavior
+        - format/limitation
+        - format/not_tiled
+        - format/overviews_missing
+        - format/partial_read_blind_spot
+        - format/sidecar_dropped
+        - format/spatial_index_failure
+        - format/spec_nonconformance
+        - format/sqlite_driver_behavior
+        - format/text_geometry_parsing
+        - format/xml_driver_behavior
+        - geometry/degenerate_but_parseable
+        - geometry/empty
+        - geometry/false_positive_intersection
+        - geometry/mixed_output
+        - geometry/null_empty_conflation
+        - geometry/overaggressive_dissolve
+        - geometry/parse_exception
+        - geometry/repair_variability
+        - geometry/ring_closure
+        - geometry/ring_orientation
+        - geometry/silent_invalid
+        - geometry/simplification_loss
+        - geometry/topology_error
+        - geometry/transitive_cluster_split
+        - geometry/zero_length
+        - measurement/area_distortion
+        - measurement/distance_error
+        - measurement/incorrect_area
+        - measurement/incorrect_statistics
+        - measurement/invalid
+        - nodata/ambiguous_zero
+        - nodata/default_value_sink
+        - nodata/ignored
+        - nodata/mask_misread
+        - nodata/nan_mishandled
+        - precision/coordinate_drift
+        - precision/loss
+        - precision/roundtrip_degradation
+        - scaling/category_misread
+        - scaling/colormap_dropped
+        - scaling/ignored
+        - scaling/incorrect_rendering
+        - scaling/pixel_lattice_misclassification
+        - transform/alignment_too_strict
+        - transform/bottom_up
+        - transform/nonsquare_pixels
+        - transform/pixel_anchor
+        - transform/pixel_shift
+        - transform/rasterization_alignment
+        - transform/resampling_assumptions
+        - transform/resolution_mismatch
+        - transform/rotated
+        - transform/shifted_origin
 
   behavioral_goal:
     type: string
@@ -282,6 +393,36 @@ properties:
         enum:
           - area
           - point
+
+      # Ground truth (plan 40 phase 2). Everything above says what *shape* the
+      # data has; these say what the right *answer* is, so a consumer can be
+      # graded against the case without re-deriving it. Generated from the real
+      # bytes by scripts/catalog_truth.py and gated by catalog/content.py.
+      expected_mean_masked:
+        type: number
+      expected_mean_naive:
+        type: number
+      nodata_pixel_count:
+        type: integer
+      # [west, south, east, north] in the case's own CRS, not 4326 -- the
+      # top-level `extent` is the WGS84 form. On a rotated raster this is the
+      # axis-aligned envelope, not the four corners.
+      expected_bounds:
+        type: array
+        items:
+          type: number
+      # [row, col, x, y] quadruples in the case's own CRS (plan 41 phase 3.3).
+      # The answer to "where does this pixel land", so a consumer asserts
+      # against a declared pair instead of hand-rolling the inverse affine --
+      # which is exactly what round 4's only irreducible finding required.
+      expected_pixel_world_pairs:
+        type: array
+        items:
+          type: array
+          items:
+            type: number
+          minItems: 4
+          maxItems: 4
 
       # OGR driver prerequisites for an *external* consumer (pyogrio, fiona,
       # ogr2ogr) — not for geocase, which reads every vector case without OGR.

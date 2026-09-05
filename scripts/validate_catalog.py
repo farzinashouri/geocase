@@ -23,6 +23,8 @@ import re
 import sys
 from pathlib import Path
 
+import yaml
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
 PACKAGE_ROOT = SRC_ROOT / "geocase"
@@ -43,8 +45,12 @@ from geocase.catalog.loader import (  # noqa: E402
 )
 from geocase.catalog.manifests import load_manifest  # noqa: E402
 from geocase.catalog.registry import CaseRegistry  # noqa: E402
+from geocase.catalog.risk_types import (  # noqa: E402
+    RISK_TYPE_ALIASES,
+    RISK_TYPE_RETIRED,
+    RISK_TYPES,
+)
 from geocase.catalog.suites import load_and_resolve_suite  # noqa: E402
-
 
 #: Upper bound on a case's on-disk payload for each ``size_class``.
 #:
@@ -110,6 +116,52 @@ def _validate_case_index_structure(case_index_path: Path) -> list[str]:
     return entries
 
 
+def _risk_type_errors(case_path: Path, case_id: str) -> list[str]:
+    """Reject a ``risk_types`` term outside the canonical vocabulary.
+
+    Plan 40 phase 3.2. Until this gate existed, only four risk-type terms were
+    checked against anything anywhere, so every other term was
+    indistinguishable from a typo -- which is how the corpus reached 124 terms
+    over 163 cases with 78 singletons, and how ``docs/adding-a-case.md`` came
+    to teach two worked-example terms that existed in no case.
+
+    Deliberately reads the **raw YAML**, not the loaded model:
+    ``CaseMetadata`` canonicalises aliases on load, so a deprecated spelling
+    would be silently repaired here and the file would keep drifting. A
+    shipped case must carry the canonical term; the alias table exists for
+    *users'* queries, not for the corpus's own files.
+
+    This function opens no data file, so it runs in the ``catalog`` gate that
+    works without ``osgeo``.
+    """
+    raw = yaml.safe_load(case_path.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        return []
+
+    errors: list[str] = []
+    for term in raw.get("risk_types") or []:
+        if term in RISK_TYPES:
+            continue
+        if term in RISK_TYPE_RETIRED:
+            errors.append(
+                f"Case '{case_id}' declares retired risk type '{term}': "
+                f"{RISK_TYPE_RETIRED[term]}"
+            )
+        elif term in RISK_TYPE_ALIASES:
+            errors.append(
+                f"Case '{case_id}' declares deprecated risk type '{term}'; "
+                f"write '{RISK_TYPE_ALIASES[term]}' instead "
+                "(run scripts/migrate_risk_types.py)"
+            )
+        else:
+            errors.append(
+                f"Case '{case_id}' declares unknown risk type '{term}'. "
+                "Pick an existing term or add one to "
+                "src/geocase/catalog/risk_types.py in the same change."
+            )
+    return errors
+
+
 def _validate_cases(case_index_path: Path) -> tuple[CaseRegistry, list[str]]:
     entries = _validate_case_index_structure(case_index_path)
     src_root = case_index_path.parent.parent
@@ -147,6 +199,7 @@ def _validate_cases(case_index_path: Path) -> tuple[CaseRegistry, list[str]]:
                 missing_file = True
 
         errors.extend(_extent_errors(metadata))
+        errors.extend(_risk_type_errors(case_path, metadata.id))
 
         # Only meaningful once every payload file is present.
         if not missing_file:

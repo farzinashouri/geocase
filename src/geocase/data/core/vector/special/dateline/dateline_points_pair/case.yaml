@@ -21,9 +21,9 @@ tags:
   - clustering
 
 risk_types:
-  - coordinate_wrapping
-  - distance_threshold_error
-  - zone_selection
+  - crs/zone_selection
+  - extent/coordinate_wrapping
+  - measurement/distance_error
 
 behavioral_goal: >
   Expose logic that treats antimeridian-adjacent points as far apart.

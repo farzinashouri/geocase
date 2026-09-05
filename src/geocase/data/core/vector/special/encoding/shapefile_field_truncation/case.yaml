@@ -25,10 +25,10 @@ tags:
   - field_truncation
 
 risk_types:
-  - field_name_truncation
-  - attribute_loss
-  - schema_mismatch
-  - format_specific
+  - attribute/field_name_truncation
+  - attribute/loss
+  - attribute/schema_mismatch
+  - format/limitation
 
 behavioral_goal: >
   Expose workflows that assume arbitrary field name lengths or fail to

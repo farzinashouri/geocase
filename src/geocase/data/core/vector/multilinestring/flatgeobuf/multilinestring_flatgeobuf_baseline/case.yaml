@@ -19,9 +19,9 @@ tags:
   - baseline
   - flatgeobuf
   - cross_format_canonical
-
-risk_types:
   - format_comparison
+
+risk_types: []
 
 behavioral_goal: >
   Provide a canonical multilinestring encoded as FlatGeobuf so format-specific

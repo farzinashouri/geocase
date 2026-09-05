@@ -18,8 +18,7 @@ tags:
   - valid
   - multipart
 
-risk_types:
-  - none
+risk_types: []
 
 behavioral_goal: >
   Provide baseline multipolygon coverage for loading and geometry-type

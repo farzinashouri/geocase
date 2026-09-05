@@ -19,7 +19,7 @@ tags:
   - valid
 
 risk_types:
-  - mixed_geometry_output
+  - geometry/mixed_output
 
 behavioral_goal: >
   Ensure GeometryCollection features can be indexed and loaded without

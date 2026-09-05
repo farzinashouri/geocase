@@ -60,7 +60,8 @@ Verify that a consumer reads row order from the transform rather than assuming n
 
 ## Risk types covered
 
-- [`nodata_ignored`](../risk/nodata-ignored.md)
+- [`nodata/ignored`](../risk/nodata-ignored.md)
+- [`transform/bottom_up`](../risk/transform-bottom-up.md)
 
 ## Expected behavior
 
@@ -77,6 +78,17 @@ Verify that a consumer reads row order from the transform rather than assuming n
 | `nodata_convention` | `sentinel` |
 | `expected_transform_signs` | `positive_e` |
 | `expected_pixel_anchor` | `area` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `72.0` |
+| Mean including NoData | `2.0625` |
+| NoData pixels | `1` |
+| Bounds (case CRS) | `[500000.0, 4200360.0, 500360.0, 4200000.0]` |
 
 ## Known consumer divergences
 
@@ -213,11 +225,11 @@ property the corpus always had into one it declares.
 
 ## Related cases
 
+- [Bottom-Up Square (Positive E and Nothing Else)](bottom_up_only_square.md) -- `bottom_up_only_square`
+- [Rotated Bottom-Up DEM (Skew and Positive Y Resolution)](rotated_bottom_up_small.md) -- `rotated_bottom_up_small`
 - [Pixel-Is-Area DEM](pixel_is_area_dem_small.md) -- `pixel_is_area_dem_small`
 - [Pixel-Is-Point DEM](pixel_is_point_dem_small.md) -- `pixel_is_point_dem_small`
-- [Rotated Bottom-Up DEM (Skew and Positive Y Resolution)](rotated_bottom_up_small.md) -- `rotated_bottom_up_small`
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
-- [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
 
 <script type="application/ld+json">
 {
@@ -235,10 +247,11 @@ property the corpus always had into one it declares.
   "keywords": [
     "georeferencing",
     "geotiff",
-    "nodata_ignored",
+    "nodata/ignored",
     "raster",
     "south-up",
-    "transform"
+    "transform",
+    "transform/bottom_up"
   ],
   "license": "MIT",
   "creator": {
@@ -250,6 +263,37 @@ property the corpus always had into one it declares.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "bottom_up_dem_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 72.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 2.0625
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4200360.0,
+        500360.0,
+        4200000.0
+      ]
     }
   ],
   "spatialCoverage": {

@@ -172,6 +172,16 @@ Use a suite when:
 
 Use selectors when your intent is more specific or temporary.
 
+The bundled suites are `core-vector`, `crs-edge-cases`, `raster-nodata`,
+`vector-topology`, `vector-crs-edge`, `vector-schema-encoding` and
+`georeferencing-conventions`.
+
+Start with `georeferencing-conventions` if you are evaluating GeoCase against
+an existing codebase. It collects the affine-transform and footprint cases —
+rotation, bottom-up rasters, pixel anchoring, sparse and holed footprints,
+antimeridian bounds — which otherwise span three corpus directories, and it is
+the axis that has produced the most defects in external use.
+
 ---
 
 ## Decision guide

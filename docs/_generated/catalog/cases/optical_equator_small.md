@@ -60,7 +60,7 @@ Confirm GeoCase handles an RGB optical scene whose extent spans the equator.
 
 ## Risk types covered
 
-- [`crs_mishandled`](../risk/crs-mishandled.md)
+- [`crs/mishandled`](../risk/crs-mishandled.md)
 
 ## Expected behavior
 
@@ -74,6 +74,15 @@ Confirm GeoCase handles an RGB optical scene whose extent spans the equator.
 | `expected_shape` | `[16, 16]` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `red`, `green`, `blue` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| NoData pixels | `0` |
+| Bounds (case CRS) | `[10.0, 0.0, 10.16, 0.16]` |
 
 ## Required capabilities
 
@@ -117,7 +126,7 @@ Confirm GeoCase handles an RGB optical scene whose extent spans the equator.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "crs_mishandled",
+    "crs/mishandled",
     "delivery:single-file",
     "eo",
     "geography:equator",
@@ -136,6 +145,25 @@ Confirm GeoCase handles an RGB optical scene whose extent spans the equator.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "optical_equator_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        10.0,
+        0.0,
+        10.16,
+        0.16
+      ]
     }
   ],
   "spatialCoverage": {

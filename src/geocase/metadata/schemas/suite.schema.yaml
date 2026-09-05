@@ -59,6 +59,13 @@ properties:
         items:
           type: string
 
+      # The missing half of the pair (plan 40 phase 3.4): tags has had both
+      # _any and _all since v1.0 while risk_types had only _any.
+      risk_types_all:
+        type: array
+        items:
+          type: string
+
       size_class:
         type: string
 

@@ -55,8 +55,8 @@ Verify that dimension order is read from the file rather than assumed, and that 
 
 ## Risk types covered
 
-- `coordinate_order`
-- [`dimension_mismatch`](../risk/dimension-mismatch.md)
+- [`band/dimension_mismatch`](../risk/band-dimension-mismatch.md)
+- [`crs/axis_order`](../risk/crs-axis-order.md)
 
 ## Expected behavior
 
@@ -145,8 +145,9 @@ demonstrate them.
 
 - [Lat/Lon Small NetCDF](latlon_small.md) -- `latlon_small`
 - [Packed int16 NDVI (NetCDF)](ndvi_packed_netcdf.md) -- `ndvi_packed_netcdf`
-- [Polygon Z (GeoPackage)](polygon_z_gpkg.md) -- `polygon_z_gpkg`
-- [Polygon Z (WKB)](polygon_z_wkb.md) -- `polygon_z_wkb`
+- [LineString GML Baseline](linestring_gml_baseline.md) -- `linestring_gml_baseline`
+- [MultiLineString GML Baseline](multilinestring_gml_baseline.md) -- `multilinestring_gml_baseline`
+- [MultiPoint GML Baseline](multipoint_gml_baseline.md) -- `multipoint_gml_baseline`
 
 <script type="application/ld+json">
 {
@@ -162,10 +163,10 @@ demonstrate them.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "band/dimension_mismatch",
     "cf-conventions",
-    "coordinate_order",
+    "crs/axis_order",
     "dimension-order",
-    "dimension_mismatch",
     "netcdf",
     "time"
   ],

@@ -60,8 +60,8 @@ Confirm that a consumer reading both halves agrees about the ground they describ
 
 ## Risk types covered
 
-- [`crs_unit_confusion`](../risk/crs-unit-confusion.md)
-- [`reprojection_error`](../risk/reprojection-error.md)
+- [`crs/reprojection_error`](../risk/crs-reprojection-error.md)
+- [`crs/units`](../risk/crs-units.md)
 
 ## Expected behavior
 
@@ -77,6 +77,17 @@ Confirm that a consumer reading both halves agrees about the ground they describ
 | `expected_nodata_value` | `-9999.0` |
 | `nodata_convention` | `sentinel` |
 | `expected_band_names` | `elevation` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `130.2470119522` |
+| Mean including NoData | `90.0515873016` |
+| NoData pixels | `1` |
+| Bounds (case CRS) | `[15.0, 40.646441002495, 15.005677088242, 40.650856515572]` |
 
 ## Notes
 
@@ -162,12 +173,12 @@ agree in WGS 84 to within a millidegree.
   },
   "keywords": [
     "crs",
-    "crs_unit_confusion",
+    "crs/reprojection_error",
+    "crs/units",
     "geotiff",
     "pair",
     "raster",
-    "reprojection",
-    "reprojection_error"
+    "reprojection"
   ],
   "license": "MIT",
   "creator": {
@@ -179,6 +190,37 @@ agree in WGS 84 to within a millidegree.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "crs_family_pair_geographic.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 130.2470119522
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 90.0515873016
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        15.0,
+        40.646441002495,
+        15.005677088242,
+        40.650856515572
+      ]
     }
   ],
   "spatialCoverage": {

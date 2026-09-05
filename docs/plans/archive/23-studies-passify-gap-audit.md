@@ -3,7 +3,7 @@
 > **Status: audited 2026-08-16.** A measurement, not a plan. Everything below was run or read
 > in the two working trees on that date; no gap is inferred from a README.
 >
-> It **corrects [Plan 22](../22-portfolio-direction.md)** on one material point. Plan 22 called the
+> It **corrects an earlier framing** on one material point. That framing called the
 > two repos "the content half and the serving half of one product." A closer reading of
 > passify's own content contract shows that is true for about a seventh of the question bank
 > and false for the rest. See [The disagreement](#the-disagreement).
@@ -97,8 +97,7 @@ The four thin topics matter more than the headline count: `system-design` has on
 
 ## The disagreement
 
-This is the finding, and it is why [Plan 22](../22-portfolio-direction.md)'s framing was too
-optimistic.
+This is the finding, and it is why the earlier framing was too optimistic.
 
 The two repos do not agree about what a question *is*:
 

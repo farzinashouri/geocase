@@ -61,9 +61,9 @@ Expose logic that treats antimeridian-adjacent points as far apart.
 
 ## Risk types covered
 
-- [`coordinate_wrapping`](../risk/coordinate-wrapping.md)
-- [`distance_threshold_error`](../risk/distance-threshold-error.md)
-- [`zone_selection`](../risk/zone-selection.md)
+- [`crs/zone_selection`](../risk/crs-zone-selection.md)
+- [`extent/coordinate_wrapping`](../risk/extent-coordinate-wrapping.md)
+- [`measurement/distance_error`](../risk/measurement-distance-error.md)
 
 ## Expected behavior
 
@@ -104,10 +104,10 @@ Two points on either side of the antimeridian that are geographically near each 
 ## Related cases
 
 - [Dateline Chain Cluster](dateline_chain_cluster.md) -- `dateline_chain_cluster`
+- [Antimeridian Crossing LineString](antimeridian_crossing_line.md) -- `antimeridian_crossing_line`
 - [Classic Antimeridian Polygon](classic_antimeridian_polygon.md) -- `classic_antimeridian_polygon`
 - [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 - [Nearby Points Cluster](nearby_points_cluster.md) -- `nearby_points_cluster`
-- [UTM Zone 1N Polygon](utm_zone_1n_small.md) -- `utm_zone_1n_small`
 
 <script type="application/ld+json">
 {
@@ -125,12 +125,12 @@ Two points on either side of the antimeridian that are geographically near each 
   "keywords": [
     "antimeridian",
     "clustering",
-    "coordinate_wrapping",
+    "crs/zone_selection",
     "dateline",
-    "distance_threshold_error",
+    "extent/coordinate_wrapping",
+    "measurement/distance_error",
     "point",
-    "vector",
-    "zone_selection"
+    "vector"
   ],
   "license": "MIT",
   "creator": {

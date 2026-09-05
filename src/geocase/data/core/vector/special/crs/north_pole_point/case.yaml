@@ -20,8 +20,8 @@ tags:
   - crs
 
 risk_types:
-  - polar_projection_singularity
-  - coordinate_edge_case
+  - data/coordinate_edge_case
+  - extent/polar
 
 behavioral_goal: >
   Ensure point-based utilities handle the north pole without crashing

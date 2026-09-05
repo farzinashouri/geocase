@@ -61,10 +61,10 @@ Detect loaders or cross-format converters that assume attribute types (integer, 
 
 ## Risk types covered
 
-- [`attribute_loss`](../risk/attribute-loss.md)
-- `format_limitation`
-- [`schema_mismatch`](../risk/schema-mismatch.md)
-- `type_coercion`
+- [`attribute/loss`](../risk/attribute-loss.md)
+- [`attribute/schema_mismatch`](../risk/attribute-schema-mismatch.md)
+- `attribute/type_coercion`
+- [`format/limitation`](../risk/format-limitation.md)
 
 ## Expected behavior
 
@@ -148,11 +148,11 @@ Three simple WGS 84 polygons (rectangular zones) across northern Europe.
 
 ## Related cases
 
-- [Parquet Mixed Schema Attributes](parquet_mixed_schema_attributes.md) -- `parquet_mixed_schema_attributes`
 - [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
-- [Mixed Encoding Attributes](mixed_encoding_attributes.md) -- `mixed_encoding_attributes`
-- [Polygon KML Baseline](polygon_kml_baseline.md) -- `polygon_kml_baseline`
-- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
+- [Parquet Mixed Schema Attributes](parquet_mixed_schema_attributes.md) -- `parquet_mixed_schema_attributes`
+- [Format-limited Precision Polygon](format_limited_precision_polygon.md) -- `format_limited_precision_polygon`
+- [Shapefile Legacy DBF Encoding](shapefile_encoding_legacy.md) -- `shapefile_encoding_legacy`
+- [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
 
 <script type="application/ld+json">
 {
@@ -168,14 +168,16 @@ Three simple WGS 84 polygons (rectangular zones) across northern Europe.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "attribute_loss",
+    "attribute/loss",
+    "attribute/schema_mismatch",
+    "attribute/type_coercion",
     "attributes",
+    "format/limitation",
     "format_limitation",
     "format_specific",
     "kml",
     "polygon",
     "schema",
-    "schema_mismatch",
     "type_coercion",
     "valid",
     "vector"

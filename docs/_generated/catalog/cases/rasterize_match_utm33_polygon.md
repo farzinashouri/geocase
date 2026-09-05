@@ -61,7 +61,7 @@ Confirm that rasterization works when vector and raster coordinates already matc
 
 ## Risk types covered
 
-- [`rasterization_alignment`](../risk/rasterization-alignment.md)
+- [`transform/rasterization_alignment`](../risk/transform-rasterization-alignment.md)
 
 ## Expected behavior
 
@@ -124,7 +124,7 @@ A projected polygon that lies within the bundled `geotiff_utm_boundary` raster e
     "crs",
     "polygon",
     "rasterization",
-    "rasterization_alignment",
+    "transform/rasterization_alignment",
     "utm",
     "vector"
   ],

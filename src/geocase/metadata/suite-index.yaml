@@ -7,3 +7,4 @@ suites:
   - path: ../catalog/suites/vector-topology.yaml
   - path: ../catalog/suites/vector-crs-edge.yaml
   - path: ../catalog/suites/vector-schema-encoding.yaml
+  - path: ../catalog/suites/georeferencing-conventions.yaml

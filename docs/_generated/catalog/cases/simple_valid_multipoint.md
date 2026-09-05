@@ -59,10 +59,6 @@ pip install "geocase[all]"
 
 Ensure MultiPoint fixtures are discoverable and load correctly for selector-driven tests.
 
-## Risk types covered
-
-- [`none`](../risk/none.md)
-
 ## Expected behavior
 
 | Assertion | Expected |
@@ -101,11 +97,11 @@ Baseline MultiPoint case for multi-point coverage.
 
 ## Related cases
 
-- [Simple Valid LineString](simple_valid_linestring.md) -- `simple_valid_linestring`
-- [Simple Valid MultiLineString](simple_valid_multilinestring.md) -- `simple_valid_multilinestring`
-- [Simple Valid Point](simple_valid_point.md) -- `simple_valid_point`
-- [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
-- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
+- [MultiPoint CSV WKT Baseline](multipoint_csv_wkt_baseline.md) -- `multipoint_csv_wkt_baseline`
+- [MultiPoint Feather Baseline](multipoint_feather_baseline.md) -- `multipoint_feather_baseline`
+- [MultiPoint FlatGeobuf Baseline](multipoint_flatgeobuf_baseline.md) -- `multipoint_flatgeobuf_baseline`
+- [MultiPoint GeoPackage Baseline](multipoint_geopackage_baseline.md) -- `multipoint_geopackage_baseline`
+- [MultiPoint GML Baseline](multipoint_gml_baseline.md) -- `multipoint_gml_baseline`
 
 <script type="application/ld+json">
 {
@@ -123,7 +119,6 @@ Baseline MultiPoint case for multi-point coverage.
   "keywords": [
     "baseline",
     "multipoint",
-    "none",
     "valid",
     "vector"
   ],

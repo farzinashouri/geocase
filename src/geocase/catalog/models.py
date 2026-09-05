@@ -4,6 +4,8 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
+from geocase.catalog.risk_types import canonical_risk_types
+
 Category = Literal["vector", "raster", "netcdf", "satellite"]
 FormatType = Literal[
     "GeoJSON",
@@ -289,6 +291,45 @@ class AssertionHints(BaseModel):
     expected_transform_signs: list[str] | None = None
     expected_pixel_anchor: PixelAnchor | None = None
 
+    # Ground truth (plan 40 phase 2). Everything above says what *shape* the
+    # data has; these say what the right *answer* is, so a consumer can be
+    # graded against the case without re-deriving it — and so the wrong answer
+    # is a finding rather than a plausible number. Typed rather than dropped in
+    # ``params`` precisely so ``catalog/content.py`` proves them against the
+    # real pixels; ``params`` has no whitelist, so a typo there is silence.
+    #
+    # The two means differ on every raster that has nodata, and the gap between
+    # them *is* the defect: a consumer that forgets to mask reproduces
+    # ``expected_mean_naive``, which is the sentinel-dragged number.
+    expected_mean_masked: float | None = None
+    expected_mean_naive: float | None = None
+    nodata_pixel_count: int | None = None
+
+    # ``[west, south, east, north]`` in **the case's own CRS**, not 4326. The
+    # separate top-level ``extent`` is the WGS84 form and ``check_extent``
+    # reprojects to reach it; conflating the two would put a wrong number in
+    # the one field whose entire purpose is to be right.
+    #
+    # On a rotated raster this is the axis-aligned envelope of the rotated
+    # footprint (rasterio's ``src.bounds``), not the four corners -- a rotated
+    # scene has no axis-aligned box that is also its outline, and the envelope
+    # is the reproducible one.
+    expected_bounds: list[float] | None = None
+
+    # The pixel <-> world round trip, as ``[row, col, x, y]`` quadruples in the
+    # case's own CRS (plan 41 phase 3.3).
+    #
+    # ``rotated_two_islands`` produced round 4's only irreducible finding, and
+    # it did so only because the reporter hand-rolled the inverse affine to
+    # check where a pixel actually landed. Shipping the answer removes that
+    # step: a consumer asserts ``src.xy(row, col) == (x, y)`` against a
+    # declared pair instead of writing their own oracle. That is the whole
+    # difference between a case that is a *stimulus* and one that is an
+    # *oracle* -- and on a rotated affine the oracle is the hard part, because
+    # ``expected_bounds`` is only the axis-aligned envelope and says nothing
+    # about where any individual pixel went.
+    expected_pixel_world_pairs: list[list[float]] | None = None
+
     # OGR driver prerequisites (plan 28 phase 2.1). Additive with an empty
     # default, so every existing case.yaml stays valid.
     #
@@ -326,6 +367,25 @@ class AssertionHints(BaseModel):
                 "expect_loadable: false -- a case that loads has no failure mode"
             )
         return self
+
+
+#: Attribute names people try on :class:`CaseMetadata`, and what they meant.
+#:
+#: Plan 41 phase 4. ``case_id`` is not listed: it is a real property below, so
+#: it never reaches ``__getattr__``. These are the spellings that have no
+#: landing place at all, where pydantic's default message names the missing
+#: attribute and not the present one.
+_ATTRIBUTE_NEAR_MISSES: dict[str, str] = {
+    "identifier": "id",
+    "case_identifier": "id",
+    "name": "title",
+    "risk_type": "risk_types",
+    "tag": "tags",
+    "path": "files.primary (or geocase.load_case(...).primary_path)",
+    "primary_path": "geocase.load_case(...).primary_path",
+    "bounds": "extent",
+    "bbox": "extent",
+}
 
 
 class CaseMetadata(BaseModel):
@@ -369,6 +429,24 @@ class CaseMetadata(BaseModel):
 
     params: dict[str, Any] = Field(default_factory=dict)
 
+    @field_validator("risk_types")
+    @classmethod
+    def canonicalize_risk_types(cls, value: list[str]) -> list[str]:
+        """Resolve deprecated risk-type spellings at load time (plan 40 §3.3).
+
+        On the model rather than in ``loader.py`` so that *every* construction
+        path canonicalises -- the YAML loader, a manifest-backed case, and a
+        model built directly in a test. The registry and every generated
+        artifact therefore see canonical terms only, which is what lets the
+        docs index and the reverse index be built from the registry rather
+        than from a second pass over the files.
+
+        Resolution is not validation: an unknown term passes through, and
+        ``scripts/validate_catalog.py`` is what rejects it. That gate opens no
+        data file, so it runs anywhere -- including without ``osgeo``.
+        """
+        return canonical_risk_types(value)
+
     @field_validator("id")
     @classmethod
     def validate_id(cls, value: str) -> str:
@@ -379,6 +457,40 @@ class CaseMetadata(BaseModel):
         if " " in value:
             raise ValueError("Case id must not contain spaces")
         return value
+
+    @property
+    def case_id(self) -> str:
+        """Alias for :attr:`id` (plan 41 phase 4).
+
+        The package spells one concept two ways --
+        :attr:`KnownDivergence.case_id` against this model's ``id`` -- so
+        ``c.case_id`` is what a reader of the *other* model reaches for first,
+        and an external consumer's very first call was exactly that. It raised
+        a bare pydantic ``AttributeError`` naming nothing useful.
+
+        An alias rather than a rename: ``id`` is on the pinned v1.0 surface.
+        Read-only, so there is one source of truth. The underlying
+        inconsistency is a **v1.1 naming item**, not a v1.0 change.
+        """
+        return self.id
+
+    def __getattr__(self, name: str) -> Any:
+        """Point a near-miss attribute at the real one before pydantic gives up.
+
+        Same shape as ``_reject_category_as_format`` in
+        :mod:`geocase.catalog.selectors`, and for the same reason: pydantic's
+        default message says only that the attribute is absent, so the answer
+        is not in the error. This runs *after* normal lookup, so it costs
+        nothing on the hit path and cannot shadow a real field.
+        """
+        suggestion = _ATTRIBUTE_NEAR_MISSES.get(name)
+        if suggestion is not None:
+            raise AttributeError(
+                f"{type(self).__name__!r} has no attribute {name!r}; "
+                f"you probably want {suggestion!r} "
+                f"(``case_id`` is accepted as an alias for ``id``)"
+            )
+        return super().__getattr__(name)  # type: ignore[misc]
 
 
 class SuiteSelection(BaseModel):
@@ -393,6 +505,12 @@ class SuiteSelection(BaseModel):
     tags_any: list[str] = Field(default_factory=list)
     tags_all: list[str] = Field(default_factory=list)
     risk_types_any: list[str] = Field(default_factory=list)
+
+    # The missing half of the pair (plan 40 §3.4): ``tags`` has had both
+    # ``_any`` and ``_all`` since v1.0 while ``risk_types`` had only ``_any``,
+    # which is the asymmetry a reporter hit when trying to intersect two
+    # failure modes. Additive with an empty default.
+    risk_types_all: list[str] = Field(default_factory=list)
     size_class: SizeClass | None = None
 
 

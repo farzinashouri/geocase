@@ -24,8 +24,8 @@ tags:
   - integer-precision
 
 risk_types:
-  - dimension_mismatch
-  - integer_precision
+  - band/dimension_mismatch
+  - precision/loss
 
 behavioral_goal: >
   Verify that Z survives the GPKG write/read cycle with the same values as

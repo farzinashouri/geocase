@@ -6,7 +6,7 @@ This document describes the current state of the GeoCase project and the workflo
 
 ## Current status
 
-GeoCase has a complete folder structure, 163 bundled cases, and fully implemented metadata, catalog, runtime, assertion, loader, and plugin layers, with 1701 passing tests.
+GeoCase has a complete folder structure, 166 bundled cases, and fully implemented metadata, catalog, runtime, assertion, loader, and plugin layers, with 1701 passing tests.
 
 ### Recent updates (April 2026)
 
@@ -17,9 +17,9 @@ GeoCase has a complete folder structure, 163 bundled cases, and fully implemente
 - CI jobs are implemented for catalog validation, tests, lint, typecheck, and docs. (This entry originally described GitLab CI files under `ci/`; that layout was never adopted — CI is GitHub Actions in `.github/workflows/`.)
 - Practical docs were added for usage and product direction:
 	- [`docs/testing-your-function-with-geocase.md`](../testing-your-function-with-geocase.md)
-	- [`docs/design/case-recommendation-service.md`](../design/case-recommendation-service.md)
-	- [`docs/design/case-recommendation-api-spec.md`](../design/case-recommendation-api-spec.md)
-	- [`docs/design/case-recommendation-user-flow.md`](../design/case-recommendation-user-flow.md)
+	- [`docs/design/case-recommendation-service.md`](https://github.com/farzinashouri/geocase/blob/main/docs/design/case-recommendation-service.md)
+	- [`docs/design/case-recommendation-api-spec.md`](https://github.com/farzinashouri/geocase/blob/main/docs/design/case-recommendation-api-spec.md)
+	- [`docs/design/case-recommendation-user-flow.md`](https://github.com/farzinashouri/geocase/blob/main/docs/design/case-recommendation-user-flow.md)
 
 ### Development environments
 
@@ -105,7 +105,7 @@ the grounds that an empty module implies a commitment the project has not made.
 
 - **`catalog/manifests.py` and `loaders/`** are implemented. `cases/raster.py` routes
   through `loaders/rasterio_loader.py`, which is the single raster load path.
-- **`api/`** is implemented and is the v1.0 compatibility surface — 27 names, pinned by
+- **`api/`** is implemented and is the v1.0 compatibility surface — 29 names, pinned by
   `tests/unit/test_public_api.py`.
 - **`catalog/validators.py`** was deleted. Nothing imported it.
 - **`cli/`** was deleted along with its broken `[project.scripts]` entry point. There is no

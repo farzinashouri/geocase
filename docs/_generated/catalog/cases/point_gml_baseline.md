@@ -61,9 +61,8 @@ Provide a canonical point encoded as GML so XML-driver loading can be compared a
 
 ## Risk types covered
 
-- [`axis_order`](../risk/axis-order.md)
-- [`format_comparison`](../risk/format-comparison.md)
-- [`xml_driver_behavior`](../risk/xml-driver-behavior.md)
+- [`crs/axis_order`](../risk/crs-axis-order.md)
+- [`format/xml_driver_behavior`](../risk/format-xml-driver-behavior.md)
 
 ## Expected behavior
 
@@ -153,7 +152,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`baseline` `cross_format_canonical` `gml` `point` `valid` `vector`
+`baseline` `cross_format_canonical` `format_comparison` `gml` `point` `valid` `vector`
 
 ## Related cases
 
@@ -177,15 +176,15 @@ geometry is derived from `params.canonical_source_case_id`
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "axis_order",
     "baseline",
     "cross_format_canonical",
+    "crs/axis_order",
+    "format/xml_driver_behavior",
     "format_comparison",
     "gml",
     "point",
     "valid",
-    "vector",
-    "xml_driver_behavior"
+    "vector"
   ],
   "license": "MIT",
   "creator": {

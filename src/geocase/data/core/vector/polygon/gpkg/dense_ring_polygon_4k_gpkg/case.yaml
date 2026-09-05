@@ -21,8 +21,7 @@ tags:
   - irregular_geometry
   - procedural
 
-risk_types:
-  - none
+risk_types: []
 
 behavioral_goal: >
   Confirm that a 4096-vertex polygon round-trips through a GeoPackage with

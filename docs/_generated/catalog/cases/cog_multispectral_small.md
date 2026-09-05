@@ -60,10 +60,10 @@ Confirm GeoCase recognises a tiled, overview-bearing multispectral GeoTIFF as CO
 
 ## Risk types covered
 
-- [`band_loss`](../risk/band-loss.md)
-- [`nodata_ignored`](../risk/nodata-ignored.md)
-- [`not_tiled`](../risk/not-tiled.md)
-- [`overviews_missing`](../risk/overviews-missing.md)
+- [`band/loss`](../risk/band-loss.md)
+- [`format/not_tiled`](../risk/format-not-tiled.md)
+- [`format/overviews_missing`](../risk/format-overviews-missing.md)
+- [`nodata/ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -82,6 +82,17 @@ Confirm GeoCase recognises a tiled, overview-bearing multispectral GeoTIFF as CO
 | `expected_overviews` | yes |
 | `expected_band_names` | `blue`, `green`, `red`, `nir` |
 | `is_cog` | yes |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `2640.0` |
+| Mean including NoData | `2477.578125` |
+| NoData pixels | `1008` |
+| Bounds (case CRS) | `[500000.0, 4499360.0, 500640.0, 4500000.0]` |
 
 ## Required capabilities
 
@@ -127,15 +138,15 @@ Confirm GeoCase recognises a tiled, overview-bearing multispectral GeoTIFF as CO
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "band_loss",
+    "band/loss",
     "cog",
     "delivery:cloud-optimized",
+    "format/not_tiled",
+    "format/overviews_missing",
     "geography:utm",
     "geotiff",
     "multispectral",
-    "nodata_ignored",
-    "not_tiled",
-    "overviews_missing",
+    "nodata/ignored",
     "product:cog",
     "raster"
   ],
@@ -149,6 +160,37 @@ Confirm GeoCase recognises a tiled, overview-bearing multispectral GeoTIFF as CO
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "cog_multispectral_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 2640.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 2477.578125
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 1008
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499360.0,
+        500640.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

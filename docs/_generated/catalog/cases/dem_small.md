@@ -60,9 +60,9 @@ Confirm GeoCase can open a float32 DEM, preserve its single band, and treat the 
 
 ## Risk types covered
 
-- [`dtype_drift`](../risk/dtype-drift.md)
-- [`nan_mishandled`](../risk/nan-mishandled.md)
-- [`nodata_ignored`](../risk/nodata-ignored.md)
+- [`dtype/drift`](../risk/dtype-drift.md)
+- [`nodata/ignored`](../risk/nodata-ignored.md)
+- [`nodata/nan_mishandled`](../risk/nodata-nan-mishandled.md)
 
 ## Expected behavior
 
@@ -78,6 +78,17 @@ Confirm GeoCase can open a float32 DEM, preserve its single band, and treat the 
 | `nodata_convention` | `nan` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `elevation` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `152.2941176471` |
+| Mean including NoData | `152.2941176471` |
+| NoData pixels | `1` |
+| Bounds (case CRS) | `[500000.0, 4499840.0, 500160.0, 4500000.0]` |
 
 ## Notes
 
@@ -154,12 +165,12 @@ NaN NoData semantics.
   "keywords": [
     "delivery:single-file",
     "dem",
-    "dtype_drift",
+    "dtype/drift",
     "eo",
     "geography:utm",
     "geotiff",
-    "nan_mishandled",
-    "nodata_ignored",
+    "nodata/ignored",
+    "nodata/nan_mishandled",
     "product:dem",
     "raster",
     "terrain"
@@ -174,6 +185,37 @@ NaN NoData semantics.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "dem_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 152.2941176471
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 152.2941176471
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499840.0,
+        500160.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

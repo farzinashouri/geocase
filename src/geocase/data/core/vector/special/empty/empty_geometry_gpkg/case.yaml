@@ -24,9 +24,9 @@ tags:
   - geometry_special
 
 risk_types:
-  - null_empty_conflation
-  - empty_geometry_handling
-  - format_specific
+  - format/limitation
+  - geometry/empty
+  - geometry/null_empty_conflation
 
 behavioral_goal: >
   Expose loaders that incorrectly handle EMPTY geometries in GeoPackage format.

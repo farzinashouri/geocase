@@ -59,8 +59,8 @@ Ensure footprint extraction remains robust for sparse and anisotropic raster sam
 
 ## Risk types covered
 
-- [`footprint_generation_error`](../risk/footprint-generation-error.md)
-- `pixel_shape_assumption`
+- [`footprint/generation_error`](../risk/footprint-generation-error.md)
+- [`transform/nonsquare_pixels`](../risk/transform-nonsquare-pixels.md)
 
 ## Expected behavior
 
@@ -70,6 +70,17 @@ Ensure footprint extraction remains robust for sparse and anisotropic raster sam
 | `expect_crs` | yes |
 | `expected_shape` | `[8, 8]` |
 | `expected_transform_signs` | `negative_e` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `100.0` |
+| Mean including NoData | `-8736.625` |
+| NoData pixels | `56` |
+| Bounds (case CRS) | `[250000.0, 4599760.0, 250480.0, 4600000.0]` |
 
 ## Notes
 
@@ -205,7 +216,7 @@ affine with no reference at all; handing it one changes what it tests.
 - [Hole Center NoData Raster](hole_center_nodata.md) -- `hole_center_nodata`
 - [Rotated Two Islands Raster](rotated_two_islands.md) -- `rotated_two_islands`
 - [Thin Corridor Shape Raster](thin_corridor_shape.md) -- `thin_corridor_shape`
-- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
+- [Rotated Raster with Non-Square Pixels](rotated_nonsquare_small.md) -- `rotated_nonsquare_small`
 
 <script type="application/ld+json">
 {
@@ -223,11 +234,11 @@ affine with no reference at all; handing it one changes what it tests.
   "keywords": [
     "edge",
     "footprint",
-    "footprint_generation_error",
+    "footprint/generation_error",
     "geotiff",
-    "pixel_shape_assumption",
     "raster",
-    "sparse"
+    "sparse",
+    "transform/nonsquare_pixels"
   ],
   "license": "MIT",
   "creator": {
@@ -239,6 +250,37 @@ affine with no reference at all; handing it one changes what it tests.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "nonsquare_diagonal_sparse.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 100.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": -8736.625
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 56
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        250000.0,
+        4599760.0,
+        250480.0,
+        4600000.0
+      ]
     }
   ],
   "spatialCoverage": {

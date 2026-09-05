@@ -60,9 +60,9 @@ Confirm that GeoCase can open a small multi-band raster, preserve its declared b
 
 ## Risk types covered
 
-- [`band_loss`](../risk/band-loss.md)
-- [`incorrect_band_order`](../risk/incorrect-band-order.md)
-- [`nodata_ignored`](../risk/nodata-ignored.md)
+- [`band/incorrect_order`](../risk/band-incorrect-order.md)
+- [`band/loss`](../risk/band-loss.md)
+- [`nodata/ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -73,6 +73,17 @@ Confirm that GeoCase can open a small multi-band raster, preserve its declared b
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
 | `expected_shape` | `[10, 10]` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `149.9489795918` |
+| Mean including NoData | `-53.03` |
+| NoData pixels | `6` |
+| Bounds (case CRS) | `[500000.0, 900.0, 500100.0, 1000.0]` |
 
 ## Notes
 
@@ -144,12 +155,12 @@ Three-band raster baseline for validating multi-band read behavior.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "band_loss",
+    "band/incorrect_order",
+    "band/loss",
     "bands",
     "geotiff",
-    "incorrect_band_order",
     "multiband",
-    "nodata_ignored",
+    "nodata/ignored",
     "raster"
   ],
   "license": "MIT",
@@ -162,6 +173,37 @@ Three-band raster baseline for validating multi-band read behavior.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "multiband_sample.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 149.9489795918
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": -53.03
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 6
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        900.0,
+        500100.0,
+        1000.0
+      ]
     }
   ],
   "spatialCoverage": {

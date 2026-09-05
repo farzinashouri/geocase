@@ -96,9 +96,10 @@ Instructions for contributors to add new cases correctly.
 
 Explains bundled vs remote vs private storage.
 
-### [`docs/design/database-design.md`](../design/database-design.md)
+### [`docs/design/database-design.md`](https://github.com/farzinashouri/geocase/blob/main/docs/design/database-design.md)
 
-Explains the longer-term catalog backend idea.
+Explains the longer-term catalog backend idea. Kept in the repository but not
+published to the site: it designs a backend that does not exist.
 
 Why this folder exists: because GeoCase is partly a toolkit and partly a convention. Good docs are part of the product.
 
@@ -382,7 +383,9 @@ Why it exists: gives one deterministic place to discover all cases.
 
 ### `metadata/suite-index.yaml` ✅
 
-Master list of suite definition file paths (currently 3 suites: `core-vector`, `crs-edge-cases`, `raster-nodata`).
+Master list of suite definition file paths (currently 7 suites: `core-vector`, `crs-edge-cases`, `raster-nodata`,
+`vector-topology`, `vector-crs-edge`, `vector-schema-encoding`,
+`georeferencing-conventions`).
 
 Why it exists: same idea, but for suites.
 
@@ -406,7 +409,7 @@ Why it exists: keeps structure explicit and reviewable.
 
 Bundled sample data. All 8 `case.yaml` files are populated with full metadata.
 
-The catalog is **163 cases**. The lists that were once here enumerated eight of them and
+The catalog is **166 cases**. The lists that were once here enumerated eight of them and
 went stale within one release; the enumeration is now generated from the registry and
 CI-gated instead. See the [dataset catalog](../dataset-catalog.md) for the reasoning and
 the [case catalog](../_generated/catalog/index.md) for the full list.

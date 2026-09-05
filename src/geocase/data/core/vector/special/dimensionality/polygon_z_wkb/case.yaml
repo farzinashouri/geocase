@@ -21,7 +21,7 @@ tags:
   - dimensionality
 
 risk_types:
-  - dimension_mismatch
+  - band/dimension_mismatch
 
 behavioral_goal: >
   Verify that the third ordinate survives a WKB round trip and is not

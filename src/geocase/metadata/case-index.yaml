@@ -39,6 +39,9 @@ cases:
 - path: data/core/raster/overlap_group/case_overlap_group_south.yaml
 - path: data/core/raster/sar_dualpol_small/case.yaml
 - path: data/core/raster/sar_vv_small/case.yaml
+- path: data/core/raster/single_variable/case_bottom_up_only_square.yaml
+- path: data/core/raster/single_variable/case_nodata_only_dem_small.yaml
+- path: data/core/raster/single_variable/case_rotated_only_square.yaml
 - path: data/core/raster/transform_conventions/case_bottom_up_dem_small.yaml
 - path: data/core/raster/transform_conventions/case_pixel_is_area_dem_small.yaml
 - path: data/core/raster/transform_conventions/case_pixel_is_point_dem_small.yaml

@@ -61,9 +61,9 @@ Expose clustering logic that fails to connect a transitive dateline-spanning clu
 
 ## Risk types covered
 
-- [`coordinate_wrapping`](../risk/coordinate-wrapping.md)
-- `local_projection_distortion`
-- `transitive_cluster_split`
+- `crs/local_distortion`
+- [`extent/coordinate_wrapping`](../risk/extent-coordinate-wrapping.md)
+- `geometry/transitive_cluster_split`
 
 ## Expected behavior
 
@@ -126,11 +126,11 @@ clustering can incorrectly split them into multiple clusters.
   },
   "keywords": [
     "clustering",
-    "coordinate_wrapping",
+    "crs/local_distortion",
     "dateline",
-    "local_projection_distortion",
+    "extent/coordinate_wrapping",
+    "geometry/transitive_cluster_split",
     "point",
-    "transitive_cluster_split",
     "transitive_connectivity",
     "vector"
   ],

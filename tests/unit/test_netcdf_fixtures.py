@@ -258,13 +258,13 @@ def test_latlon_small_no_longer_claims_undemonstrable_risks() -> None:
     """
     metadata = _metadata("latlon_small")
 
-    assert "coordinate_order" not in metadata.risk_types
-    assert "dimension_mismatch" not in metadata.risk_types
+    assert "crs/axis_order" not in metadata.risk_types
+    assert "band/dimension_mismatch" not in metadata.risk_types
     assert metadata.assertions.expect_crs is None
     assert metadata.assertions.expected_epsg is None
 
     # What it does still claim is real, and checked.
-    assert "nodata_ignored" in metadata.risk_types
+    assert "nodata/ignored" in metadata.risk_types
     assert metadata.assertions.expect_nodata is True
 
 

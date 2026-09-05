@@ -27,10 +27,10 @@ tags:
   - mixed_types
 
 risk_types:
-  - nullable_type_coercion
-  - attribute_loss
-  - schema_mismatch
-  - columnar_storage_behavior
+  - attribute/loss
+  - attribute/schema_mismatch
+  - dtype/nullable_coercion
+  - format/columnar_storage_behavior
 
 behavioral_goal: >
   Detect loaders that silently downcast Parquet nullable integer columns

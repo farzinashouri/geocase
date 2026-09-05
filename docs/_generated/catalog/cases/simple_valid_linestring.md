@@ -59,10 +59,6 @@ pip install "geocase[all]"
 
 Confirm that a basic LineString fixture is discoverable and loadable through the catalog and vector loader.
 
-## Risk types covered
-
-- [`none`](../risk/none.md)
-
 ## Expected behavior
 
 | Assertion | Expected |
@@ -101,11 +97,11 @@ Baseline LineString case for selector and loader coverage.
 
 ## Related cases
 
-- [Simple Valid MultiLineString](simple_valid_multilinestring.md) -- `simple_valid_multilinestring`
-- [Simple Valid MultiPoint](simple_valid_multipoint.md) -- `simple_valid_multipoint`
-- [Simple Valid Point](simple_valid_point.md) -- `simple_valid_point`
-- [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
-- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
+- [LineString CSV_WKT Baseline](linestring_csv_wkt_baseline.md) -- `linestring_csv_wkt_baseline`
+- [LineString FlatGeobuf Baseline](linestring_flatgeobuf_baseline.md) -- `linestring_flatgeobuf_baseline`
+- [LineString GeoArrow Baseline](linestring_geoarrow_baseline.md) -- `linestring_geoarrow_baseline`
+- [LineString GeoPackage Baseline](linestring_geopackage_baseline.md) -- `linestring_geopackage_baseline`
+- [LineString GML Baseline](linestring_gml_baseline.md) -- `linestring_gml_baseline`
 
 <script type="application/ld+json">
 {
@@ -123,7 +119,6 @@ Baseline LineString case for selector and loader coverage.
   "keywords": [
     "baseline",
     "linestring",
-    "none",
     "valid",
     "vector"
   ],

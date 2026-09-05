@@ -61,10 +61,10 @@ Expose precision loss during GeoJSON text serialization. Detect workflows where 
 
 ## Risk types covered
 
-- `coordinate_drift`
-- [`format_specific`](../risk/format-specific.md)
-- [`precision_loss`](../risk/precision-loss.md)
-- `roundtrip_degradation`
+- [`format/limitation`](../risk/format-limitation.md)
+- `precision/coordinate_drift`
+- [`precision/loss`](../risk/precision-loss.md)
+- `precision/roundtrip_degradation`
 
 ## Expected behavior
 
@@ -152,11 +152,11 @@ GeoJSON's human-readable text format trades some precision for readability.
 
 ## Related cases
 
+- [Format-limited Precision Polygon](format_limited_precision_polygon.md) -- `format_limited_precision_polygon`
 - [Empty Geometry in GeoPackage](empty_geometry_gpkg.md) -- `empty_geometry_gpkg`
+- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
 - [Shapefile Legacy DBF Encoding](shapefile_encoding_legacy.md) -- `shapefile_encoding_legacy`
 - [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
-- [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
-- [Equator-Crossing Polygon](equator_polygon.md) -- `equator_polygon`
 
 <script type="application/ld+json">
 {
@@ -173,12 +173,14 @@ GeoJSON's human-readable text format trades some precision for readability.
   },
   "keywords": [
     "coordinate_drift",
+    "format/limitation",
     "format_specific",
     "geojson",
     "precision",
-    "precision_loss",
+    "precision/coordinate_drift",
+    "precision/loss",
+    "precision/roundtrip_degradation",
     "roundtrip",
-    "roundtrip_degradation",
     "vector"
   ],
   "license": "MIT",

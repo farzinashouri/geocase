@@ -5,7 +5,137 @@ All notable changes to GeoCase are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Corpus changes: name what changed
+
+Any change to a case's **geometry, CRS, dtype, nodata value, id, or risk types** is
+listed **by case id and by what changed** — never as a summary.
+
+This convention exists because of a measured failure. The rc1 → rc3 fix to
+`polygon_*_baseline` (four different geometries shipping under one family name) was
+correct, and it silently broke a downstream test: the consumer had a canary pinning
+the old behaviour, it went red on upgrade, and **there was no signal as to why**. An
+entry reading "fixed baseline consistency" costs the reader an afternoon; one naming
+the case and the geometry costs them five seconds.
+
+A user hitting a break searches for the case id or the error text, so both belong in
+the entry verbatim.
+
 ## [Unreleased]
+
+Nothing yet.
+
+## [1.0.0] — 2026-09-05
+
+The first stable release. Everything below landed after the 2026-08-02 feature freeze
+(recorded as [1.0.0-freeze](#100-freeze--2026-08-02) at the bottom of this file) and
+shipped through the release candidates `1.0.0rc1`, `1.0.0rc2` and `1.0.0rc3`, which are
+on PyPI. If you are upgrading from an rc, the entries below are cumulative across all
+three: read **Changed — corpus** first, since that is the section that can change what a
+selector returns.
+
+### Changed — corpus
+
+- **`risk_types` consolidated to a canonical vocabulary (124 terms → 104)** — plan 40
+  phase 3, executing plan 27 §1.2–1.3. Terms are now `family/specific` where a family
+  has more than one member, and **every** term is gated: `scripts/validate_catalog.py`
+  rejects a spelling outside `src/geocase/catalog/risk_types.py`. Before this, only
+  four terms were checked against anything, so the rest were indistinguishable from
+  typos — which is how the corpus reached 124 terms over 163 cases with 78 singletons,
+  and how `docs/adding-a-case.md` came to teach two worked-example terms
+  (`topology_breakage`, `attribute_encoding`) that existed in **no case**.
+
+  **Nothing silently stops selecting.** Every merged spelling is recorded in
+  `RISK_TYPE_ALIASES` and resolved at selection time, so
+  `list_cases(risk_types_any=["coordinate_order"])` returns what it always did. A bare
+  family prefix now also selects — `risk_types_any=["crs"]` matches every `crs/*` term.
+
+  Two terms were **retired rather than renamed**, and these are the ones that change
+  what a selector returns:
+
+  - **`none` (9 cases)** — the absence of a risk type, spelled wrong. Those nine cases
+    now declare `risk_types: []`. Anything selecting on `"none"` returns nothing.
+    Affected: `simple_valid_point`, `simple_valid_linestring`,
+    `simple_valid_multipoint`, `simple_valid_multilinestring`, `simple_valid_polygon`,
+    `simple_valid_multipolygon`, `dense_ring_polygon_4k`, `dense_ring_polygon_4k_gpkg`,
+    `fractal_coastline_polygon`.
+  - **`format_comparison` (60 cases)** — a corpus-construction label rather than a
+    failure mode, covering 37% of the catalog. **Moved to `tags`**, so select it with
+    `tags_any=["format_comparison"]` instead of `risk_types_any=[...]`. No case lost
+    the label.
+
+  Two merges the brief proposed were **not** made, because the corpus's own tests
+  proved the distinction load-bearing: `lat_lon_swap` stays separate from
+  `crs/axis_order` (the GML baselines declare an authority axis order the bytes
+  genuinely honour; `out_of_bounds_coordinates` is a swap caught only because latitude
+  100 is out of range), and `crs_mishandled` stays separate from `crs/mismatch` (a
+  mismatch is a property of a *pair*, which is why `crs_mismatch_overlay_pair` exists).
+
+- **`bottom_up_dem_small`, `rotated_bottom_up_small` gained `transform/bottom_up`;
+  `pixel_is_area_dem_small`, `pixel_is_point_dem_small` gained
+  `transform/pixel_anchor`.** All four previously declared only `nodata_ignored`, so
+  the two conventions that produced the most severe findings of validation rounds 1
+  and 2 were **unsearchable by the index built to find them**. No bytes changed.
+
+### Added — corpus
+
+- **Three single-variable controls (163 → 166)** — plan 40 phase 4, under
+  `raster/single_variable/`: `rotated_only_square` (a 30° rotated affine, no nodata),
+  `nodata_only_dem_small` (two interior `-9999` sentinels, north-up), and
+  `bottom_up_only_square` (a positive-`e` affine alone). `rotated_two_islands` bundles
+  rotation *with* sparse islands *with* footprint generation, so a failure there needs
+  an argument about which caused it. These remove the argument: a defect reproducing on
+  the control **and** its bundled counterpart is localised with no further work.
+
+- **`expected_pixel_world_pairs`** — plan 41 phase 3.3. `[row, col, x, y]` quadruples
+  in the case's own CRS, on all five rotated rasters and `rotated_only_square`. Round
+  4's only irreducible finding required hand-rolling the inverse affine to see where a
+  pixel landed; the fixture now ships that answer. `expected_bounds` is only the
+  axis-aligned envelope on a rotated raster and says nothing about individual pixels,
+  which is exactly what was wrong.
+
+- **A `known_divergences` record on `optical_dateline_small`** naming the
+  *consequence*: the footprint reaches longitude **180.22**, so floor-based tile
+  indexing requests a tile at 180 and raises. The geometry was always in the file and
+  was not enough — round 4 found the crash only after hand-rolling the tile arithmetic.
+
+### Added
+
+- **`geocase.risk_types()`** — the reverse index, `{term: [case ids]}`. The forward
+  direction has always existed via `list_cases(risk_types_any=...)`; a reporter built
+  this half by hand with an ad-hoc `Counter` over all 163 cases. Additive.
+- **`list_cases(risk_types_all=...)`** — the missing half of the pair. `tags` has had
+  both `_any` and `_all` since v1.0 while `risk_types` had only `_any`. Additive.
+- **`CaseMetadata.case_id`** — a read-only alias for `.id`, plus a directed
+  `AttributeError` for near-misses. The package spells one concept two ways
+  (`KnownDivergence.case_id` against `CaseMetadata.id`), and a reporter's first call
+  was `c.case_id`, which raised a bare pydantic error naming nothing useful. The
+  underlying inconsistency is a **v1.1 naming item**, not a v1.0 change.
+
+### Changed — docs site
+
+No library behaviour changes here. Three surfaces were **unpublished from the docs
+site** ahead of the v1.0 release. All of them stay in the repository and remain
+readable on GitHub — `exclude_docs` removes them from the build, so they are no
+longer reachable by URL either.
+
+- **`docs/benchmark/`** — the LLM-benchmark subsystem. It is explicitly not part of
+  the v1.0 compatibility promise, and it is not mature enough to present as a product
+  surface beside a 1.0 release. Removed from the nav *and* from the build: nav removal
+  alone would have left the page live at its URL. The `README.md` pointer stays and is
+  now marked experimental and unpublished.
+- **`docs/design/`** — four documents specifying a case-recommendation service, an API
+  spec, and a database schema for a backend that does not exist. The pages do say
+  "proposed", but published beside a v1.0 release they read as shipping features. The
+  three published pages that linked into them (`contributing/workflow.md`,
+  `contributing/structure-and-planning.md`, `index.md`) now link by GitHub URL, per the
+  rule that an unpublished doc is never linked relatively.
+- **`docs/design/presentation-brief.md`** — a brief handed to a design tool describing
+  how to pitch GeoCase. It was already off-nav but was still being built and served,
+  and it links to a `validation` branch that will break when the branch is deleted.
+
+Also scrubbed: absolute local paths of the form `/Users/<name>/projects/…` in plans 37,
+38, and 39, which named a developer's home directory and pointed at private
+repositories no reader can open. Now written as `~/projects/…`.
 
 ### Added
 
@@ -149,6 +279,34 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `self_intersecting_polygon` returns an object whose `.is_valid` is `False`. Both
   declare `expect_valid_geometry: false`, and a harness that writes
   `assert not geom.is_valid` for both fails on the first for the wrong reason.
+
+### Fixed
+
+- **`pip install "geocase[all]"` could break a working geospatial environment**
+  (plan 40 phase 1). Installed into a venv created with `--system-site-packages`
+  over **GDAL 3.6.2 / geopandas 0.12.2 / scipy 1.10.1**, it resolved **numpy
+  2.4.6** — incompatible with that scipy — shadowed the system geopandas and
+  pandas, and left pandas unimportable:
+
+  ```
+  ImportError: C extension: None not built
+  ```
+
+  Every optional dependency is now bounded at the next major
+  (`geopandas>=0.14,<2`, `shapely>=2.0,<3`, `pyarrow>=14.0,<23`,
+  `rasterio>=1.3,<2`, `xarray>=2023.1,<2027`, `netCDF4>=1.6,<2`, and likewise
+  for the `bench`, `dev` and `docs` groups), so a future major cannot be pulled
+  in silently.
+
+  **Bounds alone do not prevent this**, and the fix that matters is knowing
+  which install to run. There are two supported shapes, now documented in
+  `README.md` and `docs/getting-started.md`: `pip install "geocase[all]"` for a
+  **greenfield** environment, and plain **`pip install geocase`** when you
+  already have a geo stack. The plain install is enough to enumerate, select and
+  resolve every case — verified against a clean interpreter with numpy,
+  rasterio, geopandas and xarray all absent — because `case.primary_path` is an
+  ordinary filesystem path and `gdal.Open` reads it directly. The extras are the
+  convenience loaders, not how a case is read.
 
 ### Changed
 
@@ -342,17 +500,26 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `scripts/validate_catalog.py` gates all three against `len(get_registry())` so the number
   cannot drift again.
 
-## [1.0.0] — dated 2026-08-02, **not yet released**
+## [1.0.0-freeze] — 2026-08-02
 
-The feature set below was finalised on 2026-08-02, and that date is what the heading
-records. It is not a publication date: **no GeoCase version has ever been uploaded to
-PyPI or TestPyPI.** Version `0.1.0` was never uploaded either. The heading date will be
-corrected to the real one when the upload happens.
+**Not a published version.** This section records the v1.0 feature freeze: the feature
+set was finalised on 2026-08-02, and that date is what the heading records. Nothing was
+uploaded under this heading. What actually shipped as `1.0.0` is the section above,
+which folds this freeze together with everything the release candidates added; this
+entry is kept because it is where the compatibility promise and the removals were first
+written down.
 
-> **Correction (2026-08-23):** this entry originally claimed 1.0.0 was "the first release
-> published to PyPI". The release process in
-> [Releasing](contributing/releasing.md) is written and gated but has not yet been run;
-> see [Plan 25](plans/25-ship-geocase-as-a-package.md).
+> **Correction (2026-09-05):** this heading previously read `## [1.0.0] — dated
+> 2026-08-02, **not yet released**` and stated that no GeoCase version had ever been
+> uploaded to PyPI or TestPyPI. That was true when written and is no longer: `1.0.0rc1`,
+> `1.0.0rc2` and `1.0.0rc3` were published to PyPI during August 2026, and `1.0.0`
+> followed on 2026-09-05. Renamed to `1.0.0-freeze` so that exactly one section in this
+> file describes the released `1.0.0`. Version `0.1.0` was never uploaded.
+>
+> An earlier correction (2026-08-23) fixed this entry's original claim that 1.0.0 was
+> "the first release published to PyPI"; see
+> [Plan 25](plans/25-ship-geocase-as-a-package.md) for the release process that had not
+> yet been run at that point.
 
 ### The compatibility promise
 
@@ -360,8 +527,10 @@ v1.0 makes a stability commitment on **two surfaces only**:
 
 1. **The pytest workflow** — the `geocase_case` / `geocase` fixtures and the
    `geocase_case`, `geocase_suite`, and `geocase_select` markers.
-2. **The public API** — the 27 names exported from `import geocase`, pinned against a
-   literal in `tests/unit/test_public_api.py`.
+2. **The public API** — the names exported from `import geocase`, pinned against a
+   literal in `tests/unit/test_public_api.py`. This surface was 27 names at the freeze
+   and is **29** as released, after Plan 31 added `SpatialExtent` and `Category`. That
+   is an additive change: no name was removed or renamed, so the promise holds.
 
 Everything else — module layout, internal helpers, the shape of `geocase.catalog` — is
 internal and may change in a minor release. The promise is deliberately narrow because
@@ -377,7 +546,8 @@ dishonest.
 
 ### Added
 
-- **Public API** (`import geocase`): a pinned 27-name surface covering case discovery,
+- **Public API** (`import geocase`): a pinned surface — 27 names at this freeze, 29 as
+  released — covering case discovery,
   loading, and inspection — `list_cases`, `get_case`, `load_case`, `show_case`,
   `list_suites`, `get_suite`, `__version__`, the case classes, the metadata models and
   enums, and `RemoteCaseUnavailableError`.

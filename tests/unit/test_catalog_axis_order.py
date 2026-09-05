@@ -49,7 +49,7 @@ def _gml_path(case_id: str) -> Path:
 @pytest.mark.parametrize("case_id", _GML_CASES)
 def test_gml_baselines_declare_authority_axis_order(case_id: str) -> None:
     """All six carried the property; none declared it before plan 34."""
-    assert "axis_order" in _metadata(case_id).risk_types
+    assert "crs/axis_order" in _metadata(case_id).risk_types
 
 
 @pytest.mark.parametrize("case_id", _GML_CASES)
@@ -97,4 +97,4 @@ def test_out_of_bounds_case_does_not_claim_axis_order() -> None:
     That is a *validity* signal, not an axis-order declaration. Recorded here
     so the distinction is not rediscovered by someone adding the term to it.
     """
-    assert "axis_order" not in _metadata("out_of_bounds_coordinates").risk_types
+    assert "crs/axis_order" not in _metadata("out_of_bounds_coordinates").risk_types

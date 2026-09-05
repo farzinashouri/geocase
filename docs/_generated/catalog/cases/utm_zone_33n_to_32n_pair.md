@@ -61,8 +61,7 @@ Confirm that the same ground footprint reprojected via two adjacent UTM zones ag
 
 ## Risk types covered
 
-- [`utm_zone_mismatch`](../risk/utm-zone-mismatch.md)
-- [`zone_selection`](../risk/zone-selection.md)
+- [`crs/zone_selection`](../risk/crs-zone-selection.md)
 
 ## Expected behavior
 
@@ -155,13 +154,12 @@ hazard -- one polygon extending past its own zone's edge.
   },
   "keywords": [
     "crs",
+    "crs/zone_selection",
     "polygon",
     "utm",
     "utm_zone_boundary",
-    "utm_zone_mismatch",
     "valid",
-    "vector",
-    "zone_selection"
+    "vector"
   ],
   "license": "MIT",
   "creator": {

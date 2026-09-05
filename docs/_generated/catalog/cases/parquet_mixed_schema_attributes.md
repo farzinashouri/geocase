@@ -61,10 +61,10 @@ Detect loaders that silently downcast Parquet nullable integer columns to float6
 
 ## Risk types covered
 
-- [`attribute_loss`](../risk/attribute-loss.md)
-- [`columnar_storage_behavior`](../risk/columnar-storage-behavior.md)
-- `nullable_type_coercion`
-- [`schema_mismatch`](../risk/schema-mismatch.md)
+- [`attribute/loss`](../risk/attribute-loss.md)
+- [`attribute/schema_mismatch`](../risk/attribute-schema-mismatch.md)
+- `dtype/nullable_coercion`
+- [`format/columnar_storage_behavior`](../risk/format-columnar-storage-behavior.md)
 
 ## Expected behavior
 
@@ -152,17 +152,17 @@ Four simple WGS 84 points along a NE diagonal across northern Europe.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "attribute_loss",
+    "attribute/loss",
+    "attribute/schema_mismatch",
     "attributes",
-    "columnar_storage_behavior",
+    "dtype/nullable_coercion",
+    "format/columnar_storage_behavior",
     "format_specific",
     "mixed_types",
     "nullable",
-    "nullable_type_coercion",
     "parquet",
     "point",
     "schema",
-    "schema_mismatch",
     "valid",
     "vector"
   ],

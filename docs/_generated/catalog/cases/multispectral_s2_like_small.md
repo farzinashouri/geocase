@@ -60,10 +60,10 @@ Confirm GeoCase preserves a four-band uint16 multispectral stack, its band order
 
 ## Risk types covered
 
-- [`band_loss`](../risk/band-loss.md)
-- [`dtype_drift`](../risk/dtype-drift.md)
-- [`incorrect_band_order`](../risk/incorrect-band-order.md)
-- [`nodata_ignored`](../risk/nodata-ignored.md)
+- [`band/incorrect_order`](../risk/band-incorrect-order.md)
+- [`band/loss`](../risk/band-loss.md)
+- [`dtype/drift`](../risk/dtype-drift.md)
+- [`nodata/ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -81,6 +81,17 @@ Confirm GeoCase preserves a four-band uint16 multispectral stack, its band order
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `B02`, `B03`, `B04`, `B08` |
 | `expected_scale_factor` | `0.0001` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `4140.306122449` |
+| Mean including NoData | `3169.921875` |
+| NoData pixels | `240` |
+| Bounds (case CRS) | `[500000.0, 4499840.0, 500160.0, 4500000.0]` |
 
 ## Notes
 
@@ -157,15 +168,15 @@ Multispectral baseline for validating four-band uint16 reflectance handling.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "band_loss",
+    "band/incorrect_order",
+    "band/loss",
     "delivery:single-file",
-    "dtype_drift",
+    "dtype/drift",
     "eo",
     "geography:utm",
     "geotiff",
-    "incorrect_band_order",
     "multispectral",
-    "nodata_ignored",
+    "nodata/ignored",
     "product:multispectral",
     "raster",
     "sentinel2"
@@ -180,6 +191,37 @@ Multispectral baseline for validating four-band uint16 reflectance handling.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "multispectral_s2_like_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 4140.306122449
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 3169.921875
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 240
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499840.0,
+        500160.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

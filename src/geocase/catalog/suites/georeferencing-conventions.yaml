@@ -1,0 +1,44 @@
+suite_key: georeferencing-conventions
+title: Georeferencing Conventions Suite
+description: >
+  The georeferencing axis: affine transform conventions (rotation,
+  bottom-up rasters, pixel-is-area versus pixel-is-point), footprint
+  generation from sparse or holed coverage, and antimeridian bounds.
+  The recommended first suite for a new consumer — it is the shortest
+  path from install to a real finding.
+schema_version: "1.0"
+
+selection:
+  storage_class: bundled
+  include_case_ids:
+    # Transform conventions: rotation, bottom-up, pixel anchor.
+    - rotated_two_islands
+    - rotated_two_islands_warped
+    - rotated_bottom_up_small
+    - rotated_nonsquare_small
+    - rotated_steep_small
+    - bottom_up_dem_small
+    - pixel_is_area_dem_small
+    - pixel_is_point_dem_small
+    - geotiff_nodata_small_shifted
+    # Footprint generation from sparse, holed or thin coverage.
+    - hole_center_nodata
+    - all_valid_rectangular
+    - nonsquare_diagonal_sparse
+    - thin_corridor_shape
+    # Antimeridian bounds on the raster side.
+    - optical_dateline_small
+
+case_order:
+  - rotated_two_islands
+  - bottom_up_dem_small
+  - pixel_is_area_dem_small
+  - pixel_is_point_dem_small
+  - hole_center_nodata
+  - optical_dateline_small
+
+notes: >
+  Every finding reported by the round-4 GDAL-only consumer came from this
+  axis: a rotated inverse matrix that silently corrupted measurements, and
+  an unsplit antimeridian footprint that crashed tile indexing. These cases
+  span three directories and were not selectable as a set before this suite.

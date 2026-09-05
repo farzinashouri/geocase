@@ -20,9 +20,9 @@ tags:
   - crs
 
 risk_types:
-  - coordinate_wrapping
-  - bbox_misinterpretation
-  - reprojection_error
+  - crs/reprojection_error
+  - extent/bbox_misinterpretation
+  - extent/coordinate_wrapping
 
 behavioral_goal: >
   Detect code that assumes longitude continuity across the antimeridian

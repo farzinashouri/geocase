@@ -60,9 +60,9 @@ Confirm GeoCase recognises an internally tiled, overview-bearing single-band Geo
 
 ## Risk types covered
 
-- [`dtype_drift`](../risk/dtype-drift.md)
-- [`not_tiled`](../risk/not-tiled.md)
-- [`overviews_missing`](../risk/overviews-missing.md)
+- [`dtype/drift`](../risk/dtype-drift.md)
+- [`format/not_tiled`](../risk/format-not-tiled.md)
+- [`format/overviews_missing`](../risk/format-overviews-missing.md)
 
 ## Expected behavior
 
@@ -77,6 +77,15 @@ Confirm GeoCase recognises an internally tiled, overview-bearing single-band Geo
 | `expected_compression` | `deflate` |
 | `expected_overviews` | yes |
 | `is_cog` | yes |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| NoData pixels | `0` |
+| Bounds (case CRS) | `[500000.0, 4499360.0, 500640.0, 4500000.0]` |
 
 ## Required capabilities
 
@@ -123,11 +132,11 @@ Confirm GeoCase recognises an internally tiled, overview-bearing single-band Geo
   "keywords": [
     "cog",
     "delivery:cloud-optimized",
-    "dtype_drift",
+    "dtype/drift",
+    "format/not_tiled",
+    "format/overviews_missing",
     "geography:utm",
     "geotiff",
-    "not_tiled",
-    "overviews_missing",
     "product:cog",
     "raster"
   ],
@@ -141,6 +150,25 @@ Confirm GeoCase recognises an internally tiled, overview-bearing single-band Geo
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "cog_singleband_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499360.0,
+        500640.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

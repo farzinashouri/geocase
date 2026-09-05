@@ -26,7 +26,7 @@ tags:
 # test terminates the user's search. `cf_time_ordering_netcdf` carries the
 # dimension-ordering risk against bytes that actually demonstrate it.
 risk_types:
-  - nodata_ignored
+  - nodata/ignored
 
 behavioral_goal: >
   Verify that latitude/longitude dimensions are correctly identified,

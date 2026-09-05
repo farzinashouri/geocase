@@ -2,7 +2,7 @@
 
 ## Context
 
-Plan 14 rejected the corpus-as-product thesis on one sentence:
+An earlier proposal questioned the corpus-as-product thesis on one sentence:
 
 > **The input is the cheap part.** A dateline-crossing polygon is six lines of Shapely and a
 > 2 KB commit — ten minutes, once.
@@ -13,12 +13,12 @@ in a unit test, and neither can a coding model. That is the gap this plan invest
 main obstacle to unit-testing raster-intensive applications is not the assertion, it is
 *having a realistic product to assert against*.
 
-### Why this survives the objection that killed Plan 14
+### Why this survives that objection
 
 Step 0 (2026-08-09) found agents got 9/10 geospatial operations right, and the benchmark runs
 since show **zero silent failures on raster**. Reasoning-based traps are largely closed.
 
-But Plan 14 conceded exactly one surviving category:
+But that proposal conceded exactly one surviving category:
 
 > **What is unaffected.** Anything depending on facts a model cannot have.
 

@@ -33,6 +33,7 @@ from geocase.catalog.suites import ResolvedSuite, load_all_suites
 
 __all__ = [
     "list_cases",
+    "risk_types",
     "get_case",
     "load_case",
     "show_case",
@@ -83,6 +84,7 @@ def list_cases(
     tags_any: list[str] | None = None,
     tags_all: list[str] | None = None,
     risk_types_any: list[str] | None = None,
+    risk_types_all: list[str] | None = None,
     include_ids: list[str] | None = None,
     exclude_ids: list[str] | None = None,
 ) -> list[CaseMetadata]:
@@ -126,9 +128,39 @@ def list_cases(
         tags_any=tags_any,
         tags_all=tags_all,
         risk_types_any=risk_types_any,
+        risk_types_all=risk_types_all,
         include_ids=include_ids,
         exclude_ids=exclude_ids,
     )
+
+
+def risk_types() -> dict[str, list[str]]:
+    """Return the reverse index: risk type -> the case ids carrying it.
+
+    ``risk_types`` is a search index over *failure modes*, and it is the part
+    of the package external reporters name as the most useful -- it takes a
+    consumer from "what could go wrong with georeferencing" to
+    ``rotated_two_islands`` by name, in seconds. The forward direction has
+    always been available through ``list_cases(risk_types_any=...)``; this is
+    the half that was missing, and a reporter built it by hand with an ad-hoc
+    ``Counter`` over every case.
+
+    Keys are canonical terms only (see
+    :mod:`geocase.catalog.risk_types`); values are sorted case ids. Family
+    prefixes are **not** keys -- use
+    :func:`geocase.catalog.risk_types.families` to group them, or pass the
+    prefix to ``list_cases(risk_types_any=["crs"])``, which does expand it::
+
+        geocase.risk_types()["transform/rotated"]
+
+    Returns:
+        A fresh dict, safe to mutate.
+    """
+    index: dict[str, list[str]] = {}
+    for case in get_registry().list_cases():
+        for term in case.risk_types:
+            index.setdefault(term, []).append(case.id)
+    return {term: sorted(ids) for term, ids in sorted(index.items())}
 
 
 def get_case(case_id: str) -> CaseMetadata:

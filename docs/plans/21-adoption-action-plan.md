@@ -3,8 +3,8 @@
 *Written before the rename; `geospatial-spec` is now `geofacts`.*
 
 > **Status: proposed 2026-08-15.** Execution plan, not a strategy document. It does not
-> supersede [Plan 20](20-restart-spec-first.md); it sequences Plan 20's open user actions
-> (U16, U17) against the concrete release and adoption blockers measured in the working tree
+> supersede the overarching frame; it sequences the open user actions
+> against the concrete release and adoption blockers measured in the working tree
 > and against the live PyPI artifact on 2026-08-15.
 
 ## Premise
@@ -31,7 +31,7 @@ released until it is done.
 
 ## Track A — Publish `geospatial-spec`
 
-*Unblocks every release. Plan 20's U16.*
+*Unblocks every release.*
 
 - **You:** create the GitHub repo `farzinashouri/geospatial-spec`, and claim the PyPI name
   (`geospatial-spec` was free — 404 on 2026-08-15).
@@ -42,7 +42,7 @@ released until it is done.
 - **You:** configure the PyPI trusted publisher and the `pypi` environment on the new repo.
 - **Me:** tag `v0.1.0`. **You:** approve the publish run.
 - **Verify:** `pip install geospatial-spec` into a clean venv; assert zero transitive
-  dependencies. That property is the package's entire adoption argument (Plan 20 trap 6).
+  dependencies. That property is the package's entire adoption argument.
 - **Me:** add `geospatial-spec >=0.1.0` to the `run:` section of `recipe/meta.yaml`,
   which currently omits it.
 - **Gate:** `pip install geocase` from a clean venv against real PyPI resolves. Until this
@@ -50,14 +50,14 @@ released until it is done.
 
 ## Track B — The five interviews
 
-*Runs in parallel. Yours alone. Plan 20's U17 and its Phase 2 gate.*
+*Runs in parallel. Yours alone. This is the U17 interview gate.*
 
 - **You:** run the five interviews using the instrument already scaffolded in
   [`docs/evidence/2026-fixture-interviews/`](../evidence/2026-fixture-interviews/README.md).
 - Lead with Rejector B's question, not a GeoCase pitch: *what is actually preventing your
   raster tests today?*
 - Record each against `TEMPLATE.md`. Do not summarize until all five are in.
-- **Gate (pre-committed in Plan 20, applied as written):** if ≥3 of 5 name dependency
+- **Gate (pre-committed, applied as written):** if ≥3 of 5 name dependency
   injection or hardcoded paths rather than fixture fidelity, the fixture half stops and Track
   C's framing changes from "fixtures" to "spec + guard." Do not relitigate the rule after
   seeing results.
@@ -91,9 +91,8 @@ months of building.
 
 - **Me:** add a `gh-deploy` job to CI on pushes to `main`. **You:** enable GitHub Pages.
 - **Me:** drop the `Plans` and `Design` sections from the `mkdocs.yml` nav
-  and add them to `not_in_nav`. They stay in the repo as an implementation log. They must not
-  be on the public site while [Plan 20](20-restart-spec-first.md) publicly argues that the
-  catalog a visitor just installed should be deleted.
+  and add them to `not_in_nav`. They stay in the repo as an implementation log. Internal
+  planning prose does not belong on the public site beside a catalog a visitor just installed.
 - **Me:** fix [`docs/index.md`](../index.md) — "Status: alpha" contradicts the README's 1.0.
 - **Me:** align the case count across README, docs and `recipe/meta.yaml`: 130 `case.yaml`
   files on disk, 134 reported by `geocase.list_cases()`.
@@ -123,10 +122,8 @@ months of building.
 
 ## Explicitly out of scope
 
-New cases, coverage gates, conda-forge submission, Plan 20 Phases 4–5 (the $20 frontier run
-and the catalog deletion), and any new API surface. Plan 20 sequences the deletion after Phase
-1 ships *and* Phase 2 reports — that is Tracks A and B, so the deletion is downstream of this
-document, not part of it.
+New cases, coverage gates, conda-forge submission, the frontier benchmark run, and any new
+API surface.
 
 ## Success check at 4 weeks
 

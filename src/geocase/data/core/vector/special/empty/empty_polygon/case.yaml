@@ -19,7 +19,7 @@ tags:
   - baseline
 
 risk_types:
-  - empty_geometry
+  - geometry/empty
 
 behavioral_goal: >
   Confirm that geometry utilities gracefully handle Polygon EMPTY inputs.

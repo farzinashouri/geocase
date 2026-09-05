@@ -18,8 +18,7 @@ tags:
   - valid
   - baseline
 
-risk_types:
-  - none
+risk_types: []
 
 behavioral_goal: >
   Confirm that a basic point fixture is discoverable and loadable

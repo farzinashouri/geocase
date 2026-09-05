@@ -60,8 +60,8 @@ Confirm GeoCase preserves a single-band VV SAR amplitude scene and its band nami
 
 ## Risk types covered
 
-- [`band_loss`](../risk/band-loss.md)
-- [`dtype_drift`](../risk/dtype-drift.md)
+- [`band/loss`](../risk/band-loss.md)
+- [`dtype/drift`](../risk/dtype-drift.md)
 
 ## Expected behavior
 
@@ -78,6 +78,17 @@ Confirm GeoCase preserves a single-band VV SAR amplitude scene and its band nami
 | `nodata_convention` | `sentinel` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `VV` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `219.1651785714` |
+| Mean including NoData | `191.76953125` |
+| NoData pixels | `32` |
+| Bounds (case CRS) | `[500000.0, 4499840.0, 500160.0, 4500000.0]` |
 
 ## Required capabilities
 
@@ -121,9 +132,9 @@ Confirm GeoCase preserves a single-band VV SAR amplitude scene and its band nami
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "band_loss",
+    "band/loss",
     "delivery:single-file",
-    "dtype_drift",
+    "dtype/drift",
     "geography:utm",
     "geotiff",
     "product:sar",
@@ -140,6 +151,37 @@ Confirm GeoCase preserves a single-band VV SAR amplitude scene and its band nami
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "sar_vv_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 219.1651785714
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 191.76953125
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 32
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499840.0,
+        500160.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {
