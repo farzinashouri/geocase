@@ -201,32 +201,20 @@ arithmetic to check where the footprint pointed.** The fixture should hand that 
 [Plan 40](40-round-3-packaging-truth-and-vocabulary.md) Phase 2's ground-truth principle applied
 to the footprint side, on independent evidence.
 
-<<<<<<< HEAD
 **Implemented 2026-09-04.**
 
 ### 3.1 Test first ✅
-=======
-### 3.1 Test first
->>>>>>> 1afc5cf (plans 40 and 41 mostly implemented)
 
 Content-gate tests asserting the new declared values are checked against the real bytes, and that
 a wrong value is a finding.
 
-<<<<<<< HEAD
 ### 3.2 `optical_dateline_small` ✅
-=======
-### 3.2 `optical_dateline_small`
->>>>>>> 1afc5cf (plans 40 and 41 mostly implemented)
 
 Record in the case's `notes.md` and as a `known_divergences` entry: **the footprint is unsplit and
 reaches lon 180.22, so naive floor-based tile indexing will request a tile at 180.** State the
 consequence, not just the geometry — the geometry is already in the file, and it was not enough.
 
-<<<<<<< HEAD
 ### 3.3 `rotated_two_islands` ✅
-=======
-### 3.3 `rotated_two_islands`
->>>>>>> 1afc5cf (plans 40 and 41 mostly implemented)
 
 Ship an **expected pixel↔world round-trip pair** in the metadata, so a consumer asserts directly
 instead of writing their own oracle: two `(row, col) → (x, y)` pairs plus the inverse.
@@ -247,22 +235,14 @@ The reporter's first call was `c.case_id`, which raised a bare pydantic `Attribu
 the same class of problem as the already-special-cased `format=` versus `category=` mistake, which
 `selectors.py` calls "the worst first impression".
 
-<<<<<<< HEAD
 **Implemented 2026-09-04.**
 
 ### 4.1 Test first ✅
-=======
-### 4.1 Test first
->>>>>>> 1afc5cf (plans 40 and 41 mostly implemented)
 
 `tests/unit/test_models.py`: `CaseMetadata(...).case_id` returns the id, and an unknown attribute
 raises a message naming the right one.
 
-<<<<<<< HEAD
 ### 4.2 Fix ✅
-=======
-### 4.2 Fix
->>>>>>> 1afc5cf (plans 40 and 41 mostly implemented)
 
 Add a read-only `case_id` property alias on `CaseMetadata` returning `self.id`, **and** a
 `__getattr__` raising a directed error for near-misses, in the style of
@@ -352,7 +332,6 @@ mkdocs build --strict
 - **The `[all]` bounds and the risk vocabulary** —
   [Plan 40](40-round-3-packaging-truth-and-vocabulary.md) Phases 1 and 3.
 - **`differential.py` and `geocase.stac`** — Plans 37 and 38.
-<<<<<<< HEAD
 
 ---
 
@@ -400,5 +379,3 @@ What differed from the plan as written.
   `__getattr__`.
 - **The alias is read-only**, as a `@property`. A settable alias would be a second
   source of truth for the id.
-=======
->>>>>>> 1afc5cf (plans 40 and 41 mostly implemented)
