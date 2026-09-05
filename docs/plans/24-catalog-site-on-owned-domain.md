@@ -59,8 +59,8 @@ Relitigating it anyway requires naming what changed, and three things did.
 
 | Its reasoning then | Why it no longer holds |
 |---|---|
-| *"Contributors are Python developers. Adding npm to a Python repo is a real maintenance cost."* | [Plan 22](22-portfolio-direction.md) measured the contributor count at zero and the user count at zero. There is no contributor population to protect from a toolchain. |
-| *"Astro/Starlight introduce a Node toolchain to buy polish rather than reach."* | The toolchain is no longer new. `~/projects/sanam_website` runs Astro 7 with MDX, `@astrojs/sitemap`, Netlify and three-locale i18n, and isolates the live domain to one file. It is a stack already operated, not one being adopted. |
+| *"Contributors are Python developers. Adding npm to a Python repo is a real maintenance cost."* | The contributor count and the user count were both measured at zero. There is no contributor population to protect from a toolchain. |
+| *"Astro/Starlight introduce a Node toolchain to buy polish rather than reach."* | The toolchain is no longer new. Another site already operated by the author runs Astro 7 with MDX, `@astrojs/sitemap`, Netlify and three-locale i18n, and isolates the live domain to one file. It is a stack already operated, not one being adopted. |
 | *"Custom domain — optional, deferred. github.io works fully."* | True when github.io was the only home. It is false the moment the catalog is also the portfolio artifact, because then the canonical URL has to be one you own. |
 
 And one thing the earlier plan could not have anticipated, because it assumed a single host:
@@ -76,7 +76,7 @@ credit the `github.io` URL. **One published home. The owned domain.**
 ### Phase 0 — the domain (blocking input)
 
 The one thing this plan cannot supply. Register or nominate the domain, then follow the
-`sanam_website` pattern: the live URL lives in exactly one file, and canonical tags, the
+the same pattern: the live URL lives in exactly one file, and canonical tags, the
 sitemap, `robots.txt` and JSON-LD `url` all read from it.
 
 Until it is set, every phase below can be built against a Netlify preview URL. Only Phase 4
@@ -140,7 +140,7 @@ consumer. Not before — `mkdocs build --strict` is a working link gate today.
 
 ### Phase 5 — the measurement, pre-committed
 
-This exists because [Plan 22](22-portfolio-direction.md) named the pattern: four gates, four
+This exists because of a named pattern: four gates, four
 documents, zero users. A publishing plan with no gate repeats it.
 
 **Ninety days after Phase 4 ships,** read Search Console:
@@ -183,14 +183,14 @@ Publishing does not give geocase a use case. It does not help `passify` or `GeoC
 either — [Plan 23](archive/23-studies-passify-gap-audit.md) established those are two products sharing
 a domain, and neither needs a fixture catalog. What publishing does is narrower:
 
-1. **It answers the one objection [Plan 22](22-portfolio-direction.md) marks "correct, and
-   unanswered"** — *the value is in the audit, not the runtime.* A published catalog delivers
-   the audit to someone who takes no dependency, installs nothing, and never runs `pip`. Every
-   other path in the portfolio requires adoption first. This one requires a page load.
-2. **It is a portfolio artifact.** 188 pages with real prose is something to point at.
+1. **It answers the one objection recorded as "correct, and unanswered"** — *the value is in
+   the audit, not the runtime.* A published catalog delivers the audit to someone who takes no
+   dependency, installs nothing, and never runs `pip`. Every other path requires adoption
+   first. This one requires a page load.
+2. **It is something to point at.** 188 pages with real prose is a demonstrable artifact.
    A `1.0.0rc1` with zero users is not.
 3. **It is the only passive instrument for the question the interviews were meant to answer.**
-   [Plan 20](20-restart-spec-first.md) Phase 2 is still 0 of 5. Search traffic is weaker
+   The fixture interviews are still 0 of 5. Search traffic is weaker
    evidence than five conversations, but it accrues while you do something else.
 
 The argument for it is cost, not value: the content is built and paid for, and the remaining
@@ -199,12 +199,11 @@ work is a shell and a deploy.
 ## What this does not authorise
 
 New cases. A faceted filter UI. A blog. The recommendation service. Any GitHub Pages
-deployment. Folding the catalog into an unrelated site — `sanam_website` is Dr Sanam Asadi
-Faezi's dementia advisory site, a different person and a different audience, and 188
-geospatial dataset pages would damage its topical coherence for no gain to yours.
+deployment. Folding the catalog into an unrelated site owned by someone else is not an
+option either: a different audience and a different topic, where 188 geospatial dataset
+pages would damage that site's topical coherence for no gain to this one.
 
-And, per [Plan 22](22-portfolio-direction.md): no claim of adoption anywhere, including on a
-résumé. Publishing pages is not users.
+And no claim of adoption anywhere. Publishing pages is not users.
 
 ## Open inputs
 

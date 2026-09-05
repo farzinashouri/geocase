@@ -1,6 +1,6 @@
 # Plan 19: Spec table as a separate, zero-dependency package
 
-> **Archived — superseded. Retained as an implementation log.** Superseded by [Plan 20](../20-restart-spec-first.md): the separate-distribution argument carried forward, the API shape did not.
+> **Archived — superseded. Retained as an implementation log.** The separate-distribution argument carried forward into `geofacts`; the API shape did not.
 >
 > The single active roadmap is [`docs/plans/development-plan.md`](../development-plan.md).
 

@@ -539,7 +539,7 @@ The rio-tiler run's recommendations are sound *for raster* and stay sequenced be
 
 **Entry condition:** start Phase 4 when a raster consumer reports value, or when Phase 1's gate is green and Phases 2–3 have shipped. Do not start it on the strength of one negative report.
 
-**Cut outright:** the cross-version differential matrix ("the moat"). It is a *service* — scheduled workflow, results store, pinned environments — not a library feature. Build it only once the shipped differential helper has found a defect in a library not maintained here. Building it before that is the four-gates-zero-users pattern [22-portfolio-direction.md](22-portfolio-direction.md) already named.
+**Cut outright:** the cross-version differential matrix ("the moat"). It is a *service* — scheduled workflow, results store, pinned environments — not a library feature. Build it only once the shipped differential helper has found a defect in a library not maintained here. Building it before that is the four-gates-zero-users pattern already named.
 
 ---
 

@@ -3,7 +3,7 @@
 **Status: open. No interviews recorded yet. Phase 3 fixture work other than the
 nodata carve-out does not start until this reports.**
 
-Five conversations, no code, decision rule pre-committed below. This is Plan 20
+Five conversations, no code, decision rule pre-committed below. This is the
 Phase 2, and it exists because of one sentence in Rejector B's closing caveat:
 
 > Ask prospective adopters what's actually preventing their raster tests today.

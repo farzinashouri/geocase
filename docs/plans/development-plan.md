@@ -23,12 +23,11 @@ collapsed. Sequencing that used to live in `execution-order.md` is folded in bel
 | Docs site | 188 generated pages with `schema.org/Dataset` JSON-LD. GitHub Pages deployment is configured; enable Pages in repository settings to serve it. |
 | Users | Zero confirmed adopters. One prospective adopter (S2/Prithvi change detection) identified but not yet asked. |
 
-Four external evaluations — one adopter, three rejectors — have now reported. Plans 22, 23 and
-25 measured the result rather than argued it, and the finding is uncomfortable and consistent:
+Four external evaluations — one adopter, three rejectors — have now reported. Plan 25 measured
+the result rather than argued it, and the finding is uncomfortable and consistent:
 
-- **The four-gates, four-documents, zero-users pattern.** Every project in the portfolio has
-  more CI gates and planning prose than it has users. GeoCase is the furthest along and still
-  has none. ([Plan 22](22-portfolio-direction.md))
+- **The four-gates, four-documents, zero-users pattern.** The project has more CI gates and
+  planning prose than it has users.
 - **Packaging is not the bottleneck.** The library has been release-ready since Plan 11. The
   one hard blocker was dependency ordering — `geofacts` had to reach PyPI before GeoCase could
   install anywhere — and it **cleared 2026-08-24** with `geofacts 0.1.2` on PyPI. What remains
@@ -36,19 +35,10 @@ Four external evaluations — one adopter, three rejectors — have now reported
 - **Discovery is the bottleneck.** The catalog is the differentiated asset, and GitHub Pages is
   now its chosen single public URL. Enable the deployment and make the catalog indexable before
   adding further promotional surfaces.
-- **The defensible product is the scope guard, not the catalog.** 3 of 3 evaluations named the
-  constants-with-scope-guards as the thing worth having; the catalog-as-product framing was
-  rejected by [Plan 14](archive/14-reposition-as-correctness-library.md)'s own gate.
-  ([Plan 20](20-restart-spec-first.md))
 
 ## Active sequence
 
-[Plan 20](20-restart-spec-first.md) is the overarching frame — split the project, ship the
-guard, gate the fixture work on interviews, demote the benchmark to an instrument.
-[Plan 22](22-portfolio-direction.md) is the portfolio constraint on top of it: GeoCase competes
-for attention with `GeoCase_Studies` and `passify`, which have a user who already exists.
-
-Within that frame, in order:
+In order:
 
 1. **[Plan 25](25-ship-geocase-as-a-package.md) — ship the package.** Publish `geofacts` to
    PyPI first (hard dependency ordering), then rehearse GeoCase on TestPyPI as `1.0.0rc2`
@@ -130,7 +120,7 @@ first if the two are separated.
 
 **Archived 2026-08-24, per [Plan 25](25-ship-geocase-as-a-package.md) §9:**
 [Plan 17](archive/17-throughput-automation-and-corpus-as-input.md) (benchmark throughput) and
-[Plan 18](archive/18-eo-product-fixtures.md) (EO product fixtures, absorbed by Plan 20) were
+[Plan 18](archive/18-eo-product-fixtures.md) (EO product fixtures) were
 both off the critical path, and Plan 18's own gate had already refuted its premise. Keeping
 them in the active set implied pending work that nothing is waiting on.
 [Plan 23](archive/23-studies-passify-gap-audit.md) moved too — a completed audit, not a plan.
@@ -144,12 +134,9 @@ Not automatable and not delegable. Each blocks the work named beside it.
 | Id | Blocks | Action |
 |---|---|---|
 | — | [Plan 25](25-ship-geocase-as-a-package.md), step 6 | ~~**Publish `geofacts` to PyPI.**~~ **Done 2026-08-24** — shipped as `0.1.2`; GeoCase's floor is now `>=0.1.2`. Remaining user action: register GeoCase's own pending publishers on test.pypi.org/pypi.org so the `1.0.0rc2` rehearsal can upload. |
-| U16 | [Plan 20](20-restart-spec-first.md) Phase 1 | Choose the PyPI name and create the repo. (Largely satisfied by the `geofacts` rename; confirm the name is claimable.) |
-| U17 | [Plan 20](20-restart-spec-first.md) Phase 2, and all of Phase 3 bar the nodata carve-out | **Run the five fixture interviews.** 0 of 5 recorded. The whole gate is judgement about what people actually said. Instrument: [`docs/evidence/2026-fixture-interviews/`](../evidence/2026-fixture-interviews/TEMPLATE.md). |
+| U17 | The fixture work | **Run the five fixture interviews.** 0 of 5 recorded. The whole gate is judgement about what people actually said. Instrument: [`docs/evidence/2026-fixture-interviews/`](../evidence/2026-fixture-interviews/TEMPLATE.md). |
 | U18 | Nothing — but it is the cheapest signal available | Send the shipped guard to the S2/Prithvi adopter and ask directly whether it goes in. |
-| U19 | [Plan 20](20-restart-spec-first.md) Phase 4 | Spend the $20; run the frontier bare track; spot-check two modules per model. |
-| U20 | [Plan 20](20-restart-spec-first.md) Phase 4 | Review the 14 null `named_trap` records. |
-| U21 | [Plan 20](20-restart-spec-first.md) Phase 5 | Approve the corpus deletion (~128 unreferenced cases) and the PyPI notice wording. |
+| U20 | The benchmark | Review the 14 null `named_trap` records. |
 | U7 | [Plan 16](archive/16-generalize-beyond-geospatial.md), archived | Run the contamination probe and review its `named_trap` output. Carried here because open items belong in the roadmap, not in an archived plan. |
 | U9 | [Plan 16](archive/16-generalize-beyond-geospatial.md), archived | Run the `stdlib` bare track against a model. |
 | U10 | [Plan 16](archive/16-generalize-beyond-geospatial.md), archived | The distribution rename that generalizing the benchmark beyond geospatial implies. |
@@ -204,8 +191,7 @@ One line per archived plan, and why. Full text and status banners in
 | [11 — Distribution (PyPI & conda)](archive/11-distribution-pypi-and-conda.md) | **Superseded** by Plan 25, which executes the same upload with a TestPyPI rehearsal and correct dependency ordering. |
 | [12 — Docs Site Publication](archive/12-docs-site-publication.md) | **Reversed** by Plan 24. GitHub Pages is now explicitly ruled out for canonical-URL reasons, not cost reasons. |
 | [13 — Cross-Format Canonical Convergence](archive/13-cross-format-canonical-convergence.md) | **Implemented 2026-08-09.** All 60 `*_baseline` fixtures now hold the geometry their `canonical_source_case_id` claims; gated by `generate_vector_fixtures.py --check`. 53 of 60 had been wrong. |
-| [14 — Reposition as a Correctness Library](archive/14-reposition-as-correctness-library.md) | **Rejected 2026-08-09** by its own pre-committed Step 0 gate. Ten blind agents got 9/10 operations correct; only `buffer_m` across the antimeridian failed, silently, 2/2. The library would have been redundant. Salvage path executed by Plan 15. |
-| [15 — GeoCase as a Benchmark](archive/15-geocase-as-benchmark.md) | **Implemented 2026-08-10** (Phases 1, 3, stripped 4). Superseded as *strategy* by Plan 20, which demotes the benchmark from product to instrument. The instrument remains and is maintained. |
-| [16 — Generalize Beyond Geospatial](archive/16-generalize-beyond-geospatial.md) | **Phases 0–4 built 2026-08-10.** Halted where it stands by Plan 20. Its three open user actions are carried in the table above. |
-| [19 — Spec Table as a Separate Package](archive/19-spec-table-separate-repo.md) | **Superseded** by Plan 20. The separate-distribution argument was right and carried forward into `geofacts`; the API shape was wrong — its public `SpecFact.value` is exactly the bare dereferenceable constant the one confirmed adopter calls make-or-break to prevent. |
+| [15 — A Benchmark Built on the Catalog](archive/15-geocase-as-benchmark.md) | **Implemented 2026-08-10** (Phases 1, 3, stripped 4). Proposes the benchmark as an addition alongside the library, behind a `bench` extra. The instrument remains and is maintained. |
+| [16 — Generalize Beyond Geospatial](archive/16-generalize-beyond-geospatial.md) | **Phases 0–4 built 2026-08-10.** Halted where it stands. Its three open user actions are carried in the table above. |
+| [19 — Spec Table as a Separate Package](archive/19-spec-table-separate-repo.md) | **Superseded.** The separate-distribution argument was right and carried forward into `geofacts`; the API shape was wrong — its public `SpecFact.value` is exactly the bare dereferenceable constant the one confirmed adopter calls make-or-break to prevent. |
 | [01–10](archive/index.md) | The pre-v1.0 plans, collapsed into the roadmap in July 2026. Plans 04 and 08 hold real corpus history. |

@@ -216,10 +216,9 @@ existing banner style in `archive/01`–`10`), and confirm `mkdocs.yml`'s existi
 | `11-distribution-pypi-and-conda.md` | Superseded by [Plan 25](25-ship-geocase-as-a-package.md) (2026-08-23) |
 | `12-docs-site-publication.md` | **Reversed by [Plan 24](24-catalog-site-on-owned-domain.md)** — GitHub Pages is now explicitly ruled out |
 | `13-cross-format-canonical-convergence.md` | Implemented 2026-08-09 (header currently still says "Proposed") |
-| `14-reposition-as-correctness-library.md` | Rejected — Step 0 gate fired 2026-08-09 |
 | `15-geocase-as-benchmark.md` | Implemented 2026-08-10 |
 | `16-generalize-beyond-geospatial.md` | Phases 0–4 built 2026-08-10; U7/U9/U10 open — **see note** |
-| `19-spec-table-separate-repo.md` | Superseded by [Plan 20](20-restart-spec-first.md) |
+| `19-spec-table-separate-repo.md` | Superseded |
 
 **Judgment call on 16:** it has three open user actions (U7, U9, U10). Archiving a plan with live
 open items buries them. Either (a) keep 16 active until U7/U9/U10 close, or (b) archive it and

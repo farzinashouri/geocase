@@ -50,7 +50,7 @@ The adoption cost is measured, not hypothetical:
 - **Two prior evaluations rejected geocase as "pixel-moving, GDAL-native."** At least one is
   likely a false negative for the same reason: pixel-moving GDAL codebases are *exactly* who
   `bottom_up_dem_small`, `rotated_two_islands` and `pixel_is_area`/`pixel_is_point` are for.
-  [Plan 22](22-portfolio-direction.md) recorded those rejections as evidence about the product;
+  those rejections were recorded as evidence about the product;
   round 4 says at least one was evidence about the *description*.
 - The reporter **nearly did not run it at all**, because `requires_dist` shows rasterio,
   geopandas and xarray behind extras and this stack is GDAL-only. That `primary_path` returns an
