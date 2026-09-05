@@ -60,9 +60,9 @@ Confirm that a consumer compositing this group across its overlaps produces a re
 
 ## Risk types covered
 
-- [`band_alias_ambiguity`](../risk/band-alias-ambiguity.md)
-- [`nodata_ignored`](../risk/nodata-ignored.md)
-- [`stacking_order_ignored`](../risk/stacking-order-ignored.md)
+- [`band/alias_ambiguity`](../risk/band-alias-ambiguity.md)
+- [`band/stacking_order_ignored`](../risk/band-stacking-order-ignored.md)
+- [`nodata/ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -78,6 +78,17 @@ Confirm that a consumer compositing this group across its overlaps produces a re
 | `expected_nodata_value` | `-9999.0` |
 | `nodata_convention` | `sentinel` |
 | `expected_band_names` | `red` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `10.0` |
+| Mean including NoData | `-59.5069444444` |
+| NoData pixels | `1` |
+| Bounds (case CRS) | `[500000.0, 4499640.0, 500360.0, 4500000.0]` |
 
 ## Notes
 
@@ -199,16 +210,16 @@ odc-stac. See `docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md`.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "band_alias_ambiguity",
+    "band/alias_ambiguity",
+    "band/stacking_order_ignored",
     "delivery:multi-file",
     "geotiff",
     "group",
     "mosaic",
-    "nodata_ignored",
+    "nodata/ignored",
     "overlap",
     "raster",
-    "stac",
-    "stacking_order_ignored"
+    "stac"
   ],
   "license": "MIT",
   "creator": {
@@ -220,6 +231,37 @@ odc-stac. See `docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md`.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "overlap_group_north.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 10.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": -59.5069444444
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499640.0,
+        500360.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

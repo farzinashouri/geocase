@@ -44,8 +44,8 @@ def _layer(name: str) -> dict:
 
 def test_case_declares_crs_mismatch() -> None:
     """The vocabulary gap this case exists to close."""
-    assert "crs_mismatch" in _metadata().risk_types
-    assert "reprojection_error" in _metadata().risk_types
+    assert "crs/mismatch" in _metadata().risk_types
+    assert "crs/reprojection_error" in _metadata().risk_types
 
 
 def test_case_is_the_only_crs_mismatch_case() -> None:
@@ -56,7 +56,7 @@ def test_case_is_the_only_crs_mismatch_case() -> None:
     """
     from geocase import list_cases
 
-    declaring = [c.id for c in list_cases() if "crs_mismatch" in c.risk_types]
+    declaring = [c.id for c in list_cases() if "crs/mismatch" in c.risk_types]
     assert declaring == [CASE_ID]
 
 

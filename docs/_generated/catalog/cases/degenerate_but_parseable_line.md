@@ -61,9 +61,9 @@ Ensure loading succeeds for a degenerate but parseable line while making its zer
 
 ## Risk types covered
 
-- `degenerate_but_parseable`
-- `invalid_measurement`
-- `zero_length_geometry`
+- `geometry/degenerate_but_parseable`
+- `geometry/zero_length`
+- `measurement/invalid`
 
 ## Expected behavior
 
@@ -125,13 +125,13 @@ Zero-length LineString that parses successfully but is geometrically degenerate.
   "keywords": [
     "collapsed",
     "degenerate",
-    "degenerate_but_parseable",
+    "geometry/degenerate_but_parseable",
+    "geometry/zero_length",
     "invalid",
-    "invalid_measurement",
     "linestring",
+    "measurement/invalid",
     "parseable",
-    "vector",
-    "zero_length_geometry"
+    "vector"
   ],
   "license": "MIT",
   "creator": {

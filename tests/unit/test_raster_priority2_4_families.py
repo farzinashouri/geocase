@@ -263,8 +263,8 @@ def test_landcover_ambiguous_zero_case_exists():
     """
     meta = _require_case("landcover_ambiguous_zero_small")
     assert meta.assertions.expect_nodata is True
-    assert "ambiguous_zero" in meta.risk_types
-    assert "nodata_ignored" in meta.risk_types
+    assert "nodata/ambiguous_zero" in meta.risk_types
+    assert "nodata/ignored" in meta.risk_types
 
 
 def test_landcover_ambiguous_zero_declares_zero_as_nodata(case_roots):

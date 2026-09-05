@@ -18,10 +18,10 @@ tags:
   - baseline
   - kml
   - cross_format_canonical
+  - format_comparison
 
 risk_types:
-  - format_comparison
-  - xml_driver_behavior
+  - format/xml_driver_behavior
 
 behavioral_goal: >
   Provide a canonical polygon encoded as KML so polygon driver-backed loading can be compared against the GeoJSON baseline.

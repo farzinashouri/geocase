@@ -77,6 +77,7 @@ nav:
       - Adding a Case: adding-a-case.md
       - Remote Datasets: remote-datasets.md
       - Dataset Catalog: dataset-catalog.md
+  - Changelog: changelog.md
   - Contributing:
       - Workflow: contributing/workflow.md
       - Releasing: contributing/releasing.md

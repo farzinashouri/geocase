@@ -61,8 +61,8 @@ Confirm that disjoint features remain separate and do not intersect.
 
 ## Risk types covered
 
-- `false_positive_intersection`
-- `overaggressive_dissolve`
+- `geometry/false_positive_intersection`
+- `geometry/overaggressive_dissolve`
 
 ## Expected behavior
 
@@ -122,9 +122,9 @@ Two separated polygons for dissolve and intersection tests that should remain no
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "false_positive_intersection",
+    "geometry/false_positive_intersection",
+    "geometry/overaggressive_dissolve",
     "multipart",
-    "overaggressive_dissolve",
     "polygon",
     "topology",
     "vector"

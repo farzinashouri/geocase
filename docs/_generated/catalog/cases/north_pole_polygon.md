@@ -61,8 +61,8 @@ Ensure polygon-based utilities handle geometries near the north pole without cra
 
 ## Risk types covered
 
-- [`area_distortion`](../risk/area-distortion.md)
-- [`polar_projection_singularity`](../risk/polar-projection-singularity.md)
+- [`extent/polar`](../risk/extent-polar.md)
+- [`measurement/area_distortion`](../risk/measurement-area-distortion.md)
 
 ## Expected behavior
 
@@ -133,7 +133,7 @@ The ring is wound counter-clockwise (right-hand rule) and encloses the pole.
 - [North Pole Point](north_pole_point.md) -- `north_pole_point`
 - [Equator-Crossing Polygon](equator_polygon.md) -- `equator_polygon`
 - [South Pole Point](south_pole_point.md) -- `south_pole_point`
-- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
+- [Svalbard Special Zone Polygon](svalbard_special_zone_polygon.md) -- `svalbard_special_zone_polygon`
 
 <script type="application/ld+json">
 {
@@ -149,13 +149,13 @@ The ring is wound counter-clockwise (right-hand rule) and encloses the pole.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "area_distortion",
     "crs",
     "edge_case",
+    "extent/polar",
     "geojson",
+    "measurement/area_distortion",
     "north_pole",
     "polar",
-    "polar_projection_singularity",
     "pole",
     "polygon",
     "vector"

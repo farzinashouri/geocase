@@ -60,9 +60,9 @@ Confirm that NoData pixels are correctly masked and excluded from statistical co
 
 ## Risk types covered
 
-- `incorrect_statistics`
-- `nan_propagation`
-- [`nodata_ignored`](../risk/nodata-ignored.md)
+- `data/nan_propagation`
+- `measurement/incorrect_statistics`
+- [`nodata/ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
 
@@ -73,6 +73,17 @@ Confirm that NoData pixels are correctly masked and excluded from statistical co
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
 | `expected_shape` | `[10, 10]` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `48.0787352901` |
+| Mean including NoData | `-152.8628394157` |
+| NoData pixels | `2` |
+| Bounds (case CRS) | `[500000.0, 5600000.0, 510000.0, 5610000.0]` |
 
 ## Notes
 
@@ -125,9 +136,9 @@ statistics validation.
 
 - [Hole Center NoData Raster](hole_center_nodata.md) -- `hole_center_nodata`
 - [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
+- [Nodata Only (One Sentinel, North-Up, Unrotated)](nodata_only_dem_small.md) -- `nodata_only_dem_small`
 - [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
-- [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
 
 <script type="application/ld+json">
 {
@@ -143,12 +154,12 @@ statistics validation.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "data/nan_propagation",
     "geotiff",
-    "incorrect_statistics",
     "masking",
-    "nan_propagation",
+    "measurement/incorrect_statistics",
     "nodata",
-    "nodata_ignored",
+    "nodata/ignored",
     "raster"
   ],
   "license": "MIT",
@@ -161,6 +172,37 @@ statistics validation.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "nodata_sample.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 48.0787352901
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": -152.8628394157
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 2
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        5600000.0,
+        510000.0,
+        5610000.0
+      ]
     }
   ],
   "spatialCoverage": {

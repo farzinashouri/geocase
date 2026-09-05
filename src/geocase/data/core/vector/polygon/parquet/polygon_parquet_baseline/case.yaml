@@ -18,10 +18,10 @@ tags:
   - baseline
   - parquet
   - cross_format_canonical
+  - format_comparison
 
 risk_types:
-  - format_comparison
-  - columnar_storage_behavior
+  - format/columnar_storage_behavior
 
 behavioral_goal: >
   Provide a canonical polygon encoded as GeoParquet so columnar vector loading can be compared against driver-backed and text-backed baselines.

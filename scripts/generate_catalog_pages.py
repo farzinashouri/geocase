@@ -25,7 +25,6 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
 OUTPUT_ROOT = REPO_ROOT / "docs" / "_generated" / "catalog"
@@ -311,6 +310,28 @@ def _required_drivers_cell(drivers: list[str]) -> str:
     return ", ".join(f"`{driver}`" for driver in drivers if driver)
 
 
+#: The ground-truth fields (plan 40 phase 2). Held out of the assertions table
+#: and given their own section: the rest of that table says what *shape* the
+#: data has, while these say what the right *answer* is, and a reader grading
+#: their own code against the case needs to find them without reading a row of
+#: dtypes first.
+_TRUTH_KEYS = (
+    "expected_mean_masked",
+    "expected_mean_naive",
+    "nodata_pixel_count",
+    "expected_bounds",
+    "expected_pixel_world_pairs",
+)
+
+_TRUTH_LABELS = {
+    "expected_mean_masked": "Mean over valid pixels",
+    "expected_mean_naive": "Mean including NoData",
+    "nodata_pixel_count": "NoData pixels",
+    "expected_bounds": "Bounds (case CRS)",
+    "expected_pixel_world_pairs": "Pixel to world (row, col, x, y)",
+}
+
+
 def _assertion_rows(case: Any) -> list[tuple[str, str]]:
     """Return the populated assertion hints as (label, value) pairs."""
     assertions = getattr(case, "assertions", None)
@@ -320,6 +341,8 @@ def _assertion_rows(case: Any) -> list[tuple[str, str]]:
     dumped = assertions.model_dump(exclude_none=True)
     rows: list[tuple[str, str]] = []
     for key, value in dumped.items():
+        if key in _TRUTH_KEYS:
+            continue
         if key == "required_drivers":
             rendered = _required_drivers_cell(value)
             if not rendered:
@@ -340,6 +363,42 @@ def _assertion_rows(case: Any) -> list[tuple[str, str]]:
             rendered = f"`{_value(value)}`"
         rows.append((f"`{key}`", rendered))
     return rows
+
+
+def _known_answer_section(case: Any) -> list[str]:
+    """Render the case's declared ground truth, if it has any (plan 40 §2.5).
+
+    Every number here is generated from the pixels by
+    ``scripts/catalog_truth.py`` and proved against them by the content gate,
+    so a reader can grade their own output against the page without opening the
+    file. The two means are shown together deliberately: their gap is what a
+    consumer that forgets to mask NoData actually produces.
+    """
+    assertions = getattr(case, "assertions", None)
+    if assertions is None:
+        return []
+
+    rows: list[tuple[str, str]] = []
+    for key in _TRUTH_KEYS:
+        value = getattr(assertions, key, None)
+        if value is None:
+            continue
+        rendered = f"`{list(value)}`" if isinstance(value, list) else f"`{value}`"
+        rows.append((_TRUTH_LABELS[key], rendered))
+
+    if not rows:
+        return []
+
+    lines = [
+        "## Known answer",
+        "",
+        "Computed from the actual bytes and gated against them. Grade your own "
+        "output against these.",
+        "",
+    ]
+    lines.extend(_table(("Quantity", "Value"), rows))
+    lines.append("")
+    return lines
 
 
 def _known_divergences_section(case: Any) -> list[str]:
@@ -446,6 +505,24 @@ def _json_ld(case: Any, site_url: str) -> list[str]:
                 "name": primary,
             }
         ]
+
+    # The declared answer, as schema.org's vocabulary for a dataset's measured
+    # quantities. Machine-readable for the same reason the page section exists:
+    # a consumer can grade against the case without opening the raster.
+    assertions = getattr(case, "assertions", None)
+    if assertions is not None:
+        measured = [
+            {
+                "@type": "PropertyValue",
+                "name": key,
+                "description": _TRUTH_LABELS[key],
+                "value": getattr(assertions, key),
+            }
+            for key in _TRUTH_KEYS
+            if getattr(assertions, key, None) is not None
+        ]
+        if measured:
+            payload["variableMeasured"] = measured
 
     place: dict[str, Any] = {}
     if case.crs:
@@ -667,6 +744,7 @@ def _render_case_page(
         lines.extend(_table(("Assertion", "Expected"), assertion_rows))
         lines.append("")
 
+    lines.extend(_known_answer_section(case))
     lines.extend(_known_divergences_section(case))
 
     # The hand-written prose sits high on the page, right after what the case
@@ -1012,16 +1090,49 @@ def _render_index(
     lines.append("")
     lines.append("Start here if you know the failure mode you want to test against.")
     lines.append("")
-    lines.append("| Risk type | Cases |")
-    lines.append("|---|---:|")
-    for risk in sorted(hub_risks):
-        lines.append(f"| [`{risk}`](risk/{_slug(risk)}.md) | {len(by_risk[risk])} |")
-    lines.append("")
     lines.append(
-        f"A further {len(by_risk) - len(hub_risks)} risk types apply to a single case "
-        "and are listed against each case below."
+        "The vocabulary is canonical and closed: terms are `family/specific`, and "
+        "a selector matches either the full term or the bare family prefix, so "
+        '`risk_types_any=["crs"]` selects the whole CRS family. In Python, '
+        "`geocase.risk_types()` returns this table as a mapping."
     )
     lines.append("")
+
+    # The *complete* index, grouped by family. Plan 40 §3.5: hub pages stay
+    # gated on MIN_HUB_CASES for the thin-content SEO reason, but the index
+    # itself must list every term -- the reporter's complaint was precisely
+    # that singleton terms were invisible, which is what sent them to an
+    # ad-hoc Counter over all 163 cases.
+    grouped: dict[str, list[str]] = defaultdict(list)
+    for risk in sorted(by_risk):
+        family = risk.split("/")[0] if "/" in risk else ""
+        grouped[family].append(risk)
+
+    for family in sorted(grouped, key=lambda f: (f == "", f)):
+        heading = f"### `{family}/`" if family else "### Ungrouped"
+        lines.append(heading)
+        lines.append("")
+        if family:
+            lines.append(
+                f"Select the whole family with "
+                f'`geocase.list_cases(risk_types_any=["{family}"])`.'
+            )
+            lines.append("")
+        lines.append("| Risk type | Cases | Where |")
+        lines.append("|---|---:|---|")
+        for risk in grouped[family]:
+            entries = sorted(by_risk[risk], key=lambda item: item.id)
+            if risk in hub_risks:
+                label = f"[`{risk}`](risk/{_slug(risk)}.md)"
+            else:
+                label = f"`{risk}`"
+            where = ", ".join(
+                f"[{case.id}](cases/{case.id}.md)" for case in entries[:6]
+            )
+            if len(entries) > 6:
+                where += f", and {len(entries) - 6} more"
+            lines.append(f"| {label} | {len(entries)} | {where} |")
+        lines.append("")
 
     lines.append("## Browse by format")
     lines.append("")

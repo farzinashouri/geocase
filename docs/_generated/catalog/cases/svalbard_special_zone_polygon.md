@@ -61,8 +61,8 @@ Confirm that robust UTM-zone logic applies the Svalbard special zone rules.
 
 ## Risk types covered
 
-- `polar_projection_edge_case`
-- [`zone_selection`](../risk/zone-selection.md)
+- [`crs/zone_selection`](../risk/crs-zone-selection.md)
+- [`extent/polar`](../risk/extent-polar.md)
 
 ## Expected behavior
 
@@ -123,12 +123,12 @@ A polygon in the Svalbard latitude band used to test special UTM zone logic.
   },
   "keywords": [
     "crs",
-    "polar_projection_edge_case",
+    "crs/zone_selection",
+    "extent/polar",
     "polygon",
     "special-case",
     "utm",
-    "vector",
-    "zone_selection"
+    "vector"
   ],
   "license": "MIT",
   "creator": {

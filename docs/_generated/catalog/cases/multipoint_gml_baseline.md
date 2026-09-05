@@ -61,8 +61,7 @@ Provide a canonical multipoint encoded as GML so format-specific loader behavior
 
 ## Risk types covered
 
-- [`axis_order`](../risk/axis-order.md)
-- [`format_comparison`](../risk/format-comparison.md)
+- [`crs/axis_order`](../risk/crs-axis-order.md)
 
 ## Expected behavior
 
@@ -152,7 +151,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`baseline` `cross_format_canonical` `gml` `multipoint` `valid` `vector`
+`baseline` `cross_format_canonical` `format_comparison` `gml` `multipoint` `valid` `vector`
 
 ## Related cases
 
@@ -176,9 +175,9 @@ geometry is derived from `params.canonical_source_case_id`
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "axis_order",
     "baseline",
     "cross_format_canonical",
+    "crs/axis_order",
     "format_comparison",
     "gml",
     "multipoint",

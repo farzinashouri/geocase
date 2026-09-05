@@ -61,8 +61,7 @@ Provide a canonical polygon encoded as GeoParquet so columnar vector loading can
 
 ## Risk types covered
 
-- [`columnar_storage_behavior`](../risk/columnar-storage-behavior.md)
-- [`format_comparison`](../risk/format-comparison.md)
+- [`format/columnar_storage_behavior`](../risk/format-columnar-storage-behavior.md)
 
 ## Expected behavior
 
@@ -119,7 +118,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`baseline` `cross_format_canonical` `parquet` `polygon` `valid` `vector`
+`baseline` `cross_format_canonical` `format_comparison` `parquet` `polygon` `valid` `vector`
 
 ## Related cases
 
@@ -144,8 +143,8 @@ geometry is derived from `params.canonical_source_case_id`
   },
   "keywords": [
     "baseline",
-    "columnar_storage_behavior",
     "cross_format_canonical",
+    "format/columnar_storage_behavior",
     "format_comparison",
     "parquet",
     "polygon",

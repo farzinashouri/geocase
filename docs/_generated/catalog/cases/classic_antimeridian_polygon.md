@@ -61,8 +61,8 @@ Provide a canonical antimeridian polygon that heuristic crossing checks are expe
 
 ## Risk types covered
 
-- [`bbox_misinterpretation`](../risk/bbox-misinterpretation.md)
-- [`coordinate_wrapping`](../risk/coordinate-wrapping.md)
+- [`extent/bbox_misinterpretation`](../risk/extent-bbox-misinterpretation.md)
+- [`extent/coordinate_wrapping`](../risk/extent-coordinate-wrapping.md)
 
 ## Expected behavior
 
@@ -123,9 +123,9 @@ A canonical polygon whose coordinates wrap from +179 to -179 degrees.
   },
   "keywords": [
     "antimeridian",
-    "bbox_misinterpretation",
-    "coordinate_wrapping",
     "dateline",
+    "extent/bbox_misinterpretation",
+    "extent/coordinate_wrapping",
     "polygon",
     "vector"
   ],

@@ -60,8 +60,8 @@ Confirm GeoCase detects NaN-encoded NoData in a float DEM rather than treating N
 
 ## Risk types covered
 
-- [`nan_mishandled`](../risk/nan-mishandled.md)
-- [`nodata_ignored`](../risk/nodata-ignored.md)
+- [`nodata/ignored`](../risk/nodata-ignored.md)
+- [`nodata/nan_mishandled`](../risk/nodata-nan-mishandled.md)
 
 ## Expected behavior
 
@@ -77,6 +77,17 @@ Confirm GeoCase detects NaN-encoded NoData in a float DEM rather than treating N
 | `nodata_convention` | `nan` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `elevation` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `110.0` |
+| Mean including NoData | `110.0` |
+| NoData pixels | `2` |
+| Bounds (case CRS) | `[500000.0, 4499840.0, 500160.0, 4500000.0]` |
 
 ## Required capabilities
 
@@ -125,8 +136,8 @@ Confirm GeoCase detects NaN-encoded NoData in a float DEM rather than treating N
     "dem",
     "geography:utm",
     "geotiff",
-    "nan_mishandled",
-    "nodata_ignored",
+    "nodata/ignored",
+    "nodata/nan_mishandled",
     "product:dem",
     "raster"
   ],
@@ -140,6 +151,37 @@ Confirm GeoCase detects NaN-encoded NoData in a float DEM rather than treating N
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "dem_nan_nodata_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 110.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 110.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 2
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499840.0,
+        500160.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

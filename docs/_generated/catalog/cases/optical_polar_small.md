@@ -60,8 +60,8 @@ Confirm GeoCase handles an RGB optical scene in a polar stereographic CRS.
 
 ## Risk types covered
 
-- [`crs_mishandled`](../risk/crs-mishandled.md)
-- `projection_assumptions`
+- [`crs/mishandled`](../risk/crs-mishandled.md)
+- `data/projection_assumptions`
 
 ## Expected behavior
 
@@ -75,6 +75,15 @@ Confirm GeoCase handles an RGB optical scene in a polar stereographic CRS.
 | `expected_shape` | `[16, 16]` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `red`, `green`, `blue` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| NoData pixels | `0` |
+| Bounds (case CRS) | `[-2000000.0, 1999840.0, -1999840.0, 2000000.0]` |
 
 ## Required capabilities
 
@@ -118,14 +127,14 @@ Confirm GeoCase handles an RGB optical scene in a polar stereographic CRS.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "crs_mishandled",
+    "crs/mishandled",
+    "data/projection_assumptions",
     "delivery:single-file",
     "eo",
     "geography:polar",
     "geotiff",
     "optical",
     "product:optical",
-    "projection_assumptions",
     "raster"
   ],
   "license": "MIT",
@@ -138,6 +147,25 @@ Confirm GeoCase handles an RGB optical scene in a polar stereographic CRS.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "optical_polar_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        -2000000.0,
+        1999840.0,
+        -1999840.0,
+        2000000.0
+      ]
     }
   ],
   "spatialCoverage": {

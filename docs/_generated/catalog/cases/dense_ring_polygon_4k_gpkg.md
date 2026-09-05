@@ -59,10 +59,6 @@ pip install "geocase[all]"
 
 Confirm that a 4096-vertex polygon round-trips through a GeoPackage with every coordinate intact, so a driver-side vertex limit or WKB truncation is visible rather than silent.
 
-## Risk types covered
-
-- [`none`](../risk/none.md)
-
 ## Expected behavior
 
 | Assertion | Expected |
@@ -120,9 +116,9 @@ hand-authored single-feature GeoJSON files and this geometry is generated. The
 
 - [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
 - [Fractal Coastline Polygon](fractal_coastline_polygon.md) -- `fractal_coastline_polygon`
-- [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
-- [Simple Valid LineString](simple_valid_linestring.md) -- `simple_valid_linestring`
-- [Simple Valid MultiLineString](simple_valid_multilinestring.md) -- `simple_valid_multilinestring`
+- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
+- [Format-limited Precision Polygon](format_limited_precision_polygon.md) -- `format_limited_precision_polygon`
+- [Invalid Geometry at Feature 9,999 (GeoPackage)](invalid_geometry_at_scale_gpkg.md) -- `invalid_geometry_at_scale_gpkg`
 
 <script type="application/ld+json">
 {
@@ -140,7 +136,6 @@ hand-authored single-feature GeoJSON files and this geometry is generated. The
   "keywords": [
     "high_vertex_count",
     "irregular_geometry",
-    "none",
     "polygon",
     "procedural",
     "valid",

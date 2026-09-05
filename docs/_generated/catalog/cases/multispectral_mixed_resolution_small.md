@@ -60,9 +60,9 @@ Confirm GeoCase preserves a multispectral stack assembled from bands of differin
 
 ## Risk types covered
 
-- [`band_loss`](../risk/band-loss.md)
-- `resampling_assumptions`
-- `resolution_mismatch`
+- [`band/loss`](../risk/band-loss.md)
+- `transform/resampling_assumptions`
+- `transform/resolution_mismatch`
 
 ## Expected behavior
 
@@ -80,6 +80,17 @@ Confirm GeoCase preserves a multispectral stack assembled from bands of differin
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `B04`, `B08`, `B11` |
 | `expected_scale_factor` | `0.0001` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `4119.0476190476` |
+| Mean including NoData | `3153.6458333333` |
+| NoData pixels | `180` |
+| Bounds (case CRS) | `[500000.0, 4499840.0, 500160.0, 4500000.0]` |
 
 ## Required capabilities
 
@@ -123,7 +134,7 @@ Confirm GeoCase preserves a multispectral stack assembled from bands of differin
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "band_loss",
+    "band/loss",
     "delivery:resampled-stack",
     "geography:utm",
     "geotiff",
@@ -131,8 +142,8 @@ Confirm GeoCase preserves a multispectral stack assembled from bands of differin
     "multispectral",
     "product:multispectral",
     "raster",
-    "resampling_assumptions",
-    "resolution_mismatch"
+    "transform/resampling_assumptions",
+    "transform/resolution_mismatch"
   ],
   "license": "MIT",
   "creator": {
@@ -144,6 +155,37 @@ Confirm GeoCase preserves a multispectral stack assembled from bands of differin
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "multispectral_mixed_resolution_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 4119.0476190476
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 3153.6458333333
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 180
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499840.0,
+        500160.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

@@ -18,10 +18,10 @@ tags:
   - baseline
   - flatgeobuf
   - cross_format_canonical
+  - format_comparison
 
 risk_types:
-  - format_comparison
-  - driver_behavior
+  - format/driver_behavior
 
 behavioral_goal: >
   Provide a canonical line encoded as FlatGeobuf so binary driver-backed line loading can be compared against text and container baselines.

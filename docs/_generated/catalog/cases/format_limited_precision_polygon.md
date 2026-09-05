@@ -61,9 +61,8 @@ Expose workflows that silently reduce coordinate precision and thereby invalidat
 
 ## Risk types covered
 
-- `driver_specific_precision_loss`
-- `format_limited`
-- `precision_rounding`
+- [`format/limitation`](../risk/format-limitation.md)
+- [`precision/loss`](../risk/precision-loss.md)
 
 ## Expected behavior
 
@@ -103,11 +102,11 @@ Thin polygon that is valid in high-precision formats but vulnerable to rounding-
 
 ## Related cases
 
+- [GeoJSON Precision Loss Roundtrip](precision_loss_geojson_roundtrip.md) -- `precision_loss_geojson_roundtrip`
+- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
+- [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
 - [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
 - [Dense Ring Polygon (4096 vertices, GeoPackage)](dense_ring_polygon_4k_gpkg.md) -- `dense_ring_polygon_4k_gpkg`
-- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
-- [Fractal Coastline Polygon](fractal_coastline_polygon.md) -- `fractal_coastline_polygon`
-- [Polygon CSV WKT Baseline](polygon_csv_wkt_baseline.md) -- `polygon_csv_wkt_baseline`
 
 <script type="application/ld+json">
 {
@@ -123,11 +122,11 @@ Thin polygon that is valid in high-precision formats but vulnerable to rounding-
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "driver_specific_precision_loss",
+    "format/limitation",
     "format_limited",
     "polygon",
     "precision",
-    "precision_rounding",
+    "precision/loss",
     "rounding",
     "valid",
     "vector"

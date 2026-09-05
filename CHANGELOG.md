@@ -5,7 +5,100 @@ All notable changes to GeoCase are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Corpus changes: name what changed
+
+Any change to a case's **geometry, CRS, dtype, nodata value, id, or risk types** is
+listed **by case id and by what changed** — never as a summary.
+
+This convention exists because of a measured failure. The rc1 → rc3 fix to
+`polygon_*_baseline` (four different geometries shipping under one family name) was
+correct, and it silently broke a downstream test: the consumer had a canary pinning
+the old behaviour, it went red on upgrade, and **there was no signal as to why**. An
+entry reading "fixed baseline consistency" costs the reader an afternoon; one naming
+the case and the geometry costs them five seconds.
+
+A user hitting a break searches for the case id or the error text, so both belong in
+the entry verbatim.
+
 ## [Unreleased]
+
+### Changed — corpus
+
+- **`risk_types` consolidated to a canonical vocabulary (124 terms → 104)** — plan 40
+  phase 3, executing plan 27 §1.2–1.3. Terms are now `family/specific` where a family
+  has more than one member, and **every** term is gated: `scripts/validate_catalog.py`
+  rejects a spelling outside `src/geocase/catalog/risk_types.py`. Before this, only
+  four terms were checked against anything, so the rest were indistinguishable from
+  typos — which is how the corpus reached 124 terms over 163 cases with 78 singletons,
+  and how `docs/adding-a-case.md` came to teach two worked-example terms
+  (`topology_breakage`, `attribute_encoding`) that existed in **no case**.
+
+  **Nothing silently stops selecting.** Every merged spelling is recorded in
+  `RISK_TYPE_ALIASES` and resolved at selection time, so
+  `list_cases(risk_types_any=["coordinate_order"])` returns what it always did. A bare
+  family prefix now also selects — `risk_types_any=["crs"]` matches every `crs/*` term.
+
+  Two terms were **retired rather than renamed**, and these are the ones that change
+  what a selector returns:
+
+  - **`none` (9 cases)** — the absence of a risk type, spelled wrong. Those nine cases
+    now declare `risk_types: []`. Anything selecting on `"none"` returns nothing.
+    Affected: `simple_valid_point`, `simple_valid_linestring`,
+    `simple_valid_multipoint`, `simple_valid_multilinestring`, `simple_valid_polygon`,
+    `simple_valid_multipolygon`, `dense_ring_polygon_4k`, `dense_ring_polygon_4k_gpkg`,
+    `fractal_coastline_polygon`.
+  - **`format_comparison` (60 cases)** — a corpus-construction label rather than a
+    failure mode, covering 37% of the catalog. **Moved to `tags`**, so select it with
+    `tags_any=["format_comparison"]` instead of `risk_types_any=[...]`. No case lost
+    the label.
+
+  Two merges the brief proposed were **not** made, because the corpus's own tests
+  proved the distinction load-bearing: `lat_lon_swap` stays separate from
+  `crs/axis_order` (the GML baselines declare an authority axis order the bytes
+  genuinely honour; `out_of_bounds_coordinates` is a swap caught only because latitude
+  100 is out of range), and `crs_mishandled` stays separate from `crs/mismatch` (a
+  mismatch is a property of a *pair*, which is why `crs_mismatch_overlay_pair` exists).
+
+- **`bottom_up_dem_small`, `rotated_bottom_up_small` gained `transform/bottom_up`;
+  `pixel_is_area_dem_small`, `pixel_is_point_dem_small` gained
+  `transform/pixel_anchor`.** All four previously declared only `nodata_ignored`, so
+  the two conventions that produced the most severe findings of validation rounds 1
+  and 2 were **unsearchable by the index built to find them**. No bytes changed.
+
+### Added — corpus
+
+- **Three single-variable controls (163 → 166)** — plan 40 phase 4, under
+  `raster/single_variable/`: `rotated_only_square` (a 30° rotated affine, no nodata),
+  `nodata_only_dem_small` (two interior `-9999` sentinels, north-up), and
+  `bottom_up_only_square` (a positive-`e` affine alone). `rotated_two_islands` bundles
+  rotation *with* sparse islands *with* footprint generation, so a failure there needs
+  an argument about which caused it. These remove the argument: a defect reproducing on
+  the control **and** its bundled counterpart is localised with no further work.
+
+- **`expected_pixel_world_pairs`** — plan 41 phase 3.3. `[row, col, x, y]` quadruples
+  in the case's own CRS, on all five rotated rasters and `rotated_only_square`. Round
+  4's only irreducible finding required hand-rolling the inverse affine to see where a
+  pixel landed; the fixture now ships that answer. `expected_bounds` is only the
+  axis-aligned envelope on a rotated raster and says nothing about individual pixels,
+  which is exactly what was wrong.
+
+- **A `known_divergences` record on `optical_dateline_small`** naming the
+  *consequence*: the footprint reaches longitude **180.22**, so floor-based tile
+  indexing requests a tile at 180 and raises. The geometry was always in the file and
+  was not enough — round 4 found the crash only after hand-rolling the tile arithmetic.
+
+### Added
+
+- **`geocase.risk_types()`** — the reverse index, `{term: [case ids]}`. The forward
+  direction has always existed via `list_cases(risk_types_any=...)`; a reporter built
+  this half by hand with an ad-hoc `Counter` over all 163 cases. Additive.
+- **`list_cases(risk_types_all=...)`** — the missing half of the pair. `tags` has had
+  both `_any` and `_all` since v1.0 while `risk_types` had only `_any`. Additive.
+- **`CaseMetadata.case_id`** — a read-only alias for `.id`, plus a directed
+  `AttributeError` for near-misses. The package spells one concept two ways
+  (`KnownDivergence.case_id` against `CaseMetadata.id`), and a reporter's first call
+  was `c.case_id`, which raised a bare pydantic error naming nothing useful. The
+  underlying inconsistency is a **v1.1 naming item**, not a v1.0 change.
 
 ### Added
 

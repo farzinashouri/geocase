@@ -20,7 +20,7 @@ tags:
   - utm
 
 risk_types:
-  - zone_selection
+  - crs/zone_selection
 
 behavioral_goal: >
   Provide a stable WGS84 polygon whose representative point maps to EPSG:32633.

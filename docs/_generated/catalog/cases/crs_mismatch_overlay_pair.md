@@ -61,8 +61,8 @@ Confirm that overlay, join and clip operations validate the CRS of every input a
 
 ## Risk types covered
 
-- `crs_mismatch`
-- [`reprojection_error`](../risk/reprojection-error.md)
+- `crs/mismatch`
+- [`crs/reprojection_error`](../risk/crs-reprojection-error.md)
 
 ## Expected behavior
 
@@ -177,11 +177,11 @@ mismatch, which is why this case exists.
   },
   "keywords": [
     "crs",
-    "crs_mismatch",
+    "crs/mismatch",
+    "crs/reprojection_error",
     "multi_layer",
     "overlay",
     "polygon",
-    "reprojection_error",
     "utm",
     "vector"
   ],

@@ -61,7 +61,7 @@ Confirm that nearby local points are grouped into a single cluster.
 
 ## Risk types covered
 
-- [`distance_threshold_error`](../risk/distance-threshold-error.md)
+- [`measurement/distance_error`](../risk/measurement-distance-error.md)
 
 ## Expected behavior
 
@@ -102,10 +102,10 @@ Three points close enough to cluster together with a small metric threshold.
 ## Related cases
 
 - [Dateline Points Pair](dateline_points_pair.md) -- `dateline_points_pair`
+- [Antimeridian Crossing LineString](antimeridian_crossing_line.md) -- `antimeridian_crossing_line`
 - [Dateline Chain Cluster](dateline_chain_cluster.md) -- `dateline_chain_cluster`
 - [Point Arrow Baseline](point_arrow_baseline.md) -- `point_arrow_baseline`
 - [Point CSV WKT Baseline](point_csv_wkt_baseline.md) -- `point_csv_wkt_baseline`
-- [Point Feather Baseline](point_feather_baseline.md) -- `point_feather_baseline`
 
 <script type="application/ld+json">
 {
@@ -123,7 +123,7 @@ Three points close enough to cluster together with a small metric threshold.
   "keywords": [
     "baseline",
     "clustering",
-    "distance_threshold_error",
+    "measurement/distance_error",
     "point",
     "vector"
   ],

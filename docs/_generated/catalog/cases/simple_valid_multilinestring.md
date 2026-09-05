@@ -59,10 +59,6 @@ pip install "geocase[all]"
 
 Ensure multi-part line geometries are represented in core vector coverage and selectable by geometry type.
 
-## Risk types covered
-
-- [`none`](../risk/none.md)
-
 ## Expected behavior
 
 | Assertion | Expected |
@@ -101,11 +97,11 @@ Baseline MultiLineString case for multi-part line coverage.
 
 ## Related cases
 
-- [Simple Valid LineString](simple_valid_linestring.md) -- `simple_valid_linestring`
-- [Simple Valid MultiPoint](simple_valid_multipoint.md) -- `simple_valid_multipoint`
-- [Simple Valid Point](simple_valid_point.md) -- `simple_valid_point`
-- [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
-- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
+- [MultiLineString CSV WKT Baseline](multilinestring_csv_wkt_baseline.md) -- `multilinestring_csv_wkt_baseline`
+- [MultiLineString FlatGeobuf Baseline](multilinestring_flatgeobuf_baseline.md) -- `multilinestring_flatgeobuf_baseline`
+- [MultiLineString GeoPackage Baseline](multilinestring_geopackage_baseline.md) -- `multilinestring_geopackage_baseline`
+- [MultiLineString GML Baseline](multilinestring_gml_baseline.md) -- `multilinestring_gml_baseline`
+- [MultiLineString KML Baseline](multilinestring_kml_baseline.md) -- `multilinestring_kml_baseline`
 
 <script type="application/ld+json">
 {
@@ -123,7 +119,6 @@ Baseline MultiLineString case for multi-part line coverage.
   "keywords": [
     "baseline",
     "multilinestring",
-    "none",
     "valid",
     "vector"
   ],

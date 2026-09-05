@@ -19,10 +19,10 @@ tags:
   - baseline
   - csv_wkt
   - cross_format_canonical
+  - format_comparison
 
 risk_types:
-  - format_comparison
-  - text_geometry_parsing
+  - format/text_geometry_parsing
 
 behavioral_goal: >
   Provide a canonical line encoded as CSV_WKT so text-based vector

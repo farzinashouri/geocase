@@ -23,10 +23,10 @@ tags:
   - data_quality
 
 risk_types:
-  - geocoding_failure
-  - silent_bad_data
-  - data_quality
-  - default_value_sink
+  - data/quality
+  - data/silent_bad_data
+  - footprint/geocoding_failure
+  - nodata/default_value_sink
 
 behavioral_goal: >
   Expose pipelines that fail to flag or filter (0, 0) coordinates,

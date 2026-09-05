@@ -61,10 +61,10 @@ Expose workflows that assume arbitrary field name lengths or fail to detect/hand
 
 ## Risk types covered
 
-- [`attribute_loss`](../risk/attribute-loss.md)
-- `field_name_truncation`
-- [`format_specific`](../risk/format-specific.md)
-- [`schema_mismatch`](../risk/schema-mismatch.md)
+- `attribute/field_name_truncation`
+- [`attribute/loss`](../risk/attribute-loss.md)
+- [`attribute/schema_mismatch`](../risk/attribute-schema-mismatch.md)
+- [`format/limitation`](../risk/format-limitation.md)
 
 ## Expected behavior
 
@@ -167,14 +167,15 @@ Other formats (GeoJSON, GPKG, Parquet) do not have this limitation.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "attribute_loss",
+    "attribute/field_name_truncation",
+    "attribute/loss",
+    "attribute/schema_mismatch",
     "attributes",
     "encoding",
-    "field_name_truncation",
     "field_truncation",
+    "format/limitation",
     "format_specific",
     "schema",
-    "schema_mismatch",
     "shapefile",
     "vector"
   ],

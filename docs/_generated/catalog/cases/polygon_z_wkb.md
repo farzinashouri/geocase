@@ -61,7 +61,7 @@ Verify that the third ordinate survives a WKB round trip and is not silently dro
 
 ## Risk types covered
 
-- [`dimension_mismatch`](../risk/dimension-mismatch.md)
+- [`band/dimension_mismatch`](../risk/band-dimension-mismatch.md)
 
 ## Expected behavior
 
@@ -170,7 +170,7 @@ pure Python with no driver in the loop, so `--check` compares it byte-for-byte.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "dimension_mismatch",
+    "band/dimension_mismatch",
     "dimensionality",
     "three-dimensional",
     "vector",

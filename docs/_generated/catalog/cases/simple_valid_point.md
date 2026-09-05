@@ -59,10 +59,6 @@ pip install "geocase[all]"
 
 Confirm that a basic point fixture is discoverable and loadable through the catalog and vector loader.
 
-## Risk types covered
-
-- [`none`](../risk/none.md)
-
 ## Expected behavior
 
 | Assertion | Expected |
@@ -101,11 +97,11 @@ Baseline Point case for selector, loader, and cross-format coverage.
 
 ## Related cases
 
-- [Simple Valid LineString](simple_valid_linestring.md) -- `simple_valid_linestring`
-- [Simple Valid MultiLineString](simple_valid_multilinestring.md) -- `simple_valid_multilinestring`
-- [Simple Valid MultiPoint](simple_valid_multipoint.md) -- `simple_valid_multipoint`
-- [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
-- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
+- [Point Arrow Baseline](point_arrow_baseline.md) -- `point_arrow_baseline`
+- [Point CSV WKT Baseline](point_csv_wkt_baseline.md) -- `point_csv_wkt_baseline`
+- [Point Feather Baseline](point_feather_baseline.md) -- `point_feather_baseline`
+- [Point FlatGeobuf Baseline](point_flatgeobuf_baseline.md) -- `point_flatgeobuf_baseline`
+- [Point GeoPackage Baseline](point_geopackage_baseline.md) -- `point_geopackage_baseline`
 
 <script type="application/ld+json">
 {
@@ -122,7 +118,6 @@ Baseline Point case for selector, loader, and cross-format coverage.
   },
   "keywords": [
     "baseline",
-    "none",
     "point",
     "valid",
     "vector"

@@ -61,8 +61,7 @@ Provide a canonical polygon encoded as WKT so plain-text geometry loading can be
 
 ## Risk types covered
 
-- [`format_comparison`](../risk/format-comparison.md)
-- [`text_geometry_parsing`](../risk/text-geometry-parsing.md)
+- [`format/text_geometry_parsing`](../risk/format-text-geometry-parsing.md)
 
 ## Expected behavior
 
@@ -120,7 +119,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`baseline` `cross_format_canonical` `polygon` `valid` `vector` `wkt`
+`baseline` `cross_format_canonical` `format_comparison` `polygon` `valid` `vector` `wkt`
 
 ## Related cases
 
@@ -146,9 +145,9 @@ geometry is derived from `params.canonical_source_case_id`
   "keywords": [
     "baseline",
     "cross_format_canonical",
+    "format/text_geometry_parsing",
     "format_comparison",
     "polygon",
-    "text_geometry_parsing",
     "valid",
     "vector",
     "wkt"

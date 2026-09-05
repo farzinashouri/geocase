@@ -59,8 +59,8 @@ Verify footprint generation preserves narrow valid structures and remains close 
 
 ## Risk types covered
 
-- [`footprint_generation_error`](../risk/footprint-generation-error.md)
-- `geometry_simplification_loss`
+- [`footprint/generation_error`](../risk/footprint-generation-error.md)
+- `geometry/simplification_loss`
 
 ## Expected behavior
 
@@ -69,6 +69,17 @@ Verify footprint generation preserves narrow valid structures and remains close 
 | `expect_loadable` | yes |
 | `expect_crs` | yes |
 | `expected_shape` | `[14, 14]` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `100.0` |
+| Mean including NoData | `-8865.4387755102` |
+| NoData pixels | `174` |
+| Bounds (case CRS) | `[700000.0, 5099650.0, 700350.0, 5100000.0]` |
 
 ## Notes
 
@@ -222,8 +233,8 @@ affine with no reference at all; handing it one changes what it tests.
     "corridor",
     "edge",
     "footprint",
-    "footprint_generation_error",
-    "geometry_simplification_loss",
+    "footprint/generation_error",
+    "geometry/simplification_loss",
     "geotiff",
     "raster"
   ],
@@ -237,6 +248,37 @@ affine with no reference at all; handing it one changes what it tests.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "thin_corridor_shape.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 100.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": -8865.4387755102
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 174
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        700000.0,
+        5099650.0,
+        700350.0,
+        5100000.0
+      ]
     }
   ],
   "spatialCoverage": {

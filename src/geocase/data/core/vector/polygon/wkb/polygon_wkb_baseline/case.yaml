@@ -19,10 +19,10 @@ tags:
   - baseline
   - wkb
   - cross_format_canonical
+  - format_comparison
 
 risk_types:
-  - format_comparison
-  - binary_geometry_parsing
+  - format/binary_geometry_parsing
 
 behavioral_goal: >
   Provide a canonical polygon encoded as WKB so plain binary geometry

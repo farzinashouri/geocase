@@ -61,8 +61,8 @@ Ensure vector loading and downstream utilities handle a baseline Web Mercator po
 
 ## Risk types covered
 
-- `projected_coordinate_assumption`
-- [`reprojection_error`](../risk/reprojection-error.md)
+- `crs/projected_coordinate_assumption`
+- [`crs/reprojection_error`](../risk/crs-reprojection-error.md)
 
 ## Expected behavior
 
@@ -123,10 +123,10 @@ Baseline EPSG:3857 point for projected-vector coverage.
   },
   "keywords": [
     "crs",
+    "crs/projected_coordinate_assumption",
+    "crs/reprojection_error",
     "epsg3857",
     "point",
-    "projected_coordinate_assumption",
-    "reprojection_error",
     "valid",
     "vector",
     "web_mercator"

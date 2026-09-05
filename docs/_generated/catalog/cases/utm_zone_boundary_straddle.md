@@ -61,8 +61,7 @@ Confirm that a polygon extending past its declared UTM zone's edge is reprojecte
 
 ## Risk types covered
 
-- [`utm_zone_mismatch`](../risk/utm-zone-mismatch.md)
-- [`zone_selection`](../risk/zone-selection.md)
+- [`crs/zone_selection`](../risk/crs-zone-selection.md)
 
 ## Expected behavior
 
@@ -152,13 +151,12 @@ that.
   },
   "keywords": [
     "crs",
+    "crs/zone_selection",
     "polygon",
     "utm",
     "utm_zone_boundary",
-    "utm_zone_mismatch",
     "valid",
-    "vector",
-    "zone_selection"
+    "vector"
   ],
   "license": "MIT",
   "creator": {

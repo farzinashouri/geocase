@@ -27,10 +27,10 @@ tags:
   - format_limitation
 
 risk_types:
-  - type_coercion
-  - attribute_loss
-  - format_limitation
-  - schema_mismatch
+  - attribute/loss
+  - attribute/schema_mismatch
+  - attribute/type_coercion
+  - format/limitation
 
 behavioral_goal: >
   Detect loaders or cross-format converters that assume attribute types

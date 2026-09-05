@@ -60,8 +60,8 @@ Confirm GeoCase reads external ``.ovr`` overviews transparently and treats the s
 
 ## Risk types covered
 
-- [`overviews_missing`](../risk/overviews-missing.md)
-- `sidecar_dropped`
+- [`format/overviews_missing`](../risk/format-overviews-missing.md)
+- `format/sidecar_dropped`
 
 ## Expected behavior
 
@@ -75,6 +75,15 @@ Confirm GeoCase reads external ``.ovr`` overviews transparently and treats the s
 | `expected_shape` | `[64, 64]` |
 | `expected_compression` | `deflate` |
 | `expected_overviews` | yes |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| NoData pixels | `0` |
+| Bounds (case CRS) | `[500000.0, 4499360.0, 500640.0, 4500000.0]` |
 
 ## Required capabilities
 
@@ -120,13 +129,13 @@ Confirm GeoCase reads external ``.ovr`` overviews transparently and treats the s
   },
   "keywords": [
     "delivery:external-overviews",
+    "format/overviews_missing",
+    "format/sidecar_dropped",
     "geography:utm",
     "geotiff",
     "overviews",
-    "overviews_missing",
     "product:cog",
-    "raster",
-    "sidecar_dropped"
+    "raster"
   ],
   "license": "MIT",
   "creator": {
@@ -138,6 +147,25 @@ Confirm GeoCase reads external ``.ovr`` overviews transparently and treats the s
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "geotiff_external_overviews_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499360.0,
+        500640.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

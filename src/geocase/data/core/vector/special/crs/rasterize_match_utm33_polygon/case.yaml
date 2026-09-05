@@ -21,7 +21,7 @@ tags:
   - utm
 
 risk_types:
-  - rasterization_alignment
+  - transform/rasterization_alignment
 
 behavioral_goal: >
   Confirm that rasterization works when vector and raster coordinates already match.

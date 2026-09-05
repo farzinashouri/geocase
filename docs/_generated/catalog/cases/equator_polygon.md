@@ -61,8 +61,8 @@ Ensure polygon-based utilities handle geometries that straddle the equator witho
 
 ## Risk types covered
 
-- `hemisphere_boundary`
-- `utm_zone_ambiguity`
+- [`crs/zone_selection`](../risk/crs-zone-selection.md)
+- [`extent/equatorial`](../risk/extent-equatorial.md)
 
 ## Expected behavior
 
@@ -129,11 +129,11 @@ projection choice is minimal but the equator-crossing property is present.
 
 ## Related cases
 
+- [Equator Crossing Line](equator_crossing_line.md) -- `equator_crossing_line`
 - [North Pole Polygon](north_pole_polygon.md) -- `north_pole_polygon`
 - [South Pole Polygon](south_pole_polygon.md) -- `south_pole_polygon`
-- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
-- [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
-- [Equator Crossing Line](equator_crossing_line.md) -- `equator_crossing_line`
+- [Svalbard Special Zone Polygon](svalbard_special_zone_polygon.md) -- `svalbard_special_zone_polygon`
+- [UTM Zone 1N Polygon](utm_zone_1n_small.md) -- `utm_zone_1n_small`
 
 <script type="application/ld+json">
 {
@@ -150,12 +150,12 @@ projection choice is minimal but the equator-crossing property is present.
   },
   "keywords": [
     "crs",
+    "crs/zone_selection",
     "edge_case",
     "equator",
+    "extent/equatorial",
     "geojson",
-    "hemisphere_boundary",
     "polygon",
-    "utm_zone_ambiguity",
     "vector"
   ],
   "license": "MIT",

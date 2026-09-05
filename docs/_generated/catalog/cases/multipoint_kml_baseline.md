@@ -59,10 +59,6 @@ pip install "geocase[all]"
 
 Provide a canonical multipoint encoded as KML so format-specific loader behavior can be compared directly against the GeoJSON baseline.
 
-## Risk types covered
-
-- [`format_comparison`](../risk/format-comparison.md)
-
 ## Expected behavior
 
 | Assertion | Expected |
@@ -121,7 +117,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`baseline` `cross_format_canonical` `kml` `multipoint` `valid` `vector`
+`baseline` `cross_format_canonical` `format_comparison` `kml` `multipoint` `valid` `vector`
 
 ## Related cases
 

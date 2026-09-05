@@ -1,6 +1,10 @@
 # Plan 41 — Round 4: The Positioning Is Costing Adopters, and the Paying Component Is the One Called Secondary
 
-> **Status: Phases 1-2 implemented 2026-09-03; Phases 3-6 proposed.** An internal GDAL-only consumer found **two
+> **Status: Phases 1-4 implemented (1-2 on 2026-09-03, 3-4 on 2026-09-04); Phases 5-6 proposed.**
+> Phase 5 (the lowest-resolution CI floor job) and Phase 6 (correcting
+> [`docs/validation.md`](../validation.md) to the surviving two-finding count) remain open;
+> Phase 6 changes no code and should land before [Plan 39](39-going-public-upstream-first.md)
+> Phase 4 broadcasts. An internal GDAL-only consumer found **two
 > P1 defects in an afternoon**, one of which *overturned a conclusion the
 > reporter had already committed to in writing*. But every finding came from
 > geometry, CRS and footprint cases — the component this project's own framing
@@ -193,18 +197,20 @@ arithmetic to check where the footprint pointed.** The fixture should hand that 
 [Plan 40](40-round-3-packaging-truth-and-vocabulary.md) Phase 2's ground-truth principle applied
 to the footprint side, on independent evidence.
 
-### 3.1 Test first
+**Implemented 2026-09-04.**
+
+### 3.1 Test first ✅
 
 Content-gate tests asserting the new declared values are checked against the real bytes, and that
 a wrong value is a finding.
 
-### 3.2 `optical_dateline_small`
+### 3.2 `optical_dateline_small` ✅
 
 Record in the case's `notes.md` and as a `known_divergences` entry: **the footprint is unsplit and
 reaches lon 180.22, so naive floor-based tile indexing will request a tile at 180.** State the
 consequence, not just the geometry — the geometry is already in the file, and it was not enough.
 
-### 3.3 `rotated_two_islands`
+### 3.3 `rotated_two_islands` ✅
 
 Ship an **expected pixel↔world round-trip pair** in the metadata, so a consumer asserts directly
 instead of writing their own oracle: two `(row, col) → (x, y)` pairs plus the inverse.
@@ -225,12 +231,14 @@ The reporter's first call was `c.case_id`, which raised a bare pydantic `Attribu
 the same class of problem as the already-special-cased `format=` versus `category=` mistake, which
 `selectors.py` calls "the worst first impression".
 
-### 4.1 Test first
+**Implemented 2026-09-04.**
+
+### 4.1 Test first ✅
 
 `tests/unit/test_models.py`: `CaseMetadata(...).case_id` returns the id, and an unknown attribute
 raises a message naming the right one.
 
-### 4.2 Fix
+### 4.2 Fix ✅
 
 Add a read-only `case_id` property alias on `CaseMetadata` returning `self.id`, **and** a
 `__getattr__` raising a directed error for near-misses, in the style of
@@ -320,3 +328,50 @@ mkdocs build --strict
 - **The `[all]` bounds and the risk vocabulary** —
   [Plan 40](40-round-3-packaging-truth-and-vocabulary.md) Phases 1 and 3.
 - **`differential.py` and `geocase.stac`** — Plans 37 and 38.
+
+---
+
+## Implementation notes — Phases 3-4 (2026-09-04)
+
+What differed from the plan as written.
+
+### Phase 3
+
+- **`expected_pixel_world_pairs` landed as a typed field**, not as `params` keys.
+  The plan allows either depending on whether Plan 40 Phase 2 had landed; it had,
+  so the typed route was available and is the better one — `params` has no
+  whitelist, so a typo there is silence.
+- **The pairs are generated, never authored.** `scripts/catalog_truth.py` computes
+  them from the file's own affine via `src.xy`, which is the same call a consumer
+  makes, so the declared answer is proven by the exact operation it exists to
+  grade. A hand-authored pair would drift from the bytes it describes, which is
+  the drift that broke `hole_center_nodata`.
+- **Written only for rotated rasters — five of them, not just
+  `rotated_two_islands`.** On a north-up grid the round trip is
+  `origin + col * pixel`, which `expected_bounds` already pins, so declaring it
+  everywhere would be noise. All five rotated rasters now carry it
+  (`rotated_two_islands`, `..._warped`, `rotated_bottom_up_small`,
+  `rotated_nonsquare_small`, `rotated_steep_small`), plus Plan 40 Phase 4's
+  `rotated_only_square`.
+- **Three samples, not the plan's two**: the origin (where a north-up assumption
+  still agrees), the far corner (maximum divergence), and a mid-grid point (which
+  no off-by-one at an edge can accidentally satisfy).
+- **§3.2's record is a `known_divergences` entry only.** The plan asks for
+  `notes.md` as well; `optical_dateline_small` has no notes file and declares
+  none, so the record is the right and only home. The gate in
+  `tests/unit/test_known_divergences.py` asserts the record states the actual
+  bound (**180.22**) rather than "past 180" — a consequence with no number is
+  prose the consumer must re-derive, which is the failure the phase exists to fix.
+- **The consumer is named `naive-tile-indexing`**, not a library. The defect is
+  not attributable to one consumer: it is what *any* code flooring an unwrapped
+  longitude into a tile index does. Naming a library would be a false attribution.
+
+### Phase 4
+
+- **The near-miss error covers nine spellings, not just `case_id`.**
+  `_ATTRIBUTE_NEAR_MISSES` maps `identifier`, `name`, `risk_type`, `tag`, `path`,
+  `primary_path`, `bounds`, `bbox` and `case_identifier` to what the reader
+  actually wants. `case_id` itself is a real property and never reaches
+  `__getattr__`.
+- **The alias is read-only**, as a `@property`. A settable alias would be a second
+  source of truth for the id.

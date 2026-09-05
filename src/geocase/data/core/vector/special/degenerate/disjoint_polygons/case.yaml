@@ -19,8 +19,8 @@ tags:
   - topology
 
 risk_types:
-  - false_positive_intersection
-  - overaggressive_dissolve
+  - geometry/false_positive_intersection
+  - geometry/overaggressive_dissolve
 
 behavioral_goal: >
   Confirm that disjoint features remain separate and do not intersect.

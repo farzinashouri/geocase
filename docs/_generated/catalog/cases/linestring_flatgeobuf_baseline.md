@@ -61,8 +61,7 @@ Provide a canonical line encoded as FlatGeobuf so binary driver-backed line load
 
 ## Risk types covered
 
-- [`driver_behavior`](../risk/driver-behavior.md)
-- [`format_comparison`](../risk/format-comparison.md)
+- [`format/driver_behavior`](../risk/format-driver-behavior.md)
 
 ## Expected behavior
 
@@ -118,7 +117,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`baseline` `cross_format_canonical` `flatgeobuf` `linestring` `valid` `vector`
+`baseline` `cross_format_canonical` `flatgeobuf` `format_comparison` `linestring` `valid` `vector`
 
 ## Related cases
 
@@ -144,8 +143,8 @@ geometry is derived from `params.canonical_source_case_id`
   "keywords": [
     "baseline",
     "cross_format_canonical",
-    "driver_behavior",
     "flatgeobuf",
+    "format/driver_behavior",
     "format_comparison",
     "linestring",
     "valid",

@@ -60,9 +60,9 @@ Detect raster code that assumes the entire tile lives in a single UTM zone, caus
 
 ## Risk types covered
 
-- `pixel_shift`
-- [`reprojection_error`](../risk/reprojection-error.md)
-- `zone_boundary_artifact`
+- [`crs/reprojection_error`](../risk/crs-reprojection-error.md)
+- [`crs/zone_selection`](../risk/crs-zone-selection.md)
+- `transform/pixel_shift`
 
 ## Expected behavior
 
@@ -72,6 +72,15 @@ Detect raster code that assumes the entire tile lives in a single UTM zone, caus
 | `expect_crs` | yes |
 | `expected_epsg` | `32633` |
 | `expected_shape` | `[20, 20]` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| NoData pixels | `0` |
+| Bounds (case CRS) | `[490000.0, 5600000.0, 510000.0, 5620000.0]` |
 
 ## Notes
 
@@ -126,7 +135,7 @@ issues in zone-edge workflows.
 - [CRS Family Pair -- Projected (UTM 33N)](crs_family_pair_projected.md) -- `crs_family_pair_projected`
 - [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 - [Rasterize Match WGS84 Polygon](rasterize_match_wgs84_polygon.md) -- `rasterize_match_wgs84_polygon`
-- [All Valid Rectangular Raster](all_valid_rectangular.md) -- `all_valid_rectangular`
+- [Svalbard Special Zone Polygon](svalbard_special_zone_polygon.md) -- `svalbard_special_zone_polygon`
 
 <script type="application/ld+json">
 {
@@ -144,13 +153,13 @@ issues in zone-edge workflows.
   "keywords": [
     "boundary",
     "crs",
+    "crs/reprojection_error",
+    "crs/zone_selection",
     "geotiff",
-    "pixel_shift",
     "raster",
     "reprojection",
-    "reprojection_error",
-    "utm",
-    "zone_boundary_artifact"
+    "transform/pixel_shift",
+    "utm"
   ],
   "license": "MIT",
   "creator": {
@@ -162,6 +171,25 @@ issues in zone-edge workflows.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "utm_boundary.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        490000.0,
+        5600000.0,
+        510000.0,
+        5620000.0
+      ]
     }
   ],
   "spatialCoverage": {

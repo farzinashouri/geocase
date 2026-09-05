@@ -22,9 +22,9 @@ tags:
   - collapsed
 
 risk_types:
-  - degenerate_but_parseable
-  - zero_length_geometry
-  - invalid_measurement
+  - geometry/degenerate_but_parseable
+  - geometry/zero_length
+  - measurement/invalid
 
 behavioral_goal: >
   Ensure loading succeeds for a degenerate but parseable line while

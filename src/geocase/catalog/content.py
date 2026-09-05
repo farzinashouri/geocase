@@ -84,6 +84,170 @@ def _total_nodata_pixels(src: Any, nodata: float | int) -> int:
     return total
 
 
+#: Relative tolerance on a declared mean. The value is written out at full
+#: float repr by ``scripts/catalog_truth.py``, so this only has to absorb the
+#: summation-order difference between the generator and a consumer's own
+#: reduction -- not a rounding convention.
+_MEAN_RTOL = 1e-6
+
+
+def _band_means(src: Any, nodata: float | int | None) -> tuple[float, float]:
+    """Return ``(masked_mean, naive_mean)`` over every band, as floats.
+
+    The naive mean is what a consumer that ignores nodata computes; the masked
+    one is the right answer. Their gap is the whole reason both are declared.
+    """
+    import numpy as np
+
+    stacked = np.concatenate(
+        [
+            np.asarray(src.read(band), dtype="float64").ravel()
+            for band in range(1, src.count + 1)
+        ]
+    )
+    naive = (
+        float(np.nanmean(stacked)) if np.isnan(stacked).any() else float(stacked.mean())
+    )
+    if nodata is None:
+        return naive, naive
+    if isinstance(nodata, float) and np.isnan(nodata):
+        valid = stacked[~np.isnan(stacked)]
+    else:
+        valid = stacked[stacked != nodata]
+    masked = float(valid.mean()) if valid.size else float("nan")
+    return masked, naive
+
+
+def _assert_close(label: str, actual: float, declared: float) -> None:
+    """Compare a declared mean against the computed one, relatively."""
+    import math
+
+    if math.isnan(actual) and math.isnan(declared):
+        return
+    if not math.isclose(actual, declared, rel_tol=_MEAN_RTOL, abs_tol=_MEAN_RTOL):
+        raise AssertionError(
+            f"declared {label}={declared!r} but the pixels give {actual!r}. "
+            "Regenerate with scripts/catalog_truth.py --write"
+        )
+
+
+def _check_ground_truth(metadata: CaseMetadata, src: Any) -> list[str]:
+    """Check the declared *answer* against the real pixels (plan 40 phase 2).
+
+    Everything else in the raster gate proves the data's shape. This proves the
+    number a consumer would be graded against, which is the one field where a
+    plausible-but-wrong value does the most damage.
+    """
+    from geocase.assertions.extent import assert_bounds_in_crs
+
+    errors: list[str] = []
+    hints = metadata.assertions
+
+    if hints.expected_mean_masked is not None or hints.expected_mean_naive is not None:
+        masked, naive = _band_means(src, src.nodata)
+        if hints.expected_mean_masked is not None:
+            declared_masked = hints.expected_mean_masked
+            _collect(
+                errors,
+                metadata,
+                "expected_mean_masked",
+                lambda: _assert_close("expected_mean_masked", masked, declared_masked),
+            )
+        if hints.expected_mean_naive is not None:
+            declared_naive = hints.expected_mean_naive
+            _collect(
+                errors,
+                metadata,
+                "expected_mean_naive",
+                lambda: _assert_close("expected_mean_naive", naive, declared_naive),
+            )
+
+    if hints.nodata_pixel_count is not None:
+        declared_count = hints.nodata_pixel_count
+        actual_count = (
+            _total_nodata_pixels(src, src.nodata) if src.nodata is not None else 0
+        )
+        if actual_count != declared_count:
+            errors.append(
+                _err(
+                    metadata,
+                    "nodata_pixel_count",
+                    f"declares {declared_count} nodata pixels but the raster has "
+                    f"{actual_count}. Regenerate with scripts/catalog_truth.py --write",
+                )
+            )
+
+    if hints.expected_bounds is not None:
+        declared_bounds = hints.expected_bounds
+        observed = tuple(float(v) for v in src.bounds)
+        _collect(
+            errors,
+            metadata,
+            "expected_bounds",
+            lambda: assert_bounds_in_crs(observed, declared_bounds),  # type: ignore[arg-type]
+        )
+
+    if hints.expected_pixel_world_pairs is not None:
+        errors.extend(
+            _check_pixel_world_pairs(metadata, src, hints.expected_pixel_world_pairs)
+        )
+
+    return errors
+
+
+#: Absolute tolerance, in CRS units, on a declared pixel<->world coordinate.
+#:
+#: Absolute rather than relative because the values are projected metres in the
+#: 10^6 range: a relative tolerance loose enough to survive float noise there
+#: would also accept an error of several metres, which is most of a pixel at
+#: the corpus's 10-30 m resolutions. Sub-millimetre is far below any real
+#: disagreement and far above the round-trip's own noise.
+_PIXEL_WORLD_ATOL = 1e-6
+
+
+def _check_pixel_world_pairs(
+    metadata: CaseMetadata, src: Any, pairs: list[list[float]]
+) -> list[str]:
+    """Check declared ``[row, col, x, y]`` quadruples against the real affine.
+
+    Uses ``src.xy``, which is the same call a consumer makes, so the declared
+    answer is proven by the exact operation it exists to grade.
+    """
+    errors: list[str] = []
+    for index, pair in enumerate(pairs):
+        if len(pair) != 4:
+            errors.append(
+                _err(
+                    metadata,
+                    "expected_pixel_world_pairs",
+                    f"entry {index} has {len(pair)} values; each must be "
+                    "[row, col, x, y]",
+                )
+            )
+            continue
+
+        row, col, declared_x, declared_y = pair
+        # float() rather than the raw return: rasterio hands back np.float64,
+        # whose repr ("np.float64(1187.5)") buries the number the reader needs
+        # in the error message.
+        raw_x, raw_y = src.xy(int(row), int(col))
+        actual_x, actual_y = float(raw_x), float(raw_y)
+        if (
+            abs(actual_x - declared_x) > _PIXEL_WORLD_ATOL
+            or abs(actual_y - declared_y) > _PIXEL_WORLD_ATOL
+        ):
+            errors.append(
+                _err(
+                    metadata,
+                    "expected_pixel_world_pairs",
+                    f"entry {index} declares pixel ({row:g}, {col:g}) lands at "
+                    f"({declared_x!r}, {declared_y!r}) but the affine puts it "
+                    f"at ({actual_x!r}, {actual_y!r})",
+                )
+            )
+    return errors
+
+
 def check_raster_content(case_dir: Path, metadata: CaseMetadata) -> list[str]:
     """Check a raster case's declared assertions against its pixels."""
     import rasterio
@@ -255,6 +419,7 @@ def check_raster_content(case_dir: Path, metadata: CaseMetadata) -> list[str]:
                     )
                 )
 
+        errors.extend(_check_ground_truth(metadata, src))
         errors.extend(_check_footprint(case_dir, metadata, src))
 
     return errors

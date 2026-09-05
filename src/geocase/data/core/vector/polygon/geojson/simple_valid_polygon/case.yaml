@@ -19,8 +19,7 @@ tags:
   - valid
   - baseline
 
-risk_types:
-  - none
+risk_types: []
 
 behavioral_goal: >
   Confirm that a minimal valid polygon loads without error and passes

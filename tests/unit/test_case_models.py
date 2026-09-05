@@ -327,6 +327,39 @@ class TestSupportingModels:
         with pytest.raises(ValidationError, match="expect_loadable"):
             AssertionHints(expected_error_kind="unparseable_geometry")
 
+    # --- plan 40 phase 2: ground truth ------------------------------------
+
+    def test_ground_truth_fields_default_to_none(self):
+        """Defaults every ground-truth field, so existing case.yaml stays valid."""
+        ah = AssertionHints()
+        assert ah.expected_mean_masked is None
+        assert ah.expected_mean_naive is None
+        assert ah.nodata_pixel_count is None
+        assert ah.expected_bounds is None
+
+    def test_ground_truth_fields_parse(self):
+        """Stores the declared answer a consumer can be graded against."""
+        ah = AssertionHints(
+            expected_mean_masked=12.5,
+            expected_mean_naive=-1234.0,
+            nodata_pixel_count=28,
+            expected_bounds=[500000.0, 4499920.0, 500080.0, 4500000.0],
+        )
+        assert ah.expected_mean_masked == 12.5
+        assert ah.expected_mean_naive == -1234.0
+        assert ah.nodata_pixel_count == 28
+        assert ah.expected_bounds == [500000.0, 4499920.0, 500080.0, 4500000.0]
+
+    def test_expected_bounds_rejects_a_scalar(self):
+        """Rejects a scalar: the field is [west, south, east, north]."""
+        with pytest.raises(ValidationError):
+            AssertionHints(expected_bounds=500000.0)
+
+    def test_nodata_pixel_count_rejects_a_non_integer(self):
+        """Rejects a fractional count: pixels are counted, not measured."""
+        with pytest.raises(ValidationError):
+            AssertionHints(nodata_pixel_count=1.5)
+
 
 # ===================================================================
 # KnownDivergence -- plan 28 phase 2.5
@@ -543,3 +576,37 @@ class TestCaseSchemaMatchesModels:
         assert prop["expected_pixel_anchor"]["enum"] == list(
             get_args(models.PixelAnchor)
         )
+
+
+class TestCaseIdDiscoverability:
+    """Plan 41 phase 4 -- ``c.case_id`` is the name people reach for first.
+
+    ``KnownDivergence`` already spells the concept ``case_id`` while
+    ``CaseMetadata`` spells it ``id``, so the package uses both spellings for
+    one concept. The reporter's very first call was ``c.case_id`` and it raised
+    a bare pydantic ``AttributeError`` naming nothing useful.
+    """
+
+    def test_case_id_returns_the_id(self) -> None:
+        meta = CaseMetadata(**_minimal_case())
+        assert meta.case_id == meta.id == "test_case"
+
+    def test_case_id_is_read_only(self) -> None:
+        """An alias that could be assigned would be a second source of truth."""
+        meta = CaseMetadata(**_minimal_case())
+        with pytest.raises((AttributeError, ValueError)):
+            meta.case_id = "something_else"
+
+    def test_unknown_near_miss_names_the_right_attribute(self) -> None:
+        """The message must carry the answer, not just the complaint."""
+        meta = CaseMetadata(**_minimal_case())
+        with pytest.raises(AttributeError) as exc:
+            _ = meta.identifier
+        message = str(exc.value)
+        assert "'id'" in message
+        assert "case_id" in message
+
+    def test_unrelated_attribute_still_raises_attribute_error(self) -> None:
+        meta = CaseMetadata(**_minimal_case())
+        with pytest.raises(AttributeError):
+            _ = meta.totally_unrelated_thing

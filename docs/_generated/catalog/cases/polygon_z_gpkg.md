@@ -61,8 +61,8 @@ Verify that Z survives the GPKG write/read cycle with the same values as the WKB
 
 ## Risk types covered
 
-- [`dimension_mismatch`](../risk/dimension-mismatch.md)
-- `integer_precision`
+- [`band/dimension_mismatch`](../risk/band-dimension-mismatch.md)
+- [`precision/loss`](../risk/precision-loss.md)
 
 ## Expected behavior
 
@@ -156,10 +156,10 @@ types, geometry, SRID, size) rather than bytes.
 ## Related cases
 
 - [Polygon Z (WKB)](polygon_z_wkb.md) -- `polygon_z_wkb`
+- [Format-limited Precision Polygon](format_limited_precision_polygon.md) -- `format_limited_precision_polygon`
+- [GeoJSON Precision Loss Roundtrip](precision_loss_geojson_roundtrip.md) -- `precision_loss_geojson_roundtrip`
 - [Empty Geometry in GeoPackage](empty_geometry_gpkg.md) -- `empty_geometry_gpkg`
 - [LineString GeoPackage Baseline](linestring_geopackage_baseline.md) -- `linestring_geopackage_baseline`
-- [MultiLineString GeoPackage Baseline](multilinestring_geopackage_baseline.md) -- `multilinestring_geopackage_baseline`
-- [MultiPoint GeoPackage Baseline](multipoint_geopackage_baseline.md) -- `multipoint_geopackage_baseline`
 
 <script type="application/ld+json">
 {
@@ -175,11 +175,11 @@ types, geometry, SRID, size) rather than bytes.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "dimension_mismatch",
+    "band/dimension_mismatch",
     "dimensionality",
     "geopackage",
     "integer-precision",
-    "integer_precision",
+    "precision/loss",
     "three-dimensional",
     "vector"
   ],

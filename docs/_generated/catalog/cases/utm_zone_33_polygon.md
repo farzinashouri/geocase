@@ -61,7 +61,7 @@ Provide a stable WGS84 polygon whose representative point maps to EPSG:32633.
 
 ## Risk types covered
 
-- [`zone_selection`](../risk/zone-selection.md)
+- [`crs/zone_selection`](../risk/crs-zone-selection.md)
 
 ## Expected behavior
 
@@ -122,11 +122,11 @@ A baseline WGS84 polygon whose representative point falls in UTM zone 33N.
   },
   "keywords": [
     "crs",
+    "crs/zone_selection",
     "polygon",
     "utm",
     "valid",
-    "vector",
-    "zone_selection"
+    "vector"
   ],
   "license": "MIT",
   "creator": {

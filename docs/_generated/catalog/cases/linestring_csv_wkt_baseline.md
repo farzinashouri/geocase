@@ -61,8 +61,7 @@ Provide a canonical line encoded as CSV_WKT so text-based vector serialization c
 
 ## Risk types covered
 
-- [`format_comparison`](../risk/format-comparison.md)
-- [`text_geometry_parsing`](../risk/text-geometry-parsing.md)
+- [`format/text_geometry_parsing`](../risk/format-text-geometry-parsing.md)
 
 ## Expected behavior
 
@@ -118,7 +117,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`baseline` `cross_format_canonical` `csv_wkt` `linestring` `valid` `vector`
+`baseline` `cross_format_canonical` `csv_wkt` `format_comparison` `linestring` `valid` `vector`
 
 ## Related cases
 
@@ -145,9 +144,9 @@ geometry is derived from `params.canonical_source_case_id`
     "baseline",
     "cross_format_canonical",
     "csv_wkt",
+    "format/text_geometry_parsing",
     "format_comparison",
     "linestring",
-    "text_geometry_parsing",
     "valid",
     "vector"
   ],

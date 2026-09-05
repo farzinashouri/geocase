@@ -61,8 +61,7 @@ Provide a canonical polygon encoded in SQLite so database-backed vector loading 
 
 ## Risk types covered
 
-- [`format_comparison`](../risk/format-comparison.md)
-- `sqlite_driver_behavior`
+- `format/sqlite_driver_behavior`
 
 ## Expected behavior
 
@@ -118,7 +117,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`baseline` `cross_format_canonical` `polygon` `sqlite` `valid` `vector`
+`baseline` `cross_format_canonical` `format_comparison` `polygon` `sqlite` `valid` `vector`
 
 ## Related cases
 
@@ -144,10 +143,10 @@ geometry is derived from `params.canonical_source_case_id`
   "keywords": [
     "baseline",
     "cross_format_canonical",
+    "format/sqlite_driver_behavior",
     "format_comparison",
     "polygon",
     "sqlite",
-    "sqlite_driver_behavior",
     "valid",
     "vector"
   ],

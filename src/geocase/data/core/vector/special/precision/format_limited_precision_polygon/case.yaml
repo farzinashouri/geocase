@@ -23,9 +23,8 @@ tags:
   - rounding
 
 risk_types:
-  - format_limited
-  - precision_rounding
-  - driver_specific_precision_loss
+  - format/limitation
+  - precision/loss
 
 behavioral_goal: >
   Expose workflows that silently reduce coordinate precision and thereby

@@ -20,9 +20,9 @@ tags:
   - edge_case
 
 risk_types:
-  - antimeridian_wrapping
-  - incorrect_rendering
-  - distance_calculation_error
+  - extent/antimeridian
+  - measurement/distance_error
+  - scaling/incorrect_rendering
 
 behavioral_goal: >
   Expose code that naively interpolates across the Prime Meridian (0°)

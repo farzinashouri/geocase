@@ -60,9 +60,9 @@ Confirm GeoCase can open a binary water mask, preserve its single uint8 band, an
 
 ## Risk types covered
 
-- [`dtype_drift`](../risk/dtype-drift.md)
-- `mask_misread`
-- [`nodata_ignored`](../risk/nodata-ignored.md)
+- [`dtype/drift`](../risk/dtype-drift.md)
+- [`nodata/ignored`](../risk/nodata-ignored.md)
+- `nodata/mask_misread`
 
 ## Expected behavior
 
@@ -79,6 +79,17 @@ Confirm GeoCase can open a binary water mask, preserve its single uint8 band, an
 | `nodata_convention` | `sentinel` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `water` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `0.2509803922` |
+| Mean including NoData | `1.24609375` |
+| NoData pixels | `1` |
+| Bounds (case CRS) | `[500000.0, 4499840.0, 500160.0, 4500000.0]` |
 
 ## Notes
 
@@ -153,13 +164,13 @@ Binary mask baseline for validating mask-style raster handling and nodata logic.
   },
   "keywords": [
     "delivery:single-file",
-    "dtype_drift",
+    "dtype/drift",
     "eo",
     "geography:utm",
     "geotiff",
     "mask",
-    "mask_misread",
-    "nodata_ignored",
+    "nodata/ignored",
+    "nodata/mask_misread",
     "product:mask",
     "raster",
     "water"
@@ -174,6 +185,37 @@ Binary mask baseline for validating mask-style raster handling and nodata logic.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "water_mask_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 0.2509803922
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 1.24609375
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499840.0,
+        500160.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

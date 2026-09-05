@@ -21,9 +21,9 @@ tags:
   - i18n
 
 risk_types:
-  - encoding_error
-  - mojibake
-  - attribute_loss
+  - attribute/encoding_error
+  - attribute/loss
+  - attribute/mojibake
 
 behavioral_goal: >
   Detect loaders that assume a single encoding or silently corrupt

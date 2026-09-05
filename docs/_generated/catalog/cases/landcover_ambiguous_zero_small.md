@@ -60,9 +60,9 @@ Surface the sentinel/class collision at 0. The sibling case ``landcover_small`` 
 
 ## Risk types covered
 
-- `ambiguous_zero`
-- [`category_misread`](../risk/category-misread.md)
-- [`nodata_ignored`](../risk/nodata-ignored.md)
+- `nodata/ambiguous_zero`
+- [`nodata/ignored`](../risk/nodata-ignored.md)
+- [`scaling/category_misread`](../risk/scaling-category-misread.md)
 
 ## Expected behavior
 
@@ -79,6 +79,17 @@ Surface the sentinel/class collision at 0. The sibling case ``landcover_small`` 
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `landcover` |
 | `expected_colormap_present` | yes |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `2.0` |
+| Mean including NoData | `1.5` |
+| NoData pixels | `64` |
+| Bounds (case CRS) | `[500000.0, 4499840.0, 500160.0, 4500000.0]` |
 
 ## Notes
 
@@ -171,17 +182,17 @@ why every fixture must sit inside the regeneration gate.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "ambiguous_zero",
     "categorical",
-    "category_misread",
     "delivery:single-file",
     "geography:utm",
     "geotiff",
     "landcover",
     "nodata",
-    "nodata_ignored",
+    "nodata/ambiguous_zero",
+    "nodata/ignored",
     "product:landcover",
-    "raster"
+    "raster",
+    "scaling/category_misread"
   ],
   "license": "MIT",
   "creator": {
@@ -193,6 +204,37 @@ why every fixture must sit inside the regeneration gate.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "landcover_ambiguous_zero_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 2.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 1.5
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 64
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499840.0,
+        500160.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

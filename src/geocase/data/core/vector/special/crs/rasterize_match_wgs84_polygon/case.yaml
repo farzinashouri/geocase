@@ -20,8 +20,8 @@ tags:
   - reprojection
 
 risk_types:
-  - rasterization_alignment
-  - reprojection_error
+  - crs/reprojection_error
+  - transform/rasterization_alignment
 
 behavioral_goal: >
   Confirm that vector geometries in WGS84 can be reprojected to the raster

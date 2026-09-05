@@ -22,9 +22,9 @@ tags:
   - repair
 
 risk_types:
-  - repair_returns_geometrycollection
-  - linear_artifacts_after_repair
-  - mixed_geometry_output
+  - data/linear_artifacts_after_repair
+  - geometry/mixed_output
+  - geometry/repair_variability
 
 behavioral_goal: >
   Expose geometry repair helpers that return mixed geometry collections

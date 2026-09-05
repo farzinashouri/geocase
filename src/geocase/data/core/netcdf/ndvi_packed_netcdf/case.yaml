@@ -22,8 +22,8 @@ tags:
   - ndvi
 
 risk_types:
-  - nodata_ignored
-  - scale_offset_ignored
+  - nodata/ignored
+  - scaling/ignored
 
 behavioral_goal: >
   Verify that packed values are unpacked through scale_factor/add_offset

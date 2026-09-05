@@ -19,10 +19,10 @@ tags:
   - baseline
   - kml
   - cross_format_canonical
+  - format_comparison
 
 risk_types:
-  - format_comparison
-  - xml_driver_behavior
+  - format/xml_driver_behavior
 
 behavioral_goal: >
   Provide a canonical point encoded as KML so driver-backed loading can

@@ -61,9 +61,9 @@ Expose code that naively interpolates across the Prime Meridian (0°) instead of
 
 ## Risk types covered
 
-- `antimeridian_wrapping`
-- `distance_calculation_error`
-- `incorrect_rendering`
+- [`extent/antimeridian`](../risk/extent-antimeridian.md)
+- [`measurement/distance_error`](../risk/measurement-distance-error.md)
+- `scaling/incorrect_rendering`
 
 ## Expected behavior
 
@@ -126,11 +126,11 @@ A line crosses the antimeridian if:
 
 ## Related cases
 
+- [Dateline Points Pair](dateline_points_pair.md) -- `dateline_points_pair`
+- [Wrapped Longitude Point](wrapped_longitude_point.md) -- `wrapped_longitude_point`
 - [Classic Antimeridian Polygon](classic_antimeridian_polygon.md) -- `classic_antimeridian_polygon`
 - [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
-- [Dateline Points Pair](dateline_points_pair.md) -- `dateline_points_pair`
-- [Dateline Chain Cluster](dateline_chain_cluster.md) -- `dateline_chain_cluster`
-- [Degenerate but Parseable Line](degenerate_but_parseable_line.md) -- `degenerate_but_parseable_line`
+- [Nearby Points Cluster](nearby_points_cluster.md) -- `nearby_points_cluster`
 
 <script type="application/ld+json">
 {
@@ -147,12 +147,12 @@ A line crosses the antimeridian if:
   },
   "keywords": [
     "antimeridian",
-    "antimeridian_wrapping",
     "dateline",
-    "distance_calculation_error",
     "edge_case",
-    "incorrect_rendering",
+    "extent/antimeridian",
     "linestring",
+    "measurement/distance_error",
+    "scaling/incorrect_rendering",
     "vector"
   ],
   "license": "MIT",

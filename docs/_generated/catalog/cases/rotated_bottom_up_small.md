@@ -60,7 +60,8 @@ Verify that a consumer reads rotation and row order from the same affine, rather
 
 ## Risk types covered
 
-- [`affine_transform_bug`](../risk/affine-transform-bug.md)
+- [`transform/bottom_up`](../risk/transform-bottom-up.md)
+- [`transform/rotated`](../risk/transform-rotated.md)
 
 ## Expected behavior
 
@@ -76,6 +77,18 @@ Verify that a consumer reads rotation and row order from the same affine, rather
 | `expected_nodata_value` | `-9999.0` |
 | `nodata_convention` | `sentinel` |
 | `expected_transform_signs` | `positive_e`, `rotated` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `72.0` |
+| Mean including NoData | `2.0625` |
+| NoData pixels | `1` |
+| Bounds (case CRS) | `[500000.0, 4200000.0, 500456.0, 4200456.0]` |
+| Pixel to world (row, col, x, y) | `[[0.0, 0.0, 500019.0, 4200019.0], [11.0, 11.0, 500437.0, 4200437.0], [6.0, 6.0, 500247.0, 4200247.0]]` |
 
 ## Notes
 
@@ -191,11 +204,11 @@ property the corpus always had into one it declares.
 
 ## Related cases
 
-- [Rotated Raster with Non-Square Pixels](rotated_nonsquare_small.md) -- `rotated_nonsquare_small`
-- [Steeply Rotated DEM (40-Degree Skew)](rotated_steep_small.md) -- `rotated_steep_small`
-- [Rotated Two Islands With Warped Reference](rotated_two_islands_warped.md) -- `rotated_two_islands_warped`
 - [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
-- [Rotated Two Islands Raster](rotated_two_islands.md) -- `rotated_two_islands`
+- [Bottom-Up Square (Positive E and Nothing Else)](bottom_up_only_square.md) -- `bottom_up_only_square`
+- [Rotated Raster with Non-Square Pixels](rotated_nonsquare_small.md) -- `rotated_nonsquare_small`
+- [Rotated Square (Rotation and Nothing Else)](rotated_only_square.md) -- `rotated_only_square`
+- [Steeply Rotated DEM (40-Degree Skew)](rotated_steep_small.md) -- `rotated_steep_small`
 
 <script type="application/ld+json">
 {
@@ -211,13 +224,14 @@ property the corpus always had into one it declares.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "affine_transform_bug",
     "georeferencing",
     "geotiff",
     "raster",
     "rotated",
     "south-up",
-    "transform"
+    "transform",
+    "transform/bottom_up",
+    "transform/rotated"
   ],
   "license": "MIT",
   "creator": {
@@ -229,6 +243,62 @@ property the corpus always had into one it declares.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "rotated_bottom_up_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 72.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 2.0625
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4200000.0,
+        500456.0,
+        4200456.0
+      ]
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_pixel_world_pairs",
+      "description": "Pixel to world (row, col, x, y)",
+      "value": [
+        [
+          0.0,
+          0.0,
+          500019.0,
+          4200019.0
+        ],
+        [
+          11.0,
+          11.0,
+          500437.0,
+          4200437.0
+        ],
+        [
+          6.0,
+          6.0,
+          500247.0,
+          4200247.0
+        ]
+      ]
     }
   ],
   "spatialCoverage": {

@@ -45,6 +45,58 @@ def _normalize(
     return west, float(south), east, float(north)
 
 
+#: Slack allowed between an observed projected bound and a declared one, as a
+#: fraction of the box's own span. Projected bounds are metres, not degrees, so
+#: a fixed absolute tolerance would be meaningless across a 10 m tile and a
+#: continental grid; relative keeps the same meaning at both scales.
+DEFAULT_RELATIVE_TOLERANCE = 1e-9
+
+
+def assert_bounds_in_crs(
+    observed: tuple[float, float, float, float],
+    expected: list[float] | tuple[float, float, float, float],
+    *,
+    rel_tolerance: float = DEFAULT_RELATIVE_TOLERANCE,
+    msg: str | None = None,
+) -> None:
+    """Assert a ``(west, south, east, north)`` envelope in the data's own CRS.
+
+    This is deliberately **not** :func:`assert_bounds`. That one is 4326-specific
+    and folds longitudes for the antimeridian; applied to a UTM easting of
+    500000 the fold is nonsense. Use this for ``assertions.expected_bounds``,
+    which is declared in the case CRS, and :func:`assert_bounds` for the
+    top-level WGS84 ``extent``.
+
+    Raises :class:`AssertionError` naming the axis that moved and by how far,
+    because "the bounds are wrong" without a direction is not actionable.
+    """
+    if len(expected) != 4:
+        raise AssertionError(
+            "expected_bounds must be [west, south, east, north]; "
+            f"got {list(expected)!r}"
+        )
+
+    names = ("west", "south", "east", "north")
+    span_x = abs(float(expected[2]) - float(expected[0])) or 1.0
+    span_y = abs(float(expected[3]) - float(expected[1])) or 1.0
+    spans = (span_x, span_y, span_x, span_y)
+
+    drifted = [
+        f"{name} {actual:.6f} != {declared:.6f} (off by {abs(actual - declared):.6f})"
+        for name, actual, declared, span in zip(
+            names, observed, (float(v) for v in expected), spans, strict=True
+        )
+        if abs(actual - declared) > rel_tolerance * span
+    ]
+    if drifted:
+        raise AssertionError(
+            msg
+            or "Declared bounds do not match the data: "
+            + "; ".join(drifted)
+            + ". Regenerate with scripts/catalog_truth.py --write"
+        )
+
+
 def assert_bounds(
     observed: tuple[float, float, float, float],
     expected: SpatialExtent,

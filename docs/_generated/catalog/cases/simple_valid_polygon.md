@@ -59,10 +59,6 @@ pip install "geocase[all]"
 
 Confirm that a minimal valid polygon loads without error and passes all standard geometry checks.
 
-## Risk types covered
-
-- [`none`](../risk/none.md)
-
 ## Expected behavior
 
 | Assertion | Expected |
@@ -123,11 +119,11 @@ running edge-case scenarios.
 
 ## Related cases
 
-- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
-- [Dense Ring Polygon (4096 vertices, GeoPackage)](dense_ring_polygon_4k_gpkg.md) -- `dense_ring_polygon_4k_gpkg`
-- [Fractal Coastline Polygon](fractal_coastline_polygon.md) -- `fractal_coastline_polygon`
-- [Simple Valid LineString](simple_valid_linestring.md) -- `simple_valid_linestring`
-- [Simple Valid MultiLineString](simple_valid_multilinestring.md) -- `simple_valid_multilinestring`
+- [Polygon CSV WKT Baseline](polygon_csv_wkt_baseline.md) -- `polygon_csv_wkt_baseline`
+- [Polygon FlatGeobuf Baseline](polygon_flatgeobuf_baseline.md) -- `polygon_flatgeobuf_baseline`
+- [Polygon GeoPackage Baseline](polygon_geopackage_baseline.md) -- `polygon_geopackage_baseline`
+- [Polygon GML Baseline](polygon_gml_baseline.md) -- `polygon_gml_baseline`
+- [Polygon KML Baseline](polygon_kml_baseline.md) -- `polygon_kml_baseline`
 
 <script type="application/ld+json">
 {
@@ -144,7 +140,6 @@ running edge-case scenarios.
   },
   "keywords": [
     "baseline",
-    "none",
     "polygon",
     "valid",
     "vector"

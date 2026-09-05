@@ -61,7 +61,7 @@ Ensure GeometryCollection features can be indexed and loaded without being coerc
 
 ## Risk types covered
 
-- [`mixed_geometry_output`](../risk/mixed-geometry-output.md)
+- [`geometry/mixed_output`](../risk/geometry-mixed-output.md)
 
 ## Expected behavior
 
@@ -131,9 +131,9 @@ Valid mixed GeometryCollection case for loader and metadata coverage.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "geometry/mixed_output",
     "geometrycollection",
     "mixed_geometry",
-    "mixed_geometry_output",
     "valid",
     "vector"
   ],

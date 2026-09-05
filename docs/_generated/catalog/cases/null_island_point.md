@@ -61,10 +61,10 @@ Expose pipelines that fail to flag or filter (0, 0) coordinates, which usually i
 
 ## Risk types covered
 
-- `data_quality`
-- `default_value_sink`
-- `geocoding_failure`
-- `silent_bad_data`
+- `data/quality`
+- `data/silent_bad_data`
+- `footprint/geocoding_failure`
+- `nodata/default_value_sink`
 
 ## Expected behavior
 
@@ -148,13 +148,15 @@ Extremely common in:
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "data/quality",
+    "data/silent_bad_data",
     "data_quality",
-    "default_value_sink",
+    "footprint/geocoding_failure",
     "geocoding_failure",
     "invalid",
+    "nodata/default_value_sink",
     "null_island",
     "point",
-    "silent_bad_data",
     "vector"
   ],
   "license": "MIT",

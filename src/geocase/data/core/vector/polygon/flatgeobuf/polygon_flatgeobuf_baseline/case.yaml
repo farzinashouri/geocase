@@ -19,10 +19,10 @@ tags:
   - baseline
   - flatgeobuf
   - cross_format_canonical
+  - format_comparison
 
 risk_types:
-  - format_comparison
-  - driver_behavior
+  - format/driver_behavior
 
 behavioral_goal: >
   Provide a canonical polygon encoded as FlatGeobuf so binary

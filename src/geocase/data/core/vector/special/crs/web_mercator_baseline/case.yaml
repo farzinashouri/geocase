@@ -21,8 +21,8 @@ tags:
   - valid
 
 risk_types:
-  - reprojection_error
-  - projected_coordinate_assumption
+  - crs/projected_coordinate_assumption
+  - crs/reprojection_error
 
 behavioral_goal: >
   Ensure vector loading and downstream utilities handle a baseline

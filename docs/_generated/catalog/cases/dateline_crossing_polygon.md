@@ -61,9 +61,9 @@ Detect code that assumes longitude continuity across the antimeridian or produce
 
 ## Risk types covered
 
-- [`bbox_misinterpretation`](../risk/bbox-misinterpretation.md)
-- [`coordinate_wrapping`](../risk/coordinate-wrapping.md)
-- [`reprojection_error`](../risk/reprojection-error.md)
+- [`crs/reprojection_error`](../risk/crs-reprojection-error.md)
+- [`extent/bbox_misinterpretation`](../risk/extent-bbox-misinterpretation.md)
+- [`extent/coordinate_wrapping`](../risk/extent-coordinate-wrapping.md)
 
 ## Expected behavior
 
@@ -144,12 +144,12 @@ Antimeridian stress case for longitude wrapping and bounds logic.
   },
   "keywords": [
     "antimeridian",
-    "bbox_misinterpretation",
-    "coordinate_wrapping",
     "crs",
+    "crs/reprojection_error",
     "dateline",
+    "extent/bbox_misinterpretation",
+    "extent/coordinate_wrapping",
     "polygon",
-    "reprojection_error",
     "vector"
   ],
   "license": "MIT",

@@ -156,6 +156,7 @@ jobs:
       # map marker pointing at the wrong place. Same reader dependencies as
       # the content gate above, hence the same job.
       - run: python scripts/catalog_extent.py --check
+      - run: python scripts/catalog_truth.py --check
       - run: python scripts/generate_raster_fixtures.py --check
       - run: python scripts/generate_vector_fixtures.py --check
       # Plan 34: `latlon_sample.nc` used to be the one fixture in the tree that
@@ -191,3 +192,9 @@ jobs:
       # rather than inlined base64 exactly so this gate names the case that
       # drifted instead of reporting "some bytes changed".
       - run: python scripts/generate_raster_previews.py --check
+      # The changelog is where a user lands after a break, so the published
+      # copy must not lag the root file it is generated from (plan 40 §5).
+      - run: python scripts/generate_changelog_page.py --check
+      # Every risk_types term is now canonical or the build fails. Cheap here
+      # because migrate_risk_types.py --check opens no data file.
+      - run: python scripts/migrate_risk_types.py --check

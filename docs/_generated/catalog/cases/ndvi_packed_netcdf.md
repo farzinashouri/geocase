@@ -55,8 +55,8 @@ Verify that packed values are unpacked through scale_factor/add_offset before us
 
 ## Risk types covered
 
-- [`nodata_ignored`](../risk/nodata-ignored.md)
-- `scale_offset_ignored`
+- [`nodata/ignored`](../risk/nodata-ignored.md)
+- [`scaling/ignored`](../risk/scaling-ignored.md)
 
 ## Expected behavior
 
@@ -134,8 +134,8 @@ the pair exists to find.
 ## Related cases
 
 - [Lat/Lon Small NetCDF](latlon_small.md) -- `latlon_small`
-- [CF Time Units and Non-Conventional Dimension Order](cf_time_ordering_netcdf.md) -- `cf_time_ordering_netcdf`
 - [NDVI Scaled Int16 Small](ndvi_scaled_int16_small.md) -- `ndvi_scaled_int16_small`
+- [CF Time Units and Non-Conventional Dimension Order](cf_time_ordering_netcdf.md) -- `cf_time_ordering_netcdf`
 - [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
 
@@ -156,10 +156,10 @@ the pair exists to find.
     "cf-conventions",
     "ndvi",
     "netcdf",
-    "nodata_ignored",
+    "nodata/ignored",
     "packing",
     "scale-factor",
-    "scale_offset_ignored"
+    "scaling/ignored"
   ],
   "license": "MIT",
   "creator": {

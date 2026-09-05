@@ -23,7 +23,7 @@ tags:
   - southern_hemisphere
 
 risk_types:
-  - zone_selection
+  - crs/zone_selection
 
 behavioral_goal: >
   Confirm that a southern-hemisphere UTM polygon reprojects to a *negative*

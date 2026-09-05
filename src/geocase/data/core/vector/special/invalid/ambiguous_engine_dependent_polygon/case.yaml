@@ -22,9 +22,9 @@ tags:
   - topology
 
 risk_types:
-  - ambiguous_engine_dependent
-  - topology_error
-  - repair_variability
+  - data/ambiguous_engine_dependent
+  - geometry/repair_variability
+  - geometry/topology_error
 
 behavioral_goal: >
   Expose workflows that assume all geometry engines agree on polygon

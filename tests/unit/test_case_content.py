@@ -210,6 +210,169 @@ def test_matching_typed_expectations_pass(tmp_path):
     assert check_case_content(tmp_path, meta) == []
 
 
+# --- plan 40 phase 2: ground truth ----------------------------------------
+#
+# The declared *answer*, not just the declared shape. A consumer can be graded
+# against these without re-deriving them, which only works if the gate proves
+# them against the pixels.
+
+
+def _truth_fixture(tmp_path):
+    """A float32 raster with a real nodata border, plus its computed truth."""
+    import numpy as np
+
+    from geocase.raster import raster_fixture
+
+    spec = raster_fixture(
+        dtype="float32", size=(8, 8), nodata=-9999, nodata_border=1, crs="EPSG:32633"
+    )
+    spec.write(tmp_path / "truth.tif")
+
+    array = np.asarray(spec.array, dtype="float64")
+    nodata_count = int((array == -9999).sum())
+    masked = array[array != -9999]
+    return {
+        "mean_masked": float(masked.mean()),
+        "mean_naive": float(array.mean()),
+        "nodata_pixel_count": nodata_count,
+        # origin (500000, 4500000), 10 m pixels, 8x8, north-up
+        "bounds": [500_000.0, 4_500_000.0 - 80.0, 500_000.0 + 80.0, 4_500_000.0],
+    }
+
+
+def test_correct_ground_truth_passes(tmp_path):
+    """Declared masked/naive means, nodata count and bounds match the pixels."""
+    from geocase.catalog.content import check_case_content
+
+    truth = _truth_fixture(tmp_path)
+    meta = _raster_metadata(
+        "truth_ok",
+        "truth.tif",
+        expected_mean_masked=truth["mean_masked"],
+        expected_mean_naive=truth["mean_naive"],
+        nodata_pixel_count=truth["nodata_pixel_count"],
+        expected_bounds=truth["bounds"],
+    )
+    assert check_case_content(tmp_path, meta) == []
+
+
+def test_wrong_expected_mean_masked_is_an_error(tmp_path):
+    """A wrong answer must be a finding — the whole point of shipping one."""
+    from geocase.catalog.content import check_case_content
+
+    truth = _truth_fixture(tmp_path)
+    meta = _raster_metadata(
+        "truth_bad_mean",
+        "truth.tif",
+        expected_mean_masked=truth["mean_masked"] + 100.0,
+    )
+    errors = check_case_content(tmp_path, meta)
+
+    assert any("expected_mean_masked" in e for e in errors), errors
+
+
+def test_naive_mean_declared_as_the_masked_one_is_an_error(tmp_path):
+    """The two means differ on any raster with nodata; conflating them is the bug."""
+    from geocase.catalog.content import check_case_content
+
+    truth = _truth_fixture(tmp_path)
+    meta = _raster_metadata(
+        "truth_swapped",
+        "truth.tif",
+        expected_mean_naive=truth["mean_masked"],
+    )
+    errors = check_case_content(tmp_path, meta)
+
+    assert any("expected_mean_naive" in e for e in errors), errors
+
+
+def test_wrong_nodata_pixel_count_is_an_error(tmp_path):
+    from geocase.catalog.content import check_case_content
+
+    truth = _truth_fixture(tmp_path)
+    meta = _raster_metadata(
+        "truth_bad_count",
+        "truth.tif",
+        nodata_pixel_count=truth["nodata_pixel_count"] + 1,
+    )
+    errors = check_case_content(tmp_path, meta)
+
+    assert any("nodata_pixel_count" in e for e in errors), errors
+
+
+def test_wrong_expected_bounds_is_an_error(tmp_path):
+    """expected_bounds is in the *case CRS*, not 4326 like ``extent``."""
+    from geocase.catalog.content import check_case_content
+
+    truth = _truth_fixture(tmp_path)
+    shifted = list(truth["bounds"])
+    shifted[0] += 500.0
+    meta = _raster_metadata("truth_bad_bounds", "truth.tif", expected_bounds=shifted)
+    errors = check_case_content(tmp_path, meta)
+
+    assert any("expected_bounds" in e for e in errors), errors
+
+
+# --- plan 41 phase 3.3: the pixel<->world round trip ----------------------
+#
+# ``rotated_two_islands`` produced the only irreducible finding of round 4, and
+# it did so because the reporter hand-rolled the inverse affine to check where
+# a pixel actually landed. A fixture that ships the answer removes that step:
+# the consumer asserts against a declared pair instead of writing their own
+# oracle, which is the difference between a stimulus and an oracle.
+
+
+def _pairs_for(path):
+    """Return two real ``(row, col, x, y)`` quadruples read from the file."""
+    import rasterio
+
+    with rasterio.open(path) as src:
+        out = []
+        for row, col in ((0, 0), (3, 5)):
+            x, y = src.xy(row, col)
+            out.append([row, col, x, y])
+    return out
+
+
+def test_correct_pixel_world_pairs_pass(tmp_path):
+    """A declared round trip that matches the file's own affine is silent."""
+    from geocase.catalog.content import check_case_content
+
+    _truth_fixture(tmp_path)
+    meta = _raster_metadata(
+        "pairs_ok",
+        "truth.tif",
+        expected_pixel_world_pairs=_pairs_for(tmp_path / "truth.tif"),
+    )
+    assert check_case_content(tmp_path, meta) == []
+
+
+def test_wrong_pixel_world_pair_is_an_error(tmp_path):
+    """The whole value of shipping the answer is that a wrong one is a finding."""
+    from geocase.catalog.content import check_case_content
+
+    _truth_fixture(tmp_path)
+    pairs = _pairs_for(tmp_path / "truth.tif")
+    pairs[1][2] += 500.0  # move the world x, keep the pixel
+    meta = _raster_metadata("pairs_bad", "truth.tif", expected_pixel_world_pairs=pairs)
+    errors = check_case_content(tmp_path, meta)
+
+    assert any("expected_pixel_world_pairs" in e for e in errors), errors
+
+
+def test_malformed_pixel_world_pair_is_an_error(tmp_path):
+    """A quadruple that is not four numbers cannot be checked, so it must fail."""
+    from geocase.catalog.content import check_case_content
+
+    _truth_fixture(tmp_path)
+    meta = _raster_metadata(
+        "pairs_malformed", "truth.tif", expected_pixel_world_pairs=[[0, 0, 1.0]]
+    )
+    errors = check_case_content(tmp_path, meta)
+
+    assert any("expected_pixel_world_pairs" in e for e in errors), errors
+
+
 # --- 1.2.4: vector (the validated surface) --------------------------------
 
 

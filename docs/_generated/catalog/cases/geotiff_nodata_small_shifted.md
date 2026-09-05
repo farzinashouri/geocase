@@ -60,9 +60,9 @@ Expose alignment helpers that require identical extents instead of recognizing r
 
 ## Risk types covered
 
-- `alignment_too_strict`
-- `pixel_lattice_misclassification`
-- `shifted_origin`
+- `scaling/pixel_lattice_misclassification`
+- `transform/alignment_too_strict`
+- `transform/shifted_origin`
 
 ## Expected behavior
 
@@ -73,6 +73,17 @@ Expose alignment helpers that require identical extents instead of recognizing r
 | `expected_epsg` | `32633` |
 | `expect_nodata` | yes |
 | `expected_shape` | `[10, 10]` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `48.0787352901` |
+| Mean including NoData | `-152.8628394157` |
+| NoData pixels | `2` |
+| Bounds (case CRS) | `[501000.0, 5600000.0, 511000.0, 5610000.0]` |
 
 ## Notes
 
@@ -108,8 +119,8 @@ from true pixel-lattice compatibility.
 - [GeoTIFF NoData Small](geotiff_nodata_small.md) -- `geotiff_nodata_small`
 - [Hole Center NoData Raster](hole_center_nodata.md) -- `hole_center_nodata`
 - [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
+- [Nodata Only (One Sentinel, North-Up, Unrotated)](nodata_only_dem_small.md) -- `nodata_only_dem_small`
 - [All Valid Rectangular Raster](all_valid_rectangular.md) -- `all_valid_rectangular`
-- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 
 <script type="application/ld+json">
 {
@@ -127,12 +138,12 @@ from true pixel-lattice compatibility.
   "keywords": [
     "affine_transform",
     "alignment",
-    "alignment_too_strict",
     "geotiff",
     "nodata",
-    "pixel_lattice_misclassification",
     "raster",
-    "shifted_origin"
+    "scaling/pixel_lattice_misclassification",
+    "transform/alignment_too_strict",
+    "transform/shifted_origin"
   ],
   "license": "MIT",
   "creator": {
@@ -144,6 +155,37 @@ from true pixel-lattice compatibility.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "nodata_sample_shifted.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 48.0787352901
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": -152.8628394157
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 2
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        501000.0,
+        5600000.0,
+        511000.0,
+        5610000.0
+      ]
     }
   ],
   "spatialCoverage": {

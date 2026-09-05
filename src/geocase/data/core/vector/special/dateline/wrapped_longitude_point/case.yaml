@@ -20,8 +20,7 @@ tags:
   - reprojection
 
 risk_types:
-  - longitude_not_normalized
-  - wrapped_coordinate_retention
+  - extent/antimeridian
 
 behavioral_goal: >
   Expose helpers that preserve wrapped geographic longitudes instead of

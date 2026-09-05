@@ -59,10 +59,6 @@ pip install "geocase[all]"
 
 Confirm that a vertex-dense, highly irregular polygon loads and validates intact -- no truncation of the coordinate list, no simplification, no self-intersection introduced by a lossy round-trip.
 
-## Risk types covered
-
-- [`none`](../risk/none.md)
-
 ## Expected behavior
 
 | Assertion | Expected |
@@ -137,9 +133,9 @@ against one.
 
 - [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
 - [Dense Ring Polygon (4096 vertices, GeoPackage)](dense_ring_polygon_4k_gpkg.md) -- `dense_ring_polygon_4k_gpkg`
-- [Simple Valid Polygon](simple_valid_polygon.md) -- `simple_valid_polygon`
-- [Simple Valid LineString](simple_valid_linestring.md) -- `simple_valid_linestring`
-- [Simple Valid MultiLineString](simple_valid_multilinestring.md) -- `simple_valid_multilinestring`
+- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
+- [Format-limited Precision Polygon](format_limited_precision_polygon.md) -- `format_limited_precision_polygon`
+- [Invalid Geometry at Feature 9,999 (GeoPackage)](invalid_geometry_at_scale_gpkg.md) -- `invalid_geometry_at_scale_gpkg`
 
 <script type="application/ld+json">
 {
@@ -156,7 +152,6 @@ against one.
   },
   "keywords": [
     "irregular_geometry",
-    "none",
     "polygon",
     "procedural",
     "valid",

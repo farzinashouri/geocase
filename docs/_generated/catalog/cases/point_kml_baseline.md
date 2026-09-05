@@ -61,8 +61,7 @@ Provide a canonical point encoded as KML so driver-backed loading can be compare
 
 ## Risk types covered
 
-- [`format_comparison`](../risk/format-comparison.md)
-- [`xml_driver_behavior`](../risk/xml-driver-behavior.md)
+- [`format/xml_driver_behavior`](../risk/format-xml-driver-behavior.md)
 
 ## Expected behavior
 
@@ -122,7 +121,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`baseline` `cross_format_canonical` `kml` `point` `valid` `vector`
+`baseline` `cross_format_canonical` `format_comparison` `kml` `point` `valid` `vector`
 
 ## Related cases
 
@@ -148,12 +147,12 @@ geometry is derived from `params.canonical_source_case_id`
   "keywords": [
     "baseline",
     "cross_format_canonical",
+    "format/xml_driver_behavior",
     "format_comparison",
     "kml",
     "point",
     "valid",
-    "vector",
-    "xml_driver_behavior"
+    "vector"
   ],
   "license": "MIT",
   "creator": {

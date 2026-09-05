@@ -24,10 +24,10 @@ tags:
   - coordinate_drift
 
 risk_types:
-  - precision_loss
-  - coordinate_drift
-  - roundtrip_degradation
-  - format_specific
+  - format/limitation
+  - precision/coordinate_drift
+  - precision/loss
+  - precision/roundtrip_degradation
 
 behavioral_goal: >
   Expose precision loss during GeoJSON text serialization. Detect workflows

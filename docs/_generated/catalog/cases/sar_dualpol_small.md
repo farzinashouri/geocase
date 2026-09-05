@@ -60,9 +60,9 @@ Confirm GeoCase preserves a dual-pol VV/VH SAR scene, its band ordering, and ban
 
 ## Risk types covered
 
-- [`band_loss`](../risk/band-loss.md)
-- [`dtype_drift`](../risk/dtype-drift.md)
-- [`incorrect_band_order`](../risk/incorrect-band-order.md)
+- [`band/incorrect_order`](../risk/band-incorrect-order.md)
+- [`band/loss`](../risk/band-loss.md)
+- [`dtype/drift`](../risk/dtype-drift.md)
 
 ## Expected behavior
 
@@ -79,6 +79,17 @@ Confirm GeoCase preserves a dual-pol VV/VH SAR scene, its band ordering, and ban
 | `nodata_convention` | `sentinel` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `VV`, `VH` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `154.4151785714` |
+| Mean including NoData | `135.11328125` |
+| NoData pixels | `64` |
+| Bounds (case CRS) | `[500000.0, 4499840.0, 500160.0, 4500000.0]` |
 
 ## Required capabilities
 
@@ -123,12 +134,12 @@ Confirm GeoCase preserves a dual-pol VV/VH SAR scene, its band ordering, and ban
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "band_loss",
+    "band/incorrect_order",
+    "band/loss",
     "delivery:single-file",
-    "dtype_drift",
+    "dtype/drift",
     "geography:utm",
     "geotiff",
-    "incorrect_band_order",
     "product:sar",
     "raster",
     "sar"
@@ -143,6 +154,37 @@ Confirm GeoCase preserves a dual-pol VV/VH SAR scene, its band ordering, and ban
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "sar_dualpol_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 154.4151785714
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 135.11328125
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 64
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499840.0,
+        500160.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

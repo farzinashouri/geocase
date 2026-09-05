@@ -61,9 +61,9 @@ Expose code that silently accepts invalid polygons or computes incorrect area/ce
 
 ## Risk types covered
 
-- [`incorrect_area`](../risk/incorrect-area.md)
-- [`silent_invalid_geometry`](../risk/silent-invalid-geometry.md)
-- [`topology_error`](../risk/topology-error.md)
+- [`geometry/silent_invalid`](../risk/geometry-silent-invalid.md)
+- [`geometry/topology_error`](../risk/geometry-topology-error.md)
+- [`measurement/incorrect_area`](../risk/measurement-incorrect-area.md)
 
 ## Expected behavior
 
@@ -144,13 +144,13 @@ topology checks catch bad geometry.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "incorrect_area",
+    "geometry/silent_invalid",
+    "geometry/topology_error",
     "invalid",
+    "measurement/incorrect_area",
     "polygon",
     "self_intersection",
-    "silent_invalid_geometry",
     "topology",
-    "topology_error",
     "vector"
   ],
   "license": "MIT",

@@ -60,8 +60,8 @@ Confirm that a consumer reading both halves agrees about the ground they describ
 
 ## Risk types covered
 
-- [`crs_unit_confusion`](../risk/crs-unit-confusion.md)
-- [`reprojection_error`](../risk/reprojection-error.md)
+- [`crs/reprojection_error`](../risk/crs-reprojection-error.md)
+- [`crs/units`](../risk/crs-units.md)
 
 ## Expected behavior
 
@@ -77,6 +77,17 @@ Confirm that a consumer reading both halves agrees about the ground they describ
 | `expected_nodata_value` | `-9999.0` |
 | `nodata_convention` | `sentinel` |
 | `expected_band_names` | `elevation` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `128.0` |
+| Mean including NoData | `88.44140625` |
+| NoData pixels | `1` |
+| Bounds (case CRS) | `[500000.0, 4499520.0, 500480.0, 4500000.0]` |
 
 ## Notes
 
@@ -162,12 +173,12 @@ agree in WGS 84 to within a millidegree.
   },
   "keywords": [
     "crs",
-    "crs_unit_confusion",
+    "crs/reprojection_error",
+    "crs/units",
     "geotiff",
     "pair",
     "raster",
-    "reprojection",
-    "reprojection_error"
+    "reprojection"
   ],
   "license": "MIT",
   "creator": {
@@ -179,6 +190,37 @@ agree in WGS 84 to within a millidegree.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "crs_family_pair_projected.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": 128.0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": 88.44140625
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499520.0,
+        500480.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

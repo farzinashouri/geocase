@@ -19,10 +19,10 @@ tags:
   - baseline
   - sqlite
   - cross_format_canonical
+  - format_comparison
 
 risk_types:
-  - format_comparison
-  - sqlite_driver_behavior
+  - format/sqlite_driver_behavior
 
 behavioral_goal: >
   Provide a canonical polygon encoded in SQLite so database-backed

@@ -18,10 +18,10 @@ tags:
   - baseline
   - flatgeobuf
   - cross_format_canonical
+  - format_comparison
 
 risk_types:
-  - format_comparison
-  - driver_behavior
+  - format/driver_behavior
 
 behavioral_goal: >
   Provide a canonical point encoded as FlatGeobuf so binary driver-backed loading can be compared against the GeoJSON baseline.

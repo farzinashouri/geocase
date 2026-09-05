@@ -60,8 +60,8 @@ Confirm GeoCase can open an NDVI-style derived raster and preserve its single fl
 
 ## Risk types covered
 
-- [`dtype_drift`](../risk/dtype-drift.md)
-- `value_range_violation`
+- [`dtype/drift`](../risk/dtype-drift.md)
+- `dtype/value_range_violation`
 
 ## Expected behavior
 
@@ -75,6 +75,15 @@ Confirm GeoCase can open an NDVI-style derived raster and preserve its single fl
 | `expected_shape` | `[16, 16]` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `ndvi` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| NoData pixels | `0` |
+| Bounds (case CRS) | `[500000.0, 4499840.0, 500160.0, 4500000.0]` |
 
 ## Notes
 
@@ -148,15 +157,15 @@ Derived-index baseline for validating float32 NDVI-style raster handling.
   },
   "keywords": [
     "delivery:single-file",
-    "dtype_drift",
+    "dtype/drift",
+    "dtype/value_range_violation",
     "eo",
     "geography:utm",
     "geotiff",
     "index",
     "ndvi",
     "product:index",
-    "raster",
-    "value_range_violation"
+    "raster"
   ],
   "license": "MIT",
   "creator": {
@@ -168,6 +177,25 @@ Derived-index baseline for validating float32 NDVI-style raster handling.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "ndvi_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499840.0,
+        500160.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

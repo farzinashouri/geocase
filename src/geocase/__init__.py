@@ -26,6 +26,7 @@ from geocase.api.public import (
     list_cases,
     list_suites,
     load_case,
+    risk_types,
     show_case,
 )
 from geocase.api.types import (
@@ -68,6 +69,7 @@ __all__ = [
     "show_case",
     "list_suites",
     "get_suite",
+    "risk_types",
     # Errors
     "RemoteCaseUnavailableError",
     # Types

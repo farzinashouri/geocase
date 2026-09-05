@@ -61,8 +61,7 @@ Expose helpers that preserve wrapped geographic longitudes instead of normalizin
 
 ## Risk types covered
 
-- `longitude_not_normalized`
-- `wrapped_coordinate_retention`
+- [`extent/antimeridian`](../risk/extent-antimeridian.md)
 
 ## Expected behavior
 
@@ -104,9 +103,9 @@ into the conventional `[-180, 180]` range.
 
 ## Related cases
 
+- [Antimeridian Crossing LineString](antimeridian_crossing_line.md) -- `antimeridian_crossing_line`
 - [Dateline Chain Cluster](dateline_chain_cluster.md) -- `dateline_chain_cluster`
 - [Dateline Points Pair](dateline_points_pair.md) -- `dateline_points_pair`
-- [Antimeridian Crossing LineString](antimeridian_crossing_line.md) -- `antimeridian_crossing_line`
 - [Classic Antimeridian Polygon](classic_antimeridian_polygon.md) -- `classic_antimeridian_polygon`
 - [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 
@@ -125,12 +124,11 @@ into the conventional `[-180, 180]` range.
   },
   "keywords": [
     "dateline",
-    "longitude_not_normalized",
+    "extent/antimeridian",
     "longitude_wrapping",
     "point",
     "reprojection",
-    "vector",
-    "wrapped_coordinate_retention"
+    "vector"
   ],
   "license": "MIT",
   "creator": {

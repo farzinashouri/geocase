@@ -61,8 +61,7 @@ Provide a canonical line encoded as GeoArrow IPC so Arrow-native geometry loadin
 
 ## Risk types covered
 
-- [`arrow_ipc_behavior`](../risk/arrow-ipc-behavior.md)
-- [`format_comparison`](../risk/format-comparison.md)
+- [`format/arrow_ipc_behavior`](../risk/format-arrow-ipc-behavior.md)
 
 ## Expected behavior
 
@@ -119,7 +118,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`baseline` `cross_format_canonical` `geoarrow` `linestring` `valid` `vector`
+`baseline` `cross_format_canonical` `format_comparison` `geoarrow` `linestring` `valid` `vector`
 
 ## Related cases
 
@@ -143,9 +142,9 @@ geometry is derived from `params.canonical_source_case_id`
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "arrow_ipc_behavior",
     "baseline",
     "cross_format_canonical",
+    "format/arrow_ipc_behavior",
     "format_comparison",
     "geoarrow",
     "linestring",

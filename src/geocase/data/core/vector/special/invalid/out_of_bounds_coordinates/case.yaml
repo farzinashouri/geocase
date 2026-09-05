@@ -21,11 +21,11 @@ tags:
   - lat_lon_swap
 
 risk_types:
-  - coordinate_range_error
-  - lat_lon_swap
-  - silent_invalid_geometry
-  - projection_failure
-  - spatial_index_failure
+  - crs/lat_lon_swap
+  - crs/projection_failure
+  - extent/coordinate_range_error
+  - format/spatial_index_failure
+  - geometry/silent_invalid
 
 behavioral_goal: >
   Expose code that silently accepts coordinates outside valid geographic ranges.

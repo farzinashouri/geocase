@@ -61,10 +61,10 @@ Expose consumers that normalize, drop or freeze a UTC offset inferred from part 
 
 ## Risk types covered
 
-- [`dtype_drift`](../risk/dtype-drift.md)
-- [`partial_read_blind_spot`](../risk/partial-read-blind-spot.md)
-- `spec_nonconformance`
-- `timezone_normalization`
+- `attribute/timezone_normalization`
+- [`dtype/drift`](../risk/dtype-drift.md)
+- [`format/partial_read_blind_spot`](../risk/format-partial-read-blind-spot.md)
+- `format/spec_nonconformance`
 
 ## Expected behavior
 
@@ -193,15 +193,15 @@ by ~40%.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "attribute/timezone_normalization",
     "batch_boundary",
     "datetime",
-    "dtype_drift",
+    "dtype/drift",
+    "format/partial_read_blind_spot",
+    "format/spec_nonconformance",
     "large",
-    "partial_read_blind_spot",
     "point",
     "procedural",
-    "spec_nonconformance",
-    "timezone_normalization",
     "vector"
   ],
   "license": "MIT",

@@ -60,8 +60,8 @@ Confirm GeoCase preserves a categorical land-cover raster and its colormap. Ever
 
 ## Risk types covered
 
-- [`category_misread`](../risk/category-misread.md)
-- `colormap_dropped`
+- [`scaling/category_misread`](../risk/scaling-category-misread.md)
+- `scaling/colormap_dropped`
 
 ## Expected behavior
 
@@ -76,6 +76,15 @@ Confirm GeoCase preserves a categorical land-cover raster and its colormap. Ever
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `landcover` |
 | `expected_colormap_present` | yes |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| NoData pixels | `0` |
+| Bounds (case CRS) | `[500000.0, 4499840.0, 500160.0, 4500000.0]` |
 
 ## Known consumer divergences
 
@@ -130,14 +139,14 @@ Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-
   },
   "keywords": [
     "categorical",
-    "category_misread",
-    "colormap_dropped",
     "delivery:single-file",
     "geography:utm",
     "geotiff",
     "landcover",
     "product:landcover",
-    "raster"
+    "raster",
+    "scaling/category_misread",
+    "scaling/colormap_dropped"
   ],
   "license": "MIT",
   "creator": {
@@ -149,6 +158,25 @@ Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "landcover_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499840.0,
+        500160.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

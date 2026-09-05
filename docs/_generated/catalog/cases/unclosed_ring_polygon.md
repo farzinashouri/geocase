@@ -61,10 +61,10 @@ Expose loaders or validators that silently accept unclosed polygon rings, which 
 
 ## Risk types covered
 
-- `parse_exception`
-- `ring_closure_error`
-- [`silent_invalid_geometry`](../risk/silent-invalid-geometry.md)
-- [`topology_error`](../risk/topology-error.md)
+- `geometry/parse_exception`
+- `geometry/ring_closure`
+- [`geometry/silent_invalid`](../risk/geometry-silent-invalid.md)
+- [`geometry/topology_error`](../risk/geometry-topology-error.md)
 
 ## Expected behavior
 
@@ -139,14 +139,14 @@ Per RFC 7946 §3.1.6:
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "geometry/parse_exception",
+    "geometry/ring_closure",
+    "geometry/silent_invalid",
+    "geometry/topology_error",
     "invalid",
     "parse_error",
-    "parse_exception",
     "polygon",
-    "ring_closure_error",
-    "silent_invalid_geometry",
     "topology",
-    "topology_error",
     "unclosed_ring",
     "vector"
   ],

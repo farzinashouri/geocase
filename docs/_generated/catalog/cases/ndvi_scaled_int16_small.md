@@ -60,9 +60,9 @@ Confirm GeoCase preserves a scaled int16 NDVI product, its scale factor, and its
 
 ## Risk types covered
 
-- [`dtype_drift`](../risk/dtype-drift.md)
-- [`nodata_ignored`](../risk/nodata-ignored.md)
-- `scale_factor_ignored`
+- [`dtype/drift`](../risk/dtype-drift.md)
+- [`nodata/ignored`](../risk/nodata-ignored.md)
+- [`scaling/ignored`](../risk/scaling-ignored.md)
 
 ## Expected behavior
 
@@ -80,6 +80,17 @@ Confirm GeoCase preserves a scaled int16 NDVI product, its scale factor, and its
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `ndvi` |
 | `expected_scale_factor` | `0.0001` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| Mean over valid pixels | `-8818.9529411765` |
+| Mean including NoData | `-8912.50390625` |
+| NoData pixels | `1` |
+| Bounds (case CRS) | `[500000.0, 4499840.0, 500160.0, 4500000.0]` |
 
 ## Known consumer divergences
 
@@ -136,14 +147,14 @@ Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-
   "keywords": [
     "delivery:single-file",
     "derived",
-    "dtype_drift",
+    "dtype/drift",
     "geography:utm",
     "geotiff",
     "ndvi",
-    "nodata_ignored",
+    "nodata/ignored",
     "product:ndvi",
     "raster",
-    "scale_factor_ignored"
+    "scaling/ignored"
   ],
   "license": "MIT",
   "creator": {
@@ -155,6 +166,37 @@ Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "ndvi_scaled_int16_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_masked",
+      "description": "Mean over valid pixels",
+      "value": -8818.9529411765
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_mean_naive",
+      "description": "Mean including NoData",
+      "value": -8912.50390625
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499840.0,
+        500160.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

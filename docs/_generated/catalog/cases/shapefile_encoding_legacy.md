@@ -61,10 +61,10 @@ Expose loaders that assume UTF-8 encoding for Shapefile attributes. Detect mojib
 
 ## Risk types covered
 
-- `attribute_corruption`
-- [`encoding_error`](../risk/encoding-error.md)
-- [`format_specific`](../risk/format-specific.md)
-- [`mojibake`](../risk/mojibake.md)
+- `attribute/corruption`
+- [`attribute/encoding_error`](../risk/attribute-encoding-error.md)
+- [`attribute/mojibake`](../risk/attribute-mojibake.md)
+- [`format/limitation`](../risk/format-limitation.md)
 
 ## Expected behavior
 
@@ -159,9 +159,9 @@ internationalization bugs in geospatial workflows.
 
 - [Mixed Encoding Attributes](mixed_encoding_attributes.md) -- `mixed_encoding_attributes`
 - [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
+- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
 - [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
 - [Empty Geometry in GeoPackage](empty_geometry_gpkg.md) -- `empty_geometry_gpkg`
-- [GeoJSON Precision Loss Roundtrip](precision_loss_geojson_roundtrip.md) -- `precision_loss_geojson_roundtrip`
 
 <script type="application/ld+json">
 {
@@ -177,14 +177,15 @@ internationalization bugs in geospatial workflows.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "attribute_corruption",
+    "attribute/corruption",
+    "attribute/encoding_error",
+    "attribute/mojibake",
     "attributes",
     "encoding",
-    "encoding_error",
+    "format/limitation",
     "format_specific",
     "i18n",
     "legacy",
-    "mojibake",
     "shapefile",
     "text",
     "vector"

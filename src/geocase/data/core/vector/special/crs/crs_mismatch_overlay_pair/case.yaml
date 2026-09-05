@@ -24,8 +24,8 @@ tags:
   - overlay
 
 risk_types:
-  - crs_mismatch
-  - reprojection_error
+  - crs/mismatch
+  - crs/reprojection_error
 
 behavioral_goal: >
   Confirm that overlay, join and clip operations validate the CRS of every

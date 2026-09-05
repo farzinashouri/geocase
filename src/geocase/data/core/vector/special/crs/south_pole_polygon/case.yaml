@@ -23,8 +23,8 @@ tags:
   - edge_case
 
 risk_types:
-  - polar_projection_singularity
-  - area_distortion
+  - extent/polar
+  - measurement/area_distortion
 
 behavioral_goal: >
   Ensure polygon-based utilities handle geometries near the south pole

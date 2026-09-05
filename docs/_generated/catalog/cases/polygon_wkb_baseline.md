@@ -61,8 +61,7 @@ Provide a canonical polygon encoded as WKB so plain binary geometry loading can 
 
 ## Risk types covered
 
-- `binary_geometry_parsing`
-- [`format_comparison`](../risk/format-comparison.md)
+- `format/binary_geometry_parsing`
 
 ## Expected behavior
 
@@ -120,7 +119,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`baseline` `cross_format_canonical` `polygon` `valid` `vector` `wkb`
+`baseline` `cross_format_canonical` `format_comparison` `polygon` `valid` `vector` `wkb`
 
 ## Related cases
 
@@ -145,8 +144,8 @@ geometry is derived from `params.canonical_source_case_id`
   },
   "keywords": [
     "baseline",
-    "binary_geometry_parsing",
     "cross_format_canonical",
+    "format/binary_geometry_parsing",
     "format_comparison",
     "polygon",
     "valid",

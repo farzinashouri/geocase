@@ -20,9 +20,9 @@ tags:
   - csv
   - wkt
   - cross_format_canonical
-
-risk_types:
   - format_comparison
+
+risk_types: []
 
 behavioral_goal: >
   Provide a canonical multipolygon encoded as CSV with WKT so format-specific

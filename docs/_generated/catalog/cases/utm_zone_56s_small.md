@@ -61,7 +61,7 @@ Confirm that a southern-hemisphere UTM polygon reprojects to a *negative* latitu
 
 ## Risk types covered
 
-- [`zone_selection`](../risk/zone-selection.md)
+- [`crs/zone_selection`](../risk/crs-zone-selection.md)
 
 ## Expected behavior
 
@@ -146,12 +146,12 @@ also `utm_zone_1n_small` (zone edge) and `utm_zone_boundary_straddle`
   },
   "keywords": [
     "crs",
+    "crs/zone_selection",
     "polygon",
     "southern_hemisphere",
     "utm",
     "valid",
-    "vector",
-    "zone_selection"
+    "vector"
   ],
   "license": "MIT",
   "creator": {

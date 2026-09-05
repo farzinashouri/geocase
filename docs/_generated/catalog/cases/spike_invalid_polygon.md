@@ -61,9 +61,9 @@ Expose geometry repair helpers that return mixed geometry collections instead of
 
 ## Risk types covered
 
-- `linear_artifacts_after_repair`
-- [`mixed_geometry_output`](../risk/mixed-geometry-output.md)
-- `repair_returns_geometrycollection`
+- `data/linear_artifacts_after_repair`
+- [`geometry/mixed_output`](../risk/geometry-mixed-output.md)
+- [`geometry/repair_variability`](../risk/geometry-repair-variability.md)
 
 ## Expected behavior
 
@@ -125,12 +125,12 @@ which is useful for testing whether repair helpers keep only polygonal output.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "data/linear_artifacts_after_repair",
+    "geometry/mixed_output",
+    "geometry/repair_variability",
     "invalid",
-    "linear_artifacts_after_repair",
-    "mixed_geometry_output",
     "polygon",
     "repair",
-    "repair_returns_geometrycollection",
     "spike",
     "vector"
   ],

@@ -61,8 +61,8 @@ Verify that inner rings are preserved on load and that area calculations subtrac
 
 ## Risk types covered
 
-- [`incorrect_area`](../risk/incorrect-area.md)
-- `ring_ordering`
+- [`geometry/ring_orientation`](../risk/geometry-ring-orientation.md)
+- [`measurement/incorrect_area`](../risk/measurement-incorrect-area.md)
 
 ## Expected behavior
 
@@ -124,10 +124,10 @@ Exercises interior-ring handling. The polygon is valid but contains one hole.
 ## Related cases
 
 - [Self-Intersecting Polygon](self_intersecting_polygon.md) -- `self_intersecting_polygon`
+- [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
 - [Ambiguous Engine-dependent Polygon](ambiguous_engine_dependent_polygon.md) -- `ambiguous_engine_dependent_polygon`
 - [Classic Antimeridian Polygon](classic_antimeridian_polygon.md) -- `classic_antimeridian_polygon`
 - [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
-- [Dateline crossing polygon](dateline_crossing_polygon.md) -- `dateline_crossing_polygon`
 
 <script type="application/ld+json">
 {
@@ -143,11 +143,11 @@ Exercises interior-ring handling. The polygon is valid but contains one hole.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "geometry/ring_orientation",
     "hole",
-    "incorrect_area",
     "interior_ring",
+    "measurement/incorrect_area",
     "polygon",
-    "ring_ordering",
     "vector"
   ],
   "license": "MIT",

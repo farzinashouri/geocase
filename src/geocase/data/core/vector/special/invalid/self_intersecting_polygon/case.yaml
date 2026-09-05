@@ -21,9 +21,9 @@ tags:
   - topology
 
 risk_types:
-  - silent_invalid_geometry
-  - incorrect_area
-  - topology_error
+  - geometry/silent_invalid
+  - geometry/topology_error
+  - measurement/incorrect_area
 
 behavioral_goal: >
   Expose code that silently accepts invalid polygons or computes

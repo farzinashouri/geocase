@@ -60,9 +60,9 @@ Confirm GeoCase can open a small RGB optical raster and preserve its three uint8
 
 ## Risk types covered
 
-- [`band_loss`](../risk/band-loss.md)
-- [`dtype_drift`](../risk/dtype-drift.md)
-- [`incorrect_band_order`](../risk/incorrect-band-order.md)
+- [`band/incorrect_order`](../risk/band-incorrect-order.md)
+- [`band/loss`](../risk/band-loss.md)
+- [`dtype/drift`](../risk/dtype-drift.md)
 
 ## Expected behavior
 
@@ -76,6 +76,15 @@ Confirm GeoCase can open a small RGB optical raster and preserve its three uint8
 | `expected_shape` | `[16, 16]` |
 | `expected_compression` | `deflate` |
 | `expected_band_names` | `red`, `green`, `blue` |
+
+## Known answer
+
+Computed from the actual bytes and gated against them. Grade your own output against these.
+
+| Quantity | Value |
+|---|---|
+| NoData pixels | `0` |
+| Bounds (case CRS) | `[500000.0, 4499840.0, 500160.0, 4500000.0]` |
 
 ## Notes
 
@@ -150,13 +159,13 @@ True-colour optical baseline for validating multi-band uint8 raster handling.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "band_loss",
+    "band/incorrect_order",
+    "band/loss",
     "delivery:single-file",
-    "dtype_drift",
+    "dtype/drift",
     "eo",
     "geography:utm",
     "geotiff",
-    "incorrect_band_order",
     "optical",
     "product:optical",
     "raster",
@@ -172,6 +181,25 @@ True-colour optical baseline for validating multi-band uint8 raster handling.
       "@type": "DataDownload",
       "encodingFormat": "GeoTIFF",
       "name": "optical_rgb_small.tif"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "nodata_pixel_count",
+      "description": "NoData pixels",
+      "value": 0
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "expected_bounds",
+      "description": "Bounds (case CRS)",
+      "value": [
+        500000.0,
+        4499840.0,
+        500160.0,
+        4500000.0
+      ]
     }
   ],
   "spatialCoverage": {

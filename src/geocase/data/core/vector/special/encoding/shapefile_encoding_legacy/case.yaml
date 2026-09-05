@@ -26,10 +26,10 @@ tags:
   - legacy
 
 risk_types:
-  - encoding_error
-  - mojibake
-  - attribute_corruption
-  - format_specific
+  - attribute/corruption
+  - attribute/encoding_error
+  - attribute/mojibake
+  - format/limitation
 
 behavioral_goal: >
   Expose loaders that assume UTF-8 encoding for Shapefile attributes.

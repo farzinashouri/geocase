@@ -61,8 +61,8 @@ Ensure point-based utilities handle the north pole without crashing or making in
 
 ## Risk types covered
 
-- [`coordinate_edge_case`](../risk/coordinate-edge-case.md)
-- [`polar_projection_singularity`](../risk/polar-projection-singularity.md)
+- [`data/coordinate_edge_case`](../risk/data-coordinate-edge-case.md)
+- [`extent/polar`](../risk/extent-polar.md)
 
 ## Expected behavior
 
@@ -105,8 +105,8 @@ Point exactly at the geographic north pole for polar edge-case coverage.
 - [South Pole Point](south_pole_point.md) -- `south_pole_point`
 - [North Pole Polygon](north_pole_polygon.md) -- `north_pole_polygon`
 - [South Pole Polygon](south_pole_polygon.md) -- `south_pole_polygon`
+- [Svalbard Special Zone Polygon](svalbard_special_zone_polygon.md) -- `svalbard_special_zone_polygon`
 - [Web Mercator Baseline Point](web_mercator_baseline.md) -- `web_mercator_baseline`
-- [CRS Mismatch Overlay Pair](crs_mismatch_overlay_pair.md) -- `crs_mismatch_overlay_pair`
 
 <script type="application/ld+json">
 {
@@ -122,12 +122,12 @@ Point exactly at the geographic north pole for polar edge-case coverage.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
-    "coordinate_edge_case",
     "crs",
+    "data/coordinate_edge_case",
+    "extent/polar",
     "north_pole",
     "point",
     "polar",
-    "polar_projection_singularity",
     "vector"
   ],
   "license": "MIT",

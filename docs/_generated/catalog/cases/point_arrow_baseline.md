@@ -61,8 +61,7 @@ Provide a canonical point encoded as Arrow IPC so the explicit Arrow loader path
 
 ## Risk types covered
 
-- [`arrow_ipc_behavior`](../risk/arrow-ipc-behavior.md)
-- [`format_comparison`](../risk/format-comparison.md)
+- [`format/arrow_ipc_behavior`](../risk/format-arrow-ipc-behavior.md)
 
 ## Expected behavior
 
@@ -119,7 +118,7 @@ geometry is derived from `params.canonical_source_case_id`
 
 ## Tags
 
-`arrow` `baseline` `cross_format_canonical` `point` `valid` `vector`
+`arrow` `baseline` `cross_format_canonical` `format_comparison` `point` `valid` `vector`
 
 ## Related cases
 
@@ -144,9 +143,9 @@ geometry is derived from `params.canonical_source_case_id`
   },
   "keywords": [
     "arrow",
-    "arrow_ipc_behavior",
     "baseline",
     "cross_format_canonical",
+    "format/arrow_ipc_behavior",
     "format_comparison",
     "point",
     "valid",
