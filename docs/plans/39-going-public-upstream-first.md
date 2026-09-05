@@ -42,7 +42,7 @@ correction is load-bearing for the sequencing:
 | Plans 37 and 38 are implemented | **Both are `proposed`.** No `known_divergences` records, no `geocase.stac`, no `compare_arrays`, no new cases. Nothing from either has landed. |
 | "Publish a new version" | **`1.0.0rc3` is already on real PyPI**, not only TestPyPI — `rc1`, `rc2`, `rc3` all published, tagged `v1.0.0rc1..rc3`. So the action is `1.0.0`, not a first release. |
 | "Publish the docs on GitHub Pages" | **`https://farzinashouri.github.io/geocase` returns 404.** `mkdocs.yml` names it as `site_url` and `.github/workflows/pages.yml` is committed and correct; Pages was simply never enabled in repository settings. |
-| "Contribute to the open source libs" | **Nothing has been filed.** 17 ready-to-paste drafts sit in `/Users/farzinashouri/projects/geocase_validator/issues/`, plus 2 round-1 reproductions in `geocase_validation/findings/`. |
+| "Contribute to the open source libs" | **Nothing has been filed.** 17 ready-to-paste drafts sit in `~/projects/geocase_validator/issues/`, plus 2 round-1 reproductions in `geocase_validation/findings/`. |
 
 Three of those four are cheap to fix and one of them — Pages — is a repository
 setting with no code attached. But the fourth is the one this plan is organised
@@ -217,7 +217,7 @@ which three and why; this plan changes **when**, not **what**.
 ### 1.1 File exactly three
 
 All 17 drafts are confirmed present in
-`/Users/farzinashouri/projects/geocase_validator/issues/`. File these three:
+`~/projects/geocase_validator/issues/`. File these three:
 
 | draft | why this one |
 |---|---|

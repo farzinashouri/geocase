@@ -17,9 +17,9 @@ GeoCase has a complete folder structure, 166 bundled cases, and fully implemente
 - CI jobs are implemented for catalog validation, tests, lint, typecheck, and docs. (This entry originally described GitLab CI files under `ci/`; that layout was never adopted — CI is GitHub Actions in `.github/workflows/`.)
 - Practical docs were added for usage and product direction:
 	- [`docs/testing-your-function-with-geocase.md`](../testing-your-function-with-geocase.md)
-	- [`docs/design/case-recommendation-service.md`](../design/case-recommendation-service.md)
-	- [`docs/design/case-recommendation-api-spec.md`](../design/case-recommendation-api-spec.md)
-	- [`docs/design/case-recommendation-user-flow.md`](../design/case-recommendation-user-flow.md)
+	- [`docs/design/case-recommendation-service.md`](https://github.com/farzinashouri/geocase/blob/main/docs/design/case-recommendation-service.md)
+	- [`docs/design/case-recommendation-api-spec.md`](https://github.com/farzinashouri/geocase/blob/main/docs/design/case-recommendation-api-spec.md)
+	- [`docs/design/case-recommendation-user-flow.md`](https://github.com/farzinashouri/geocase/blob/main/docs/design/case-recommendation-user-flow.md)
 
 ### Development environments
 

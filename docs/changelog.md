@@ -106,6 +106,32 @@ the entry verbatim.
   was `c.case_id`, which raised a bare pydantic error naming nothing useful. The
   underlying inconsistency is a **v1.1 naming item**, not a v1.0 change.
 
+### Changed — docs site
+
+No library behaviour changes here. Three surfaces were **unpublished from the docs
+site** ahead of the v1.0 release. All of them stay in the repository and remain
+readable on GitHub — `exclude_docs` removes them from the build, so they are no
+longer reachable by URL either.
+
+- **`docs/benchmark/`** — the LLM-benchmark subsystem. It is explicitly not part of
+  the v1.0 compatibility promise, and it is not mature enough to present as a product
+  surface beside a 1.0 release. Removed from the nav *and* from the build: nav removal
+  alone would have left the page live at its URL. The `README.md` pointer stays and is
+  now marked experimental and unpublished.
+- **`docs/design/`** — four documents specifying a case-recommendation service, an API
+  spec, and a database schema for a backend that does not exist. The pages do say
+  "proposed", but published beside a v1.0 release they read as shipping features. The
+  three published pages that linked into them (`contributing/workflow.md`,
+  `contributing/structure-and-planning.md`, `index.md`) now link by GitHub URL, per the
+  rule that an unpublished doc is never linked relatively.
+- **`docs/design/presentation-brief.md`** — a brief handed to a design tool describing
+  how to pitch GeoCase. It was already off-nav but was still being built and served,
+  and it links to a `validation` branch that will break when the branch is deleted.
+
+Also scrubbed: absolute local paths of the form `/Users/<name>/projects/…` in plans 37,
+38, and 39, which named a developer's home directory and pointed at private
+repositories no reader can open. Now written as `~/projects/…`.
+
 ### Added
 
 - **`crs_mismatch_overlay_pair` (153 → 154)** — plan 36 phase 2, executing plan 27

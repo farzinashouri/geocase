@@ -52,7 +52,7 @@ Each folder under `docs/` holds one kind of document:
 - User guides at the top level explain how to select cases, write tests, and use GeoCase day to day.
 - `docs/contributing/` — how to work on GeoCase: workflow, conventions, and maintainer practices.
 - `docs/plans/` — what is planned and in what order, including the [roadmap](https://github.com/farzinashouri/geocase/blob/main/docs/plans/development-plan.md). Superseded plans stay in `docs/plans/archive/` as an implementation log.
-- `docs/design/` — future-facing designs that are not part of the core workflow.
+- `docs/design/` — future-facing designs for things that do not exist yet, such as a case-recommendation service. Kept in the repository and readable on [GitHub](https://github.com/farzinashouri/geocase/tree/main/docs/design), but not published here, so that a proposal is never mistaken for a shipping feature.
 - `docs/reference/` — descriptive maps of the project as it exists today, such as the [codebase summary](reference/codebase-summary.md).
 - `docs/_generated/` — pages built by scripts and gated in CI; never edit them by hand.
 

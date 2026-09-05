@@ -96,9 +96,10 @@ Instructions for contributors to add new cases correctly.
 
 Explains bundled vs remote vs private storage.
 
-### [`docs/design/database-design.md`](../design/database-design.md)
+### [`docs/design/database-design.md`](https://github.com/farzinashouri/geocase/blob/main/docs/design/database-design.md)
 
-Explains the longer-term catalog backend idea.
+Explains the longer-term catalog backend idea. Kept in the repository but not
+published to the site: it designs a backend that does not exist.
 
 Why this folder exists: because GeoCase is partly a toolkit and partly a convention. Good docs are part of the product.
 

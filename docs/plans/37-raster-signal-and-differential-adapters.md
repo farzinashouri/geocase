@@ -25,7 +25,7 @@ consumers under GDAL 3.12.2 / Python 3.14.3, using the differential shape
 [`geocase.differential`](../../src/geocase/differential.py) documents: read each
 case two or three ways that must agree, and report the disagreement. Full report,
 harness and standalone reproductions are in
-`/Users/farzinashouri/projects/geocase_validation/` (`findings/REPORT.md`).
+`~/projects/geocase_validation/` (`findings/REPORT.md`).
 
 | Consumer | Version | Result |
 |---|---|---|
@@ -374,8 +374,8 @@ Plus the finding this plan exists for, re-run end to end:
 
 ```bash
 # in the validation env, with rio-tiler installed
-python /Users/farzinashouri/projects/geocase_validation/findings/repro_riotiler_rotated.py
-python /Users/farzinashouri/projects/geocase_validation/findings/repro_riotiler_bottomup.py
+python ~/projects/geocase_validation/findings/repro_riotiler_rotated.py
+python ~/projects/geocase_validation/findings/repro_riotiler_bottomup.py
 ```
 
 Phase 3 lands 154 → **157** cases; the count gate fires in seven files
