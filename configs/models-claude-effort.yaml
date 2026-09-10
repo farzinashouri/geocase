@@ -1,0 +1,63 @@
+# Effort track (Plan 45) — three Claude models x five --effort levels, run
+# through the Claude Code CLI on a subscription seat.
+#
+# READ THIS BEFORE COMPARING ANYTHING FROM THIS CONFIG TO A BARE RUN.
+# `claude -p` has no bare-completion mode: every invocation carries roughly
+# 23 800 tokens of Claude Code harness preamble that no flag removes
+# (--system-prompt replaces the task system prompt, not the harness; disabling
+# every tool made the payload larger). So the model never sees the task prompt
+# in isolation, `prompt_sha256` no longer describes what it saw, and the
+# preamble shifts with every CLI release. Results here are comparable
+# **within this track only** — same harness, same preamble, varying only model
+# and effort. Every run.json written from this config says so in its own
+# fields: `track: effort`, `preamble: claude-code-harness`, `harness_version`.
+#
+# What the track buys: on one antimeridian prompt, `--effort low` spent 46
+# thinking tokens and `--effort max` spent 3 965. Whether that ~86x changes an
+# *outcome* per trap_category is the open question (U27) this exists to answer.
+
+defaults:
+  trials: 1
+  # The CLI exposes no temperature knob. Null rather than a number, because a
+  # recorded 0.2 that was never sent is a provenance lie.
+  temperature: null
+  exec_timeout_s: 60
+
+budget:
+  # Zero, and it can only ever fire as an alarm. ClaudeCliClient reports
+  # cost=None by design: `modelUsage` gives "costBasis": "list", which is not
+  # what a subscription is billed. If a cost ever reaches the tracker from
+  # this config, something has started metering — abort rather than spend.
+  max_usd_total: 0.0
+
+# The real scarce resource on this track is throughput against the operator's
+# own interactive rate limits — the same seat their editor is using. rpm is
+# deliberately low: a 420-call sweep that saturates the limit locks the
+# operator out of their own tools for the duration.
+limits:
+  rpm: 6
+  requests_per_day: 400
+  quota_file: .geocase_quota_claude.json
+
+models:
+  # Start here. The sequencing note in Plan 45 is explicit: run ONE model
+  # across five efforts (~140 calls) and confirm the effort signal is real per
+  # trap_category before committing to 15 arms. If `low` and `max` produce the
+  # same profile, the axis is not worth the remaining ten.
+  - id: claude-haiku-4-5
+    label: Haiku 4.5 (Claude Code CLI)
+    tracks: [effort]
+    provider: claude-cli
+    effort: [low, medium, high, xhigh, max]
+
+  - id: claude-sonnet-5
+    label: Sonnet 5 (Claude Code CLI)
+    tracks: [effort]
+    provider: claude-cli
+    effort: [low, medium, high, xhigh, max]
+
+  - id: claude-opus-5
+    label: Opus 5 (Claude Code CLI)
+    tracks: [effort]
+    provider: claude-cli
+    effort: [low, medium, high, xhigh, max]

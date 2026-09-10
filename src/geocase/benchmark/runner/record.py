@@ -142,8 +142,32 @@ def write_bare_record(
     outcomes_by_trial: dict[int, list[TrialOutcome]],
     cost_usd: float | None,
     domain: str = "geo",
+    provider: str = "openrouter",
+    track: str = "bare",
+    protocol: str = "openrouter-chat",
+    effort: str | None = None,
+    harness_version: str | None = None,
+    preamble: str | None = None,
 ) -> dict[str, Any]:
-    """Write ``run_dir/run.json`` for a bare run and return the record."""
+    """Write ``run_dir/run.json`` for a single-completion run.
+
+    The provider/track/protocol trio were literals until Plan 45 Phase 4.2;
+    they keep today's values as defaults, so every committed bare record
+    regenerates byte-identically.
+
+    ``effort``/``harness_version``/``preamble`` are written **only** when
+    passed. On the effort track all three are required in practice:
+
+    * ``harness_version`` — the ``claude -p`` preamble is a function of the
+      CLI release, so a record without it is not reproducible;
+    * ``preamble`` — the explicit marker that the model did **not** see the
+      task prompt in isolation, which is what makes effort numbers
+      incomparable with bare ones.
+
+    They are omitted rather than written as ``null`` on a bare record: a null
+    ``preamble`` reads as "checked, there was none", which is a claim this
+    module cannot make about a run it did not observe.
+    """
     run_dir = Path(run_dir)
     defaults = config.get("defaults", {})
     integrity = scan_integrity(run_dir)
@@ -155,10 +179,14 @@ def write_bare_record(
         "model": {
             "id": model["id"],
             "label": model.get("label") or model["id"],
-            "provider": "openrouter",
+            "provider": provider,
         },
-        "track": "bare",
-        "protocol": "openrouter-chat",
+        "track": track,
+        "protocol": protocol,
+        # Written only when supplied, so a bare record's bytes are unchanged.
+        **({"effort": effort} if effort is not None else {}),
+        **({"harness_version": harness_version} if harness_version is not None else {}),
+        **({"preamble": preamble} if preamble is not None else {}),
         "runner": {"name": "geocase-benchmark", "version": RUNNER_VERSION},
         "config": {
             "trials": trials,

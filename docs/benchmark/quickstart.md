@@ -193,7 +193,7 @@ and `grader.py` (the oracle).
 
 ---
 
-## Running models: the two tracks
+## Running models: the three tracks
 
 ### Bare track — automated, needs an OpenRouter key
 
@@ -319,6 +319,44 @@ verdicts sit side by side — which is what separates a reproducible defect from
 an unlucky sample. `--protocol` is fixed per run: mixing `claude-code` and
 `cursor` results into one record is refused rather than silently blurred.
 
+### Effort track — automated, needs a Claude Code subscription
+
+The same tasks through `claude -p` at each `--effort` level, asking one
+question the other two tracks cannot: **does more thinking rescue the trap, and
+which trap?** On one antimeridian prompt, `low` spent 46 thinking tokens and
+`max` spent 3 965 — an ~86x spread on one model.
+
+```bash
+python -m geocase.benchmark run --config configs/models-claude-effort.yaml \
+  --track effort --domain geo --dry-run
+```
+
+```text
+track=effort: 15 arms x 1 trials x 23 tasks = 345 CLI invocations, serial
+  claude-haiku-4-5 @low
+  ...
+  cost: not estimated — this track runs on a subscription seat and records no
+  spend. The ceiling is your interactive rate limit, which your own editor
+  session is also drawing on.
+```
+
+**Read the comparability rule below before comparing any of these numbers to a
+bare run.** It is not a caveat, it is the condition under which the track means
+anything.
+
+Two operational notes. `ANTHROPIC_API_KEY` must be **unset**: with a key
+present the same command bills per token instead of drawing on the seat, and
+the client refuses to start rather than let that happen silently. And the run
+is serial against your own interactive rate limit — the config paces at 6 rpm
+because a sweep that saturates the limit locks you out of your own editor for
+the duration. Start with one model across five efforts (~140 calls) and confirm
+the effort signal is real per trap category before running all 15 arms.
+
+Results land in `results/runs/<date>_<model>_effort-<level>/`, one directory
+per arm. The level in that name is load-bearing, not cosmetic: without it two
+efforts of one model would share a directory and `--resume` would skip the
+second as already done — a silent wrong result rather than an error.
+
 ---
 
 ## Rules that keep the numbers honest
@@ -352,6 +390,34 @@ dedicated venv, under timeout, with `*_KEY` and `*_TOKEN` scrubbed from the
 environment. This is *soft* isolation — for stronger guarantees, run the
 grading step inside `docker run --network none`.
 
+**Effort-track results are comparable within the effort track only.** Same
+harness, same preamble, varying only model and effort — that comparison is
+clean. Against bare numbers it is not, and the reason is the preamble, not the
+provider. `claude -p` has no bare-completion mode: every invocation carries
+roughly 23 800 tokens of Claude Code harness that no flag removes
+(`--system-prompt` replaces the task system prompt, not the harness; disabling
+every tool made the payload *larger*). So the model never sees the task prompt
+in isolation, `prompt_sha256` no longer describes what it saw, and the preamble
+shifts with every CLI release — two runs a month apart are not comparable
+either, which is why every effort record carries `harness_version`. Each
+`run.json` states this in its own fields rather than relying on you having read
+this page:
+
+```json
+{"track": "effort", "protocol": "claude-code",
+ "effort": "low", "harness_version": "claude-cli/2.1.263",
+ "preamble": "claude-code-harness"}
+```
+
+`preamble` is the marker. If you are looking at a table of numbers and cannot
+see whether that field was set, you do not yet know what you are comparing.
+
+**The effort track's cost column is intentionally empty.** `modelUsage` reports
+`"costBasis": "list"`, and under a subscription those dollars are never billed.
+`cost_usd` is `null` on every effort record rather than `0.0`, because a zero
+reads as "measured, and it was free". The list figure is kept, clearly labelled,
+under `usage.total_cost_usd_list`, and never reaches the budget abort.
+
 **Cross-domain rates are not comparable.** Task difficulty is set by the task
 author, not by the domain: six hand-picked tasks with hand-picked traps are not
 a random sample of anything. A lower silent rate on `stdlib` than on `geo`
@@ -367,8 +433,9 @@ pedagogy independent of anything this repo publishes.
 
 **Single-family evidence is the standing weakness.** The only complete run so
 far is one Claude model, the same family that authored both GeoCase and this
-harness. Until several models across both tracks have run, every number carries
-that caveat.
+harness. Until several models across the bare and agentic tracks have run,
+every number carries that caveat — and the effort track cannot lift it, since
+every arm of it is a Claude model by construction.
 
 ---
 

@@ -11,8 +11,8 @@ from dataclasses import dataclass
 from geocase.benchmark.domains import get_domain
 from geocase.benchmark.prompts import task_paragraph
 from geocase.benchmark.registry import TaskMeta
+from geocase.benchmark.runner.client import ChatClient, ChatReply
 from geocase.benchmark.runner.extract import extract_code_block
-from geocase.benchmark.runner.openrouter import ChatReply, OpenRouterClient
 
 # The dependency line is a per-domain slot. For `geo` the substituted sentence
 # is byte-identical to the hard-coded one this template used to carry, which is
@@ -45,7 +45,7 @@ class BareResult:
 
 
 def run_bare_task(
-    client: OpenRouterClient,
+    client: ChatClient,
     model_id: str,
     task: TaskMeta,
     *,

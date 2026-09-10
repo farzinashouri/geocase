@@ -14,7 +14,22 @@ from dataclasses import dataclass
 
 import httpx
 
+from geocase.benchmark.runner.client import ChatReply
 from geocase.benchmark.runner.limiter import DailyQuota, RateLimiter
+
+# Re-exported: ChatReply moved to `runner.client` with the Protocol (Plan 45
+# Phase 1) and every existing `from ...openrouter import ChatReply` still
+# resolves to the same object.
+__all__ = [
+    "BASE_URL",
+    "BudgetExceededError",
+    "ChatFailedError",
+    "ChatReply",
+    "ChatTimeoutError",
+    "CostTracker",
+    "OpenRouterClient",
+    "RetryPolicy",
+]
 
 BASE_URL = "https://openrouter.ai/api/v1"
 RETRYABLE = {429, 500, 502, 503, 504}
@@ -74,13 +89,6 @@ class CostTracker:
                 f"would exceed max_usd_total ${self.max_usd:.2f}"
             )
         self.spent += cost_usd or 0.0
-
-
-@dataclass
-class ChatReply:
-    content: str
-    cost: float | None
-    usage: dict
 
 
 class OpenRouterClient:
