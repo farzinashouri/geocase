@@ -20,8 +20,10 @@ tags:
   - int8
 
 risk_types:
+  # Plan 44 phase 4 -- whose failure mode this case is.
   - dtype/coercion
   - dtype/overflow
+  - failure_mode/consumer
   - nodata/ignored
 
 behavioral_goal: >

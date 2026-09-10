@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "description": "decimal expansion at 15 places ends in nines"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.999999999999999,
+          51.0
+        ]
+      }
+    }
+  ]
+}

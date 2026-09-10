@@ -24,6 +24,8 @@ tags:
   - coordinate_drift
 
 risk_types:
+  # Plan 44 phase 4 -- whose failure mode this case is.
+  - failure_mode/reference_implementation
   - format/limitation
   - precision/coordinate_drift
   - precision/loss
@@ -70,6 +72,29 @@ assertions:
   expected_epsg: 4326
   expected_geometry_types:
     - Point
+
+# Plan 44 phase 1.1 -- the 2026-09-06 run that pointed the corpus at GDAL
+# itself rather than at a consumer of it. Feature 3 of this case found it, by
+# luck: 1e-14 is the one magnitude where the significant digit lands on the
+# single string position intelliround does not test. The designed version of
+# this stimulus is the numeric_boundary_* family (plan 44 phase 2).
+known_divergences:
+  - consumer: gdal
+    version_range: "GDAL d6fd56f52d (also GDAL 3.12.2), WKT and GeoJSON writers"
+    description: >
+      Coordinates with |v| in [1e-14, 1e-13) are written as 0 by both the WKT
+      and the GeoJSON writers -- relative error 1.0, silently, with no error
+      and no warning. Not a precision floor: the default is 15 decimal places
+      and 1e-14 is 0.00000000000001, 14 places. ogr/ogrlibjsonutils.cpp:158
+      formats through OGRFormatDouble(..., OGRWktOptions(15, round=true), 1),
+      which calls intelliround at ogr/ogrutils.cpp:161-169; that branch tests
+      s[len-3] through s[len-9] for zeros and then drops the last 8
+      characters, including the untested s[len-2], which for
+      "0.000000000000010" holds the only significant digit. A brute force over
+      300000 coordinates puts the affected class at exactly [1e-14, 1e-13).
+      Set SIGNIFICANT_FIGURES, or write a binary format, for coordinates in
+      that class.
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/44-gdal-as-target-and-the-numeric-axis.md
 
 params:
   precision_digits: 15

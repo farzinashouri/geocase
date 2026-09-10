@@ -62,6 +62,7 @@ Confirm that signed 8-bit integer rasters open with the correct dtype and preser
 
 - [`dtype/coercion`](../risk/dtype-coercion.md)
 - `dtype/overflow`
+- [`failure_mode/consumer`](../risk/failure-mode-consumer.md)
 - [`nodata/ignored`](../risk/nodata-ignored.md)
 
 ## Expected behavior
@@ -126,7 +127,7 @@ Single-band `int8` raster for validating narrow signed integer dtype handling.
 - [GeoTIFF Int16 Small](geotiff_int16_small.md) -- `geotiff_int16_small`
 - [GeoTIFF Int32 Small](geotiff_int32_small.md) -- `geotiff_int32_small`
 - [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
-- [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
+- [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
 
 <script type="application/ld+json">
 {
@@ -145,6 +146,7 @@ Single-band `int8` raster for validating narrow signed integer dtype handling.
     "dtype",
     "dtype/coercion",
     "dtype/overflow",
+    "failure_mode/consumer",
     "geotiff",
     "int8",
     "nodata/ignored",

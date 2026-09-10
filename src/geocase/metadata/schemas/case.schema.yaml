@@ -159,6 +159,9 @@ properties:
         - extent/coordinate_wrapping
         - extent/equatorial
         - extent/polar
+        # Plan 44 phase 4 -- whose failure mode the case is.
+        - failure_mode/consumer
+        - failure_mode/reference_implementation
         - footprint/generation_error
         - footprint/geocoding_failure
         - format/arrow_ipc_behavior
@@ -201,8 +204,12 @@ properties:
         - nodata/mask_misread
         - nodata/nan_mishandled
         - precision/coordinate_drift
+        # Plan 44 phase 2.3 -- the numeric-boundary axis.
+        - precision/denormal_magnitude
+        - precision/formatter_boundary
         - precision/loss
         - precision/roundtrip_degradation
+        - precision/significant_digits
         - scaling/category_misread
         - scaling/colormap_dropped
         - scaling/ignored
@@ -423,6 +430,19 @@ properties:
             type: number
           minItems: 4
           maxItems: 4
+
+      # The [x, y] coordinates a write-then-read cycle must return unchanged,
+      # in the case's own CRS (plan 44 phase 2.2). Typed rather than left in
+      # `params`, because "did the value survive?" is only answerable against
+      # a declared answer, and `params` has no whitelist.
+      expected_roundtrip_coordinates:
+        type: array
+        items:
+          type: array
+          items:
+            type: number
+          minItems: 2
+          maxItems: 2
 
       # OGR driver prerequisites for an *external* consumer (pyogrio, fiona,
       # ogr2ogr) — not for geocase, which reads every vector case without OGR.

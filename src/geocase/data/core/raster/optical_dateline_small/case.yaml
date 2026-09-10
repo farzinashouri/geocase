@@ -24,6 +24,8 @@ tags:
 risk_types:
   - extent/antimeridian
   - extent/bounds_normalization
+  # Plan 44 phase 4 -- whose failure mode this case is.
+  - failure_mode/reference_implementation
 
 behavioral_goal: >
   Confirm GeoCase handles an RGB optical scene whose extent crosses the
@@ -92,3 +94,22 @@ known_divergences:
       spec for both formats. bounds_to_geometry handles only the wrapped
       (minx > maxx) convention.
     upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md
+  # Plan 44 phase 1.1 -- the 2026-09-06 run that pointed the corpus at GDAL
+  # itself rather than at a consumer of it.
+  - consumer: gdal
+    version_range: "GDAL d6fd56f52d (also GDAL 3.12.2), any projected target SRS"
+    description: >
+      gdal.AutoCreateWarpedVRT(ds, None, "EPSG:3857") returns a dataset with
+      RasterYSize == 0 for this raster, with CE_None and no warning. PROJ wraps
+      the eastern bound of 180.22 to -20013018 m, so GDALSuggestedWarpOutput2
+      sees an X span of ~40000 km against a Y span of ~35 km, derives one
+      square pixel size from the diagonal, and at
+      alg/gdaltransformer.cpp:1141-1142 rounds *pnLines to 0. The too-large
+      direction is clamped twelve lines above; the rounds-to-zero direction is
+      not. The antimeridian handling at gdaltransformer.cpp:1474-1491 fires
+      only when the destination SRS is geographic, so a projected target gets
+      none. The caller sees an invalid GDALDataset and only a later Create
+      reports "Attempt to create 23x0 dataset is illegal", which names the
+      symptom and not the cause. Split or wrap the footprint before warping to
+      a projected CRS.
+    upstream_url: https://github.com/farzinashouri/geocase/blob/main/docs/plans/44-gdal-as-target-and-the-numeric-axis.md

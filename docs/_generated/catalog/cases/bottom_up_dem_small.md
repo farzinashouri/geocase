@@ -60,6 +60,7 @@ Verify that a consumer reads row order from the transform rather than assuming n
 
 ## Risk types covered
 
+- [`failure_mode/consumer`](../risk/failure-mode-consumer.md)
 - [`nodata/ignored`](../risk/nodata-ignored.md)
 - [`transform/bottom_up`](../risk/transform-bottom-up.md)
 
@@ -225,11 +226,11 @@ property the corpus always had into one it declares.
 
 ## Related cases
 
-- [Bottom-Up Square (Positive E and Nothing Else)](bottom_up_only_square.md) -- `bottom_up_only_square`
-- [Rotated Bottom-Up DEM (Skew and Positive Y Resolution)](rotated_bottom_up_small.md) -- `rotated_bottom_up_small`
 - [Pixel-Is-Area DEM](pixel_is_area_dem_small.md) -- `pixel_is_area_dem_small`
 - [Pixel-Is-Point DEM](pixel_is_point_dem_small.md) -- `pixel_is_point_dem_small`
-- [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
+- [Bottom-Up Square (Positive E and Nothing Else)](bottom_up_only_square.md) -- `bottom_up_only_square`
+- [Rotated Bottom-Up DEM (Skew and Positive Y Resolution)](rotated_bottom_up_small.md) -- `rotated_bottom_up_small`
+- [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
 
 <script type="application/ld+json">
 {
@@ -245,6 +246,7 @@ property the corpus always had into one it declares.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "failure_mode/consumer",
     "georeferencing",
     "geotiff",
     "nodata/ignored",

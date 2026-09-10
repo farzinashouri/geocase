@@ -59,6 +59,7 @@ Validate footprint extraction under rotated transform and disconnected valid pix
 
 ## Risk types covered
 
+- [`failure_mode/consumer`](../risk/failure-mode-consumer.md)
 - [`footprint/generation_error`](../risk/footprint-generation-error.md)
 - [`transform/rotated`](../risk/transform-rotated.md)
 
@@ -250,6 +251,7 @@ affine with no reference at all; handing it one changes what it tests.
   },
   "keywords": [
     "edge",
+    "failure_mode/consumer",
     "footprint",
     "footprint/generation_error",
     "geotiff",

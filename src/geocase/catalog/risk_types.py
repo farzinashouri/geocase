@@ -198,6 +198,23 @@ RISK_TYPE_DESCRIPTIONS: dict[str, str] = {
     "precision/roundtrip_degradation": (
         "A write-then-read cycle does not return the input unchanged."
     ),
+    # Plan 44 phase 2.3. Round 6 found GDAL writing coordinates in
+    # [1e-14, 1e-13) as ``0`` -- and found it by luck, because the corpus's one
+    # precision case happened to carry a point at that magnitude. The axis is
+    # *numbers at a representational boundary*, not geometry, and until now the
+    # corpus had a single term for it and no way to say which boundary.
+    "precision/formatter_boundary": (
+        "A value sits on a text-formatter's rounding or truncation boundary, "
+        "where the written decimal stops representing the double it came from."
+    ),
+    "precision/significant_digits": (
+        "The number of significant digits needed to round-trip the value "
+        "exceeds what the writer emits by default."
+    ),
+    "precision/denormal_magnitude": (
+        "The magnitude is near zero enough that a writer or reader collapses "
+        "it to zero rather than preserving it."
+    ),
     # -- geometry ----------------------------------------------------------
     "geometry/silent_invalid": (
         "An OGC-invalid or semantically wrong geometry loads without complaint."
@@ -389,6 +406,31 @@ RISK_TYPE_DESCRIPTIONS: dict[str, str] = {
     ),
     "data/projection_assumptions": (
         "An analysis assumes a projection property the data does not have."
+    ),
+    # -- failure_mode ------------------------------------------------------
+    # Plan 44 phase 4. *Whose* failure mode a case is, which the catalog could
+    # not express until round 6 made the gap expensive: a consumer sweeping the
+    # corpus against GDAL spends a whole run discovering that the convention
+    # cases pass, and a consumer sweeping a downstream library needs exactly
+    # those cases first.
+    #
+    # Round 6 is the evidence. bottom_up_dem_small, rotated_two_islands,
+    # pixel_is_point/pixel_is_area, dem_nan_nodata_small, geotiff_int8_small,
+    # landcover_ambiguous_zero_small and water_mask_small all *passed* against
+    # GDAL -- while rounds 1 and 4 found real defects in rio-tiler and titiler
+    # from the same cases. They are not weak cases; they are cases about a
+    # normalisation GDAL performs and downstream code assumes did not happen.
+    #
+    # A term here is orthogonal to the rest of the vocabulary: a case declares
+    # what can go wrong *and* who it goes wrong for, and both are selectable.
+    "failure_mode/consumer": (
+        "A correct normalisation that the reference implementation performs and "
+        "downstream code assumes did not happen -- the case catches consumers "
+        "of GDAL/PROJ/GEOS, not those libraries themselves."
+    ),
+    "failure_mode/reference_implementation": (
+        "A defect in the reference implementation itself (GDAL, PROJ, GEOS), "
+        "reproducible without any downstream library in the stack."
     ),
 }
 

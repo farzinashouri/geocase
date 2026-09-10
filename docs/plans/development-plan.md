@@ -17,11 +17,11 @@ collapsed. Sequencing that used to live in `execution-order.md` is folded in bel
 
 | | |
 |---|---|
-| Version | `1.0.0rc3` in this repository; `1.0.0rc1` is published on [PyPI](https://pypi.org/project/geocase/). |
-| Catalog | **154 cases** (vector, raster, NetCDF), 5.1 MB bundled, gated in CI. |
+| Version | **`1.0.0` released** and published on [PyPI](https://pypi.org/project/geocase/). *(Table updated 2026-09-05.)* |
+| Catalog | **166 cases** — 117 vector, 46 raster, 3 NetCDF — gated in CI. |
 | Gates | `catalog`, `tests` (3.11 + 3.14), `lint`, `typecheck`, `docs` — all green. |
-| Docs site | 188 generated pages with `schema.org/Dataset` JSON-LD. GitHub Pages deployment is configured; enable Pages in repository settings to serve it. |
-| Users | Zero confirmed adopters. One prospective adopter (S2/Prithvi change detection) identified but not yet asked. |
+| Docs site | Serving at <https://farzinashouri.github.io/geocase/> ([Plan 39](39-going-public-upstream-first.md) §0.1). |
+| Users | Zero confirmed adopters. Four external evaluations reported; ~32 defects found across ten libraries, and **17 upstream drafts remain unfiled** — the head of the current sequence. |
 
 Four external evaluations — one adopter, three rejectors — have now reported. Plan 25 measured
 the result rather than argued it, and the finding is uncomfortable and consistent:
@@ -117,6 +117,35 @@ documents alone: Plan 41 §1.2 should define suite membership by **risk family**
 id list if Plan 40 §3 has already landed, so the suite does not go stale as cases are added;
 and Plan 40 §3's renames must be recorded under Plan 40 §5's changelog convention, so §5 lands
 first if the two are separated.
+
+### After `1.0.0`: the backlog before the next round (added 2026-09-05)
+
+`1.0.0` is live and the round-3/round-4 sequence above is substantially landed — Plan 40 is
+implemented, Plan 41 Phases 1–4 are implemented. The next question asked was whether to validate
+against a further library or re-run the consumers already tested.
+[Plan 42](42-round-5-consumer-selection-and-the-unfiled-backlog.md) answers it and **owns the
+next sequence**, whose head is not a validation round at all:
+
+1. **[Plan 39](39-going-public-upstream-first.md) Phase 1 / [Plan 42](42-round-5-consumer-selection-and-the-unfiled-backlog.md) Phase 1 — file the three drafts.**
+   The sequence was already broken once: Plan 39 Phase 3 cut `1.0.0` **ahead of** its own
+   Phase 1, and **17 drafts remain unfiled**. Filing is the only action producing external
+   evidence, and a fifth round before it adds accusations to a pile no third party has agreed
+   with. Carries Plan 41 Phase 6 as the same one-file pass over
+   [`docs/validation.md`](../validation.md).
+2. **[Plan 42](42-round-5-consumer-selection-and-the-unfiled-backlog.md) Phase 2.1 — verify the
+   `[all]` fix.** Plan 40 Phase 1 is implemented but was never verified against the environment
+   that broke. Cheap, and it needs the rc3 leg to prove the reproduction is real.
+3. **[Plan 42](42-round-5-consumer-selection-and-the-unfiled-backlog.md) Phases 3–4 — the vector
+   differential**, if a fifth round is wanted (U20). Shapely/GEOS against pyogrio/OGR, then
+   DuckDB `spatial` against geopandas: the paying axis (Plan 41) run with the paying instrument
+   (Plan 38), which no prior round has done, since every instrument built so far is raster-side
+   while the corpus is 117 vector against 46 raster.
+4. **[Plan 39](39-going-public-upstream-first.md) Phase 4 — broadcast**, on its own entry
+   condition of *filed plus two weeks*.
+
+Explicitly **not** in this sequence: re-running the eight consumers of Plans 37 and 38 against
+`1.0.0`. Recorded as a decision in
+[Plan 42](42-round-5-consumer-selection-and-the-unfiled-backlog.md) §2.2.
 
 **Archived 2026-08-24, per [Plan 25](25-ship-geocase-as-a-package.md) §9:**
 [Plan 17](archive/17-throughput-automation-and-corpus-as-input.md) (benchmark throughput) and

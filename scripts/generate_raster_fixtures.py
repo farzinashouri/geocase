@@ -404,6 +404,13 @@ def _priority_2_4_specs() -> list[RasterSpec]:
     # Geographic (lon/lat) transforms with ~0.01 deg pixels.
     polar_tx = _origin(-2_000_000.0, 2_000_000.0, 10.0, 10.0)  # EPSG:3995 metres
     dateline_tx = _origin(179.9, 1.0, 0.02, 0.02)  # straddles +180 lon
+    # Plan 44 phase 3.1 -- the missing sign. The eastward case above is the
+    # only raster in the corpus past +-180, and round 6's warp defect
+    # (AutoCreateWarpedVRT returning a 23x0 dataset) could not be shown to be
+    # symmetric because there was no negative-wrap counterpart. Mirrored about
+    # 180: same size, dtype, band count, CRS and pixel size, so a behavioural
+    # difference is attributable to the sign of the crossing and nothing else.
+    dateline_west_tx = _origin(-180.22, 1.0, 0.02, 0.02)  # straddles -180 lon
     equator_tx = _origin(10.0, 0.16, 0.01, 0.01)  # centred on the equator
 
     # -- Priority 4: mixed resolution / NaN DEM / scaled NDVI / landcover --
@@ -496,6 +503,16 @@ def _priority_2_4_specs() -> list[RasterSpec]:
             compression="deflate",
             crs="EPSG:4326",
             transform=dateline_tx,
+        ),
+        RasterSpec(
+            case_id="optical_dateline_west_small",
+            primary="optical_dateline_west_small.tif",
+            bands=optical,
+            dtype="uint8",
+            band_names=["red", "green", "blue"],
+            compression="deflate",
+            crs="EPSG:4326",
+            transform=dateline_west_tx,
         ),
         RasterSpec(
             case_id="optical_equator_small",

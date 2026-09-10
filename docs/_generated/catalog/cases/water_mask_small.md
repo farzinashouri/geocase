@@ -61,6 +61,7 @@ Confirm GeoCase can open a binary water mask, preserve its single uint8 band, an
 ## Risk types covered
 
 - [`dtype/drift`](../risk/dtype-drift.md)
+- [`failure_mode/consumer`](../risk/failure-mode-consumer.md)
 - [`nodata/ignored`](../risk/nodata-ignored.md)
 - `nodata/mask_misread`
 
@@ -145,9 +146,9 @@ Binary mask baseline for validating mask-style raster handling and nodata logic.
 
 - [DEM Small](dem_small.md) -- `dem_small`
 - [Multispectral Sentinel-2-like Small](multispectral_s2_like_small.md) -- `multispectral_s2_like_small`
+- [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
+- [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
 - [NDVI Scaled Int16 Small](ndvi_scaled_int16_small.md) -- `ndvi_scaled_int16_small`
-- [NDVI Small](ndvi_small.md) -- `ndvi_small`
-- [Optical RGB Small](optical_rgb_small.md) -- `optical_rgb_small`
 
 <script type="application/ld+json">
 {
@@ -166,6 +167,7 @@ Binary mask baseline for validating mask-style raster handling and nodata logic.
     "delivery:single-file",
     "dtype/drift",
     "eo",
+    "failure_mode/consumer",
     "geography:utm",
     "geotiff",
     "mask",

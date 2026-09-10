@@ -157,9 +157,9 @@ types, geometry, SRID, size) rather than bytes.
 
 - [Polygon Z (WKB)](polygon_z_wkb.md) -- `polygon_z_wkb`
 - [Format-limited Precision Polygon](format_limited_precision_polygon.md) -- `format_limited_precision_polygon`
-- [GeoJSON Precision Loss Roundtrip](precision_loss_geojson_roundtrip.md) -- `precision_loss_geojson_roundtrip`
-- [Empty Geometry in GeoPackage](empty_geometry_gpkg.md) -- `empty_geometry_gpkg`
-- [LineString GeoPackage Baseline](linestring_geopackage_baseline.md) -- `linestring_geopackage_baseline`
+- [Numeric Boundary: 1e-14](numeric_boundary_1e14.md) -- `numeric_boundary_1e14`
+- [Numeric Boundary: Trailing Nines](numeric_boundary_trailing_nines.md) -- `numeric_boundary_trailing_nines`
+- [Numeric Boundary: Trailing Zeros](numeric_boundary_trailing_zeros.md) -- `numeric_boundary_trailing_zeros`
 
 <script type="application/ld+json">
 {

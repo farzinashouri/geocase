@@ -330,6 +330,19 @@ class AssertionHints(BaseModel):
     # about where any individual pixel went.
     expected_pixel_world_pairs: list[list[float]] | None = None
 
+    # The coordinates a write-then-read cycle must return unchanged, as
+    # ``[x, y]`` pairs in the case's own CRS (plan 44 phase 2.2).
+    #
+    # Round 6's first defect -- GDAL writing coordinates in [1e-14, 1e-13) as
+    # ``0`` -- is invisible without this: the file is well-formed either way,
+    # and "did the value survive?" is a question only the *declared* answer can
+    # settle. Typed rather than dropped in ``params`` because ``params`` is
+    # ``dict[str, Any]`` with no validator, so a misspelled key there is
+    # silence (plan 40 §2). With the answer shipped, a consumer asserts against
+    # a declared pair instead of re-deriving what "survived" means -- the work
+    # plan 41 §3 says the best cases hand over.
+    expected_roundtrip_coordinates: list[list[float]] | None = None
+
     # OGR driver prerequisites (plan 28 phase 2.1). Additive with an empty
     # default, so every existing case.yaml stays valid.
     #

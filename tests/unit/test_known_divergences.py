@@ -69,6 +69,7 @@ class TestTheRestOfTheCorpus:
             "optical_dateline_small",
             "empty_polygon",
             "geometrycollection_mixed_valid",
+            "precision_loss_geojson_roundtrip",
         }
 
     def test_every_declared_record_is_attributed_and_described(
@@ -207,3 +208,67 @@ class TestRoundFourHandsOverItsFinding:
         assert any("180.22" in d.description for d in case.known_divergences), (
             "the record must state the actual eastern bound, not just 'past 180'"
         )
+
+
+class TestRoundSixGdalAsATarget:
+    """Plan 44 phase 1.1 -- the 2026-09-06 run against GDAL ``d6fd56f52d``.
+
+    The first round to point the corpus at the *reference implementation*
+    rather than at a consumer of it. Two defects, and neither came from
+    geometry, CRS or footprint: a coordinate at ``1e-14`` and a longitude at
+    ``180.22``. Both records name ``gdal`` as the consumer, because against
+    this target GDAL *is* the consumer.
+    """
+
+    EXPECTED = {
+        ("precision_loss_geojson_roundtrip", "gdal"),
+        ("optical_dateline_small", "gdal"),
+    }
+
+    @pytest.mark.parametrize(("case_id", "consumer"), sorted(EXPECTED))
+    def test_the_case_records_the_gdal_defect_it_found(
+        self, case_id: str, consumer: str
+    ):
+        """Test each round-6 finding is attributed to the case that found it."""
+        case = geocase.get_case(case_id)
+        matches = [d for d in case.known_divergences if d.consumer == consumer]
+        assert matches, f"{case_id} must record a divergence for {consumer}"
+
+    @pytest.mark.parametrize(("case_id", "consumer"), sorted(EXPECTED))
+    def test_each_record_names_the_commit_it_was_observed_at(
+        self, case_id: str, consumer: str
+    ):
+        """A reference-implementation defect is pinned to a commit, not a release."""
+        case = geocase.get_case(case_id)
+        for divergence in case.known_divergences:
+            if divergence.consumer == consumer:
+                assert divergence.version_range
+                assert "d6fd56f52d" in divergence.version_range
+
+    def test_the_precision_record_names_the_magnitude_class(self):
+        """The finding is a magnitude class, not one unlucky coordinate."""
+        case = geocase.get_case("precision_loss_geojson_roundtrip")
+        matches = [
+            d
+            for d in case.known_divergences
+            if "1e-14" in d.description and "1e-13" in d.description
+        ]
+        assert matches, (
+            "the record must state the affected class |v| in [1e-14, 1e-13), "
+            "not just 'small coordinates are lost'"
+        )
+
+    def test_the_warp_record_names_the_zero_height_symptom(self):
+        """The caller sees ``23x0``; the record must say why, not just what."""
+        case = geocase.get_case("optical_dateline_small")
+        matches = [
+            d
+            for d in case.known_divergences
+            if d.consumer == "gdal" and "0" in d.description
+        ]
+        assert matches
+        assert any(
+            "AutoCreateWarpedVRT" in d.description
+            for d in case.known_divergences
+            if d.consumer == "gdal"
+        ), "the record must name the entry point a consumer actually calls"
