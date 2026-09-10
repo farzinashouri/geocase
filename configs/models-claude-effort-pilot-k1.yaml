@@ -1,0 +1,24 @@
+# Plan 46 Phase 1 pilot, the k=1 arms — the three middle effort levels of the
+# same model (23 geo tasks x 3 arms x 1 trial = 69 invocations). These draw
+# the monotonicity curve between the k=3 ends in
+# models-claude-effort-pilot-k3.yaml; the verdict is not read off them.
+
+defaults:
+  trials: 1
+  temperature: null
+  exec_timeout_s: 60
+
+budget:
+  max_usd_total: 0.0
+
+limits:
+  rpm: 6
+  requests_per_day: 400
+  quota_file: .geocase_quota_claude.json
+
+models:
+  - id: claude-haiku-4-5
+    label: Haiku 4.5 (Claude Code CLI)
+    tracks: [effort]
+    provider: claude-cli
+    effort: [medium, high, xhigh]

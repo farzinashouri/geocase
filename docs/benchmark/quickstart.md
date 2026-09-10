@@ -357,6 +357,84 @@ per arm. The level in that name is load-bearing, not cosmetic: without it two
 efforts of one model would share a directory and `--resume` would skip the
 second as already done — a silent wrong result rather than an error.
 
+For the [Plan 46](https://github.com/farzinashouri/geocase/blob/main/docs/plans/46-benchmark-depth-and-measurement.md)
+pilot — one model across five efforts, three trials at the two ends of the
+axis and one in the middle — two configs split the sweep so `defaults.trials`
+can differ, and both land in the same per-arm directories:
+
+```bash
+python -m geocase.benchmark run --config configs/models-claude-effort-pilot-k3.yaml \
+  --track effort --domain geo --out results/runs    # low, max; k=3
+python -m geocase.benchmark run --config configs/models-claude-effort-pilot-k1.yaml \
+  --track effort --domain geo --out results/runs    # medium, high, xhigh; k=1
+```
+
+---
+
+## Comparing runs: the report command
+
+`report` reads every `run.json` under a directory and prints four tables. It
+writes nothing back — everything is derived at report time from the checks
+already stored, so no committed record moves.
+
+```bash
+python -m geocase.benchmark report --runs results/runs --domain geo
+python -m geocase.benchmark report --runs results/runs --by-effort
+python -m geocase.benchmark report --runs results/runs --domain geo --coverage
+```
+
+```text
+domain: geo   letters: C correct, T trapped, B broken, L loud, M missing
+
+TASK x MODEL
+  [1] Model A  (k=3)
+  task          [1]
+  area_m2       C T T
+  buffer_m      T T T
+  ...
+
+PER TRAP CATEGORY (trapped rate per column)
+  Model A
+    antimeridian         5/6 trapped (83%; 95% CI 44%-97%)
+
+REPRODUCIBLE SILENT (trapped in every trial, k>=3)
+  Model A: buffer_m
+
+EXCLUDED
+  2026-08-10_nvidia-nemotron-3-super-120b-a12b-free_bare: not publishable (14 api_failure(s)) — rate-limit damage is not model behaviour
+```
+
+1. **task x model matrix** — one cell per task, the k-trial classifications
+   side by side. `C T T` reads as one flaky task; `T T T` reads as a defect.
+2. **per-`trap_category` rollup** — the trapped rate per category per column,
+   with a **Wilson score interval**. 5 of 20 is not a percentage worth quoting
+   bare: at n=20 the interval is wide enough to change what the number licenses
+   you to say.
+3. **reproducible-silent** — tasks trapped in *every* trial, claimed only at
+   k>=3. This is the strongest single output the benchmark can produce, and
+   `buffer_m`'s 2/2 in the original experiment is the prior art for why.
+4. **coverage** (`--coverage`) — which catalog risk families no task in the
+   domain exercises, via the `trap_category` -> `risk_types` mapping
+   (`TRAP_TO_RISK` in `taxonomy.py`). Today: `transform`, `dtype`,
+   `precision`, and more.
+
+**`trapped` is not `broken`.** A trial's stored verdict scores a failed
+control and a failed edge the same `SILENT`. Those are different findings, and
+the report separates them: **trapped** means every control passed and an edge
+returned a plausible wrong value — the phenomenon the benchmark is about;
+**broken** means a control did not pass — a model that cannot do the job. The
+per-category rate counts *trapped* trials; broken ones are in the denominator
+and reported beside it. The split is computed by `classify_trial` in
+`taxonomy.py` and never written into a record.
+
+**A run with `publishable: false` is excluded from every rate and named.** A
+rate computed over rate-limit damage would be the benchmark's own silent
+failure. Effort-track columns carry their `preamble` marker in the header
+(`Haiku 4.5 @low [claude-code-harness]`), so an effort column cannot be read
+beside a bare column without the reader seeing why not. Runs spanning more
+than one domain are refused without `--domain`; there is no blended headline
+number.
+
 ---
 
 ## Rules that keep the numbers honest
@@ -377,7 +455,20 @@ python -m pytest tests/benchmark/test_oracles.py -q
 
 **A leaked hint invalidates a run.** Prompts must never name the trap or hint
 that an edge case exists. Every prompt is hashed per run so an edit is
-auditable after the fact.
+auditable after the fact — and versioned: editing a `prompt.md` bumps
+`prompt_version` in `task.yaml` and archives the old text as `prompt.v<N>.md`,
+so a committed run's hash keeps reproducing from the version it was sent and
+the hash test reports a v1 run under a v2 tree as *not comparable* rather
+than silently repinning it. Two prompts have moved this way (`project_line`,
+`utm_epsg_for`; see `CHANGELOG.md`), both to close a gap between what the
+prompt promised and what the oracle enforced.
+
+**Hand-typed constants are cited.** Every public numeric constant in a grader
+appears in that grader's `SOURCES` dict, either as a `(document, section)`
+citation — `s2_fixture`'s `BOA_ADD_OFFSET`, `utm_epsg_for`'s zone table — or
+as an `author-chosen: ...` note saying it is a parameter of the oracle rather
+than a published fact. `tests/benchmark/test_oracle_constants.py` is a
+completeness check, so a new constant cannot arrive unclassified.
 
 **Spec ambiguity is not a finding.** If a task fails because the contract was
 vague, the benchmark has measured its own prompt. Each prompt pins the contract
@@ -494,9 +585,12 @@ python -m pytest tests/benchmark -q
 This covers the oracle self-tests, the registry contracts (every `task.yaml`
 validates, and declared checks exactly match what each grader emits), the
 prompt-hash gate (every committed run's recorded `prompt_sha256` still
-reproduces from today's code, so a prompt edit can never happen silently), and
-the port pin — which re-grades the committed modules from the original experiment
-and asserts the statuses still match, including the `buffer_m` silent failure.
+reproduces from the prompt version that run recorded, so a prompt edit can
+never happen silently), the oracle-constant citation check, the
+`trap_category` -> `risk_types` cross-check, the report command against
+synthetic runs, and the port pin — which re-grades the committed modules from
+the original experiment and asserts the statuses still match, including the
+`buffer_m` silent failure.
 Drift in either direction means the artifacts or the oracles changed, and the
 published numbers must be regenerated deliberately.
 
@@ -513,14 +607,19 @@ published numbers must be regenerated deliberately.
    `{scratch_dir}` placeholders. Pin the contract; never mention the trap.
 4. Write `grader.py` exporting `build_checks(f)`, returning
    `(name, kind, callable)` triples. Each callable returns `(ok, detail)`;
-   raising is `LOUD`, returning `False` is `SILENT`.
+   raising is `LOUD`, returning `False` is `SILENT`. Any hand-typed numeric
+   constant goes in a module-level `SOURCES` dict with its citation.
 5. Write `probe.md` — the open contamination question. Required outside `geo`.
 6. Add a known-good and a known-trapped implementation to
    `tests/benchmark/test_oracles.py`. This is mandatory — an oracle with no
    regression net is not defensible.
+7. Map the task's `trap_category` in `TRAP_TO_RISK` (`taxonomy.py`) if it is
+   new, so `report --coverage` can see what it exercises.
 
 The registry test enforces that declared checks match emitted ones, so a
-`task.yaml` that drifts from its grader fails CI.
+`task.yaml` that drifts from its grader fails CI. Editing an existing task's
+`prompt.md` later means bumping `prompt_version` and archiving the old text
+(see *Rules that keep the numbers honest*).
 
 ## Adding a domain
 

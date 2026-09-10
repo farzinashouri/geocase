@@ -8,6 +8,8 @@ under the defect, so an implementation that never localises passes them.
 
 TOL = 1e-9
 
+SOURCES = {"TOL": "author-chosen: floating-point comparison tolerance"}
+
 
 def _close(got, exp):
     return (

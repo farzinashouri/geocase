@@ -28,9 +28,14 @@ Requirements:
 """
 
 
-def bare_prompt(task: TaskMeta) -> str:
+def bare_prompt(task: TaskMeta, *, version: int | None = None) -> str:
+    """The bare prompt for ``task`` — at ``version`` if given, else current.
+
+    The version parameter exists for the prompt-hash pin: a committed run's
+    ``prompt_sha256`` must reproduce from the prompt version that run recorded
+    (Plan 46 §0.3). A live run always sends the current prompt."""
     return BARE_TEMPLATE.format(
-        paragraph=task_paragraph(task),
+        paragraph=task_paragraph(task, version=version),
         deps=get_domain(task.domain).package_blurb,
     )
 

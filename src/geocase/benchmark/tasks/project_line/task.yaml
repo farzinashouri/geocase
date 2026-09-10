@@ -7,6 +7,7 @@ module: gen_project_line.py
 handbook_id: VEC-0029
 trap_category: discretization
 packages: [shapely, pyproj]
+prompt_version: 2
 origin: plan15
 checks:
   - {name: short_line, kind: control}

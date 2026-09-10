@@ -7,6 +7,8 @@ group with nothing to average into ``0.0`` — a number where the contract says
 
 TOL = 1e-9
 
+SOURCES = {"TOL": "author-chosen: floating-point comparison tolerance"}
+
 
 def _close(got, exp):
     return isinstance(got, float) and abs(got - exp) <= TOL

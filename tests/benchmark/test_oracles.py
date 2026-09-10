@@ -569,6 +569,48 @@ def s2_fixture(path, size=32):
 """
 
 
+# ------------------------------------------------- Plan 46 Phase 0 (oracle fixes)
+# utm_epsg_for was a Step 0 port with no GOOD/TRAPPED pair of its own; it
+# relied on the committed-run pin. Phase 0.2 rewrites its prompt, so it now
+# carries an explicit pair like every later task.
+
+GOOD["utm_epsg_for"] = """
+def utm_epsg_for(lon, lat):
+    zone = int((lon + 180) // 6) + 1
+    # MGRS grid-zone exceptions: 32V is widened over SW Norway; Svalbard is
+    # covered by 31X/33X/35X/37X and the even zones are dropped there.
+    if 56 <= lat < 64 and 3 <= lon < 12:
+        zone = 32
+    if 72 <= lat < 84:
+        if 0 <= lon < 9:
+            zone = 31
+        elif 9 <= lon < 21:
+            zone = 33
+        elif 21 <= lon < 33:
+            zone = 35
+        elif 33 <= lon < 42:
+            zone = 37
+    return (32600 if lat >= 0 else 32700) + zone
+"""
+
+# The pyproj-delegating answer. EPSG's areas of use encode the plain 6-degree
+# slices and not the MGRS grid exceptions (RESULTS.md, prior-art notes), so
+# under a contract that names MGRS this is wrong for a stated reason — the
+# whole point of Phase 0.2 is that it is no longer wrong by the grader's
+# private opinion.
+TRAPPED["utm_epsg_for"] = """
+from pyproj.aoi import AreaOfInterest
+from pyproj.database import query_utm_crs_info
+
+def utm_epsg_for(lon, lat):
+    info = query_utm_crs_info(
+        datum_name="WGS 84",
+        area_of_interest=AreaOfInterest(lon, lat, lon, lat),
+    )
+    return int(info[0].code)
+"""
+
+
 NEW_TASKS = sorted(GOOD)
 
 
@@ -599,6 +641,95 @@ def test_known_trapped_is_silent_on_the_edge_check(name, tmp_path):
         (c.check, c.status.value, c.detail) for c in outcome.checks
     ]
     assert outcome.outcome == "SILENT"
+
+
+# --------------------------------------------- Plan 46 Phase 0: contract == oracle
+# A prompt that promises one tolerance while the grader enforces another is an
+# oracle defect in the benchmark's own contract: a submission can violate what
+# the model was told and still score PASS.
+
+
+def _project_line_densified(waypoints: int) -> str:
+    """Densify before reprojecting, with a chosen number of waypoints.
+
+    Correct in kind — the trap is densify-*after* — but the coarser the
+    densification, the further the chord midpoints fall from the geodesic.
+    """
+    return f"""
+from pyproj import Geod, Transformer
+from shapely.geometry import LineString
+
+def project_line(line, dst_epsg):
+    geod = Geod(ellps="WGS84")
+    coords = list(line.coords)
+    pts = [coords[0]]
+    for (lo1, la1), (lo2, la2) in zip(coords, coords[1:]):
+        pts.extend(geod.npts(lo1, la1, lo2, la2, {waypoints}))
+        pts.append((lo2, la2))
+    t = Transformer.from_crs(4326, dst_epsg, always_xy=True)
+    return LineString([t.transform(x, y) for x, y in pts])
+"""
+
+
+def _promised_tolerance_km(task) -> float:
+    import re
+
+    match = re.search(r"to within (\d+(?:\.\d+)?) km", task.prompt_template)
+    assert match, "project_line's prompt no longer states a tolerance in km"
+    return float(match.group(1))
+
+
+def test_project_line_oracle_enforces_the_promised_tolerance():
+    """The number in prompt.md and the number in grader.py are the same number."""
+    from geocase.benchmark.grading import load_module
+
+    task = get_task("project_line")
+    grader = load_module(task.grader_path)
+    assert grader.LIMIT_M == _promised_tolerance_km(task) * 1000, (
+        f"prompt promises {_promised_tolerance_km(task):g} km, "
+        f"grader enforces {grader.LIMIT_M / 1000:g} km"
+    )
+
+
+@pytest.mark.parametrize(
+    ("waypoints", "expected"),
+    [
+        # 7 waypoints on the 60-degree edge leg lands ~75 km off: outside any
+        # tolerance the prompt has ever stated, and a densify-before that is
+        # simply too coarse to honour the contract.
+        (7, "SILENT"),
+        # 30 waypoints lands ~3 km off: inside the stated 25 km.
+        (30, "CORRECT"),
+    ],
+)
+def test_project_line_is_graded_against_the_stated_tolerance(
+    waypoints, expected, tmp_path
+):
+    _, outcome = _grade("project_line", _project_line_densified(waypoints), tmp_path)
+    assert outcome.outcome == expected, [
+        (c.check, c.status.value, c.detail) for c in outcome.checks
+    ]
+
+
+def test_utm_epsg_for_contract_is_decidable():
+    """The 33X/32V answers follow from a standard the prompt names.
+
+    Before Phase 0.2 the prompt asked for the CRS "appropriate for that
+    location" and the grader pinned the MGRS grid exceptions, while
+    ``pyproj.query_utm_crs_info`` — the authoritative EPSG lookup — returns the
+    plain 6-degree zones for both edge points. Two defensible readings, one of
+    them scored SILENT: exactly the ambiguous contract quickstart.md forbids.
+    """
+    task = get_task("utm_epsg_for")
+    paragraph = task.prompt_template.split("\n\nRequirements:")[0]
+    assert "Military Grid Reference System" in paragraph, (
+        "utm_epsg_for's prompt must pin the zone-assignment standard so that "
+        "the grid exceptions are decidable from a named source"
+    )
+    # And it still must not hint at the trap by naming the places.
+    lowered = paragraph.lower()
+    for hint in ("svalbard", "norway", "33x", "32v", "exception zone"):
+        assert hint not in lowered, f"prompt names the trap: {hint!r}"
 
 
 # ---------------------------------------------------------------- geohash oracle

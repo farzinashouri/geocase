@@ -165,9 +165,13 @@ Not automatable and not delegable. Each blocks the work named beside it.
 | — | [Plan 25](25-ship-geocase-as-a-package.md), step 6 | ~~**Publish `geofacts` to PyPI.**~~ **Done 2026-08-24** — shipped as `0.1.2`; GeoCase's floor is now `>=0.1.2`. Remaining user action: register GeoCase's own pending publishers on test.pypi.org/pypi.org so the `1.0.0rc2` rehearsal can upload. |
 | U17 | The fixture work | **Run the five fixture interviews.** 0 of 5 recorded. The whole gate is judgement about what people actually said. Instrument: [`docs/evidence/2026-fixture-interviews/`](../evidence/2026-fixture-interviews/TEMPLATE.md). |
 | U18 | Nothing — but it is the cheapest signal available | Send the shipped guard to the S2/Prithvi adopter and ask directly whether it goes in. |
-| U20 | The benchmark | Review the 14 null `named_trap` records. |
+| U20 | The benchmark — `sweep`'s report stage | Review the 14 null `named_trap` records in `results/probes/2026-08-11_nvidia-nemotron-3-ultra-550b-a55b-free.json` (`python scripts/review_probes.py`). Manual by design; [Plan 46](46-benchmark-depth-and-measurement.md) §1.4. |
+| U27 | [Plan 45](45-claude-cli-effort-track.md) Phases 3–4's remaining ten arms; [Plan 46](46-benchmark-depth-and-measurement.md) Phases 3–5 | **Read the effort-track pilot.** Plan 46 Phase 1 launched it 2026-09-10 (Haiku 4.5, five efforts, k=3 at `low`/`max`); apply the §1.3 decision rule to `python -m geocase.benchmark report --runs results/runs --by-effort`. If `low` and `max` give the same per-category profile the effort axis is dead. |
+| U30 | A frontier Claude model in the *bare* numbers | Fund U29 (a $5–10 OpenRouter/Anthropic top-up for an Anthropic bare-track provider, ~60 lines behind `ChatClient`). Without it every frontier number carries the harness preamble. |
+| U31 | Lifting the single-family caveat | Measure a second model family on the bare track. Every effort arm is a Claude model by construction; Phase 1 of Plan 46 does not lift this. |
+| U32 | [Plan 46](46-benchmark-depth-and-measurement.md) Phase 3's second battery | Decide whether append-only checks still hold when a battery needs to *change* an existing check's meaning; if not, `checks_version` comes back. |
 | U7 | [Plan 16](archive/16-generalize-beyond-geospatial.md), archived | Run the contamination probe and review its `named_trap` output. Carried here because open items belong in the roadmap, not in an archived plan. |
-| U9 | [Plan 16](archive/16-generalize-beyond-geospatial.md), archived | Run the `stdlib` bare track against a model. |
+| U9 | [Plan 16](archive/16-generalize-beyond-geospatial.md), archived; [Plan 46](46-benchmark-depth-and-measurement.md) §1.4 | Run the `stdlib` bare track against a model (`--domain stdlib`, needs `OPENROUTER_API_KEY`). Six tasks with a full harness that have never been run; until then the claim that the instrument detects silent failures outside geospatial code is unsupported. |
 | U10 | [Plan 16](archive/16-generalize-beyond-geospatial.md), archived | The distribution rename that generalizing the benchmark beyond geospatial implies. |
 
 ## Deferred work

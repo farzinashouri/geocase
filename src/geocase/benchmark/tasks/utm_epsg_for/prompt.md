@@ -1,6 +1,6 @@
 You are writing one small self-contained Python module. Work exclusively inside {workdir} — do not read or modify anything outside that directory.
 
-Task: Implement a function `utm_epsg_for(lon, lat)` that takes a WGS84 longitude and latitude and returns, as an `int`, the EPSG code of the UTM coordinate reference system that is appropriate for that location.
+Task: Implement a function `utm_epsg_for(lon, lat)` that takes a WGS84 longitude and latitude and returns, as an `int`, the EPSG code of the WGS 84 / UTM coordinate reference system for the grid zone containing that location, where grid zones are assigned as by the Military Grid Reference System, whose zone numbering includes the published grid exceptions. Codes are 326xx for the northern hemisphere and 327xx for the southern, with xx the zone number.
 
 Requirements:
 - Save the module as {module_path}. Importing the module must have no side effects.

@@ -57,6 +57,8 @@ agentlab*/
 
 # Plan 17: local operator state for the per-day OpenRouter request quota.
 .geocase_quota.json
+# Plan 45/46: the same, for the claude-cli effort track.
+.geocase_quota_claude.json
 
 geocase_validate/
 .agentbus/

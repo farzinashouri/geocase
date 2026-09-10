@@ -1,0 +1,33 @@
+# Plan 46 Phase 1 pilot, the k=3 arms — one model, the two ends of the effort
+# axis, three trials each (23 geo tasks x 2 arms x 3 trials = 138 invocations).
+#
+# Plan 46 §1.2: single-trial evidence cannot separate a reproducible defect
+# from an unlucky sample, and the ends of the axis are what the verdict is read
+# off; the middle levels (models-claude-effort-pilot-k1.yaml) only draw the
+# monotonicity curve. Split into two configs because `defaults.trials` is
+# per-config, and the two halves land in the same per-arm run directories
+# (`<date>_<model>_effort-<level>`), so `--resume` composes them.
+#
+# The model is the one Plan 45's sequencing note says to start with. Read the
+# comparability warning in models-claude-effort.yaml before quoting anything
+# from these runs beside a bare number.
+
+defaults:
+  trials: 3
+  temperature: null
+  exec_timeout_s: 60
+
+budget:
+  max_usd_total: 0.0
+
+limits:
+  rpm: 6
+  requests_per_day: 400
+  quota_file: .geocase_quota_claude.json
+
+models:
+  - id: claude-haiku-4-5
+    label: Haiku 4.5 (Claude Code CLI)
+    tracks: [effort]
+    provider: claude-cli
+    effort: [low, max]

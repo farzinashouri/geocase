@@ -417,6 +417,9 @@ def run_bare_track(
                     "protocol": prov["protocol"],
                     **prov["extra"],
                     "prompt_sha256": prompt_sha,
+                    # Which prompt.md the hash describes (Plan 46 §0.3). Absent
+                    # on pre-Plan-46 metas, which the hash pin reads as 1.
+                    "prompt_version": task.prompt_version,
                     "cost_usd": result.cost,
                     "usage": result.usage,
                     "extracted": result.code is not None,

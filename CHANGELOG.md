@@ -22,6 +22,43 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Changed — benchmark prompts (Plan 46 Phase 0)
+
+Two task prompts were edited, so their `prompt_sha256` moved. Each task now
+carries `prompt_version: 2` in its `task.yaml`, the superseded text is archived
+as `prompt.v1.md` beside `prompt.md`, and every committed run's recorded hash
+still reproduces from the version that run was sent. **A run made under v1 is
+not comparable with one made under v2 for these two tasks**; the prompt-hash
+test reports the split rather than failing on it. Listed by task and by what
+changed:
+
+- **`project_line`** — the stated tolerance moved from **1 km to 25 km**. The
+  grader had always enforced 25 km (`LIMIT_M`), so a submission 20 km off
+  violated the prompt's contract and scored `PASS`. The prompt moved rather than
+  the oracle: the trap is densify-*before*-reproject, whose failure is >500 km,
+  and a 1 km bar would additionally have measured how many waypoints a model
+  chose. The oracle's behaviour is unchanged; no committed grading moves.
+- **`utm_epsg_for`** — the contract now names the zone-assignment standard: the
+  grid zone *"as assigned by the Military Grid Reference System, whose zone
+  numbering includes the published grid exceptions"*. The old prompt asked for
+  the CRS *"appropriate for that location"*, under which
+  `pyproj.query_utm_crs_info`'s answers (32632 for 10.5E 78N, 32631 for 4.5E
+  60N — EPSG's areas of use do not encode the 33X/32V exceptions) were a
+  defensible reading scored `SILENT`. The grader's expected codes are unchanged
+  and now cited (DMA TM 8358.1, ch. 3) in a `SOURCES` dict, which every
+  hand-typed grader constant must carry.
+
+### Added — benchmark
+
+- `python -m geocase.benchmark report` — task x model matrix, per-trap-category
+  trapped rates with Wilson intervals, reproducible-silent tasks at k>=3, and
+  `--coverage`. Unpublishable runs are excluded from every rate and named.
+- `classify_trial` in `geocase.benchmark.taxonomy`: `trapped` (controls pass,
+  edge silently wrong) vs `broken` (a control did not pass), derived at report
+  time from the stored checks. No record schema changes.
+- `TRAP_TO_RISK`: the `trap_category` -> catalog `risk_types` mapping; the
+  coverage test pins that `transform`, `dtype` and `precision` have no geo task.
+
 Plan 44. Eight cases added, no case removed, no existing geometry / CRS / dtype /
 nodata value / id changed. **Every existing case keeps every risk type it had** —
 the changes below are additions only, so nothing that selected before stops
