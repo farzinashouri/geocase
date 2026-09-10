@@ -22,7 +22,84 @@ the entry verbatim.
 
 ## [Unreleased]
 
-Nothing yet.
+Plan 44. Eight cases added, no case removed, no existing geometry / CRS / dtype /
+nodata value / id changed. **Every existing case keeps every risk type it had** —
+the changes below are additions only, so nothing that selected before stops
+selecting.
+
+### Added — corpus
+
+The numeric-boundary family, under
+`src/geocase/data/core/vector/special/precision/`. Seven single-point GeoJSON
+cases, single-variable, isolating where a text formatter stops representing the
+double it was given. `precision_loss_geojson_roundtrip` found this class **by
+accident** — one of its three points happens to sit at `1e-14` — and the family
+exists so finding it again is not an accident:
+
+- **`numeric_boundary_1e14`** — the hit. GDAL `d6fd56f52d` writes this coordinate
+  as `0` through both the WKT and the GeoJSON writers, silently, at relative
+  error 1.0. Not a precision floor: `1e-14` is fourteen decimal places, inside
+  the writer's default of fifteen.
+- **`numeric_boundary_1e13`** — the upper bracket. A brute force over 300 000
+  coordinates puts the zeroing class at exactly `|v|` in `[1e-14, 1e-13)`, so
+  this value must survive. A consumer that loses it has a wider bug.
+- **`numeric_boundary_1e15`** — the lower bracket, separating the writer bug from
+  "the value fell off the end of 15 decimal places". Losing `1e-15` is documented
+  behaviour; losing `1e-14` is not.
+- **`numeric_boundary_trailing_zeros`** — `0.000000010000001`, which loses its
+  trailing `1` through `intelliround` (`ogr/ogrutils.cpp:161-169`): the routine
+  tests `s[len-3]` through `s[len-9]` for zeros, then drops the last 8
+  characters including the untested `s[len-2]`. Same mechanism as the `1e-14`
+  finding, at a magnitude nobody would call small.
+- **`numeric_boundary_trailing_nines`** — the other pattern `intelliround`
+  special-cases, where rounding carries across every digit. Its `y` carries
+  across an integer boundary, so a consumer rounding to 15 places returns `51.0`
+  for a point that was never at 51.
+- **`numeric_boundary_15_significant_digits`** — control. Inside the writer's
+  15-place default, so it must survive unchanged.
+- **`numeric_boundary_17_significant_digits`** — control. 17 digits is what IEEE
+  754 doubles need in the worst case, two more than the writer emits, so this
+  value is *expected* to change on a text round-trip. It exists so a consumer can
+  tell that documented limit apart from the `1e-14` class, which is a defect.
+
+And one raster:
+
+- **`optical_dateline_west_small`** — an RGB GeoTIFF straddling the antimeridian
+  at `-180`, mirroring `optical_dateline_small` about 180. Identical size, dtype,
+  band count, CRS and pixel size, so a behavioural difference between the pair is
+  attributable to the **direction of the crossing** and to nothing else.
+
+### Added — risk types
+
+Five terms, all additive. Existing spellings are untouched and no alias was
+needed.
+
+- `precision/formatter_boundary`, `precision/significant_digits`,
+  `precision/denormal_magnitude` — the numeric axis the corpus had no way to
+  name.
+- `failure_mode/consumer`, `failure_mode/reference_implementation` — a new
+  family recording **whose** failure mode a case is. Round 6 pointed the corpus
+  at GDAL itself and the georeferencing-convention cases all passed; that is the
+  correct result, because those cases are failure modes for *consumers of* GDAL,
+  not for GDAL. The corpus previously could not express the difference.
+
+### Changed — corpus
+
+`risk_types` gained one or more `failure_mode/*` terms on the cases below.
+**Additions only** — no term was removed, renamed or retired, so every existing
+selector returns what it did before. Listed by id because a new term changes what
+`list_cases(risk_types_any=...)` returns *for the added term*:
+
+- `failure_mode/consumer` — `dem_nan_nodata_small`, `rotated_two_islands`,
+  `geotiff_int8_small`, `landcover_ambiguous_zero_small`, `water_mask_small`,
+  `bottom_up_dem_small`, `pixel_is_area_dem_small`, `pixel_is_point_dem_small`.
+- `failure_mode/reference_implementation` — `optical_dateline_small`,
+  `precision_loss_geojson_roundtrip`.
+
+`optical_dateline_small` and `precision_loss_geojson_roundtrip` additionally
+gained a `known_divergences` record apiece, so a repeat differential run against
+GDAL reports `known` rather than `diverged`. This changes differential output
+only; it does not affect selection.
 
 ## [1.0.0] — 2026-09-05
 

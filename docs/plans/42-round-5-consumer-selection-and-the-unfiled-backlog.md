@@ -1,6 +1,13 @@
 # Plan 42 — Round 5: Choosing the Next Consumers, and the Backlog That Should Go First
 
-> **Status: proposed 2026-09-05.** `1.0.0` is live. The question this plan
+> **Status: Phase 1.1 and Phase 2 resolved 2026-09-10; 1.2 landed 2026-09-10;
+> 1.3 waiting; Phases 3–4 open.** Three issues are filed and two accepted, with
+> the maintainers taking the PRs themselves — see §1.1 and
+> [Plan 43](43-upstream-filing-queue-and-repo-liveness.md). §2.1 was resolved
+> *without running it*: the `1.0.0` fix is documentary, not a resolution change,
+> so the rc3 leg could not discriminate and **no `1.0.1` is required**. §1.3's
+> wait is *filed plus two weeks*, not *accepted*, so the broadcast is still
+> pending. `1.0.0` is live. The question this plan
 > answers was asked directly: *test against another library, or re-run the ones
 > already tested?* The measured answer is **neither, first**. Four rounds have
 > produced ~32 defects across ten libraries and **17 upstream drafts remain
@@ -161,16 +168,44 @@ Plan 39's entry condition for broadcast is *filed plus two weeks*, not
 
 ### 2.1 Verify the `[all]` fix against the environment that broke
 
-TDD: the failing case first. Reproduce
-[Plan 40](40-round-3-packaging-truth-and-vocabulary.md) §1's environment — a
-venv with `--system-site-packages` over an older GDAL/geopandas — assert
-`pip install "geocase[all]"` leaves `import pandas` and `import geopandas`
-working, and confirm the assertion fails against `1.0.0rc3` before confirming it
-passes against `1.0.0`. Without the rc3 leg this verifies nothing: a pass on
-both means the reproduction is wrong.
+**Resolved without running, 2026-09-10: the premise was wrong. No `1.0.1`.**
 
-Record the result in `CHANGELOG.md` under `1.0.0` if the fix is confirmed. If it
-is **not** fixed, this becomes `1.0.1` and Phases 3–4 stop until it is.
+As written, this step assumed `1.0.0` contained a *resolution* fix for the
+[Plan 40](40-round-3-packaging-truth-and-vocabulary.md) §1 breakage, to be
+verified TDD-style against `1.0.0rc3`. It does not. The whole of the
+`rc3 → 1.0.0` diff on `pyproject.toml` is the addition of upper bounds at the
+**next major** (`geopandas>=0.14` → `>=0.14,<2`, `rasterio>=1.3` → `>=1.3,<2`,
+and so on) plus the explanatory comment.
+
+Against the recorded failure — numpy 2.4.6 resolved against scipy 1.10.1, a
+shadowed system geopandas, pandas left unimportable — none of those bounds can
+bind:
+
+- geocase pins **no numpy, no pandas, no scipy**; they arrive transitively
+  through geopandas and rasterio.
+- `geopandas<2` does not constrain which numpy pip resolves.
+- Every added bound sits at the next major of a package whose *current* major
+  was already what resolved in the failing run.
+
+So the reproduction would fail on **both** legs, which is the outcome this step
+names as proof that the reproduction is wrong. Running it would spend a day
+confirming what the diff shows in a minute.
+
+**What actually shipped in `1.0.0` is a documentary fix, not a resolution one.**
+The install-shapes section of `README.md` now tells a user with an existing geo
+stack to install plain `geocase`, and the `[project.optional-dependencies]`
+comment records the failure that motivated it. That is a legitimate fix for this
+class: the breakage occurs only when `[all]` is run over a working stack, and
+the guidance is now to not do that. Plan 40 §1's own conclusion was that
+`[all]`-over-an-existing-stack is not fixable by pinning in the general case,
+which is why the documentation route was taken.
+
+The `1.0.1` conditional therefore does not fire, and Phases 3–4 are not blocked.
+
+A resolution-level fix — adding `numpy` and `pandas` bounds to the `vector` and
+`raster` extras — remains available, but it is a **new decision** rather than a
+verification, and it would need its own evidence that bounding them does not
+break the greenfield case `[all]` exists to serve. Not taken here.
 
 ### 2.2 Do not re-run rounds 1–2
 
@@ -261,4 +296,17 @@ generators, and both coverage matrices — regenerated and committed.
 
 ## Implementation notes
 
-*To be completed as phases land.*
+**2026-09-10 — §2.1 closed by inspection, not by experiment.** Recorded here
+because a step that says "run the reproduction" and is then *not* run needs its
+reasoning on the record. The `rc3 → 1.0.0` `pyproject.toml` diff adds upper
+bounds at the next major and nothing else; the Plan 40 §1 failure was a numpy /
+scipy / pandas resolution that those bounds do not touch, since geocase pins
+none of the three. A faithful reproduction fails on both legs, which this plan
+already names as the signature of a wrong reproduction. The fix that shipped is
+`README.md`'s install-shapes guidance plus the pyproject comment. **No `1.0.1`.**
+
+**2026-09-10 — §1.2 landed.** `docs/validation.md` corrected in one pass, per
+this plan's instruction to land it together with
+[Plan 41](41-positioning-and-the-geometry-thesis.md) Phase 6 and
+[Plan 44](44-gdal-as-target-and-the-numeric-axis.md) §1.2. See those plans'
+notes for the count and GDAL-negative-result halves.

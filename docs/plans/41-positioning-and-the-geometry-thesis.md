@@ -1,10 +1,10 @@
 # Plan 41 — Round 4: The Positioning Is Costing Adopters, and the Paying Component Is the One Called Secondary
 
-> **Status: Phases 1-4 implemented (1-2 on 2026-09-03, 3-4 on 2026-09-04); Phases 5-6 proposed.**
-> Phase 5 (the lowest-resolution CI floor job) and Phase 6 (correcting
-> [`docs/validation.md`](../validation.md) to the surviving two-finding count) remain open;
-> Phase 6 changes no code and should land before [Plan 39](39-going-public-upstream-first.md)
-> Phase 4 broadcasts. An internal GDAL-only consumer found **two
+> **Status: Phases 1-4 implemented (1-2 on 2026-09-03, 3-4 on 2026-09-04);
+> Phase 6 implemented 2026-09-10; Phase 5 open.**
+> Phase 6 landed in one pass over [`docs/validation.md`](../validation.md) with
+> Plan 42 §1.2 and Plan 44 §1.2. Phase 5 (the lowest-resolution CI floor job)
+> remains open and is explicitly not urgent — no consumer has been bitten by it. An internal GDAL-only consumer found **two
 > P1 defects in an afternoon**, one of which *overturned a conclusion the
 > reporter had already committed to in writing*. But every finding came from
 > geometry, CRS and footprint cases — the component this project's own framing
@@ -271,6 +271,21 @@ this plan.
 ---
 
 ## Phase 6 — Correct the public claim to the surviving number
+
+**Implemented 2026-09-10**, landed in one pass over `docs/validation.md`
+together with [Plan 42](42-round-5-consumer-selection-and-the-unfiled-backlog.md)
+§1.2 and [Plan 44](44-gdal-as-target-and-the-numeric-axis.md) §1.2, as Plan 42
+§1.2 instructed. New sections: *The number that survives scrutiny* (the
+subtraction, citing two) and *The claim that does not deflate* (the
+confidently-wrong-conclusion sentence).
+
+The retroactive half was resolved as **state plainly where it has not been
+applied**, the second branch the phase allows. The report covers rounds 1–2
+only, and their records do not carry a per-finding judgement of what review
+alone could have reached, so applying the subtraction now would be a
+reconstruction rather than a measurement. The published text says so, and
+distinguishes the 19 "corpus caught, review missed" figure from the
+irreducibility question it is often mistaken for.
 
 [Plan 39](39-going-public-upstream-first.md) is about to broadcast. Round 4's deduction is the
 standard to apply to it first.

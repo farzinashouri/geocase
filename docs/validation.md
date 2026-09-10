@@ -1,12 +1,13 @@
 ---
-description: "Two rounds of differential validation pointed the GeoCase corpus at ten widely used geospatial libraries and found 26 confirmed defects, most of them silent — and zero overlap between what the corpus caught and what code review caught."
+description: "Two rounds of differential validation pointed the GeoCase corpus at ten widely used geospatial libraries and found 26 confirmed defects, most of them silent — with zero overlap between what the corpus caught and what code review caught. Three are now filed upstream and the first was accepted by its maintainers within twelve hours."
 ---
 
 # What ten geospatial libraries got wrong, and how we found out
 
 *A unified report on two rounds of differential validation against the GeoCase corpus.*
 
-> Date: 2026-08-31 · Corpus: geocase 1.0.0rc3, 154 cases (117 vector / 34 raster / 3 netcdf)
+> Date: 2026-08-31, updated 2026-09-10 with filing outcomes and the round-4 subtraction
+> Corpus: geocase 1.0.0rc3, 154 cases (117 vector / 34 raster / 3 netcdf)
 > Environment: Python 3.14.3, GDAL 3.12.2
 > Round 1: pyogrio · rio-tiler · geocube · fiona
 > Round 2: titiler · stackstac · odc-stac · lonboard · geoarrow-python · pyproj
@@ -393,7 +394,104 @@ and imports no geocase code, a source-confirmed root cause with a `file:line`,
 and a ready-to-paste upstream issue body. All reproductions were re-verified in
 an interpreter with `geocase` blocked from import.
 
-**Nothing has been filed upstream.** These are drafts.
+### The number that survives scrutiny
+
+Twenty-six is a gross count, and gross counts deflate under questioning. A
+later round measured how much.
+
+A fourth round put `1.0.0rc3` in front of an internal consumer on a GDAL-only
+stack — `pip install geocase`, a venv, about 250 lines of test code. One
+afternoon produced **four** findings, two of them P1. Asked how many of the four
+a careful engineer could have reached without the corpus, the reporter's own
+answer was two:
+
+> The irreducible "only geocase could find this" set is two: the rotated inverse
+> matrix and the antimeridian tile. [...] If you're building the case for
+> adoption elsewhere, cite two, not four — the stronger claim is the one that
+> survives scrutiny.
+
+The subtraction is the point. Two of the four were re-derivable from reading the
+source carefully enough; two were not, because they require a file whose affine
+is genuinely rotated and a scene that genuinely crosses 180°, and nobody writes
+those by hand while testing the code that mishandles them. **Cite two.**
+
+**The same subtraction has not been applied to the 26 above.** Doing it honestly
+means re-asking, per finding, whether review alone would have reached it — and
+the round-1 and round-2 records do not carry that judgement, so applying it
+retroactively now would be a reconstruction rather than a measurement. The 19
+"found by the corpus, missed by code review" figure is the closest available
+proxy and it is *not* the same question: it records what the review pass
+actually missed, not what a review pass could in principle have caught. Read the
+26 as gross, the 19 as measured-but-weaker, and the two from round 4 as the
+number that has been through this filter.
+
+### What happened when we pointed the corpus at GDAL
+
+A later run used GDAL itself as the target rather than as the neutral reference.
+The georeferencing-convention cases — `bottom_up_dem_small`,
+`rotated_two_islands`, `dem_nan_nodata_small`, `geotiff_int8_small`,
+`landcover_ambiguous_zero_small`, `water_mask_small`, and the
+`pixel_is_point` / `pixel_is_area` pair — **all passed.**
+
+That is the result, and it is the one worth publishing. Round 1 found rio-tiler
+mis-handling `bottom_up_dem_small`. Round 4 found a P1 from
+`rotated_two_islands`. GDAL handles both correctly. So those cases are not
+failure modes *for GDAL* — **they are failure modes for consumers of GDAL**,
+and their value is that they catch every downstream library that assumes a
+normalisation GDAL quietly performs and it does not.
+
+This is the direct answer to an objection the project has heard twice: that
+geocase is "pixel-moving, GDAL-native" and therefore redundant if you already
+have GDAL. The opposite is true. The cases exist *because* GDAL gets these
+right — a convention only becomes a trap at the boundary where something reads
+GDAL's output and re-derives the convention for itself.
+
+The run did produce two findings against GDAL, both from cases that are barely
+geospatial: a coordinate at `1e-14` and a longitude of `180.22`. They are
+recorded as a **method** result and deliberately **not** added to the count
+above. Two findings against a reference implementation, one of which needed a
+brute-force sweep to characterise, is a weaker claim than the consumer rounds,
+and mixing it in would invite exactly the scrutiny the previous section exists
+to survive.
+
+### The claim that does not deflate
+
+The strongest result of round 4 is not a count at all:
+
+> The fixtures didn't just catch what I missed — they corrected what I'd gotten
+> wrong with confidence. That's a different and better product than coverage.
+
+`rotated_two_islands` overturned a conclusion the reporter had already committed
+to **in writing**. A corpus that finds what you missed competes with careful
+review; a corpus that reverses a confident written attribution does something
+review had already failed to do on that exact question. That claim cannot be
+deflated by re-deriving the finding from source, which is precisely how two of
+round 4's four gross findings deflate.
+
+### What has been filed, and what came back
+
+Filing began on 2026-09-06. Three reports are upstream:
+
+| Finding | Issue | Status |
+|---|---|---|
+| 11 — `crs=` without `resolution=` reuses resolution across a unit change | [odc-stac#288](https://github.com/opendatacube/odc-stac/issues/288) | **Accepted** 2026-09-06, maintainer taking the fix |
+| 1 — rotated affine silently mis-georeferenced (root-cause half of 14) | [rio-tiler#993](https://github.com/cogeotiff/rio-tiler/issues/993) | Filed |
+| 17 — 4-band PNG → 500, wrong band count in the message | [titiler#1493](https://github.com/developmentseed/titiler/issues/1493) | Filed |
+
+`odc-stac#288` drew a maintainer response within twelve hours confirming the
+diagnosis outright — *"basically your assessment is correct"* — naming the
+defective lines and sketching the fix, which the maintainers are carrying
+themselves. That is the strongest form this evidence can take: not our claim
+that the corpus found a defect, but the library's own maintainers agreeing it
+is one and fixing it.
+
+The remaining reports are still drafts. Filing is deliberately paced at roughly
+one open issue per repository, so the backlog is scheduled rather than
+outstanding; the queue and its reasoning are in
+[Plan 43](https://github.com/farzinashouri/geocase/blob/main/docs/plans/43-upstream-filing-queue-and-repo-liveness.md).
+Two of the drafts were withdrawn before filing after a liveness check found the
+findings already reported on abandoned or duplicate threads — recorded there
+rather than refiled.
 
 ## Where the raw material lives
 

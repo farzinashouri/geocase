@@ -1,14 +1,14 @@
 # Plan 44 — GDAL as a *Target*, Not a Consumer: The Numeric Axis Pays, the Geometry Axis Does Not
 
-> **Status: Phases 2–4 and 1.1 implemented 2026-09-10; Phase 1.2 and Phase 5
+> **Status: Phases 1–4 implemented 2026-09-10; Phase 5
 > outstanding.** The catalog work landed: the numeric-boundary family (Phase 2),
 > the westward dateline raster (Phase 3), the `failure_mode/*` axis (Phase 4)
-> and the two `known_divergences` records (1.1). Still owed: the
-> [`docs/validation.md`](../validation.md) paragraph stating the negative result
-> (1.2), and the whole of Phase 5 — neither GDAL draft has been written, there
+> and the two `known_divergences` records (1.1), and
+> [`docs/validation.md`](../validation.md) now states the negative result (1.2).
+> Still owed: the whole of Phase 5 — neither GDAL draft has been written, there
 > is no `issues/` directory, and the two standalone repro scripts
 > (`repro_geojson_1e14_zeroed.py`, `repro_warp_zero_height.py`) do not exist in
-> the tree. Nothing has been filed upstream.
+> the tree. Nothing has been filed against GDAL.
 > A round-6 run pointed the corpus at **GDAL itself** — the first time any round
 > has treated the reference implementation as the target rather than the oracle.
 > It produced **two defects in GDAL `d6fd56f52d`**, and the result that matters
@@ -146,7 +146,15 @@ Phase 1's shape, and note that `KnownDivergence` spells the case reference
 `case_id` while `CaseMetadata` uses `id` — the mismatch
 [Plan 41](41-positioning-and-the-geometry-thesis.md) records and has not fixed.
 
-**1.2** Add a short section to [`docs/validation.md`](../validation.md) stating
+**1.2 ✅ Implemented 2026-09-10.** Landed as *What happened when we pointed the
+corpus at GDAL*, in one pass over the file with
+[Plan 41](41-positioning-and-the-geometry-thesis.md) Phase 6 and
+[Plan 42](42-round-5-consumer-selection-and-the-unfiled-backlog.md) §1.2. It
+runs slightly longer than the paragraph asked for because it also carries §1.3's
+exclusion — the two GDAL findings are stated as a *method* result and explicitly
+kept out of the headline count.
+
+Add a short section to [`docs/validation.md`](../validation.md) stating
 the GDAL result plainly: *the convention cases pass against GDAL, and that is
 the point.* This is the strongest available answer to the two prior evaluations
 Plan 41 records rejecting geocase as "pixel-moving, GDAL-native" — it says
