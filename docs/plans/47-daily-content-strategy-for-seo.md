@@ -245,6 +245,29 @@ Verify the site in Search Console via the HTML-file method (no DNS control on `g
 submit `sitemap.xml`, which MkDocs already emits. Record the start date in this plan's header
 once done.
 
+**Steps, done once:**
+
+1. Go to [Google Search Console](https://search.google.com/search-console) → **Add property**.
+2. Choose **URL prefix** (not "Domain") and enter `https://farzinashouri.github.io/geocase/`
+   exactly, trailing slash included.
+3. Verify via **HTML file upload**: Google issues a file named `google<token>.html` containing
+   the line `google-site-verification: google<token>.html`. Drop it at the docs root
+   (`docs/google<token>.html`, alongside `docs/index.md`) — MkDocs passes non-`.md` files
+   straight through to `site/` unmangled, and it is excluded from neither `exclude_docs` nor
+   `not_in_nav`. **Commit and push to `main`**; Pages only serves what's on `main`, so
+   verification fails until the workflow redeploys.
+4. Confirm it is live at `https://farzinashouri.github.io/geocase/google<token>.html`, then click
+   **Verify** in Search Console.
+5. Once verified, open **Sitemaps** in the left nav and submit `sitemap.xml` (MkDocs emits it at
+   build time; no extra config needed).
+6. Optional: use **URL Inspection** on a few key pages (home, a couple of case pages) and click
+   **Request Indexing** to nudge the crawl rather than waiting for the first organic crawl.
+
+**Done 2026-09-10:** verification file `docs/googlebc59b0034e879b11.html` added and confirmed to
+build correctly (`mkdocs build --strict` green; file lands unmangled at
+`site/googlebc59b0034e879b11.html`). Not yet pushed to `main` at time of writing — push before
+clicking Verify, or verification will 404.
+
 ### 5.2 Pre-committed 90-day rule
 
 Assessed 90 days after 5.1's verification date:
