@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/logo/geocase-lockup-ground.png" alt="GeoCase" width="480">
+</p>
+
 # GeoCase
 
 **Two pixels out of a hundred are NoData, and your mean elevation is off by 200 metres.**

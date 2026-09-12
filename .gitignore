@@ -61,5 +61,6 @@ agentlab*/
 .geocase_quota_claude.json
 
 geocase_validate/
+docs/plans/
 .agentbus/
 .claude/settings.local.json
