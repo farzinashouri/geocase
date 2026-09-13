@@ -251,6 +251,13 @@ def backfill_bare_record(
             costs.append(float(cost))
     date = run_dir.name.split("_", 1)[0]
 
+    # Track provenance is read off the metas the orchestrator wrote, so an
+    # effort run rebuilt from disk is not silently restamped as bare. Absent
+    # keys (pre-Plan-45 metas) fall through to the bare defaults.
+    track = first.get("track", "bare")
+    protocol = first.get("protocol", "openrouter-chat")
+    provider = "claude-cli" if protocol == "claude-code" else "openrouter"
+
     return write_bare_record(
         run_dir,
         model={"id": resolved, "label": label or first.get("label") or resolved},
@@ -258,5 +265,12 @@ def backfill_bare_record(
         date=date,
         config={"defaults": {"temperature": None}},
         outcomes_by_trial=outcomes_by_trial,
-        cost_usd=sum(costs) if costs else None,
+        # Seat calls are never billed, so an effort run records no spend.
+        cost_usd=(sum(costs) if costs else None) if provider == "openrouter" else None,
+        provider=provider,
+        track=track,
+        protocol=protocol,
+        effort=first.get("effort"),
+        harness_version=first.get("harness_version"),
+        preamble=first.get("preamble"),
     )

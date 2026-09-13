@@ -141,6 +141,44 @@ def test_bare_defaults_are_unchanged_by_the_new_parameters(tmp_path):
     assert "harness_version" not in record
 
 
+def test_backfill_reads_effort_provenance_from_the_metas(tmp_path):
+    """Backfilling an effort run must not stamp it as a bare one.
+
+    The orchestrator writes track/protocol/effort/harness_version/preamble
+    into every meta, so a rebuilt record can carry them truthfully; ``cost_usd``
+    stays ``None`` because no seat call is billed.
+    """
+    from geocase.benchmark.runner.record import backfill_bare_record
+
+    gen = tmp_path / "generated" / "trial1"
+    gen.mkdir(parents=True)
+    (gen / "area_m2.meta.json").write_text(
+        json.dumps(
+            {
+                "task": "area_m2",
+                "model": "claude-haiku-4-5",
+                "trial": 1,
+                "track": "effort",
+                "protocol": "claude-code",
+                "effort": "low",
+                "harness_version": "claude-cli/2.1.263",
+                "preamble": "claude-code-harness",
+                "cost_usd": None,
+            }
+        )
+    )
+    (gen / "graded.json").write_text("[]")
+
+    record = backfill_bare_record(tmp_path)
+    assert record["track"] == "effort"
+    assert record["protocol"] == "claude-code"
+    assert record["model"]["provider"] == "claude-cli"
+    assert record["effort"] == "low"
+    assert record["harness_version"] == "claude-cli/2.1.263"
+    assert record["preamble"] == "claude-code-harness"
+    assert record["cost_usd"] is None
+
+
 # --------------------------------------------------- 4.1 committed-run pin
 
 
@@ -185,6 +223,12 @@ def test_committed_records_regenerate_byte_identically(run_dir: Path):
             outcomes_by_trial=outcomes_by_trial,
             cost_usd=recorded["cost_usd"],
             domain=recorded["domain"],
+            provider=recorded["model"]["provider"],
+            track=recorded["track"],
+            protocol=recorded["protocol"],
+            effort=recorded.get("effort"),
+            harness_version=recorded.get("harness_version"),
+            preamble=recorded.get("preamble"),
         )
         after = (run_dir / "run.json").read_text()
     finally:

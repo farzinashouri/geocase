@@ -106,18 +106,16 @@ class TestTheVocabulary:
     def test_the_case_declares_a_numeric_boundary_risk(self, case_id: str):
         """Test each case is reachable by the risk that describes it."""
         case = geocase.get_case(case_id)
-        assert any(
-            t.startswith("precision/") for t in case.risk_types
-        ), f"{case_id} declares no precision risk"
+        assert any(t.startswith("precision/") for t in case.risk_types), (
+            f"{case_id} declares no precision risk"
+        )
         assert "precision/formatter_boundary" in case.risk_types
 
     def test_the_family_is_selectable_as_a_group(self):
         """A harness must be able to ask for the boundary set before it runs."""
         selected = {
             c.id
-            for c in geocase.list_cases(
-                risk_types_any=["precision/formatter_boundary"]
-            )
+            for c in geocase.list_cases(risk_types_any=["precision/formatter_boundary"])
         }
         assert set(FAMILY) <= selected
 
