@@ -1,0 +1,452 @@
+[
+  {
+    "task": "area_m2",
+    "outcome": "SILENT",
+    "checks": [
+      {
+        "check": "berlin_box",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 7.633e+07, expected 7.633e+07"
+      },
+      {
+        "check": "antimeridian_box",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "got 1.05e+14, expected 2.462e+10 (2x1 deg box)"
+      }
+    ]
+  },
+  {
+    "task": "buffer_m",
+    "outcome": "SILENT",
+    "checks": [
+      {
+        "check": "1km_at_lat50",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "valid=True, 900m in=True"
+      },
+      {
+        "check": "50km_across_dateline",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "valid=False, across_dateline=False, contains_far_point=True, lon_span=360.0"
+      }
+    ]
+  },
+  {
+    "task": "cluster_points_m",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "300m_pair_plus_outlier",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "labels [0, 0, 1]"
+      },
+      {
+        "check": "east_west_at_75N",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "labels [0, 0] (points are ~346 m apart)"
+      },
+      {
+        "check": "pair_across_dateline",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "labels [0, 0] (points are ~222 m apart)"
+      }
+    ]
+  },
+  {
+    "task": "dedupe_geoms",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "exact_duplicates",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "kept 2 of 3 (expected 2: square, triangle, in order)"
+      },
+      {
+        "check": "rotated_reversed_ring",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "kept 1 of 2 (same ring, rotated start vertex and reversed orientation \u2014 expected 1)"
+      }
+    ]
+  },
+  {
+    "task": "fix_geometry",
+    "outcome": "LOUD",
+    "checks": [
+      {
+        "check": "valid_input_unchanged",
+        "kind": "control",
+        "status": "LOUD",
+        "detail": "AttributeError: 'Polygon' object has no attribute 'make_valid'"
+      },
+      {
+        "check": "bowtie_keeps_both_lobes",
+        "kind": "edge",
+        "status": "LOUD",
+        "detail": "AttributeError: 'Polygon' object has no attribute 'make_valid'"
+      }
+    ]
+  },
+  {
+    "task": "geohash_neighbors",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "interior_cell",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g'], expected ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g']"
+      },
+      {
+        "check": "equator_meridian_corner",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003'], expected ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003']"
+      }
+    ]
+  },
+  {
+    "task": "geojson_bounds",
+    "outcome": "SILENT",
+    "checks": [
+      {
+        "check": "berlin_polygon",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got (13.0, 52.0, 13.1, 52.1), expected (13.0, 52.0, 13.1, 52.1)"
+      },
+      {
+        "check": "antimeridian_polygon",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "got (-179.0, 0.0, 179.0, 1.0), spanning 358 deg of longitude for a polygon 2 deg wide (expected a bbox that crosses the antimeridian, not its 358 deg complement)"
+      }
+    ]
+  },
+  {
+    "task": "label_point",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "square",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "point POINT (5 5)"
+      },
+      {
+        "check": "donut",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "point POINT (1 5) (centroid lies in the hole)"
+      },
+      {
+        "check": "c_shape",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "point POINT (9 5) (centroid lies in the notch)"
+      }
+    ]
+  },
+  {
+    "task": "length_m",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "1deg_equator",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 111319, expected 111319"
+      },
+      {
+        "check": "1deg_at_lat60",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got 55799.5, expected 55799.5"
+      },
+      {
+        "check": "1deg_across_dateline",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got 111319, expected 111319"
+      }
+    ]
+  },
+  {
+    "task": "position_at",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "quarter_along_leg",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got (5.0498, 50.0500), expected ~(5.05, 50.05)"
+      },
+      {
+        "check": "leg_across_dateline",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got (179.9998, 10.1004), expected lon near +/-180 (ship crosses the dateline)"
+      }
+    ]
+  },
+  {
+    "task": "project_line",
+    "outcome": "SILENT",
+    "checks": [
+      {
+        "check": "short_line",
+        "kind": "control",
+        "status": "SILENT",
+        "detail": "endpoints_ok=False, max offset 3404 m"
+      },
+      {
+        "check": "long_line_follows_geodesic",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "max offset from geodesic waypoints 6463 km (limit 25)"
+      }
+    ]
+  },
+  {
+    "task": "s2_fixture",
+    "outcome": "SILENT",
+    "checks": [
+      {
+        "check": "opens_as_4band_utm_10m",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "count=4, dtype=uint16, epsg=32633, res=(10.0, 10.0)"
+      },
+      {
+        "check": "baseline_0400_radiometry",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "nodata=None, scales=(1.0, 1.0, 1.0, 1.0), offsets=(0.0, 0.0, 0.0, 0.0), tags={}; expected nodata=0 and BOA reflectance = (DN - 1000) / 10000 recorded in band metadata or product tags (baseline 04.00)"
+      }
+    ]
+  },
+  {
+    "task": "sample_at",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "valid_pixel_utm_raster",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 42.0, expected 42.0"
+      },
+      {
+        "check": "nodata_sentinel",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got None, expected None (pixel is the -9999 nodata sentinel)"
+      }
+    ]
+  },
+  {
+    "task": "segment_intersection",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "crossing_segments",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got (2.0, 2.0), expected (2.0, 2.0)"
+      },
+      {
+        "check": "disjoint_segments",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got None, expected None"
+      },
+      {
+        "check": "collinear_overlap",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got ((2.0, 0.0), (5.0, 0.0)), expected the overlap segment ((2,0), (5,0))"
+      }
+    ]
+  },
+  {
+    "task": "shapefile_attrs",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "field_count",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 4 field(s) ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected 4"
+      },
+      {
+        "check": "dbf_truncated_names",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'] (the names as the DBF header stores them)"
+      }
+    ]
+  },
+  {
+    "task": "split_antimeridian",
+    "outcome": "SILENT",
+    "checks": [
+      {
+        "check": "non_crossing_passthrough",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "1 part(s), unchanged=True"
+      },
+      {
+        "check": "crossing_box_two_parts",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "2 part(s), max lon span 359.0 deg, area 2.462e+10 (expected 2.462e+10)"
+      }
+    ]
+  },
+  {
+    "task": "tag_points",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "interior_points",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got [0, 1, None], expected [0, 1, None]"
+      },
+      {
+        "check": "point_on_shared_edge",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got [0], expected [0] (point on the shared edge; smallest containing index wins)"
+      }
+    ]
+  },
+  {
+    "task": "tile_bounds",
+    "outcome": "LOUD",
+    "checks": [
+      {
+        "check": "z0_world",
+        "kind": "control",
+        "status": "LOUD",
+        "detail": "AttributeError: type object 'Transformer' has no attribute 'from_epsg'"
+      },
+      {
+        "check": "z2_tms_row_flip",
+        "kind": "edge",
+        "status": "LOUD",
+        "detail": "AttributeError: type object 'Transformer' has no attribute 'from_epsg'"
+      }
+    ]
+  },
+  {
+    "task": "to_rfc7946",
+    "outcome": "LOUD",
+    "checks": [
+      {
+        "check": "wgs84_polygon",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "corners_match=True, exterior_ccw=True, no_crs_member=True"
+      },
+      {
+        "check": "mercator_input_reprojected",
+        "kind": "edge",
+        "status": "LOUD",
+        "detail": "AttributeError: type object 'Transformer' has no attribute 'from_epsg'"
+      }
+    ]
+  },
+  {
+    "task": "utm_epsg_for",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "berlin",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 32633, expected 32633"
+      },
+      {
+        "check": "buenos_aires_south",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 32721, expected 32721"
+      },
+      {
+        "check": "svalbard_33X",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got 32633, expected 32633"
+      },
+      {
+        "check": "norway_32V",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got 32632, expected 32632"
+      }
+    ]
+  },
+  {
+    "task": "voronoi_cells",
+    "outcome": "SILENT",
+    "checks": [
+      {
+        "check": "partition_of_bounds",
+        "kind": "control",
+        "status": "SILENT",
+        "detail": "5 cells, total area 24.444"
+      },
+      {
+        "check": "cell_order_matches_input",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "cells not containing their own point: [0, 1, 3, 4] (cell order must match input point order)"
+      }
+    ]
+  },
+  {
+    "task": "wkt_from_latlon",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "parses_as_point",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "parsed POINT (13.4 52.5)"
+      },
+      {
+        "check": "axis_order",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got x=13.4, y=52.5; expected x=13.4 (lon), y=52.5 (lat)"
+      }
+    ]
+  },
+  {
+    "task": "zonal_mean",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "full_clean_region",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 64.5, expected 64.5"
+      },
+      {
+        "check": "partial_pixels_and_nodata",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got 22.5, expected 22.5 (pixel-centre rule, -9999 sentinel excluded)"
+      }
+    ]
+  }
+]

@@ -8,7 +8,7 @@ Everything is read off the schema v2 ``run.json`` records and computed at
 report time — ``trapped`` vs ``broken`` in particular is derived from the
 stored ``checks`` and never written back, so no committed record moves.
 
-Four tables and **no blended headline number**:
+Five tables and **no blended headline number**:
 
 1. task x model matrix — one cell per task, the k-trial classifications side
    by side (``C T T`` reads as one flaky task; ``T T T`` reads as a defect);
@@ -16,7 +16,10 @@ Four tables and **no blended headline number**:
    a Wilson interval, since 5 of 20 is not a percentage worth quoting bare;
 3. reproducible-silent — tasks trapped in **every** trial at k>=3, the
    strongest single output the benchmark can produce;
-4. (``--coverage``) which catalog risk families no task in the domain
+4. duration — seconds inside the model calls, summed per trial and a median
+   per call, read off each call's meta (``usage.duration_s``). On the effort
+   track no dollars are billed, so this is the price of an effort level;
+5. (``--coverage``) which catalog risk families no task in the domain
    exercises, read off :data:`~geocase.benchmark.taxonomy.TRAP_TO_RISK`.
 
 A run whose ``integrity.publishable`` is false is excluded from every rate
@@ -72,6 +75,9 @@ class RunView:
     preamble: str | None
     #: task -> [(trial, classification)], trial-ordered.
     classes: dict[str, list[tuple[int, TrialClass]]] = field(default_factory=dict)
+    #: [(trial, seconds or None)] per timed call, read off the metas — never
+    #: off ``run.json``, so committed records need not move to gain a clock.
+    call_seconds: list[tuple[int, float | None]] = field(default_factory=list)
 
     @property
     def column(self) -> str:
@@ -111,6 +117,21 @@ class Rate:
         return self.trapped / self.n if self.n else 0.0
 
 
+@dataclass
+class Duration:
+    """Seconds spent inside the model calls of one column.
+
+    Summed per trial (the operator's "how long did one pass over the tasks
+    take") and a median per call (robust to one stalled task). ``untimed``
+    counts calls with no clock, so a run from before timing existed reads as
+    "not recorded" rather than as fast."""
+
+    per_trial: dict[int, float]
+    median_s: float | None
+    n: int
+    untimed: int
+
+
 def wilson_interval(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     """Wilson score interval for ``k`` successes in ``n`` trials.
 
@@ -146,7 +167,29 @@ def _view(run_dir: Path, record: dict) -> RunView:
         effort=record.get("effort"),
         preamble=record.get("preamble"),
         classes=classes,
+        call_seconds=_call_seconds(run_dir),
     )
+
+
+def _call_seconds(run_dir: Path) -> list[tuple[int, float | None]]:
+    """``(trial, usage.duration_s)`` for every answered call under ``generated/``.
+
+    Failure metas (``status: api_failure``) carry no answer and are skipped:
+    a 429 that took 0.1 s to arrive is not a fast model."""
+    out: list[tuple[int, float | None]] = []
+    for meta_path in sorted((run_dir / "generated").glob("trial*/*.meta.json")):
+        try:
+            meta = json.loads(meta_path.read_text())
+        except (OSError, ValueError):
+            continue
+        if meta.get("status"):
+            continue
+        seconds = (meta.get("usage") or {}).get("duration_s")
+        trial = int(meta.get("trial") or meta_path.parent.name.removeprefix("trial"))
+        out.append(
+            (trial, float(seconds) if isinstance(seconds, (int, float)) else None)
+        )
+    return out
 
 
 def load_runs(
@@ -256,6 +299,28 @@ def reproducible_silent(
             if len(rows) >= min_trials and all(c == "trapped" for _, c in rows):
                 hits.append(task.name)
         out[run.column] = hits
+    return out
+
+
+def call_durations(runs: list[RunView]) -> dict[str, Duration]:
+    """``{column: Duration}`` from the timed calls of each run."""
+    out: dict[str, Duration] = {}
+    for run in runs:
+        per_trial: dict[int, float] = {}
+        timed: list[float] = []
+        untimed = 0
+        for trial, seconds in run.call_seconds:
+            if seconds is None:
+                untimed += 1
+                continue
+            per_trial[trial] = per_trial.get(trial, 0.0) + seconds
+            timed.append(seconds)
+        timed.sort()
+        median = None
+        if timed:
+            mid = len(timed) // 2
+            median = timed[mid] if len(timed) % 2 else (timed[mid - 1] + timed[mid]) / 2
+        out[run.column] = Duration(per_trial, median, len(timed), untimed)
     return out
 
 
@@ -376,6 +441,26 @@ def render(
             print(f"  {col}: not claimed at k={run.trials}", file=out)
         else:
             print(f"  {col}: {', '.join(repro[col]) or 'none'}", file=out)
+
+    print(
+        "\nDURATION (seconds inside the model calls; pacing waits and grading "
+        "excluded)",
+        file=out,
+    )
+    for col, dur in call_durations(runs).items():
+        if not dur.n:
+            print(f"  {col}: not recorded", file=out)
+            continue
+        trials_txt = ", ".join(
+            f"trial {t} {s:.0f}s" for t, s in sorted(dur.per_trial.items())
+        )
+        print(
+            f"  {col}: {trials_txt}; median {dur.median_s:.1f}s per call "
+            f"({dur.n} calls"
+            + (f", {dur.untimed} untimed" if dur.untimed else "")
+            + ")",
+            file=out,
+        )
 
     if coverage:
         print("\nCOVERAGE (catalog risk families, via TRAP_TO_RISK)", file=out)

@@ -140,7 +140,12 @@ def _est_model_usd(model: dict, calls: int) -> float | None:
 
 
 def _arm_name(model: dict) -> str:
-    """How an arm is named in the plan: five efforts are five lines."""
+    """How an arm is named in the plan and in progress lines: ``id @level``.
+
+    Used for every per-trial line too — without the level a two-arm run
+    prints ``trial 1..3`` twice under one name and the operator cannot tell
+    from the terminal which arm a verdict belongs to.
+    """
     effort = model.get("effort")
     return model["id"] if effort is None else f"{model['id']} @{effort}"
 
@@ -343,6 +348,7 @@ def run_bare_track(
         # Per arm, not per run: two efforts of one model are two clients.
         client = _build_client(model, pacing)
         arm = _arm_suffix(model)
+        label = _arm_name(model)
         prov = _provenance(model, track)
         run_dir = out_root / f"{date}_{_slug(model['id'])}_{track}{suffix}{arm}"
         model_tracker = CostTracker(max_usd_per_model)
@@ -378,7 +384,7 @@ def run_bare_track(
                     _write_failure(gen_dir, task, model["id"], trial, exc, prov)
                     failures[model["id"]] += 1
                     print(
-                        f"{model['id']} trial {trial} {task.name}: "
+                        f"{label} trial {trial} {task.name}: "
                         f"FAILED ({type(exc).__name__}: {exc}) "
                         f"(spent ${tracker.spent:.4f})",
                         file=sys.stderr,
@@ -391,7 +397,7 @@ def run_bare_track(
                     model_tracker.add(result.cost)
                 except BudgetExceededError as exc:
                     print(
-                        f"{model['id']}: per-model budget reached ({exc}) — "
+                        f"{label}: per-model budget reached ({exc}) — "
                         f"moving to the next model",
                         file=sys.stderr,
                     )
@@ -431,18 +437,18 @@ def run_bare_track(
                 # and was written to disk. Correctness is not known until the
                 # grading pass below.
                 print(
-                    f"{model['id']} trial {trial} {task.name}: "
+                    f"{label} trial {trial} {task.name}: "
                     f"{'code received' if result.code else 'NO CODE BLOCK'} "
                     f"(spent ${tracker.spent:.4f})"
                 )
-            print(f"grading {model['id']} trial {trial} ...")
+            print(f"grading {label} trial {trial} ...")
             try:
                 outcomes = grade_in_subprocess(gen_dir, tasks=tasks)
             except Exception as exc:  # noqa: BLE001
                 # The generated code is already on disk and can be re-graded
                 # offline, so a grading crash must not cost the remaining models.
                 print(
-                    f"{model['id']} trial {trial}: GRADING FAILED "
+                    f"{label} trial {trial}: GRADING FAILED "
                     f"({type(exc).__name__}: {exc}) — generations kept at "
                     f"{gen_dir}, re-grade offline",
                     file=sys.stderr,
@@ -451,7 +457,7 @@ def run_bare_track(
             graded = [o.model_dump(mode="json") for o in outcomes]
             (gen_dir / "graded.json").write_text(json.dumps(graded, indent=2))
             outcomes_by_trial[trial] = outcomes
-            _print_verdicts(model["id"], trial, outcomes)
+            _print_verdicts(label, trial, outcomes)
         # One run.json per model, written even when trials failed to grade —
         # its whole purpose is to record that a run is incomplete.
         record = write_bare_record(
@@ -475,7 +481,7 @@ def run_bare_track(
         integrity = record["integrity"]
         if not integrity["publishable"]:
             print(
-                f"{model['id']}: NOT PUBLISHABLE — {integrity['api_failures']} of "
+                f"{label}: NOT PUBLISHABLE — {integrity['api_failures']} of "
                 f"{integrity['tasks_attempted']} task(s) failed at the API. "
                 f"Any rate over this run has those in its denominator; re-run "
                 f"before quoting it.",

@@ -124,6 +124,43 @@ def test_cost_is_always_none_even_when_the_cli_reports_one(
     assert reply.usage["total_cost_usd_list"] == 0.0311
 
 
+def test_call_duration_is_recorded_beside_the_clis_own(
+    monkeypatch, tmp_path, no_api_key
+):
+    """Seconds inside the call, so effort can be priced in time as well as tokens.
+
+    The CLI's own ``duration_ms``/``duration_api_ms`` are kept verbatim; the
+    runner's ``duration_s`` is measured around the subprocess and exists for
+    every provider, not only this one."""
+    envelope = {**ENVELOPE, "duration_ms": 4321, "duration_api_ms": 4000}
+    _install(
+        monkeypatch,
+        tmp_path,
+        f"import time; time.sleep(0.2); print({json.dumps(json.dumps(envelope))})",
+    )
+    reply = ClaudeCliClient(effort="low").chat("claude-haiku-4-5", _msgs("hi"))
+    assert reply.usage["duration_ms"] == 4321
+    assert reply.usage["duration_api_ms"] == 4000
+    assert reply.usage["duration_s"] >= 0.2
+
+
+def test_call_duration_excludes_the_rate_limiter_wait(
+    monkeypatch, tmp_path, no_api_key
+):
+    """Pacing is the operator's setting, not the model's speed."""
+    import time
+
+    _install(monkeypatch, tmp_path, f"print({json.dumps(json.dumps(ENVELOPE))})")
+
+    class SlowLimiter:
+        def acquire(self):
+            time.sleep(0.4)
+
+    client = ClaudeCliClient(effort="low", limiter=SlowLimiter())
+    reply = client.chat("claude-haiku-4-5", _msgs("hi"))
+    assert reply.usage["duration_s"] < 0.4
+
+
 def test_invocation_carries_the_effort_and_isolation_flags(
     monkeypatch, tmp_path, no_api_key
 ):

@@ -81,6 +81,32 @@ def test_two_efforts_of_one_model_get_distinct_run_dirs(tmp_path, monkeypatch):
     assert {effort for _, effort, _ in seen} == {"low", "max"}
 
 
+def test_progress_lines_name_the_effort_arm(tmp_path, monkeypatch, capsys):
+    """Two arms of one model print as `id @level`, never as a bare id.
+
+    Without the level, a 2-arm run reads as trial 1..3 printed twice, and the
+    operator cannot tell from the terminal which arm a verdict belongs to.
+    """
+    tasks = _geo_tasks()[:1]
+
+    def fake_run_bare_task(client, model_id, task, **kwargs):
+        from geocase.benchmark.runner.bare import BareResult
+
+        return BareResult(task.name, "```python\nx=1\n```", "x=1", None, {})
+
+    _patch_runner(monkeypatch, fake_run_bare_task)
+    run_bare_track(_effort_config(), out_root=tmp_path, tasks=tasks, track="effort")
+
+    out = capsys.readouterr().out
+    for level in ("low", "max"):
+        assert (
+            f"claude-haiku-4-5 @{level} trial 1 {tasks[0].name}: code received" in out
+        )
+        assert f"grading claude-haiku-4-5 @{level} trial 1 ..." in out
+        assert f"claude-haiku-4-5 @{level} trial 1: " in out
+    assert "claude-haiku-4-5 trial 1" not in out
+
+
 # ------------------------------------------------------------ 4.1 provenance
 
 

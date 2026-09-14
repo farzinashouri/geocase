@@ -48,7 +48,7 @@ python scripts/generate_vector_coverage_matrix.py --output docs/_generated/vecto
 python scripts/generate_raster_coverage_matrix.py --output docs/_generated/raster-coverage-matrix.md
 ```
 
-Benchmark runner: `python -m geocase.benchmark grade ...` (see `src/geocase/benchmark/cli.py`). `python -m geocase.benchmark report --runs results/runs --domain geo` compares runs (task x model matrix, per-`trap_category` rates with Wilson intervals, reproducible-silent at k>=3; `--coverage` lists catalog risk families no task exercises).
+Benchmark runner: `python -m geocase.benchmark grade ...` (see `src/geocase/benchmark/cli.py`). `python -m geocase.benchmark report --runs results/runs --domain geo` compares runs (task x model matrix, per-`trap_category` rates with Wilson intervals, reproducible-silent at k>=3, seconds per trial from each call's `usage.duration_s`; `--coverage` lists catalog risk families no task exercises).
 
 ## Architecture
 

@@ -18,6 +18,7 @@ from geocase.benchmark.registry import get_task
 from geocase.benchmark.runner import report as report_mod
 from geocase.benchmark.runner.report import (
     build_matrix,
+    call_durations,
     category_rates,
     load_runs,
     reproducible_silent,
@@ -62,10 +63,21 @@ def _write_run(
     domain: str = "geo",
     track: str = "bare",
     extra: dict | None = None,
+    durations: dict[str, list[float | None]] | None = None,
 ) -> Path:
     run_dir = root / run_id
     (run_dir / "generated" / "trial1").mkdir(parents=True)
     n_trials = max(len(v) for v in trials.values())
+    # Timing lives in the per-call metas, never in run.json: committed
+    # records must not move when a field is added.
+    for task, seconds in (durations or {}).items():
+        for i, s in enumerate(seconds):
+            gen = run_dir / "generated" / f"trial{i + 1}"
+            gen.mkdir(parents=True, exist_ok=True)
+            usage = {} if s is None else {"duration_s": s}
+            (gen / f"{task}.meta.json").write_text(
+                json.dumps({"task": task, "trial": i + 1, "usage": usage})
+            )
     record = {
         "schema_version": 2,
         "run_id": run_id,
@@ -191,6 +203,39 @@ def test_reproducible_silent_is_not_claimed_below_k3(tmp_path):
     assert reproducible_silent(runs, TASKS) == {runs[0].column: []}
 
 
+# ------------------------------------------------------------- duration
+
+
+def test_duration_sums_seconds_per_trial_and_medians_per_call(tmp_path):
+    """Wall time is the effort track's price: no dollars are billed on a seat,
+    so seconds and rate limits are what an operator pays per level."""
+    _write_run(
+        tmp_path,
+        "2026-09-06_model-d_bare",
+        model_id="org/model-d",
+        label="Model D",
+        trials={"area_m2": [CORRECT, CORRECT], "buffer_m": [TRAPPED, TRAPPED]},
+        durations={"area_m2": [1.0, 3.0], "buffer_m": [2.0, None]},
+    )
+    runs, _ = load_runs(tmp_path, domain="geo")
+    d = call_durations(runs)[runs[0].column]
+    assert d.per_trial == {1: 3.0, 2: 3.0}
+    assert d.median_s == 2.0
+    assert (d.n, d.untimed) == (3, 1)
+
+
+def test_duration_is_not_claimed_for_runs_that_recorded_none(runs_root):
+    """Runs before timing existed say so rather than reading as 0 s."""
+    runs, _ = load_runs(runs_root, domain="geo")
+    d = call_durations(runs)[runs[0].column]
+    assert d.n == 0 and d.median_s is None
+    out = io.StringIO()
+    report_mod.main(["--runs", str(runs_root), "--domain", "geo"], out=out)
+    text = out.getvalue()
+    assert "DURATION" in text
+    assert "Model A: not recorded" in text
+
+
 # ------------------------------------------------------------ 2.2 wilson
 
 
@@ -248,6 +293,7 @@ def test_cli_prints_the_four_tables_and_the_exclusion(runs_root):
     assert "TASK x MODEL" in text
     assert "PER TRAP CATEGORY" in text
     assert "REPRODUCIBLE SILENT" in text
+    assert "DURATION" in text
     assert "EXCLUDED" in text and "2026-09-02_model-b_bare" in text
     assert "buffer_m" in text and "T T T" in text
     # No blended headline number.

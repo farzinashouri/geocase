@@ -33,6 +33,7 @@ import os
 import re
 import shutil
 import subprocess
+import time
 from typing import Protocol
 
 from geocase.benchmark.runner.client import ChatReply
@@ -153,6 +154,10 @@ class ClaudeCliClient:
         if self.quota is not None:
             self.quota.take()
         self.limiter.acquire()
+        # Timed after the limiter: pacing is the operator's setting, not the
+        # model's speed. On a seat no dollars are billed, so seconds per level
+        # are the effort axis's only price and `report` sums them per trial.
+        started = time.perf_counter()
         try:
             proc = subprocess.run(  # noqa: S603 - argv list, no shell
                 argv,
@@ -174,7 +179,9 @@ class ClaudeCliClient:
                 f"{model} at effort {self.effort}: claude exit "
                 f"{proc.returncode} — {(proc.stderr or proc.stdout)[:300]}"
             )
-        return self._parse(proc.stdout, model)
+        reply = self._parse(proc.stdout, model)
+        reply.usage["duration_s"] = time.perf_counter() - started
+        return reply
 
     def _parse(self, stdout: str, model: str) -> ChatReply:
         """Envelope → :class:`ChatReply`. Never raises ``KeyError`` upward.
@@ -217,6 +224,12 @@ class ClaudeCliClient:
             details = usage.get("output_tokens_details")
             if isinstance(details, dict) and "thinking_tokens" in details:
                 usage["thinking_tokens"] = details["thinking_tokens"]
+        # The CLI's own clocks, kept verbatim beside the runner's `duration_s`:
+        # `duration_api_ms` is time inside the API call, `duration_ms` the
+        # whole CLI turn including harness setup.
+        for key in ("duration_ms", "duration_api_ms"):
+            if isinstance(data.get(key), (int, float)):
+                usage[key] = data[key]
         cost = data.get("total_cost_usd")
         if isinstance(cost, (int, float)):
             # Kept under a name that says what it is. `cost` stays None so it

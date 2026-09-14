@@ -111,6 +111,15 @@ def test_client_chat_returns_content_and_usage():
     assert reply.cost == pytest.approx(0.01)
 
 
+def test_client_records_seconds_spent_in_the_call():
+    """Same field the effort track writes, so ``report`` can time any arm."""
+    reply = _client(lambda request: _ok_response()).chat(
+        "test/model", [{"role": "user", "content": "hi"}]
+    )
+    assert isinstance(reply.usage["duration_s"], float)
+    assert reply.usage["duration_s"] >= 0.0
+
+
 def test_client_retries_on_429_then_succeeds():
     calls = []
 

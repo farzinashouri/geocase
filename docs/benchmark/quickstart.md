@@ -373,7 +373,7 @@ python -m geocase.benchmark run --config configs/models-claude-effort-pilot-k1.y
 
 ## Comparing runs: the report command
 
-`report` reads every `run.json` under a directory and prints four tables. It
+`report` reads every `run.json` under a directory and prints five tables. It
 writes nothing back — everything is derived at report time from the checks
 already stored, so no committed record moves.
 
@@ -400,6 +400,9 @@ PER TRAP CATEGORY (trapped rate per column)
 REPRODUCIBLE SILENT (trapped in every trial, k>=3)
   Model A: buffer_m
 
+DURATION (seconds inside the model calls; pacing waits and grading excluded)
+  Model A: trial 1 412s, trial 2 398s, trial 3 405s; median 17.3s per call (69 calls)
+
 EXCLUDED
   2026-08-10_nvidia-nemotron-3-super-120b-a12b-free_bare: not publishable (14 api_failure(s)) — rate-limit damage is not model behaviour
 ```
@@ -413,7 +416,14 @@ EXCLUDED
 3. **reproducible-silent** — tasks trapped in *every* trial, claimed only at
    k>=3. This is the strongest single output the benchmark can produce, and
    `buffer_m`'s 2/2 in the original experiment is the prior art for why.
-4. **coverage** (`--coverage`) — which catalog risk families no task in the
+4. **duration** — seconds spent inside the model calls, summed per trial and
+   as a median per call. Each client times its own call *after* the rate
+   limiter wait, so the number is the model's speed, not the run's pacing;
+   it is stored as `usage.duration_s` in the per-call meta, never in
+   `run.json`, so committed records do not move. On the effort track no
+   dollars are billed, which makes this the price of an effort level. Runs
+   recorded before the clock existed print `not recorded`.
+5. **coverage** (`--coverage`) — which catalog risk families no task in the
    domain exercises, via the `trap_category` -> `risk_types` mapping
    (`TRAP_TO_RISK` in `taxonomy.py`). Today: `transform`, `dtype`,
    `precision`, and more.

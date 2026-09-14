@@ -208,6 +208,9 @@ class OpenRouterClient:
             if self.quota is not None:
                 self.quota.take()
             self.limiter.acquire()
+            # Timed per attempt, after the limiter: the number is seconds the
+            # model took to answer, not seconds this run chose to wait.
+            attempt_started = time.perf_counter()
             try:
                 resp = self._http.post("/chat/completions", json=payload)
             except httpx.TimeoutException as exc:
@@ -271,6 +274,7 @@ class OpenRouterClient:
                         last_exc = exc
                         last_reason = f"malformed response ({type(exc).__name__})"
                     else:
+                        usage["duration_s"] = time.perf_counter() - attempt_started
                         return ChatReply(
                             content=content or "",
                             cost=usage.get("cost"),
