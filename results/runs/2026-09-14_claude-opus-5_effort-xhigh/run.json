@@ -1,0 +1,4483 @@
+{
+  "schema_version": 2,
+  "run_id": "2026-09-14_claude-opus-5_effort-xhigh",
+  "date": "2026-09-14",
+  "domain": "geo",
+  "model": {
+    "id": "claude-opus-5",
+    "label": "Opus 5 (Claude Code CLI)",
+    "provider": "claude-cli"
+  },
+  "track": "effort",
+  "protocol": "claude-code",
+  "effort": "xhigh",
+  "harness_version": "claude-cli/2.1.263",
+  "preamble": "claude-code-harness",
+  "runner": {
+    "name": "geocase-benchmark",
+    "version": "2.0.0.dev0"
+  },
+  "config": {
+    "trials": 3,
+    "temperature": null,
+    "max_turns": null,
+    "variant_seed": null,
+    "sandbox_requirements_sha256": null,
+    "prompt_sha256": {
+      "area_m2": "c42be34198b2a8788f70e3f794cd2e16f52837e78906a42dda63bd6d3199e16f",
+      "buffer_m": "00c0eb6ae1df2d3e4ab6688e81af96e5f83b1b8d2aa9de21a46807ca96b435e2",
+      "cluster_points_m": "dea94540d289d1540d190051659550fc97f0ab5c758999c96ef545d05e351b1b",
+      "dedupe_geoms": "baea32f4acbadd1088e56f950b1773277feee0e71eadb19e7dafd2f1da63c413",
+      "fix_geometry": "2fc1361ca73e9b02d62ad0881efe29cc4f49d09ea40eb473b847708c56ce58aa",
+      "geohash_neighbors": "020a02578e1e4bb5d9f27097002921c4066aa5fd5aeeb8ad48c0e7c432d9ff3c",
+      "geojson_bounds": "f6e109ac4ebb88eaf8a8211e63e2edd95ce58e003fc606dc3e9d3a2520070e8e",
+      "label_point": "ddc6a5752442069704733a59c7d959c6ebbf0e4cdfa91106a586cce643adfd4a",
+      "length_m": "fb6f18b6c939deeacdca78dcb72e21fb5a7aeda872b9140d563112c620d9a476",
+      "position_at": "beeebe594ea203353f6a2aa391f24c5abd7d7ddf487823a4363493daa732f997",
+      "project_line": "56000143a67d3be5460facb90cc688607af29ed60ca3f6fc5ef81feb4a77c47b",
+      "s2_fixture": "40163418abf460ee71a9a5420d6507a840797b8ee490e3d0867b4cd3d830e461",
+      "sample_at": "0057c74f7c52363e7317de45290b233358b880bae5ad776c390c1c0a51a66348",
+      "segment_intersection": "d8ef1d58567826671a392352615e57549c39e5b96229c1badb134feeac53506e",
+      "shapefile_attrs": "5d1bf11577f5891ddc4990d748b03e8213174c1057c91adbb8fe7bc9181d9368",
+      "split_antimeridian": "fdb9f643dc5135a8cd0938bf0e4ef26334077796f6a549f85daaa4e2f26096bd",
+      "tag_points": "cdd8a4e1b186a4dbe0c9922bce4dddc13a44142a152e05f694bbeebf7189e865",
+      "tile_bounds": "d84f032cc7f208bda62d53f2bde26cb0aee26736cb948ae8c0f93bd5a122ee4b",
+      "to_rfc7946": "d44ea2ea2f364d2613e7a259b3dc15277399b709be2bca787871bc19456b748b",
+      "utm_epsg_for": "af105d092262ff381e88d7ada72e192e6c147e6b8a43c3d357f7561640a37655",
+      "voronoi_cells": "b617bcc8d7883cd0f7e7ee1d738eed33766c4c0737aa3e741d3ff87ed36d03d9",
+      "wkt_from_latlon": "1d93471df7e7f5d7b5893b1e31fa29e6b797bc15b664c925410a07ba0c72469d",
+      "zonal_mean": "7e462cc8194b95d185d315de4cd4cf436df0087f9910a9229f9136b7338d457e"
+    }
+  },
+  "cost_usd": null,
+  "integrity": {
+    "tasks_attempted": 69,
+    "api_failures": 0,
+    "publishable": true,
+    "by_trial": {
+      "trial1": {
+        "tasks_attempted": 23,
+        "api_failures": 0
+      },
+      "trial2": {
+        "tasks_attempted": 23,
+        "api_failures": 0
+      },
+      "trial3": {
+        "tasks_attempted": 23,
+        "api_failures": 0
+      }
+    }
+  },
+  "tasks": {
+    "area_m2": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_box",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 7.633e+07, expected 7.633e+07"
+            },
+            {
+              "check": "antimeridian_box",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 2.462e+10, expected 2.462e+10 (2x1 deg box)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 7360,
+            "cache_read_input_tokens": 8144,
+            "output_tokens": 7883,
+            "output_tokens_details": {
+              "thinking_tokens": 6568
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 7360,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 7883,
+                "cache_read_input_tokens": 8144,
+                "cache_creation_input_tokens": 7360,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 7360
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 6568,
+            "duration_ms": 93017,
+            "duration_api_ms": 93853,
+            "total_cost_usd_list": 0.27592599999999995,
+            "duration_s": 93.87506737500371
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_box",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 7.633e+07, expected 7.633e+07"
+            },
+            {
+              "check": "antimeridian_box",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 2.462e+10, expected 2.462e+10 (2x1 deg box)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 11340,
+            "cache_read_input_tokens": 48388,
+            "output_tokens": 7842,
+            "output_tokens_details": {
+              "thinking_tokens": 6331
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 11340,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 1314,
+                "cache_read_input_tokens": 22020,
+                "cache_creation_input_tokens": 153,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 153
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 6331,
+            "duration_ms": 96649,
+            "duration_api_ms": 97605,
+            "total_cost_usd_list": 0.334843,
+            "duration_s": 97.43012029099918
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_box",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 7.633e+07, expected 7.633e+07"
+            },
+            {
+              "check": "antimeridian_box",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 2.462e+10, expected 2.462e+10 (2x1 deg box)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4702,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 6933,
+            "output_tokens_details": {
+              "thinking_tokens": 5970
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4702,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 6933,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4702,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4702
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 5970,
+            "duration_ms": 82099,
+            "duration_api_ms": 83058,
+            "total_cost_usd_list": 0.2269355,
+            "duration_s": 83.04104462500254
+          },
+          "status": null
+        }
+      ]
+    },
+    "buffer_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "1km_at_lat50",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, 900m in=True"
+            },
+            {
+              "check": "50km_across_dateline",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "valid=True, across_dateline=True, contains_far_point=False, lon_span=360.0"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4719,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 32995,
+            "output_tokens_details": {
+              "thinking_tokens": 27659
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4719,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 32995,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4719,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4719
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 27659,
+            "duration_ms": 399528,
+            "duration_api_ms": 400431,
+            "total_cost_usd_list": 0.8786384999999999,
+            "duration_s": 400.43284287500137
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "1km_at_lat50",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, 900m in=True"
+            },
+            {
+              "check": "50km_across_dateline",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "valid=True, across_dateline=True, contains_far_point=False, lon_span=360.0"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 42228,
+            "cache_read_input_tokens": 88719,
+            "output_tokens": 47452,
+            "output_tokens_details": {
+              "thinking_tokens": 42095
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 42228,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 5346,
+                "cache_read_input_tokens": 57615,
+                "cache_creation_input_tokens": 165,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 165
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 42095,
+            "duration_ms": 587764,
+            "duration_api_ms": 588500,
+            "total_cost_usd_list": 1.6541365,
+            "duration_s": 588.9607254169969
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "1km_at_lat50",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, 900m in=True"
+            },
+            {
+              "check": "50km_across_dateline",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "valid=True, across_dateline=True, contains_far_point=False, lon_span=360.0"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4719,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 25720,
+            "output_tokens_details": {
+              "thinking_tokens": 19633
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4719,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 25720,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4719,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4719
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 19633,
+            "duration_ms": 309936,
+            "duration_api_ms": 310905,
+            "total_cost_usd_list": 0.6967635,
+            "duration_s": 310.79227645799983
+          },
+          "status": null
+        }
+      ]
+    },
+    "cluster_points_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "300m_pair_plus_outlier",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "labels [0, 0, 1]"
+            },
+            {
+              "check": "east_west_at_75N",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~346 m apart)"
+            },
+            {
+              "check": "pair_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~222 m apart)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 12914,
+            "cache_read_input_tokens": 50012,
+            "output_tokens": 12628,
+            "output_tokens_details": {
+              "thinking_tokens": 9981
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 12914,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 4622,
+                "cache_read_input_tokens": 23562,
+                "cache_creation_input_tokens": 185,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 185
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 9981,
+            "duration_ms": 151510,
+            "duration_api_ms": 152025,
+            "total_cost_usd_list": 0.47107299999999996,
+            "duration_s": 152.3104563339948
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "300m_pair_plus_outlier",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "labels [0, 0, 1]"
+            },
+            {
+              "check": "east_west_at_75N",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~346 m apart)"
+            },
+            {
+              "check": "pair_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~222 m apart)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 9269,
+            "cache_read_input_tokens": 26450,
+            "output_tokens": 7180,
+            "output_tokens_details": {
+              "thinking_tokens": 4561
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 9269,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 2710,
+                "cache_read_input_tokens": 15617,
+                "cache_creation_input_tokens": 4485,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4485
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 4561,
+            "duration_ms": 81418,
+            "duration_api_ms": 82226,
+            "total_cost_usd_list": 0.286627,
+            "duration_s": 82.1899979170048
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "300m_pair_plus_outlier",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "labels [0, 0, 1]"
+            },
+            {
+              "check": "east_west_at_75N",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~346 m apart)"
+            },
+            {
+              "check": "pair_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~222 m apart)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4842,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 9090,
+            "output_tokens_details": {
+              "thinking_tokens": 6899
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4842,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 9090,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4842,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4842
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 6899,
+            "duration_ms": 98520,
+            "duration_api_ms": 99330,
+            "total_cost_usd_list": 0.28229350000000003,
+            "duration_s": 99.327308292
+          },
+          "status": null
+        }
+      ]
+    },
+    "dedupe_geoms": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "exact_duplicates",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "kept 2 of 3 (expected 2: square, triangle, in order)"
+            },
+            {
+              "check": "rotated_reversed_ring",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "kept 1 of 2 (same ring, rotated start vertex and reversed orientation \u2014 expected 1)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 9496,
+            "cache_read_input_tokens": 46580,
+            "output_tokens": 6121,
+            "output_tokens_details": {
+              "thinking_tokens": 4544
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 9496,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 1457,
+                "cache_read_input_tokens": 20187,
+                "cache_creation_input_tokens": 142,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 142
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 4544,
+            "duration_ms": 78274,
+            "duration_api_ms": 79146,
+            "total_cost_usd_list": 0.272449,
+            "duration_s": 79.18152887500037
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "exact_duplicates",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "kept 2 of 3 (expected 2: square, triangle, in order)"
+            },
+            {
+              "check": "rotated_reversed_ring",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "kept 1 of 2 (same ring, rotated start vertex and reversed orientation \u2014 expected 1)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 9984,
+            "cache_read_input_tokens": 26393,
+            "output_tokens": 6732,
+            "output_tokens_details": {
+              "thinking_tokens": 5450
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 9984,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 1490,
+                "cache_read_input_tokens": 15560,
+                "cache_creation_input_tokens": 5257,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 5257
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 5450,
+            "duration_ms": 83872,
+            "duration_api_ms": 84633,
+            "total_cost_usd_list": 0.28250050000000004,
+            "duration_s": 84.62503541700426
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "exact_duplicates",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "kept 2 of 3 (expected 2: square, triangle, in order)"
+            },
+            {
+              "check": "rotated_reversed_ring",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "kept 1 of 2 (same ring, rotated start vertex and reversed orientation \u2014 expected 1)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 10825,
+            "cache_read_input_tokens": 26451,
+            "output_tokens": 7964,
+            "output_tokens_details": {
+              "thinking_tokens": 6216
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 10825,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 1939,
+                "cache_read_input_tokens": 15618,
+                "cache_creation_input_tokens": 6040,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 6040
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 6216,
+            "duration_ms": 99362,
+            "duration_api_ms": 100260,
+            "total_cost_usd_list": 0.3217395,
+            "duration_s": 100.25139287499996
+          },
+          "status": null
+        }
+      ]
+    },
+    "fix_geometry": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_input_unchanged",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, area 64 (expected 64)"
+            },
+            {
+              "check": "bowtie_keeps_both_lobes",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 50 (expected 50), both_lobes=True (buffer(0) keeps only one)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 15760,
+            "cache_read_input_tokens": 26413,
+            "output_tokens": 13918,
+            "output_tokens_details": {
+              "thinking_tokens": 10891
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 15760,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 2920,
+                "cache_read_input_tokens": 15580,
+                "cache_creation_input_tokens": 11013,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 11013
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 10891,
+            "duration_ms": 162161,
+            "duration_api_ms": 163103,
+            "total_cost_usd_list": 0.5199295,
+            "duration_s": 163.01180208400183
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_input_unchanged",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, area 64 (expected 64)"
+            },
+            {
+              "check": "bowtie_keeps_both_lobes",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 50 (expected 50), both_lobes=True (buffer(0) keeps only one)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 10,
+            "cache_creation_input_tokens": 10015,
+            "cache_read_input_tokens": 99220,
+            "output_tokens": 27957,
+            "output_tokens_details": {
+              "thinking_tokens": 21277
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 10015,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 18348,
+                "cache_read_input_tokens": 23890,
+                "cache_creation_input_tokens": 1705,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 1705
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 21277,
+            "duration_ms": 327417,
+            "duration_api_ms": 327153,
+            "total_cost_usd_list": 0.849908,
+            "duration_s": 328.20079099999566
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_input_unchanged",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, area 64 (expected 64)"
+            },
+            {
+              "check": "bowtie_keeps_both_lobes",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 50 (expected 50), both_lobes=True (buffer(0) keeps only one)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 4909,
+            "cache_read_input_tokens": 36723,
+            "output_tokens": 12517,
+            "output_tokens_details": {
+              "thinking_tokens": 10177
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4909,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 2241,
+                "cache_read_input_tokens": 25890,
+                "cache_creation_input_tokens": 104,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 104
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 10177,
+            "duration_ms": 142193,
+            "duration_api_ms": 142930,
+            "total_cost_usd_list": 0.4923385,
+            "duration_s": 143.070189584
+          },
+          "status": null
+        }
+      ]
+    },
+    "geohash_neighbors": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_cell",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g'], expected ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g']"
+            },
+            {
+              "check": "equator_meridian_corner",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003'], expected ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003']"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 9437,
+            "cache_read_input_tokens": 41943,
+            "output_tokens": 9114,
+            "output_tokens_details": {
+              "thinking_tokens": 5487
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 9437,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 4565,
+                "cache_read_input_tokens": 15555,
+                "cache_creation_input_tokens": 4715,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4715
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 5487,
+            "duration_ms": 106425,
+            "duration_api_ms": 107239,
+            "total_cost_usd_list": 0.3443655,
+            "duration_s": 107.22913166700164
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_cell",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g'], expected ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g']"
+            },
+            {
+              "check": "equator_meridian_corner",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003'], expected ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003']"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 15555,
+            "output_tokens": 7107,
+            "output_tokens_details": {
+              "thinking_tokens": 5497
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 7107,
+                "cache_read_input_tokens": 15555,
+                "cache_creation_input_tokens": 0,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 0
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 5497,
+            "duration_ms": 78227,
+            "duration_api_ms": 79024,
+            "total_cost_usd_list": 0.1866065,
+            "duration_s": 79.07159583400062
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_cell",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g'], expected ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g']"
+            },
+            {
+              "check": "equator_meridian_corner",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003'], expected ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003']"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 9624,
+            "cache_read_input_tokens": 21666,
+            "output_tokens": 4002,
+            "output_tokens_details": {
+              "thinking_tokens": 2456
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 9624,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 4000,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4844,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4844
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 2456,
+            "duration_ms": 122872,
+            "duration_api_ms": 123851,
+            "total_cost_usd_list": 0.21615350000000003,
+            "duration_s": 124.01646712499996
+          },
+          "status": null
+        }
+      ]
+    },
+    "geojson_bounds": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_polygon",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (13.0, 52.0, 13.099999999999994, 52.1), expected (13.0, 52.0, 13.1, 52.1)"
+            },
+            {
+              "check": "antimeridian_polygon",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.0, 0.0, -179.0, 1.0), spanning 2 deg of longitude for a polygon 2 deg wide (expected a bbox that crosses the antimeridian, not its 358 deg complement)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4752,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 11528,
+            "output_tokens_details": {
+              "thinking_tokens": 8181
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4752,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 11528,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4752,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4752
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 8181,
+            "duration_ms": 135804,
+            "duration_api_ms": 136477,
+            "total_cost_usd_list": 0.3423165,
+            "duration_s": 136.60800425000343
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_polygon",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (13.0, 52.0, 13.099999999999994, 52.1), expected (13.0, 52.0, 13.1, 52.1)"
+            },
+            {
+              "check": "antimeridian_polygon",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.0, 0.0, -179.0, 1.0), spanning 2 deg of longitude for a polygon 2 deg wide (expected a bbox that crosses the antimeridian, not its 358 deg complement)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 14049,
+            "cache_read_input_tokens": 31170,
+            "output_tokens": 17651,
+            "output_tokens_details": {
+              "thinking_tokens": 10524
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 14049,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 3784,
+                "cache_read_input_tokens": 15585,
+                "cache_creation_input_tokens": 14049,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 14049
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 10524,
+            "duration_ms": 197997,
+            "duration_api_ms": 198887,
+            "total_cost_usd_list": 0.5985400000000001,
+            "duration_s": 198.71031729199603
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_polygon",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (13.0, 52.0, 13.099999999999994, 52.1), expected (13.0, 52.0, 13.1, 52.1)"
+            },
+            {
+              "check": "antimeridian_polygon",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.0, 0.0, -179.0, 1.0), spanning 2 deg of longitude for a polygon 2 deg wide (expected a bbox that crosses the antimeridian, not its 358 deg complement)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 15115,
+            "cache_read_input_tokens": 26476,
+            "output_tokens": 14921,
+            "output_tokens_details": {
+              "thinking_tokens": 8763
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 15115,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 4748,
+                "cache_read_input_tokens": 15643,
+                "cache_creation_input_tokens": 10305,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 10305
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 8763,
+            "duration_ms": 160294,
+            "duration_api_ms": 160854,
+            "total_cost_usd_list": 0.5386029999999999,
+            "duration_s": 161.09641429099975
+          },
+          "status": null
+        }
+      ]
+    },
+    "label_point": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "square",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "point POINT (5 5)"
+            },
+            {
+              "check": "donut",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (1.1712646484375 1.1712646484375) (centroid lies in the hole)"
+            },
+            {
+              "check": "c_shape",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (8.8287353515625 1.1712646484375) (centroid lies in the notch)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4678,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 11357,
+            "output_tokens_details": {
+              "thinking_tokens": 8533
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4678,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 11357,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4678,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4678
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 8533,
+            "duration_ms": 135455,
+            "duration_api_ms": 136358,
+            "total_cost_usd_list": 0.3372485,
+            "duration_s": 136.40503229100432
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "square",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "point POINT (5 5)"
+            },
+            {
+              "check": "donut",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (1.171875 1.171875) (centroid lies in the hole)"
+            },
+            {
+              "check": "c_shape",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (8.828125 1.171875) (centroid lies in the notch)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 46533,
+            "output_tokens": 12259,
+            "output_tokens_details": {
+              "thinking_tokens": 9700
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 12255,
+                "cache_read_input_tokens": 15511,
+                "cache_creation_input_tokens": 0,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 0
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 9700,
+            "duration_ms": 270845,
+            "duration_api_ms": 271660,
+            "total_cost_usd_list": 0.3308785,
+            "duration_s": 271.8389912499988
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "square",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "point POINT (5 5)"
+            },
+            {
+              "check": "donut",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (8.828125 8.828125) (centroid lies in the hole)"
+            },
+            {
+              "check": "c_shape",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (8.828125 1.171875) (centroid lies in the notch)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4758,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 7270,
+            "output_tokens_details": {
+              "thinking_tokens": 5222
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4758,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 7270,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4758,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4758
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 5222,
+            "duration_ms": 85283,
+            "duration_api_ms": 85918,
+            "total_cost_usd_list": 0.23587350000000004,
+            "duration_s": 86.14147233299991
+          },
+          "status": null
+        }
+      ]
+    },
+    "length_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "1deg_equator",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            },
+            {
+              "check": "1deg_at_lat60",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 55799.5, expected 55799.5"
+            },
+            {
+              "check": "1deg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 6707,
+            "cache_read_input_tokens": 43737,
+            "output_tokens": 2809,
+            "output_tokens_details": {
+              "thinking_tokens": 1754
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 6707,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 896,
+                "cache_read_input_tokens": 17387,
+                "cache_creation_input_tokens": 153,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 153
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 1754,
+            "duration_ms": 35850,
+            "duration_api_ms": 36791,
+            "total_cost_usd_list": 0.1603095,
+            "duration_s": 36.63233066599787
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "1deg_equator",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            },
+            {
+              "check": "1deg_at_lat60",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 55799.5, expected 55799.5"
+            },
+            {
+              "check": "1deg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4684,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 3398,
+            "output_tokens_details": {
+              "thinking_tokens": 2741
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4684,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 3398,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4684,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4684
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 2741,
+            "duration_ms": 39768,
+            "duration_api_ms": 40656,
+            "total_cost_usd_list": 0.1383375,
+            "duration_s": 40.605085499999404
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "1deg_equator",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            },
+            {
+              "check": "1deg_at_lat60",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 55799.5, expected 55799.5"
+            },
+            {
+              "check": "1deg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4764,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 3623,
+            "output_tokens_details": {
+              "thinking_tokens": 2494
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4764,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 3623,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4764,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4764
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 2494,
+            "duration_ms": 43301,
+            "duration_api_ms": 44188,
+            "total_cost_usd_list": 0.14476250000000002,
+            "duration_s": 44.079689874999985
+          },
+          "status": null
+        }
+      ]
+    },
+    "position_at": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "quarter_along_leg",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (5.0498, 50.0500), expected ~(5.05, 50.05)"
+            },
+            {
+              "check": "leg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.9998, 10.1004), expected lon near +/-180 (ship crosses the dateline)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4744,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 8501,
+            "output_tokens_details": {
+              "thinking_tokens": 6182
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4744,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 8501,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4744,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4744
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 6182,
+            "duration_ms": 101633,
+            "duration_api_ms": 102391,
+            "total_cost_usd_list": 0.2665345,
+            "duration_s": 102.65393104200484
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "quarter_along_leg",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (5.0498, 50.0500), expected ~(5.05, 50.05)"
+            },
+            {
+              "check": "leg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.9998, 10.1004), expected lon near +/-180 (ship crosses the dateline)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4744,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 5441,
+            "output_tokens_details": {
+              "thinking_tokens": 3795
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4744,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 5441,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4744,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4744
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 3795,
+            "duration_ms": 67774,
+            "duration_api_ms": 68628,
+            "total_cost_usd_list": 0.1900345,
+            "duration_s": 68.51846950000618
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "quarter_along_leg",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (5.0498, 50.0500), expected ~(5.05, 50.05)"
+            },
+            {
+              "check": "leg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.9998, 10.1004), expected lon near +/-180 (ship crosses the dateline)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4824,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 4435,
+            "output_tokens_details": {
+              "thinking_tokens": 2746
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4824,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 4435,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4824,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4824
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 2746,
+            "duration_ms": 52692,
+            "duration_api_ms": 53494,
+            "total_cost_usd_list": 0.1656845,
+            "duration_s": 53.41582075000042
+          },
+          "status": null
+        }
+      ]
+    },
+    "project_line": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "short_line",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "endpoints_ok=True, max offset 0 m"
+            },
+            {
+              "check": "long_line_follows_geodesic",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "max offset from geodesic waypoints 6 km (limit 25)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4769,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 13849,
+            "output_tokens_details": {
+              "thinking_tokens": 10337
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4769,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 13849,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4769,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4769
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 10337,
+            "duration_ms": 164240,
+            "duration_api_ms": 165185,
+            "total_cost_usd_list": 0.4005395,
+            "duration_s": 165.12558670900034
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "short_line",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "endpoints_ok=True, max offset 0 m"
+            },
+            {
+              "check": "long_line_follows_geodesic",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "max offset from geodesic waypoints 1 km (limit 25)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 21331,
+            "cache_read_input_tokens": 26435,
+            "output_tokens": 21367,
+            "output_tokens_details": {
+              "thinking_tokens": 16929
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 21331,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 4820,
+                "cache_read_input_tokens": 15602,
+                "cache_creation_input_tokens": 16562,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 16562
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 16929,
+            "duration_ms": 251803,
+            "duration_api_ms": 252620,
+            "total_cost_usd_list": 0.7619054999999999,
+            "duration_s": 252.6125352090021
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "short_line",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "endpoints_ok=True, max offset 0 m"
+            },
+            {
+              "check": "long_line_follows_geodesic",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "max offset from geodesic waypoints 6 km (limit 25)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 21025,
+            "cache_read_input_tokens": 89442,
+            "output_tokens": 19846,
+            "output_tokens_details": {
+              "thinking_tokens": 16110
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 21025,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 3821,
+                "cache_read_input_tokens": 31540,
+                "cache_creation_input_tokens": 318,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 318
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 16110,
+            "duration_ms": 236427,
+            "duration_api_ms": 237237,
+            "total_cost_usd_list": 0.7523489999999999,
+            "duration_s": 237.153281333
+          },
+          "status": null
+        }
+      ]
+    },
+    "s2_fixture": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "opens_as_4band_utm_10m",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "count=4, dtype=uint16, epsg=32631, res=(10.0, 10.0)"
+            },
+            {
+              "check": "baseline_0400_radiometry",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "nodata=0.0, scales=(0.0001, 0.0001, 0.0001, 0.0001), offsets=(-0.1, -0.1, -0.1, -0.1), tags={'BOA_ADD_OFFSET': '-1000', 'BOA_QUANTIFICATION_VALUE': '10000', 'QUANTIFICATION_VALUE': '10000'}; expected nodata=0 and BOA reflectance = (DN - 1000) / 10000 recorded in band metadata or product tags (baseline 04.00)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4775,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 16522,
+            "output_tokens_details": {
+              "thinking_tokens": 12314
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4775,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 16522,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4775,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4775
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 12314,
+            "duration_ms": 198001,
+            "duration_api_ms": 198915,
+            "total_cost_usd_list": 0.4674585,
+            "duration_s": 199.0477632090042
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "opens_as_4band_utm_10m",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "count=4, dtype=uint16, epsg=32631, res=(10.0, 10.0)"
+            },
+            {
+              "check": "baseline_0400_radiometry",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "nodata=0.0, scales=(0.0001, 0.0001, 0.0001, 0.0001), offsets=(-0.1, -0.1, -0.1, -0.1), tags={'BOA_ADD_OFFSET': '-1000', 'BOA_QUANTIFICATION_VALUE': '10000'}; expected nodata=0 and BOA reflectance = (DN - 1000) / 10000 recorded in band metadata or product tags (baseline 04.00)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4775,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 14978,
+            "output_tokens_details": {
+              "thinking_tokens": 10968
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4775,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 14978,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4775,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4775
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 10968,
+            "duration_ms": 176344,
+            "duration_api_ms": 177295,
+            "total_cost_usd_list": 0.42886850000000004,
+            "duration_s": 177.2165004579947
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "opens_as_4band_utm_10m",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "count=4, dtype=uint16, epsg=32631, res=(10.0, 10.0)"
+            },
+            {
+              "check": "baseline_0400_radiometry",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "nodata=0.0, scales=(0.0001, 0.0001, 0.0001, 0.0001), offsets=(-0.1, -0.1, -0.1, -0.1), tags={'BOA_ADD_OFFSET': '-1000', 'BOA_QUANTIFICATION_VALUE': '10000', 'QUANTIFICATION_VALUE': '10000'}; expected nodata=0 and BOA reflectance = (DN - 1000) / 10000 recorded in band metadata or product tags (baseline 04.00)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4855,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 15848,
+            "output_tokens_details": {
+              "thinking_tokens": 12144
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4855,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 15848,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4855,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4855
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 12144,
+            "duration_ms": 190955,
+            "duration_api_ms": 191685,
+            "total_cost_usd_list": 0.4513985,
+            "duration_s": 191.7788546669999
+          },
+          "status": null
+        }
+      ]
+    },
+    "sample_at": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_pixel_utm_raster",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 42.0, expected 42.0"
+            },
+            {
+              "check": "nodata_sentinel",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (pixel is the -9999 nodata sentinel)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4706,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 2941,
+            "output_tokens_details": {
+              "thinking_tokens": 1940
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4706,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 2941,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4706,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4706
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 1940,
+            "duration_ms": 33488,
+            "duration_api_ms": 34360,
+            "total_cost_usd_list": 0.1271585,
+            "duration_s": 34.247531458000594
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_pixel_utm_raster",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 42.0, expected 42.0"
+            },
+            {
+              "check": "nodata_sentinel",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (pixel is the -9999 nodata sentinel)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4706,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 4757,
+            "output_tokens_details": {
+              "thinking_tokens": 3716
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4706,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 4757,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4706,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4706
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 3716,
+            "duration_ms": 56277,
+            "duration_api_ms": 57159,
+            "total_cost_usd_list": 0.1725585,
+            "duration_s": 57.06292779099749
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_pixel_utm_raster",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 42.0, expected 42.0"
+            },
+            {
+              "check": "nodata_sentinel",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (pixel is the -9999 nodata sentinel)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4786,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 3928,
+            "output_tokens_details": {
+              "thinking_tokens": 3026
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4786,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 3928,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4786,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4786
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 3026,
+            "duration_ms": 45727,
+            "duration_api_ms": 46686,
+            "total_cost_usd_list": 0.1526285,
+            "duration_s": 46.483558166999956
+          },
+          "status": null
+        }
+      ]
+    },
+    "segment_intersection": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "crossing_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (2.0, 2.0), expected (2.0, 2.0)"
+            },
+            {
+              "check": "disjoint_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got None, expected None"
+            },
+            {
+              "check": "collinear_overlap",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ((2.0, 0.0), (5.0, 0.0)), expected the overlap segment ((2,0), (5,0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4738,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 5604,
+            "output_tokens_details": {
+              "thinking_tokens": 3671
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4738,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 5604,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4738,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4738
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 3671,
+            "duration_ms": 61073,
+            "duration_api_ms": 61970,
+            "total_cost_usd_list": 0.1940685,
+            "duration_s": 61.87772224999935
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "crossing_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (2.0, 2.0), expected (2.0, 2.0)"
+            },
+            {
+              "check": "disjoint_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got None, expected None"
+            },
+            {
+              "check": "collinear_overlap",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ((2.0, 0.0), (5.0, 0.0)), expected the overlap segment ((2,0), (5,0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 12,
+            "cache_creation_input_tokens": 23645,
+            "cache_read_input_tokens": 135203,
+            "output_tokens": 22584,
+            "output_tokens_details": {
+              "thinking_tokens": 10328
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 23645,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 4138,
+                "cache_read_input_tokens": 31357,
+                "cache_creation_input_tokens": 3121,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 3121
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 10328,
+            "duration_ms": 334301,
+            "duration_api_ms": 334962,
+            "total_cost_usd_list": 0.8698735000000001,
+            "duration_s": 335.0967313750007
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "crossing_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (2.0, 2.0), expected (2.0, 2.0)"
+            },
+            {
+              "check": "disjoint_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got None, expected None"
+            },
+            {
+              "check": "collinear_overlap",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ((2.0, 0.0), (5.0, 0.0)), expected the overlap segment ((2,0), (5,0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4818,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 8672,
+            "output_tokens_details": {
+              "thinking_tokens": 5949
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4818,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 8672,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4818,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4818
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 5949,
+            "duration_ms": 96721,
+            "duration_api_ms": 97317,
+            "total_cost_usd_list": 0.2715685,
+            "duration_s": 97.57965587499984
+          },
+          "status": null
+        }
+      ]
+    },
+    "shapefile_attrs": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "field_count",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 4 field(s) ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected 4"
+            },
+            {
+              "check": "dbf_truncated_names",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'] (the names as the DBF header stores them)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4701,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 10890,
+            "output_tokens_details": {
+              "thinking_tokens": 8766
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4701,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 10890,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4701,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4701
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 8766,
+            "duration_ms": 122039,
+            "duration_api_ms": 122683,
+            "total_cost_usd_list": 0.3258135,
+            "duration_s": 123.00240962500538
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "field_count",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 4 field(s) ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected 4"
+            },
+            {
+              "check": "dbf_truncated_names",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'] (the names as the DBF header stores them)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 8,
+            "cache_creation_input_tokens": 10728,
+            "cache_read_input_tokens": 68423,
+            "output_tokens": 8786,
+            "output_tokens_details": {
+              "thinking_tokens": 4942
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 10728,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 3240,
+                "cache_read_input_tokens": 21244,
+                "cache_creation_input_tokens": 317,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 317
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 4942,
+            "duration_ms": 100990,
+            "duration_api_ms": 101927,
+            "total_cost_usd_list": 0.3623085,
+            "duration_s": 101.96488595799747
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "field_count",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 4 field(s) ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected 4"
+            },
+            {
+              "check": "dbf_truncated_names",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'] (the names as the DBF header stores them)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 4781,
+            "cache_read_input_tokens": 26447,
+            "output_tokens": 8391,
+            "output_tokens_details": {
+              "thinking_tokens": 6088
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4781,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 8389,
+                "cache_read_input_tokens": 15614,
+                "cache_creation_input_tokens": 0,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 0
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 6088,
+            "duration_ms": 108950,
+            "duration_api_ms": 109684,
+            "total_cost_usd_list": 0.2719555,
+            "duration_s": 109.82404799999995
+          },
+          "status": null
+        }
+      ]
+    },
+    "split_antimeridian": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "non_crossing_passthrough",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "1 part(s), unchanged=True"
+            },
+            {
+              "check": "crossing_box_two_parts",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "2 part(s), max lon span 1.0 deg, area 2.462e+10 (expected 2.462e+10)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4790,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 13864,
+            "output_tokens_details": {
+              "thinking_tokens": 11004
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4790,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 13864,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4790,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4790
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 11004,
+            "duration_ms": 157856,
+            "duration_api_ms": 158664,
+            "total_cost_usd_list": 0.40112849999999994,
+            "duration_s": 158.7312811669981
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "non_crossing_passthrough",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "1 part(s), unchanged=True"
+            },
+            {
+              "check": "crossing_box_two_parts",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "2 part(s), max lon span 1.0 deg, area 2.462e+10 (expected 2.462e+10)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 21436,
+            "cache_read_input_tokens": 26456,
+            "output_tokens": 20865,
+            "output_tokens_details": {
+              "thinking_tokens": 17447
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 21436,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 4260,
+                "cache_read_input_tokens": 15623,
+                "cache_creation_input_tokens": 16646,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 16646
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 17447,
+            "duration_ms": 251538,
+            "duration_api_ms": 252312,
+            "total_cost_usd_list": 0.750435,
+            "duration_s": 252.3471253750031
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "non_crossing_passthrough",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "1 part(s), unchanged=True"
+            },
+            {
+              "check": "crossing_box_two_parts",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "2 part(s), max lon span 1.0 deg, area 2.462e+10 (expected 2.462e+10)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4870,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 20299,
+            "output_tokens_details": {
+              "thinking_tokens": 17066
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4870,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 20299,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4870,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4870
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 17066,
+            "duration_ms": 244280,
+            "duration_api_ms": 245113,
+            "total_cost_usd_list": 0.5628035,
+            "duration_s": 245.25811437499988
+          },
+          "status": null
+        }
+      ]
+    },
+    "tag_points": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_points",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got [0, 1, None], expected [0, 1, None]"
+            },
+            {
+              "check": "point_on_shared_edge",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [0], expected [0] (point on the shared edge; smallest containing index wins)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4784,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 5559,
+            "output_tokens_details": {
+              "thinking_tokens": 4537
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4784,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 5559,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4784,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4784
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 4537,
+            "duration_ms": 64241,
+            "duration_api_ms": 65061,
+            "total_cost_usd_list": 0.19343349999999998,
+            "duration_s": 65.03475779199653
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_points",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got [0, 1, None], expected [0, 1, None]"
+            },
+            {
+              "check": "point_on_shared_edge",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [0], expected [0] (point on the shared edge; smallest containing index wins)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4784,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 4832,
+            "output_tokens_details": {
+              "thinking_tokens": 3826
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4784,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 4832,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4784,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4784
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 3826,
+            "duration_ms": 58061,
+            "duration_api_ms": 58859,
+            "total_cost_usd_list": 0.1752685,
+            "duration_s": 58.832433625000704
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_points",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got [0, 1, None], expected [0, 1, None]"
+            },
+            {
+              "check": "point_on_shared_edge",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [0], expected [0] (point on the shared edge; smallest containing index wins)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4864,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 6163,
+            "output_tokens_details": {
+              "thinking_tokens": 4948
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4864,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 6163,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4864,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4864
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 4948,
+            "duration_ms": 72039,
+            "duration_api_ms": 72778,
+            "total_cost_usd_list": 0.2093435,
+            "duration_s": 72.76765162499987
+          },
+          "status": null
+        }
+      ]
+    },
+    "tile_bounds": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "z0_world",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (-180.0, -85.0511287798066, 180.0, 85.0511287798066)"
+            },
+            {
+              "check": "z2_tms_row_flip",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (-90.0, -66.5133, 0.0, 0.0), expected (-90.0, -66.5133, 0.0, 0.0)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4717,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 2327,
+            "output_tokens_details": {
+              "thinking_tokens": 1104
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4717,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 2327,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4717,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4717
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 1104,
+            "duration_ms": 26595,
+            "duration_api_ms": 27454,
+            "total_cost_usd_list": 0.11190349999999999,
+            "duration_s": 27.377329208997253
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "z0_world",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (-180.0, -85.0511287798066, 180.0, 85.0511287798066)"
+            },
+            {
+              "check": "z2_tms_row_flip",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (-90.0, -66.5133, 0.0, 0.0), expected (-90.0, -66.5133, 0.0, 0.0)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 7605,
+            "cache_read_input_tokens": 44038,
+            "output_tokens": 4362,
+            "output_tokens_details": {
+              "thinking_tokens": 1591
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 7605,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 1616,
+                "cache_read_input_tokens": 17655,
+                "cache_creation_input_tokens": 783,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 783
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 1591,
+            "duration_ms": 48646,
+            "duration_api_ms": 49682,
+            "total_cost_usd_list": 0.208281,
+            "duration_s": 49.41884750000463
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "z0_world",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (-180.0, -85.0511287798066, 180.0, 85.0511287798066)"
+            },
+            {
+              "check": "z2_tms_row_flip",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (-90.0, -66.5133, 0.0, 0.0), expected (-90.0, -66.5133, 0.0, 0.0)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4797,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 2105,
+            "output_tokens_details": {
+              "thinking_tokens": 728
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4797,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 2105,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4797,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4797
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 728,
+            "duration_ms": 24308,
+            "duration_api_ms": 25217,
+            "total_cost_usd_list": 0.1071535,
+            "duration_s": 25.110971250000148
+          },
+          "status": null
+        }
+      ]
+    },
+    "to_rfc7946": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "wgs84_polygon",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "corners_match=True, exterior_ccw=True, no_crs_member=True"
+            },
+            {
+              "check": "mercator_input_reprojected",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "coords_in_lonlat_range=True, corners_match_wgs84=True (first coord (13.1, 52.0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 25505,
+            "cache_read_input_tokens": 62582,
+            "output_tokens": 33364,
+            "output_tokens_details": {
+              "thinking_tokens": 26974
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 25505,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 12749,
+                "cache_read_input_tokens": 36176,
+                "cache_creation_input_tokens": 162,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 162
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 26974,
+            "duration_ms": 396013,
+            "duration_api_ms": 396794,
+            "total_cost_usd_list": 1.1216389999999998,
+            "duration_s": 396.7608373330004
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "wgs84_polygon",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "corners_match=True, exterior_ccw=True, no_crs_member=True"
+            },
+            {
+              "check": "mercator_input_reprojected",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "coords_in_lonlat_range=True, corners_match_wgs84=True (first coord (13.099999999999998, 52.0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 29521,
+            "cache_read_input_tokens": 42095,
+            "output_tokens": 39433,
+            "output_tokens_details": {
+              "thinking_tokens": 34048
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 29521,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 14723,
+                "cache_read_input_tokens": 15631,
+                "cache_creation_input_tokens": 24723,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 24723
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 34048,
+            "duration_ms": 569246,
+            "duration_api_ms": 570199,
+            "total_cost_usd_list": 1.3032854999999999,
+            "duration_s": 570.1609496669998
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "wgs84_polygon",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "corners_match=True, exterior_ccw=True, no_crs_member=True"
+            },
+            {
+              "check": "mercator_input_reprojected",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "coords_in_lonlat_range=True, corners_match_wgs84=True (first coord (13.099999999999998, 52.0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4820,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 38443,
+            "output_tokens_details": {
+              "thinking_tokens": 31775
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4820,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 38443,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4820,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4820
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 31775,
+            "duration_ms": 456823,
+            "duration_api_ms": 457429,
+            "total_cost_usd_list": 1.0158695,
+            "duration_s": 457.720288
+          },
+          "status": null
+        }
+      ]
+    },
+    "utm_epsg_for": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32633, expected 32633"
+            },
+            {
+              "check": "buenos_aires_south",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32721, expected 32721"
+            },
+            {
+              "check": "svalbard_33X",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 32633, expected 32633"
+            },
+            {
+              "check": "norway_32V",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 32632, expected 32632"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4759,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 5126,
+            "output_tokens_details": {
+              "thinking_tokens": 3174
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4759,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 5126,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4759,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4759
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 3174,
+            "duration_ms": 63919,
+            "duration_api_ms": 64803,
+            "total_cost_usd_list": 0.18234250000000002,
+            "duration_s": 64.79290933399898
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32633, expected 32633"
+            },
+            {
+              "check": "buenos_aires_south",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32721, expected 32721"
+            },
+            {
+              "check": "svalbard_33X",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 32633, expected 32633"
+            },
+            {
+              "check": "norway_32V",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 32632, expected 32632"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 9712,
+            "cache_read_input_tokens": 45682,
+            "output_tokens": 6720,
+            "output_tokens_details": {
+              "thinking_tokens": 2981
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 9712,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 1915,
+                "cache_read_input_tokens": 19257,
+                "cache_creation_input_tokens": 1288,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 1288
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 2981,
+            "duration_ms": 74412,
+            "duration_api_ms": 75004,
+            "total_cost_usd_list": 0.28916200000000003,
+            "duration_s": 75.3961927920027
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32633, expected 32633"
+            },
+            {
+              "check": "buenos_aires_south",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32721, expected 32721"
+            },
+            {
+              "check": "svalbard_33X",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 32633, expected 32633"
+            },
+            {
+              "check": "norway_32V",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 32632, expected 32632"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4839,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 4875,
+            "output_tokens_details": {
+              "thinking_tokens": 2884
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4839,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 4875,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4839,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4839
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 2884,
+            "duration_ms": 54624,
+            "duration_api_ms": 55477,
+            "total_cost_usd_list": 0.1768625,
+            "duration_s": 55.415161333000015
+          },
+          "status": null
+        }
+      ]
+    },
+    "voronoi_cells": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "partition_of_bounds",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "5 cells, total area 100.000"
+            },
+            {
+              "check": "cell_order_matches_input",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "cells not containing their own point: none (cell order must match input point order)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 17043,
+            "cache_read_input_tokens": 53858,
+            "output_tokens": 15739,
+            "output_tokens_details": {
+              "thinking_tokens": 12367
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 17043,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 3505,
+                "cache_read_input_tokens": 27439,
+                "cache_creation_input_tokens": 437,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 437
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 12367,
+            "duration_ms": 177434,
+            "duration_api_ms": 178193,
+            "total_cost_usd_list": 0.592038,
+            "duration_s": 178.2879052499993
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "partition_of_bounds",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "5 cells, total area 100.000"
+            },
+            {
+              "check": "cell_order_matches_input",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "cells not containing their own point: none (cell order must match input point order)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 13495,
+            "cache_read_input_tokens": 26419,
+            "output_tokens": 10619,
+            "output_tokens_details": {
+              "thinking_tokens": 8710
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 13495,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 1972,
+                "cache_read_input_tokens": 15586,
+                "cache_creation_input_tokens": 8742,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 8742
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 8710,
+            "duration_ms": 121215,
+            "duration_api_ms": 122119,
+            "total_cost_usd_list": 0.4148335,
+            "duration_s": 121.9832652920013
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "partition_of_bounds",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "5 cells, total area 100.000"
+            },
+            {
+              "check": "cell_order_matches_input",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "cells not containing their own point: none (cell order must match input point order)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 16028,
+            "cache_read_input_tokens": 26499,
+            "output_tokens": 13719,
+            "output_tokens_details": {
+              "thinking_tokens": 11377
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 16028,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 2539,
+                "cache_read_input_tokens": 15666,
+                "cache_creation_input_tokens": 11195,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 11195
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 11377,
+            "duration_ms": 158592,
+            "duration_api_ms": 159406,
+            "total_cost_usd_list": 0.5176985000000001,
+            "duration_s": 159.31520912500037
+          },
+          "status": null
+        }
+      ]
+    },
+    "wkt_from_latlon": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "parses_as_point",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "parsed POINT (13.4 52.5)"
+            },
+            {
+              "check": "axis_order",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got x=13.4, y=52.5; expected x=13.4 (lon), y=52.5 (lat)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4694,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 3514,
+            "output_tokens_details": {
+              "thinking_tokens": 1898
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4694,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 3514,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4694,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4694
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 1898,
+            "duration_ms": 44356,
+            "duration_api_ms": 45139,
+            "total_cost_usd_list": 0.14135250000000002,
+            "duration_s": 45.17435583299812
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "parses_as_point",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "parsed POINT (13.4 52.5)"
+            },
+            {
+              "check": "axis_order",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got x=13.4, y=52.5; expected x=13.4 (lon), y=52.5 (lat)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4694,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 3196,
+            "output_tokens_details": {
+              "thinking_tokens": 1625
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4694,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 3196,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4694,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4694
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 1625,
+            "duration_ms": 38438,
+            "duration_api_ms": 39295,
+            "total_cost_usd_list": 0.1334025,
+            "duration_s": 39.19339329200011
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "parses_as_point",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "parsed POINT (13.4 52.5)"
+            },
+            {
+              "check": "axis_order",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got x=13.4, y=52.5; expected x=13.4 (lon), y=52.5 (lat)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4774,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 3063,
+            "output_tokens_details": {
+              "thinking_tokens": 1533
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4774,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 3063,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4774,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4774
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 1533,
+            "duration_ms": 35121,
+            "duration_api_ms": 35911,
+            "total_cost_usd_list": 0.1308775,
+            "duration_s": 35.87755941700016
+          },
+          "status": null
+        }
+      ]
+    },
+    "zonal_mean": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "full_clean_region",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 64.5, expected 64.5"
+            },
+            {
+              "check": "partial_pixels_and_nodata",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 22.5, expected 22.5 (pixel-centre rule, -9999 sentinel excluded)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4749,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 7321,
+            "output_tokens_details": {
+              "thinking_tokens": 5850
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4749,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 7321,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4749,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4749
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 5850,
+            "duration_ms": 84901,
+            "duration_api_ms": 85822,
+            "total_cost_usd_list": 0.2370995,
+            "duration_s": 85.80338087499695
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "full_clean_region",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 64.5, expected 64.5"
+            },
+            {
+              "check": "partial_pixels_and_nodata",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 22.5, expected 22.5 (pixel-centre rule, -9999 sentinel excluded)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4749,
+            "cache_read_input_tokens": 10833,
+            "output_tokens": 6362,
+            "output_tokens_details": {
+              "thinking_tokens": 4960
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4749,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 6362,
+                "cache_read_input_tokens": 10833,
+                "cache_creation_input_tokens": 4749,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4749
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 4960,
+            "duration_ms": 75790,
+            "duration_api_ms": 76691,
+            "total_cost_usd_list": 0.2131245,
+            "duration_s": 76.60318512500089
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "full_clean_region",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 64.5, expected 64.5"
+            },
+            {
+              "check": "partial_pixels_and_nodata",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 22.5, expected 22.5 (pixel-centre rule, -9999 sentinel excluded)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 6,
+            "cache_creation_input_tokens": 10478,
+            "cache_read_input_tokens": 47641,
+            "output_tokens": 7203,
+            "output_tokens_details": {
+              "thinking_tokens": 5268
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 10478,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 1676,
+                "cache_read_input_tokens": 21146,
+                "cache_creation_input_tokens": 165,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 165
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 5268,
+            "duration_ms": 82798,
+            "duration_api_ms": 83541,
+            "total_cost_usd_list": 0.30986349999999996,
+            "duration_s": 83.84063091600001
+          },
+          "status": null
+        }
+      ]
+    }
+  }
+}

@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import hashlib
+import importlib
 import json
 import re
 import sys
@@ -571,6 +572,23 @@ def _print_verdicts(model_id: str, trial: int, outcomes: list[TrialOutcome]) -> 
     )
 
 
+#: What every oracle imports. The grader runs in ``sys.executable`` — the
+#: runner's own interpreter — so if these do not import here they will not
+#: import there, and every trial grades as LOUD on ``ModuleNotFoundError``.
+GRADER_MODULES: tuple[str, ...] = ("numpy", "pyproj", "shapely")
+
+
+def missing_grader_modules() -> list[str]:
+    """Names in :data:`GRADER_MODULES` that this interpreter cannot import."""
+    missing = []
+    for name in GRADER_MODULES:
+        try:
+            importlib.import_module(name)
+        except ImportError:
+            missing.append(name)
+    return missing
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="geocase.benchmark run")
     ap.add_argument("--config", type=Path, required=True)
@@ -614,6 +632,19 @@ def main(argv: list[str] | None = None) -> int:
         config.setdefault("defaults", {})["trials"] = args.trials
     if args.max_usd is not None:
         config.setdefault("budget", {})["max_usd_total"] = args.max_usd
+
+    # Before anything is spent, dry-run included: on 2026-09-14 a run launched
+    # under the wrong interpreter made 138 calls whose every grading pass then
+    # died on import, and rewrote three records empty on resume.
+    missing = missing_grader_modules()
+    if missing:
+        print(
+            f"error: the grader cannot import {', '.join(missing)} under "
+            f"{sys.executable} — activate the conda `geocase` env "
+            f"(`conda activate geocase`) and rerun",
+            file=sys.stderr,
+        )
+        return 2
 
     from geocase.benchmark.cli import EmptySelectionError, select_tasks
 

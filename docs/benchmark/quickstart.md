@@ -208,6 +208,11 @@ Export it in your shell — never put a key in a config file in this repository.
 The runner reads it from the environment only, refuses to start without it, and
 never logs it.
 
+Run from the conda `geocase` env. The grader runs in the same interpreter as
+the runner, and `run` refuses to start (exit 2, dry-run included) if that
+interpreter cannot import `numpy`, `pyproj` or `shapely` — otherwise every
+trial would grade `LOUD` on `ModuleNotFoundError` after the calls were spent.
+
 Always plan the run first. `--dry-run` makes no network calls:
 
 ```bash
