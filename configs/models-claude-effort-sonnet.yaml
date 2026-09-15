@@ -29,4 +29,6 @@ models:
     label: Sonnet 5 (Claude Code CLI)
     tracks: [effort]
     provider: claude-cli
-    effort: [low, medium, high, xhigh, max]
+    # max dropped 2026-09-15: four arms (276 calls) fit the remaining daily quota;
+    # add it back and rerun the same command to fill the fifth arm.
+    effort: [low, medium, high, xhigh]
