@@ -1,0 +1,54 @@
+{
+  "task": "geohash_neighbors",
+  "model": "claude-fable-5-1",
+  "trial": 2,
+  "track": "effort",
+  "protocol": "claude-code",
+  "effort": "low",
+  "harness_version": "claude-cli/2.1.263",
+  "preamble": "claude-code-harness",
+  "prompt_sha256": "020a02578e1e4bb5d9f27097002921c4066aa5fd5aeeb8ad48c0e7c432d9ff3c",
+  "prompt_version": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 16317,
+    "output_tokens": 1342,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1342,
+        "cache_read_input_tokens": 16317,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message",
+        "model": null
+      }
+    ],
+    "speed": "standard",
+    "effort": "low",
+    "thinking_tokens": 0,
+    "duration_ms": 13714,
+    "duration_api_ms": 14608,
+    "total_cost_usd_list": 0.07234325000000003,
+    "duration_s": 14.741029874999981
+  },
+  "extracted": true
+}

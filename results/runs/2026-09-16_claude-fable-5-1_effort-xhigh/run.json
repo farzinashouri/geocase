@@ -1,0 +1,3017 @@
+{
+  "schema_version": 2,
+  "run_id": "2026-09-16_claude-fable-5-1_effort-xhigh",
+  "date": "2026-09-16",
+  "domain": "geo",
+  "model": {
+    "id": "claude-fable-5-1",
+    "label": "Fable 5.1 (Claude Code CLI)",
+    "provider": "claude-cli"
+  },
+  "track": "effort",
+  "protocol": "claude-code",
+  "effort": "xhigh",
+  "harness_version": "claude-cli/2.1.263",
+  "preamble": "claude-code-harness",
+  "runner": {
+    "name": "geocase-benchmark",
+    "version": "2.0.0.dev0"
+  },
+  "config": {
+    "trials": 3,
+    "temperature": null,
+    "max_turns": null,
+    "variant_seed": null,
+    "sandbox_requirements_sha256": null,
+    "prompt_sha256": {
+      "area_m2": "c42be34198b2a8788f70e3f794cd2e16f52837e78906a42dda63bd6d3199e16f",
+      "cluster_points_m": "dea94540d289d1540d190051659550fc97f0ab5c758999c96ef545d05e351b1b",
+      "dedupe_geoms": "baea32f4acbadd1088e56f950b1773277feee0e71eadb19e7dafd2f1da63c413",
+      "fix_geometry": "2fc1361ca73e9b02d62ad0881efe29cc4f49d09ea40eb473b847708c56ce58aa",
+      "geohash_neighbors": "020a02578e1e4bb5d9f27097002921c4066aa5fd5aeeb8ad48c0e7c432d9ff3c",
+      "geojson_bounds": "f6e109ac4ebb88eaf8a8211e63e2edd95ce58e003fc606dc3e9d3a2520070e8e",
+      "label_point": "ddc6a5752442069704733a59c7d959c6ebbf0e4cdfa91106a586cce643adfd4a",
+      "length_m": "fb6f18b6c939deeacdca78dcb72e21fb5a7aeda872b9140d563112c620d9a476",
+      "position_at": "beeebe594ea203353f6a2aa391f24c5abd7d7ddf487823a4363493daa732f997",
+      "project_line": "56000143a67d3be5460facb90cc688607af29ed60ca3f6fc5ef81feb4a77c47b",
+      "s2_fixture": "40163418abf460ee71a9a5420d6507a840797b8ee490e3d0867b4cd3d830e461",
+      "sample_at": "0057c74f7c52363e7317de45290b233358b880bae5ad776c390c1c0a51a66348",
+      "segment_intersection": "d8ef1d58567826671a392352615e57549c39e5b96229c1badb134feeac53506e",
+      "shapefile_attrs": "5d1bf11577f5891ddc4990d748b03e8213174c1057c91adbb8fe7bc9181d9368",
+      "split_antimeridian": "fdb9f643dc5135a8cd0938bf0e4ef26334077796f6a549f85daaa4e2f26096bd",
+      "tag_points": "cdd8a4e1b186a4dbe0c9922bce4dddc13a44142a152e05f694bbeebf7189e865",
+      "tile_bounds": "d84f032cc7f208bda62d53f2bde26cb0aee26736cb948ae8c0f93bd5a122ee4b",
+      "utm_epsg_for": "af105d092262ff381e88d7ada72e192e6c147e6b8a43c3d357f7561640a37655",
+      "voronoi_cells": "b617bcc8d7883cd0f7e7ee1d738eed33766c4c0737aa3e741d3ff87ed36d03d9",
+      "wkt_from_latlon": "1d93471df7e7f5d7b5893b1e31fa29e6b797bc15b664c925410a07ba0c72469d",
+      "zonal_mean": "7e462cc8194b95d185d315de4cd4cf436df0087f9910a9229f9136b7338d457e"
+    }
+  },
+  "cost_usd": null,
+  "integrity": {
+    "tasks_attempted": 69,
+    "api_failures": 33,
+    "publishable": false,
+    "by_trial": {
+      "trial1": {
+        "tasks_attempted": 23,
+        "api_failures": 2
+      },
+      "trial2": {
+        "tasks_attempted": 23,
+        "api_failures": 8
+      },
+      "trial3": {
+        "tasks_attempted": 23,
+        "api_failures": 23
+      }
+    }
+  },
+  "tasks": {
+    "area_m2": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_box",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 7.633e+07, expected 7.633e+07"
+            },
+            {
+              "check": "antimeridian_box",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 2.462e+10, expected 2.462e+10 (2x1 deg box)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 226,
+            "cache_creation_input_tokens": 32022,
+            "cache_read_input_tokens": 255427,
+            "output_tokens": 25647,
+            "output_tokens_details": {
+              "thinking_tokens": 22589
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 32022,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 3948,
+                "cache_read_input_tokens": 42791,
+                "cache_creation_input_tokens": 920,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 920
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 22589,
+            "duration_ms": 318843,
+            "duration_api_ms": 318558,
+            "total_cost_usd_list": 1.9900757500000004,
+            "duration_s": 319.66701233300046
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_box",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 7.633e+07, expected 7.633e+07"
+            },
+            {
+              "check": "antimeridian_box",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 2.462e+10, expected 2.462e+10 (2x1 deg box)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 98,
+            "cache_creation_input_tokens": 28936,
+            "cache_read_input_tokens": 104599,
+            "output_tokens": 26000,
+            "output_tokens_details": {
+              "thinking_tokens": 19980
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 28936,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 1931,
+                "cache_read_input_tokens": 38720,
+                "cache_creation_input_tokens": 1905,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 1905
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 19980,
+            "duration_ms": 298455,
+            "duration_api_ms": 299161,
+            "total_cost_usd_list": 1.9070187499999998,
+            "duration_s": 299.32624337499874
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_area_m2.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "buffer_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_buffer_m.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_buffer_m.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_buffer_m.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "cluster_points_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "300m_pair_plus_outlier",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "labels [0, 0, 1]"
+            },
+            {
+              "check": "east_west_at_75N",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~346 m apart)"
+            },
+            {
+              "check": "pair_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~222 m apart)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 34,
+            "cache_creation_input_tokens": 20290,
+            "cache_read_input_tokens": 28162,
+            "output_tokens": 18603,
+            "output_tokens_details": {
+              "thinking_tokens": 12292
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 20290,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 3173,
+                "cache_read_input_tokens": 16473,
+                "cache_creation_input_tokens": 15506,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 15506
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 12292,
+            "duration_ms": 198677,
+            "duration_api_ms": 199452,
+            "total_cost_usd_list": 1.3445325000000001,
+            "duration_s": 199.55758174999937
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "300m_pair_plus_outlier",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "labels [0, 0, 1]"
+            },
+            {
+              "check": "east_west_at_75N",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~346 m apart)"
+            },
+            {
+              "check": "pair_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~222 m apart)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4784,
+            "cache_read_input_tokens": 11689,
+            "output_tokens": 16825,
+            "output_tokens_details": {
+              "thinking_tokens": 13087
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4784,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 16825,
+                "cache_read_input_tokens": 11689,
+                "cache_creation_input_tokens": 4784,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4784
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 13087,
+            "duration_ms": 198367,
+            "duration_api_ms": 199138,
+            "total_cost_usd_list": 0.94106925,
+            "duration_s": 199.33783558399955
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_cluster_points_m.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "dedupe_geoms": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "exact_duplicates",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "kept 2 of 3 (expected 2: square, triangle, in order)"
+            },
+            {
+              "check": "rotated_reversed_ring",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "kept 1 of 2 (same ring, rotated start vertex and reversed orientation \u2014 expected 1)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 98,
+            "cache_creation_input_tokens": 12060,
+            "cache_read_input_tokens": 72239,
+            "output_tokens": 9222,
+            "output_tokens_details": {
+              "thinking_tokens": 6268
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 12060,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 2045,
+                "cache_read_input_tokens": 22144,
+                "cache_creation_input_tokens": 1605,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 1605
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 6268,
+            "duration_ms": 121306,
+            "duration_api_ms": 122053,
+            "total_cost_usd_list": 0.7224837500000001,
+            "duration_s": 122.12416112499977
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "exact_duplicates",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "kept 2 of 3 (expected 2: square, triangle, in order)"
+            },
+            {
+              "check": "rotated_reversed_ring",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "kept 1 of 2 (same ring, rotated start vertex and reversed orientation \u2014 expected 1)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 162,
+            "cache_creation_input_tokens": 15636,
+            "cache_read_input_tokens": 121019,
+            "output_tokens": 12414,
+            "output_tokens_details": {
+              "thinking_tokens": 7742
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 15636,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 2002,
+                "cache_read_input_tokens": 25502,
+                "cache_creation_input_tokens": 1823,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 1823
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 7742,
+            "duration_ms": 141846,
+            "duration_api_ms": 141845,
+            "total_cost_usd_list": 0.96643875,
+            "duration_s": 142.75567670800228
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_dedupe_geoms.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "fix_geometry": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_input_unchanged",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, area 64 (expected 64)"
+            },
+            {
+              "check": "bowtie_keeps_both_lobes",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 50 (expected 50), both_lobes=True (buffer(0) keeps only one)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 66,
+            "cache_creation_input_tokens": 18868,
+            "cache_read_input_tokens": 58530,
+            "output_tokens": 32429,
+            "output_tokens_details": {
+              "thinking_tokens": 28557
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 18868,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 18373,
+                "cache_read_input_tokens": 30405,
+                "cache_creation_input_tokens": 152,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 152
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 28557,
+            "duration_ms": 375183,
+            "duration_api_ms": 375876,
+            "total_cost_usd_list": 2.0152555000000003,
+            "duration_s": 376.23130825000044
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_input_unchanged",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, area 64 (expected 64)"
+            },
+            {
+              "check": "bowtie_keeps_both_lobes",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 50 (expected 50), both_lobes=True (buffer(0) keeps only one)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 66,
+            "cache_creation_input_tokens": 8093,
+            "cache_read_input_tokens": 55283,
+            "output_tokens": 11220,
+            "output_tokens_details": {
+              "thinking_tokens": 7160
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 8093,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 3310,
+                "cache_read_input_tokens": 22411,
+                "cache_creation_input_tokens": 2118,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 2118
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 7160,
+            "duration_ms": 133244,
+            "duration_api_ms": 134044,
+            "total_cost_usd_list": 0.73849375,
+            "duration_s": 134.08191187500051
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_fix_geometry.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "geohash_neighbors": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_cell",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g'], expected ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g']"
+            },
+            {
+              "check": "equator_meridian_corner",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003'], expected ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003']"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 98,
+            "cache_creation_input_tokens": 13893,
+            "cache_read_input_tokens": 71886,
+            "output_tokens": 15638,
+            "output_tokens_details": {
+              "thinking_tokens": 7885
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 13893,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 6704,
+                "cache_read_input_tokens": 23115,
+                "cache_creation_input_tokens": 2467,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 2467
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 7885,
+            "duration_ms": 164649,
+            "duration_api_ms": 165602,
+            "total_cost_usd_list": 1.0798554999999999,
+            "duration_s": 165.51697704199978
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_cell",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g'], expected ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g']"
+            },
+            {
+              "check": "equator_meridian_corner",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003'], expected ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003']"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 66,
+            "cache_creation_input_tokens": 9177,
+            "cache_read_input_tokens": 47008,
+            "output_tokens": 12795,
+            "output_tokens_details": {
+              "thinking_tokens": 7870
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 9177,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 8454,
+                "cache_read_input_tokens": 18908,
+                "cache_creation_input_tokens": 1958,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 1958
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 7870,
+            "duration_ms": 135974,
+            "duration_api_ms": 136692,
+            "total_cost_usd_list": 0.836846,
+            "duration_s": 136.9134366670005
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_geohash_neighbors.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "geojson_bounds": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_polygon",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (13.0, 52.0, 13.1, 52.1), expected (13.0, 52.0, 13.1, 52.1)"
+            },
+            {
+              "check": "antimeridian_polygon",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.0, 0.0, -179.0, 1.0), spanning 2 deg of longitude for a polygon 2 deg wide (expected a bbox that crosses the antimeridian, not its 358 deg complement)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4752,
+            "cache_read_input_tokens": 11689,
+            "output_tokens": 26787,
+            "output_tokens_details": {
+              "thinking_tokens": 23506
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4752,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 26787,
+                "cache_read_input_tokens": 11689,
+                "cache_creation_input_tokens": 4752,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4752
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 23506,
+            "duration_ms": 309364,
+            "duration_api_ms": 310395,
+            "total_cost_usd_list": 1.4385022499999995,
+            "duration_s": 310.2219218749997
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_geojson_bounds.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_geojson_bounds.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "label_point": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "square",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "point POINT (5.000000000000001 5)"
+            },
+            {
+              "check": "donut",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (8.828125 8.828125) (centroid lies in the hole)"
+            },
+            {
+              "check": "c_shape",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (8.828125 1.171875) (centroid lies in the notch)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 66,
+            "cache_creation_input_tokens": 10108,
+            "cache_read_input_tokens": 49700,
+            "output_tokens": 11084,
+            "output_tokens_details": {
+              "thinking_tokens": 8286
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 10108,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 5719,
+                "cache_read_input_tokens": 21644,
+                "cache_creation_input_tokens": 153,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 153
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 8286,
+            "duration_ms": 124522,
+            "duration_api_ms": 125359,
+            "total_cost_usd_list": 0.7705520000000001,
+            "duration_s": 125.52445470900057
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "square",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "point POINT (5.000000000000001 5)"
+            },
+            {
+              "check": "donut",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (8.828125 8.828125) (centroid lies in the hole)"
+            },
+            {
+              "check": "c_shape",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (8.828125 1.171875) (centroid lies in the notch)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 98,
+            "cache_creation_input_tokens": 11364,
+            "cache_read_input_tokens": 70425,
+            "output_tokens": 8752,
+            "output_tokens_details": {
+              "thinking_tokens": 1595
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 11364,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 2295,
+                "cache_read_input_tokens": 22559,
+                "cache_creation_input_tokens": 494,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 494
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 1595,
+            "duration_ms": 88005,
+            "duration_api_ms": 88673,
+            "total_cost_usd_list": 0.6845732499999999,
+            "duration_s": 88.75150070900054
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_label_point.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "length_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "1deg_equator",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            },
+            {
+              "check": "1deg_at_lat60",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 55799.5, expected 55799.5"
+            },
+            {
+              "check": "1deg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4684,
+            "cache_read_input_tokens": 11689,
+            "output_tokens": 2253,
+            "output_tokens_details": {
+              "thinking_tokens": 1556
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4684,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 2253,
+                "cache_read_input_tokens": 11689,
+                "cache_creation_input_tokens": 4684,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4684
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 1556,
+            "duration_ms": 28959,
+            "duration_api_ms": 31984,
+            "total_cost_usd_list": 0.21039325,
+            "duration_s": 29.754655417000322
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "1deg_equator",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            },
+            {
+              "check": "1deg_at_lat60",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 55799.5, expected 55799.5"
+            },
+            {
+              "check": "1deg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 98,
+            "cache_creation_input_tokens": 8557,
+            "cache_read_input_tokens": 66232,
+            "output_tokens": 4749,
+            "output_tokens_details": {
+              "thinking_tokens": 1835
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 8557,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 1037,
+                "cache_read_input_tokens": 19502,
+                "cache_creation_input_tokens": 744,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 744
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 1835,
+            "duration_ms": 52234,
+            "duration_api_ms": 53132,
+            "total_cost_usd_list": 0.427249,
+            "duration_s": 52.98449624999921
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_length_m.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "position_at": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "quarter_along_leg",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (5.0498, 50.0500), expected ~(5.05, 50.05)"
+            },
+            {
+              "check": "leg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.9998, 10.1004), expected lon near +/-180 (ship crosses the dateline)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4744,
+            "cache_read_input_tokens": 11689,
+            "output_tokens": 7332,
+            "output_tokens_details": {
+              "thinking_tokens": 6006
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4744,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 7332,
+                "cache_read_input_tokens": 11689,
+                "cache_creation_input_tokens": 4744,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4744
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 6006,
+            "duration_ms": 83486,
+            "duration_api_ms": 84303,
+            "total_cost_usd_list": 0.46558025000000003,
+            "duration_s": 84.34778816700054
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "quarter_along_leg",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (5.0498, 50.0500), expected ~(5.05, 50.05)"
+            },
+            {
+              "check": "leg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.9998, 10.1004), expected lon near +/-180 (ship crosses the dateline)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 66,
+            "cache_creation_input_tokens": 13965,
+            "cache_read_input_tokens": 51197,
+            "output_tokens": 12762,
+            "output_tokens_details": {
+              "thinking_tokens": 4716
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 13965,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 2122,
+                "cache_read_input_tokens": 23075,
+                "cache_creation_input_tokens": 2579,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 2579
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 4716,
+            "duration_ms": 128676,
+            "duration_api_ms": 129184,
+            "total_cost_usd_list": 0.93200225,
+            "duration_s": 129.48510145800174
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_position_at.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "project_line": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "short_line",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "endpoints_ok=True, max offset 0 m"
+            },
+            {
+              "check": "long_line_follows_geodesic",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "max offset from geodesic waypoints 0 km (limit 25)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4769,
+            "cache_read_input_tokens": 11689,
+            "output_tokens": 37246,
+            "output_tokens_details": {
+              "thinking_tokens": 34239
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4769,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 37246,
+                "cache_read_input_tokens": 11689,
+                "cache_creation_input_tokens": 4769,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4769
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 34239,
+            "duration_ms": 431429,
+            "duration_api_ms": 432450,
+            "total_cost_usd_list": 1.9618052499999998,
+            "duration_s": 432.43483445899983
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "short_line",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "endpoints_ok=True, max offset 0 m"
+            },
+            {
+              "check": "long_line_follows_geodesic",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "max offset from geodesic waypoints 0 km (limit 25)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 130,
+            "cache_creation_input_tokens": 30620,
+            "cache_read_input_tokens": 153414,
+            "output_tokens": 35810,
+            "output_tokens_details": {
+              "thinking_tokens": 31398
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 30620,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 10318,
+                "cache_read_input_tokens": 42108,
+                "cache_creation_input_tokens": 201,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 201
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 31398,
+            "duration_ms": 428543,
+            "duration_api_ms": 428379,
+            "total_cost_usd_list": 2.4437365,
+            "duration_s": 429.4228790829984
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_project_line.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "s2_fixture": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "opens_as_4band_utm_10m",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "count=4, dtype=uint16, epsg=32631, res=(10.0, 10.0)"
+            },
+            {
+              "check": "baseline_0400_radiometry",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "nodata=0.0, scales=(0.0001, 0.0001, 0.0001, 0.0001), offsets=(-0.1, -0.1, -0.1, -0.1), tags={'BOA_ADD_OFFSET': '-1000', 'BOA_QUANTIFICATION_VALUE': '10000'}; expected nodata=0 and BOA reflectance = (DN - 1000) / 10000 recorded in band metadata or product tags (baseline 04.00)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 130,
+            "cache_creation_input_tokens": 14456,
+            "cache_read_input_tokens": 105442,
+            "output_tokens": 18265,
+            "output_tokens_details": {
+              "thinking_tokens": 14354
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 14456,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 8825,
+                "cache_read_input_tokens": 25986,
+                "cache_creation_input_tokens": 159,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 159
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 14354,
+            "duration_ms": 206677,
+            "duration_api_ms": 207782,
+            "total_cost_usd_list": 1.2312575000000001,
+            "duration_s": 207.61157674999959
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "opens_as_4band_utm_10m",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "count=4, dtype=uint16, epsg=32632, res=(10.0, 10.0)"
+            },
+            {
+              "check": "baseline_0400_radiometry",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "nodata=0.0, scales=(1.0, 1.0, 1.0, 1.0), offsets=(0.0, 0.0, 0.0, 0.0), tags={'BOA_ADD_OFFSET': '-1000', 'BOA_QUANTIFICATION_VALUE': '10000'}; expected nodata=0 and BOA reflectance = (DN - 1000) / 10000 recorded in band metadata or product tags (baseline 04.00)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 66,
+            "cache_creation_input_tokens": 21142,
+            "cache_read_input_tokens": 60798,
+            "output_tokens": 20576,
+            "output_tokens_details": {
+              "thinking_tokens": 17051
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 21142,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 4449,
+                "cache_read_input_tokens": 32645,
+                "cache_creation_input_tokens": 186,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 186
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 17051,
+            "duration_ms": 243562,
+            "duration_api_ms": 244076,
+            "total_cost_usd_list": 1.4687265,
+            "duration_s": 244.31807308400312
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_s2_fixture.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "sample_at": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_pixel_utm_raster",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 42.0, expected 42.0"
+            },
+            {
+              "check": "nodata_sentinel",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (pixel is the -9999 nodata sentinel)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4706,
+            "cache_read_input_tokens": 11689,
+            "output_tokens": 5837,
+            "output_tokens_details": {
+              "thinking_tokens": 4880
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4706,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 5837,
+                "cache_read_input_tokens": 11689,
+                "cache_creation_input_tokens": 4706,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4706
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 4880,
+            "duration_ms": 65520,
+            "duration_api_ms": 66518,
+            "total_cost_usd_list": 0.3900592500000001,
+            "duration_s": 66.53565020799942
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_pixel_utm_raster",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 42.0, expected 42.0"
+            },
+            {
+              "check": "nodata_sentinel",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (pixel is the -9999 nodata sentinel)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4706,
+            "cache_read_input_tokens": 11689,
+            "output_tokens": 5689,
+            "output_tokens_details": {
+              "thinking_tokens": 4712
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4706,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 5689,
+                "cache_read_input_tokens": 11689,
+                "cache_creation_input_tokens": 4706,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4706
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 4712,
+            "duration_ms": 64544,
+            "duration_api_ms": 65388,
+            "total_cost_usd_list": 0.38265925,
+            "duration_s": 65.27868754099472
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_sample_at.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "segment_intersection": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "crossing_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (2.0, 2.0), expected (2.0, 2.0)"
+            },
+            {
+              "check": "disjoint_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got None, expected None"
+            },
+            {
+              "check": "collinear_overlap",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ((2.0, 0.0), (5.0, 0.0)), expected the overlap segment ((2,0), (5,0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 66,
+            "cache_creation_input_tokens": 11264,
+            "cache_read_input_tokens": 48809,
+            "output_tokens": 8454,
+            "output_tokens_details": {
+              "thinking_tokens": 2448
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 11264,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 2043,
+                "cache_read_input_tokens": 20693,
+                "cache_creation_input_tokens": 2260,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 2260
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 2448,
+            "duration_ms": 86909,
+            "duration_api_ms": 87746,
+            "total_cost_usd_list": 0.66200425,
+            "duration_s": 87.7723439170004
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "crossing_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (2.0, 2.0), expected (2.0, 2.0)"
+            },
+            {
+              "check": "disjoint_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got None, expected None"
+            },
+            {
+              "check": "collinear_overlap",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ((2.0, 0.0), (5.0, 0.0)), expected the overlap segment ((2,0), (5,0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 66,
+            "cache_creation_input_tokens": 12470,
+            "cache_read_input_tokens": 49911,
+            "output_tokens": 10973,
+            "output_tokens_details": {
+              "thinking_tokens": 5078
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 12470,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 3358,
+                "cache_read_input_tokens": 21795,
+                "cache_creation_input_tokens": 2364,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 2364
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 5078,
+            "duration_ms": 110627,
+            "duration_api_ms": 111283,
+            "total_cost_usd_list": 0.8123497500000001,
+            "duration_s": 111.38515233300132
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_segment_intersection.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "shapefile_attrs": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "field_count",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 4 field(s) ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected 4"
+            },
+            {
+              "check": "dbf_truncated_names",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'] (the names as the DBF header stores them)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 194,
+            "cache_creation_input_tokens": 43909,
+            "cache_read_input_tokens": 202769,
+            "output_tokens": 38880,
+            "output_tokens_details": {
+              "thinking_tokens": 21829
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 43909,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 6889,
+                "cache_read_input_tokens": 48393,
+                "cache_creation_input_tokens": 7205,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 7205
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 21829,
+            "duration_ms": 442337,
+            "duration_api_ms": 442964,
+            "total_cost_usd_list": 2.8759442500000003,
+            "duration_s": 443.3956678329996
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "field_count",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 4 field(s) ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected 4"
+            },
+            {
+              "check": "dbf_truncated_names",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'] (the names as the DBF header stores them)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4701,
+            "cache_read_input_tokens": 11689,
+            "output_tokens": 17999,
+            "output_tokens_details": {
+              "thinking_tokens": 14675
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4701,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 17999,
+                "cache_read_input_tokens": 11689,
+                "cache_creation_input_tokens": 4701,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4701
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 14675,
+            "duration_ms": 201194,
+            "duration_api_ms": 202075,
+            "total_cost_usd_list": 0.9980442500000001,
+            "duration_s": 202.0646435000017
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_shapefile_attrs.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "split_antimeridian": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "non_crossing_passthrough",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "1 part(s), unchanged=True"
+            },
+            {
+              "check": "crossing_box_two_parts",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "2 part(s), max lon span 1.0 deg, area 2.462e+10 (expected 2.462e+10)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 98,
+            "cache_creation_input_tokens": 28661,
+            "cache_read_input_tokens": 108132,
+            "output_tokens": 29925,
+            "output_tokens_details": {
+              "thinking_tokens": 26430
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 28661,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 6246,
+                "cache_read_input_tokens": 40167,
+                "cache_creation_input_tokens": 183,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 183
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 26430,
+            "duration_ms": 355264,
+            "duration_api_ms": 354945,
+            "total_cost_usd_list": 2.0986849999999997,
+            "duration_s": 356.16102675
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_split_antimeridian.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_split_antimeridian.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "tag_points": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_points",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got [0, 1, None], expected [0, 1, None]"
+            },
+            {
+              "check": "point_on_shared_edge",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [0], expected [0] (point on the shared edge; smallest containing index wins)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 98,
+            "cache_creation_input_tokens": 12423,
+            "cache_read_input_tokens": 72856,
+            "output_tokens": 9043,
+            "output_tokens_details": {
+              "thinking_tokens": 4798
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 12423,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 1607,
+                "cache_read_input_tokens": 22990,
+                "cache_creation_input_tokens": 1122,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 1122
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 4798,
+            "duration_ms": 100344,
+            "duration_api_ms": 101071,
+            "total_cost_usd_list": 0.720996,
+            "duration_s": 101.16972983300002
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_points",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got [0, 1, None], expected [0, 1, None]"
+            },
+            {
+              "check": "point_on_shared_edge",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [0], expected [0] (point on the shared edge; smallest containing index wins)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 130,
+            "cache_creation_input_tokens": 10152,
+            "cache_read_input_tokens": 92464,
+            "output_tokens": 7389,
+            "output_tokens_details": {
+              "thinking_tokens": 3306
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 10152,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 1272,
+                "cache_read_input_tokens": 22044,
+                "cache_creation_input_tokens": 798,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 798
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 3306,
+            "duration_ms": 83606,
+            "duration_api_ms": 84396,
+            "total_cost_usd_list": 0.598103,
+            "duration_s": 85.06558595800016
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_tag_points.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "tile_bounds": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "z0_world",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (-180.0, -85.0511287798066, 180.0, 85.0511287798066)"
+            },
+            {
+              "check": "z2_tms_row_flip",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (-90.0, -66.5133, 0.0, 0.0), expected (-90.0, -66.5133, 0.0, 0.0)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 98,
+            "cache_creation_input_tokens": 10992,
+            "cache_read_input_tokens": 71277,
+            "output_tokens": 8116,
+            "output_tokens_details": {
+              "thinking_tokens": 4054
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 10992,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 2000,
+                "cache_read_input_tokens": 22086,
+                "cache_creation_input_tokens": 595,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 595
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 4054,
+            "duration_ms": 88775,
+            "duration_api_ms": 89487,
+            "total_cost_usd_list": 0.6455712499999999,
+            "duration_s": 89.63019333299962
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "z0_world",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (-180.0, -85.0511287798066, 180.0, 85.0511287798066)"
+            },
+            {
+              "check": "z2_tms_row_flip",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (-90.0, -66.5133, 0.0, 0.0), expected (-90.0, -66.5133, 0.0, 0.0)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4717,
+            "cache_read_input_tokens": 11689,
+            "output_tokens": 1547,
+            "output_tokens_details": {
+              "thinking_tokens": 798
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4717,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 1547,
+                "cache_read_input_tokens": 11689,
+                "cache_creation_input_tokens": 4717,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4717
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 798,
+            "duration_ms": 20817,
+            "duration_api_ms": 21834,
+            "total_cost_usd_list": 0.17576424999999998,
+            "duration_s": 21.932985917002952
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_tile_bounds.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "to_rfc7946": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_to_rfc7946.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_to_rfc7946.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_to_rfc7946.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "utm_epsg_for": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32633, expected 32633"
+            },
+            {
+              "check": "buenos_aires_south",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32721, expected 32721"
+            },
+            {
+              "check": "svalbard_33X",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 32633, expected 32633"
+            },
+            {
+              "check": "norway_32V",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 32632, expected 32632"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 66,
+            "cache_creation_input_tokens": 12882,
+            "cache_read_input_tokens": 50591,
+            "output_tokens": 10151,
+            "output_tokens_details": {
+              "thinking_tokens": 4960
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 12882,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 2149,
+                "cache_read_input_tokens": 22454,
+                "cache_creation_input_tokens": 2117,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 2117
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 4960,
+            "duration_ms": 110407,
+            "duration_api_ms": 111204,
+            "total_cost_usd_list": 0.77966875,
+            "duration_s": 111.30712308299917
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_utm_epsg_for.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_utm_epsg_for.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "voronoi_cells": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "partition_of_bounds",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "5 cells, total area 100.000"
+            },
+            {
+              "check": "cell_order_matches_input",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "cells not containing their own point: none (cell order must match input point order)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 130,
+            "cache_creation_input_tokens": 18332,
+            "cache_read_input_tokens": 116639,
+            "output_tokens": 21451,
+            "output_tokens_details": {
+              "thinking_tokens": 18214
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 18332,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 8231,
+                "cache_read_input_tokens": 29827,
+                "cache_creation_input_tokens": 194,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 194
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 18214,
+            "duration_ms": 262020,
+            "duration_api_ms": 261734,
+            "total_cost_usd_list": 1.47082375,
+            "duration_s": 263.1722489579988
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_voronoi_cells.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_voronoi_cells.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "wkt_from_latlon": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "parses_as_point",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "parsed POINT (13.4 52.5)"
+            },
+            {
+              "check": "axis_order",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got x=13.4, y=52.5; expected x=13.4 (lon), y=52.5 (lat)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4694,
+            "cache_read_input_tokens": 11689,
+            "output_tokens": 3713,
+            "output_tokens_details": {
+              "thinking_tokens": 2356
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 4694,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 3713,
+                "cache_read_input_tokens": 11689,
+                "cache_creation_input_tokens": 4694,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 4694
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 2356,
+            "duration_ms": 40799,
+            "duration_api_ms": 41657,
+            "total_cost_usd_list": 0.28360825,
+            "duration_s": 41.65101912500177
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_wkt_from_latlon.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_wkt_from_latlon.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    },
+    "zonal_mean": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "full_clean_region",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 64.5, expected 64.5"
+            },
+            {
+              "check": "partial_pixels_and_nodata",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 22.5, expected 22.5 (pixel-centre rule, -9999 sentinel excluded)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "input_tokens": 66,
+            "cache_creation_input_tokens": 9888,
+            "cache_read_input_tokens": 48608,
+            "output_tokens": 12704,
+            "output_tokens_details": {
+              "thinking_tokens": 10353
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 9888,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 32,
+                "output_tokens": 7756,
+                "cache_read_input_tokens": 20481,
+                "cache_creation_input_tokens": 1096,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 1096
+                },
+                "type": "message",
+                "model": null
+              }
+            ],
+            "speed": "standard",
+            "effort": "xhigh",
+            "thinking_tokens": 10353,
+            "duration_ms": 151782,
+            "duration_api_ms": 152655,
+            "total_cost_usd_list": 0.846935,
+            "duration_s": 152.64660345899756
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_zonal_mean.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_zonal_mean.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": null,
+          "status": "api_failure"
+        }
+      ]
+    }
+  }
+}

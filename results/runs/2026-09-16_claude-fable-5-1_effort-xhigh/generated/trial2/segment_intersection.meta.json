@@ -1,0 +1,54 @@
+{
+  "task": "segment_intersection",
+  "model": "claude-fable-5-1",
+  "trial": 2,
+  "track": "effort",
+  "protocol": "claude-code",
+  "effort": "xhigh",
+  "harness_version": "claude-cli/2.1.263",
+  "preamble": "claude-code-harness",
+  "prompt_sha256": "d8ef1d58567826671a392352615e57549c39e5b96229c1badb134feeac53506e",
+  "prompt_version": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 66,
+    "cache_creation_input_tokens": 12470,
+    "cache_read_input_tokens": 49911,
+    "output_tokens": 10973,
+    "output_tokens_details": {
+      "thinking_tokens": 5078
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12470,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 32,
+        "output_tokens": 3358,
+        "cache_read_input_tokens": 21795,
+        "cache_creation_input_tokens": 2364,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2364
+        },
+        "type": "message",
+        "model": null
+      }
+    ],
+    "speed": "standard",
+    "effort": "xhigh",
+    "thinking_tokens": 5078,
+    "duration_ms": 110627,
+    "duration_api_ms": 111283,
+    "total_cost_usd_list": 0.8123497500000001,
+    "duration_s": 111.38515233300132
+  },
+  "extracted": true
+}

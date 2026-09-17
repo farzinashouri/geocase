@@ -1,0 +1,32 @@
+# Plan 48 Phase 4 — Fable 5.1 at every effort level except max, three trials
+# each (23 geo tasks x 4 arms x 3 trials = 276 invocations, ~50 min at 6 rpm
+# plus thinking time; fits the 400/day quota only on a day with nothing else run).
+#
+# Why: Haiku (2026-09-13), Opus (2026-09-14) and Sonnet (2026-09-15) are
+# measured on the effort axis; Fable 5.1 extends the model axis above Opus.
+# `max` is left out so the four arms fit one day's quota; add it back and
+# rerun the same command to fill the fifth arm.
+#
+# Same pacing and comparability caveats as models-claude-effort-pilot-k3.yaml;
+# `ANTHROPIC_API_KEY` must be unset. Resume is the default: rerunning the same
+# command picks up where an interrupted run stopped, arm by arm.
+
+defaults:
+  trials: 3
+  temperature: null
+  exec_timeout_s: 60
+
+budget:
+  max_usd_total: 0.0
+
+limits:
+  rpm: 6
+  requests_per_day: 400
+  quota_file: .geocase_quota_claude.json
+
+models:
+  - id: claude-fable-5-1
+    label: Fable 5.1 (Claude Code CLI)
+    tracks: [effort]
+    provider: claude-cli
+    effort: [low, medium, high, xhigh]
