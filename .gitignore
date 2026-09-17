@@ -62,5 +62,8 @@ agentlab*/
 
 geocase_validate/
 docs/plans/
+# Plan 44 Phase 5: upstream issue drafts, held until filed (5.5 embargo).
+issues/gdal-warp-zero-height-dataset.md
+issues/gdal-small-coordinates-written-as-zero.md
 .agentbus/
 .claude/settings.local.json

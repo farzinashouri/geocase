@@ -126,6 +126,12 @@ needed.
   correct result, because those cases are failure modes for *consumers of* GDAL,
   not for GDAL. The corpus previously could not express the difference.
 
+  `risk_types` is a pinned selector surface, so shipping this family commits the
+  two terms and the axis they cut. That was decided deliberately (Plan 44, U26):
+  the family is additive — no existing term changes meaning and no existing
+  query changes its result set — and if a later round shows the split wants a
+  third value, adding one is additive again.
+
 ### Changed — corpus
 
 `risk_types` gained one or more `failure_mode/*` terms on the cases below.
@@ -137,7 +143,16 @@ selector returns what it did before. Listed by id because a new term changes wha
   `geotiff_int8_small`, `landcover_ambiguous_zero_small`, `water_mask_small`,
   `bottom_up_dem_small`, `pixel_is_area_dem_small`, `pixel_is_point_dem_small`.
 - `failure_mode/reference_implementation` — `optical_dateline_small`,
-  `precision_loss_geojson_roundtrip`.
+  `precision_loss_geojson_roundtrip`. The cases added in this release carry the
+  term from the start and are listed here too, so that the set this selector
+  returns can be read off one list: `optical_dateline_west_small`,
+  `numeric_boundary_1e13`, `numeric_boundary_1e14`, `numeric_boundary_1e15`,
+  `numeric_boundary_15_significant_digits`,
+  `numeric_boundary_17_significant_digits`, `numeric_boundary_trailing_nines`,
+  `numeric_boundary_trailing_zeros`.
+
+Complete as shipped: `failure_mode/consumer` selects 8 cases and
+`failure_mode/reference_implementation` selects 10.
 
 `optical_dateline_small` and `precision_loss_geojson_roundtrip` additionally
 gained a `known_divergences` record apiece, so a repeat differential run against
