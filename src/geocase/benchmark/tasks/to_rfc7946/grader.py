@@ -7,6 +7,11 @@ from shapely.geometry import LinearRing, box
 
 CORNERS = [(13.0, 52.0), (13.1, 52.0), (13.1, 52.1), (13.0, 52.1)]
 
+SOURCES = {
+    "CORNERS": "author-chosen: the lon/lat test square; its 3857 image is computed "
+    "by pyproj, not typed",
+}
+
 
 def _ring_of(result):
     assert result["type"] == "Polygon", f"type is {result.get('type')!r}"

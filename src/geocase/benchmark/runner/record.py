@@ -22,14 +22,44 @@ denominator never reached the model.
 from __future__ import annotations
 
 import hashlib
+import importlib.metadata
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
 from geocase.benchmark.taxonomy import TrialOutcome
 
 RUNNER_VERSION = "2.0.0.dev0"
+
+# The packages a generated module may import and a grader therefore executes.
+# Mirrors the set the task prompts promise ("shapely 2.1, pyproj 3.7,
+# rasterio 1.4, numpy, and scikit-learn"), because those are exactly the
+# versions whose API drift can move an outcome without the grader changing.
+GRADING_PACKAGES = ("rasterio", "shapely", "pyproj", "numpy", "scikit-learn")
+
+
+def grading_env(
+    packages: tuple[str, ...] | list[str] = GRADING_PACKAGES,
+) -> dict[str, Any]:
+    """The interpreter and package versions a grading was produced under.
+
+    Recorded so a re-grade can tell "the grader regressed" from "this ran
+    somewhere else". A package that is not installed is recorded as ``None``
+    rather than omitted: absent is a fact about the environment, and dropping
+    the key would make it indistinguishable from a record written before this
+    field existed.
+    """
+    env: dict[str, Any] = {
+        "python": f"{sys.version_info.major}.{sys.version_info.minor}"
+    }
+    for package in packages:
+        try:
+            env[package] = importlib.metadata.version(package)
+        except importlib.metadata.PackageNotFoundError:
+            env[package] = None
+    return env
 
 
 def _slug(model_id: str) -> str:
@@ -142,8 +172,39 @@ def write_bare_record(
     outcomes_by_trial: dict[int, list[TrialOutcome]],
     cost_usd: float | None,
     domain: str = "geo",
+    provider: str = "openrouter",
+    track: str = "bare",
+    protocol: str = "openrouter-chat",
+    effort: str | None = None,
+    harness_version: str | None = None,
+    preamble: str | None = None,
+    record_grading_env: bool = False,
 ) -> dict[str, Any]:
-    """Write ``run_dir/run.json`` for a bare run and return the record."""
+    """Write ``run_dir/run.json`` for a single-completion run.
+
+    The provider/track/protocol trio were literals until Plan 45 Phase 4.2;
+    they keep today's values as defaults, so every committed bare record
+    regenerates byte-identically.
+
+    ``record_grading_env`` adds the interpreter and package versions the
+    gradings were produced under. Off by default so the committed records keep
+    regenerating byte-identically; new runs pass it, and
+    ``test_results_pin.py`` skips rather than asserts when a recorded
+    environment does not match the running one.
+
+    ``effort``/``harness_version``/``preamble`` are written **only** when
+    passed. On the effort track all three are required in practice:
+
+    * ``harness_version`` — the ``claude -p`` preamble is a function of the
+      CLI release, so a record without it is not reproducible;
+    * ``preamble`` — the explicit marker that the model did **not** see the
+      task prompt in isolation, which is what makes effort numbers
+      incomparable with bare ones.
+
+    They are omitted rather than written as ``null`` on a bare record: a null
+    ``preamble`` reads as "checked, there was none", which is a claim this
+    module cannot make about a run it did not observe.
+    """
     run_dir = Path(run_dir)
     defaults = config.get("defaults", {})
     integrity = scan_integrity(run_dir)
@@ -155,11 +216,22 @@ def write_bare_record(
         "model": {
             "id": model["id"],
             "label": model.get("label") or model["id"],
-            "provider": "openrouter",
+            "provider": provider,
         },
-        "track": "bare",
-        "protocol": "openrouter-chat",
+        "track": track,
+        "protocol": protocol,
+        # Written only when supplied, so a bare record's bytes are unchanged.
+        **({"effort": effort} if effort is not None else {}),
+        **({"harness_version": harness_version} if harness_version is not None else {}),
+        **({"preamble": preamble} if preamble is not None else {}),
         "runner": {"name": "geocase-benchmark", "version": RUNNER_VERSION},
+        # The interpreter and package versions the gradings were produced
+        # under. A generated module executes these, so their API drift moves an
+        # outcome with no grader change. Opt-in for the same reason
+        # ``effort``/``preamble`` are: writing it unconditionally moves the
+        # bytes of all 28 committed records, whose ``module_sha256`` is
+        # provenance and whose regeneration is pinned byte-for-byte.
+        **({"grading_env": grading_env()} if record_grading_env else {}),
         "config": {
             "trials": trials,
             "temperature": defaults.get("temperature"),
@@ -223,6 +295,13 @@ def backfill_bare_record(
             costs.append(float(cost))
     date = run_dir.name.split("_", 1)[0]
 
+    # Track provenance is read off the metas the orchestrator wrote, so an
+    # effort run rebuilt from disk is not silently restamped as bare. Absent
+    # keys (pre-Plan-45 metas) fall through to the bare defaults.
+    track = first.get("track", "bare")
+    protocol = first.get("protocol", "openrouter-chat")
+    provider = "claude-cli" if protocol == "claude-code" else "openrouter"
+
     return write_bare_record(
         run_dir,
         model={"id": resolved, "label": label or first.get("label") or resolved},
@@ -230,5 +309,12 @@ def backfill_bare_record(
         date=date,
         config={"defaults": {"temperature": None}},
         outcomes_by_trial=outcomes_by_trial,
-        cost_usd=sum(costs) if costs else None,
+        # Seat calls are never billed, so an effort run records no spend.
+        cost_usd=(sum(costs) if costs else None) if provider == "openrouter" else None,
+        provider=provider,
+        track=track,
+        protocol=protocol,
+        effort=first.get("effort"),
+        harness_version=first.get("harness_version"),
+        preamble=first.get("preamble"),
     )

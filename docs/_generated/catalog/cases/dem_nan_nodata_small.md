@@ -60,6 +60,7 @@ Confirm GeoCase detects NaN-encoded NoData in a float DEM rather than treating N
 
 ## Risk types covered
 
+- [`failure_mode/consumer`](../risk/failure-mode-consumer.md)
 - [`nodata/ignored`](../risk/nodata-ignored.md)
 - [`nodata/nan_mishandled`](../risk/nodata-nan-mishandled.md)
 
@@ -114,9 +115,9 @@ Computed from the actual bytes and gated against them. Grade your own output aga
 
 - [DEM Small](dem_small.md) -- `dem_small`
 - [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
-- [Multispectral Sentinel-2-like Small](multispectral_s2_like_small.md) -- `multispectral_s2_like_small`
-- [NDVI Scaled Int16 Small](ndvi_scaled_int16_small.md) -- `ndvi_scaled_int16_small`
 - [Water Mask Small](water_mask_small.md) -- `water_mask_small`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
+- [GeoTIFF Int8 Small](geotiff_int8_small.md) -- `geotiff_int8_small`
 
 <script type="application/ld+json">
 {
@@ -134,6 +135,7 @@ Computed from the actual bytes and gated against them. Grade your own output aga
   "keywords": [
     "delivery:single-file",
     "dem",
+    "failure_mode/consumer",
     "geography:utm",
     "geotiff",
     "nodata/ignored",

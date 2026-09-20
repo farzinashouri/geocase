@@ -16,10 +16,13 @@ from geocase.benchmark.registry import TaskMeta
 PLACEHOLDERS = ("{workdir}", "{python}", "{module_path}", "{scratch_dir}")
 
 
-def task_paragraph(task: TaskMeta) -> str:
+def task_paragraph(task: TaskMeta, *, version: int | None = None) -> str:
     """The task statement alone, without the file/interpreter scaffolding —
-    what the bare track sends, since there is no filesystem to save into."""
-    text = task.prompt_template
+    what the bare track sends, since there is no filesystem to save into.
+
+    ``version`` selects an archived prompt (Plan 46 §0.3); the default is the
+    current one."""
+    text = task.prompt_template if version is None else task.prompt_template_at(version)
     start = text.index("Task: ")
     end = text.index("\n\nRequirements:")
     return text[start:end].strip()

@@ -10,6 +10,15 @@ Two failures this pins, both found on disk on 2026-08-11:
 Re-grading here is deliberately in-process against the *committed* modules: the
 assertion is that the recorded statuses still follow from the code on disk, so a
 grader change that silently moves a published number fails the build.
+
+That comparison is only meaningful in the environment the grading was produced
+under. A generated module executes rasterio/shapely/pyproj, so their API drift
+moves an outcome with no grader change at all — ``CRS.equals()`` exists in
+rasterio 1.5.0 and not in 1.4.4, which split this test across the 3.14 and 3.11
+CI legs on 2026-09-20. Where ``run.json`` records a ``grading_env`` that does not
+match the running one, the trial is skipped rather than asserted: the pin cannot
+distinguish a real regression from a different interpreter, and asserting anyway
+would pick one environment as canonical by accident.
 """
 
 from __future__ import annotations
@@ -21,6 +30,7 @@ import pytest
 
 from geocase.benchmark.cli import select_tasks
 from geocase.benchmark.grading import grade_directory
+from geocase.benchmark.runner.record import grading_env
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RUNS = REPO_ROOT / "results" / "runs"
@@ -34,6 +44,32 @@ def _run_dirs() -> list[Path]:
 
 def _trial_dirs() -> list[Path]:
     return [t for r in _run_dirs() for t in sorted((r / "generated").glob("trial*"))]
+
+
+def _skip_if_graded_elsewhere(trial_dir: Path) -> None:
+    """Skip when the record names a grading environment other than this one.
+
+    A record with no ``grading_env`` predates the field and is still asserted:
+    dropping those would silently retire the pin over every run committed before
+    2026-09-20, which is most of the corpus.
+    """
+    record_path = trial_dir.parent.parent / "run.json"
+    if not record_path.is_file():
+        return
+    recorded = json.loads(record_path.read_text()).get("grading_env")
+    if recorded is None:
+        return
+    current = grading_env()
+    drifted = {
+        name: (value, current.get(name))
+        for name, value in recorded.items()
+        if current.get(name) != value
+    }
+    if drifted:
+        pytest.skip(
+            f"graded under a different environment {drifted} — a re-grade here "
+            f"would compare package behaviour, not the grader"
+        )
 
 
 @pytest.mark.parametrize(
@@ -51,6 +87,7 @@ def test_every_committed_trial_has_a_grading(trial_dir: Path):
 )
 def test_committed_gradings_still_reproduce(trial_dir: Path):
     """Regrading the committed modules must return the recorded statuses."""
+    _skip_if_graded_elsewhere(trial_dir)
     recorded = {
         o["task"]: o["outcome"]
         for o in json.loads((trial_dir / "graded.json").read_text())

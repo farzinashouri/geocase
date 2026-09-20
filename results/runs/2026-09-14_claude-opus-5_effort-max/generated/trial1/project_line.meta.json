@@ -1,0 +1,16 @@
+{
+  "task": "project_line",
+  "model": "claude-opus-5",
+  "trial": 1,
+  "track": "effort",
+  "protocol": "claude-code",
+  "effort": "max",
+  "harness_version": "claude-cli/2.1.263",
+  "preamble": "claude-code-harness",
+  "status": "api_failure",
+  "error_type": "ChatFailedError",
+  "detail": "ChatFailedError: claude-opus-5 at effort max: timed out after 600s",
+  "cost_usd": null,
+  "usage": {},
+  "extracted": false
+}

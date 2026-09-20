@@ -186,6 +186,12 @@ def main(argv: list[str] | None = None) -> int:
         from geocase.benchmark.runner.status import main as status_main
 
         return status_main(argv[1:])
+    if argv and argv[0] == "report":
+        # Likewise disk-only: the task x model matrix, per-category rates
+        # with Wilson intervals, reproducible-silent tasks (Plan 46 §2.2).
+        from geocase.benchmark.runner.report import main as report_main
+
+        return report_main(argv[1:])
 
     ap = argparse.ArgumentParser(prog="geocase.benchmark")
     sub = ap.add_subparsers(dest="command", required=True)

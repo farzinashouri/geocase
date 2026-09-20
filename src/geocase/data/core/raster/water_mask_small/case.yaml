@@ -23,7 +23,9 @@ tags:
   - delivery:single-file
 
 risk_types:
+  # Plan 44 phase 4 -- whose failure mode this case is.
   - dtype/drift
+  - failure_mode/consumer
   - nodata/ignored
   - nodata/mask_misread
 

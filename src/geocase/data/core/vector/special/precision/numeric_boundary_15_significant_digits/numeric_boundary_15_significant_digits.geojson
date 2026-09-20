@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "description": "round-trips in exactly 15 significant digits"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          10.123456789012344,
+          50.987654321098766
+        ]
+      }
+    }
+  ]
+}

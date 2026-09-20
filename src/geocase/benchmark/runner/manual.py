@@ -101,6 +101,7 @@ def prepare(
 
     prompts: dict[str, Path] = {}
     hashes: dict[str, str] = {}
+    versions: dict[str, int] = {}
     for task in tasks:
         (workdir / f"scratch_{task.name}").mkdir(exist_ok=True)
         text = render_prompt(task, workdir=workdir, python=interpreter)
@@ -108,6 +109,7 @@ def prepare(
         path.write_text(text)
         prompts[task.name] = path
         hashes[task.name] = hashlib.sha256(text.encode()).hexdigest()
+        versions[task.name] = task.prompt_version
 
     order = shuffled_task_order(seed, domain=domain)
     (workdir / MANIFEST).write_text(
@@ -118,6 +120,8 @@ def prepare(
                 "domain": domain,
                 "sandbox_requirements_sha256": _sha256_file(requirements),
                 "prompt_sha256": hashes,
+                # Plan 46 §0.3: which prompt.md each hash describes.
+                "prompt_version": versions,
                 "order": order,
                 "seed": seed,
             },
@@ -288,6 +292,11 @@ def _load_or_init_record(
             "sandbox_requirements_sha256": manifest.get("sandbox_requirements_sha256")
             or _sha256_file(get_domain(domain).requirements),
             "prompt_sha256": manifest.get("prompt_sha256", {}),
+            **(
+                {"prompt_version": manifest["prompt_version"]}
+                if manifest.get("prompt_version")
+                else {}
+            ),
         },
         "cost_usd": None,
         "tasks": {},

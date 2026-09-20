@@ -11,8 +11,8 @@ from dataclasses import dataclass
 from geocase.benchmark.domains import get_domain
 from geocase.benchmark.prompts import task_paragraph
 from geocase.benchmark.registry import TaskMeta
+from geocase.benchmark.runner.client import ChatClient, ChatReply
 from geocase.benchmark.runner.extract import extract_code_block
-from geocase.benchmark.runner.openrouter import ChatReply, OpenRouterClient
 
 # The dependency line is a per-domain slot. For `geo` the substituted sentence
 # is byte-identical to the hard-coded one this template used to carry, which is
@@ -28,9 +28,14 @@ Requirements:
 """
 
 
-def bare_prompt(task: TaskMeta) -> str:
+def bare_prompt(task: TaskMeta, *, version: int | None = None) -> str:
+    """The bare prompt for ``task`` — at ``version`` if given, else current.
+
+    The version parameter exists for the prompt-hash pin: a committed run's
+    ``prompt_sha256`` must reproduce from the prompt version that run recorded
+    (Plan 46 §0.3). A live run always sends the current prompt."""
     return BARE_TEMPLATE.format(
-        paragraph=task_paragraph(task),
+        paragraph=task_paragraph(task, version=version),
         deps=get_domain(task.domain).package_blurb,
     )
 
@@ -45,7 +50,7 @@ class BareResult:
 
 
 def run_bare_task(
-    client: OpenRouterClient,
+    client: ChatClient,
     model_id: str,
     task: TaskMeta,
     *,

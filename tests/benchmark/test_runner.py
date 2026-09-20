@@ -111,6 +111,54 @@ def test_client_chat_returns_content_and_usage():
     assert reply.cost == pytest.approx(0.01)
 
 
+def test_run_refuses_to_start_when_the_grader_cannot_import(
+    tmp_path, monkeypatch, capsys
+):
+    """A run under the wrong interpreter must fail before the first call.
+
+    2026-09-14: 138 Opus calls were made under miniforge's base Python, every
+    grading pass died on ``No module named 'pyproj'``, and three records were
+    rewritten empty. The grader runs in ``sys.executable`` — the same
+    interpreter as the runner — so the check is an import in-process."""
+    from geocase.benchmark.runner import orchestrator
+
+    monkeypatch.setattr(orchestrator, "missing_grader_modules", lambda: ["pyproj"])
+    config = tmp_path / "c.yaml"
+    config.write_text(
+        "defaults: {trials: 1, temperature: 0.2}\nbudget: {max_usd_total: 1}\n"
+        "models:\n  - {id: org/m, label: M, tracks: [bare]}\n"
+    )
+    rc = orchestrator.main(
+        [
+            "--config",
+            str(config),
+            "--domain",
+            "geo",
+            "--dry-run",
+            "--out",
+            str(tmp_path),
+        ]
+    )
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "pyproj" in err and "conda" in err
+
+
+def test_grader_modules_are_present_in_the_test_environment():
+    from geocase.benchmark.runner.orchestrator import missing_grader_modules
+
+    assert missing_grader_modules() == []
+
+
+def test_client_records_seconds_spent_in_the_call():
+    """Same field the effort track writes, so ``report`` can time any arm."""
+    reply = _client(lambda request: _ok_response()).chat(
+        "test/model", [{"role": "user", "content": "hi"}]
+    )
+    assert isinstance(reply.usage["duration_s"], float)
+    assert reply.usage["duration_s"] >= 0.0
+
+
 def test_client_retries_on_429_then_succeeds():
     calls = []
 

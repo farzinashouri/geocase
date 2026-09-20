@@ -109,9 +109,9 @@ Computed from the actual bytes and gated against them. Grade your own output aga
 
 - [Optical Equator Small](optical_equator_small.md) -- `optical_equator_small`
 - [Optical Dateline Small](optical_dateline_small.md) -- `optical_dateline_small`
+- [Optical Dateline West Small](optical_dateline_west_small.md) -- `optical_dateline_west_small`
 - [Optical RGB Small](optical_rgb_small.md) -- `optical_rgb_small`
 - [DEM Small](dem_small.md) -- `dem_small`
-- [Multispectral Sentinel-2-like Small](multispectral_s2_like_small.md) -- `multispectral_s2_like_small`
 
 <script type="application/ld+json">
 {

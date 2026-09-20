@@ -62,6 +62,12 @@ class TaskMeta(BaseModel):
     # Optional, so the existing 20 geo task.yaml files stay untouched and no
     # committed prompt hash moves (Plan 17 §3.2).
     fixtures: list[FixtureDecl] = []
+    # Bumped whenever prompt.md is edited (Plan 46 §0.3). Every run's meta
+    # records the version it was sent, and the superseded text is archived as
+    # ``prompt.v<N>.md`` beside ``prompt.md``, so a committed prompt hash keeps
+    # reproducing from the version that run recorded rather than being
+    # silently repinned. Defaults to 1: the version every pre-Plan-46 run saw.
+    prompt_version: int = 1
 
     @model_validator(mode="after")
     def _known_category(self) -> TaskMeta:
@@ -88,6 +94,17 @@ class TaskMeta(BaseModel):
     @property
     def prompt_template(self) -> str:
         return (self.directory / "prompt.md").read_text()
+
+    def prompt_template_at(self, version: int) -> str:
+        """The prompt text at ``version`` — current, or an archived one."""
+        if version == self.prompt_version:
+            return self.prompt_template
+        if not 1 <= version < self.prompt_version:
+            raise ValueError(
+                f"{self.name}: no prompt version {version} "
+                f"(current is {self.prompt_version})"
+            )
+        return (self.directory / f"prompt.v{version}.md").read_text()
 
     @property
     def grader_path(self) -> Path:

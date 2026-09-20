@@ -7,6 +7,11 @@ from geocase.benchmark._oracle_utils import rel_ok
 PTS = [(1, 1), (9, 2), (4, 7), (2, 9), (8, 8)]
 BOUNDS = (0, 0, 10, 10)
 
+SOURCES = {
+    "PTS": "author-chosen: generator points; the checks are properties, not values",
+    "BOUNDS": "author-chosen: the clipping box whose area (100) the cells must sum to",
+}
+
 
 def build_checks(f):
     def partition():

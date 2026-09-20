@@ -9,6 +9,8 @@ numeric analogue to ``buffer_m``.
 
 TOL = 1e-9
 
+SOURCES = {"TOL": "author-chosen: floating-point comparison tolerance"}
+
 
 def _is_float(v):
     return isinstance(v, float) or (isinstance(v, int) and not isinstance(v, bool))

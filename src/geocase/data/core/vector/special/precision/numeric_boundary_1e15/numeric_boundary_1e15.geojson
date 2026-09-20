@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "description": "one decade below the affected magnitude class"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1e-15,
+          1e-15
+        ]
+      }
+    }
+  ]
+}

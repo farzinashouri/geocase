@@ -24,6 +24,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TypeVar
 
+from geocase.benchmark.runner.client import ChatClient
 from geocase.benchmark.runner.limiter import DailyQuota, RateLimiter
 from geocase.benchmark.runner.openrouter import OpenRouterClient, RetryPolicy
 
@@ -38,26 +39,38 @@ class Pacing:
     quota_file: Path | None
     max_usd_total: float | None
 
-    def build_client(self, **kwargs: object) -> OpenRouterClient:
-        quota = (
+    def build_quota(self) -> DailyQuota | None:
+        """The persisted per-day cap, or None when the config sets neither.
+
+        Public because every provider needs it, not just OpenRouter: the
+        effort track's ceiling is rate limits, so it reuses this unchanged
+        (Plan 45 §2.2)."""
+        return (
             DailyQuota(self.quota_file, self.requests_per_day)
             if self.quota_file is not None and self.requests_per_day is not None
             else None
         )
+
+    def build_client(self, **kwargs: object) -> ChatClient:
         return OpenRouterClient(
             policy=self.retry,
             limiter=RateLimiter(self.rpm),
-            quota=quota,
+            quota=self.build_quota(),
             **kwargs,  # type: ignore[arg-type]
         )
 
-    def describe(self) -> str:
+    def describe(self, *, track: str = "bare") -> str:
         rpm = "unpaced" if self.rpm is None else f"{self.rpm:g} rpm"
         day = (
             "no daily cap"
             if self.requests_per_day is None
             else f"{self.requests_per_day}/day"
         )
+        if track == "effort":
+            # The retry knobs below are HTTP-response knobs; `claude -p`
+            # returns no Retry-After, so quoting them here would describe
+            # behaviour this track does not have.
+            return f"pacing: {rpm}, {day} (rate limits are this track's ceiling)"
         honor = "honoring" if self.retry.honor_long_retry_after else "refusing"
         return (
             f"pacing: {rpm}, {day}; retry <= {self.retry.max_retry_after:g}s "

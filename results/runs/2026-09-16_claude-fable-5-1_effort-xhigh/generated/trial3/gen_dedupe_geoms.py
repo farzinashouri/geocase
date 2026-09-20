@@ -1,0 +1,1 @@
+# api failure: ChatFailedError: claude-fable-5-1 at effort xhigh: claude exit 1 — {"duration_api_ms":0,"stop_reason":"stop_sequence","session_id":"30752557-2171-4115-bd47-87a427464d0c","total_cost_usd":0,"usage":{"output_tokens_details":{"thinking_tokens":0},"input_tokens":0,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"output_tokens":0,"server_tool_use":{"web_sear

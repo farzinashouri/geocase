@@ -3,6 +3,8 @@ must return the overlap segment — determinant-only solvers return None."""
 
 TOL = 1e-9
 
+SOURCES = {"TOL": "author-chosen: floating-point comparison tolerance"}
+
 
 def _is_point(v):
     return (

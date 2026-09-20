@@ -60,6 +60,7 @@ Verify that a consumer reads AREA_OR_POINT rather than assuming one convention. 
 
 ## Risk types covered
 
+- [`failure_mode/consumer`](../risk/failure-mode-consumer.md)
 - [`nodata/ignored`](../risk/nodata-ignored.md)
 - [`transform/pixel_anchor`](../risk/transform-pixel-anchor.md)
 
@@ -205,9 +206,9 @@ property the corpus always had into one it declares.
 
 - [Pixel-Is-Point DEM](pixel_is_point_dem_small.md) -- `pixel_is_point_dem_small`
 - [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
-- [Bottom-Up Square (Positive E and Nothing Else)](bottom_up_only_square.md) -- `bottom_up_only_square`
-- [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
 - [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
+- [GeoTIFF Int8 Small](geotiff_int8_small.md) -- `geotiff_int8_small`
+- [Land Cover With Ambiguous Zero](landcover_ambiguous_zero_small.md) -- `landcover_ambiguous_zero_small`
 
 <script type="application/ld+json">
 {
@@ -223,6 +224,7 @@ property the corpus always had into one it declares.
     "url": "https://farzinashouri.github.io/geocase"
   },
   "keywords": [
+    "failure_mode/consumer",
     "georeferencing",
     "geotiff",
     "nodata/ignored",

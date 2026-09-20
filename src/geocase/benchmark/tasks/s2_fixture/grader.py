@@ -42,6 +42,24 @@ BOA_ADD_OFFSET = -1000.0
 QUANTIFICATION_VALUE = 10000.0
 NODATA = 0.0
 
+# Hand-typed facts carry a citation (Plan 46 §0.4); the completeness check is
+# tests/benchmark/test_oracle_constants.py.
+SOURCES = {
+    "BOA_ADD_OFFSET": (
+        "Sentinel-2 Products Specification Document (PSD) 14.9",
+        "Radiometric offset — BOA_ADD_OFFSET_VALUES_LIST, processing baseline "
+        "04.00 (ESA change notice, products from 2022-01-25)",
+    ),
+    "QUANTIFICATION_VALUE": (
+        "Sentinel-2 Products Specification Document (PSD) 14.9",
+        "Product_Image_Characteristics — BOA_QUANTIFICATION_VALUE",
+    ),
+    "NODATA": (
+        "Sentinel-2 Products Specification Document (PSD) 14.9",
+        "Special_Values — NODATA = 0 (L2A reflectance rasters)",
+    ),
+}
+
 # UTM EPSG codes: northern 326xx, southern 327xx, zones 1-60.
 _UTM_NORTH = range(32601, 32661)
 _UTM_SOUTH = range(32701, 32761)

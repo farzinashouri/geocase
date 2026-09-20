@@ -1,0 +1,35 @@
+# Plan 48 Phase 4 step 2, widened — Opus 5 at every effort level, three trials
+# each (23 geo tasks x 5 arms x 3 trials = 345 invocations, ~1 h at 6 rpm plus
+# thinking time; fits the 400/day quota only on a day with nothing else run).
+#
+# Why: the Haiku pilot (read 2026-09-14) put the best arm at C = 65 %, but
+# Haiku is not a frontier model, so its `max` is a lower bound on the ceiling
+# and Plan 46 §1.3's band stays provisional until a frontier model has been
+# measured at `max`. U27 was negative on Haiku — one per-category profile at
+# `low` and `max` — and running all five Opus levels re-asks that question on
+# a model that can actually use the thinking budget, at k=3 throughout so the
+# middle of the curve is claimable too, not only its ends.
+#
+# Same pacing and comparability caveats as models-claude-effort-pilot-k3.yaml;
+# `ANTHROPIC_API_KEY` must be unset. `--resume` picks up where an interrupted
+# run stopped, arm by arm.
+
+defaults:
+  trials: 3
+  temperature: null
+  exec_timeout_s: 60
+
+budget:
+  max_usd_total: 0.0
+
+limits:
+  rpm: 6
+  requests_per_day: 400
+  quota_file: .geocase_quota_claude.json
+
+models:
+  - id: claude-opus-5
+    label: Opus 5 (Claude Code CLI)
+    tracks: [effort]
+    provider: claude-cli
+    effort: [low, medium, high, xhigh, max]

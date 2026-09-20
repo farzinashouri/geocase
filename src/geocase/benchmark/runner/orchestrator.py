@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import hashlib
+import importlib
 import json
 import re
 import sys
@@ -22,6 +23,7 @@ import yaml
 
 from geocase.benchmark.grading import grade_in_subprocess
 from geocase.benchmark.registry import TaskMeta, all_tasks
+from geocase.benchmark.runner.limiter import RateLimiter
 from geocase.benchmark.runner.openrouter import (
     BudgetExceededError,
     CostTracker,
@@ -30,6 +32,11 @@ from geocase.benchmark.runner.openrouter import (
 from geocase.benchmark.runner.policy import Pacing, add_pacing_args, policy_from_args
 from geocase.benchmark.runner.record import write_bare_record
 from geocase.benchmark.taxonomy import TrialOutcome
+
+# Kept here rather than imported from `claude_cli` so `--dry-run` and config
+# validation never pull in the subprocess client.
+EFFORT_LEVELS = ("low", "medium", "high", "xhigh", "max")
+
 
 # Measured over the committed bare runs (n=65): 221 prompt / 3164 completion
 # tokens per task. Used only to estimate spend before a run; the hard budget
@@ -56,6 +63,69 @@ def _models_for_track(config: dict, track: str) -> list[dict]:
     return [m for m in config.get("models", []) if track in m.get("tracks", [])]
 
 
+def expand_effort_arms(models: list[dict]) -> list[dict]:
+    """One arm per ``effort:`` level (Plan 45 Phase 3.2).
+
+    A model carrying ``effort: [low, max]`` becomes two arms differing only in
+    that level; a model without the key stays a single arm with ``effort:
+    None``, so every existing config expands to itself. The input dicts are
+    never mutated — the config is read again for the dry-run plan.
+    """
+    arms: list[dict] = []
+    for model in models:
+        levels = model.get("effort")
+        if not levels:
+            arm = dict(model)
+            arm["effort"] = None
+            arms.append(arm)
+            continue
+        if isinstance(levels, str):
+            levels = [levels]
+        for level in levels:
+            if level not in EFFORT_LEVELS:
+                raise ValueError(
+                    f"{model.get('id', '?')}: unknown effort {level!r}; "
+                    f"expected one of {', '.join(EFFORT_LEVELS)}"
+                )
+            arm = dict(model)
+            arm["effort"] = level
+            arms.append(arm)
+    return arms
+
+
+def _build_client(model: dict, pacing: Pacing | None):
+    """The provider dispatch. Defaults to ``openrouter`` (Plan 45 §3.2).
+
+    Every existing config omits ``provider:`` and therefore behaves exactly as
+    before; only a config that names ``claude-cli`` reaches the effort path.
+    """
+    provider = model.get("provider", "openrouter")
+    if provider == "openrouter":
+        return OpenRouterClient() if pacing is None else pacing.build_client()
+    if provider == "claude-cli":
+        # Imported lazily: the bare path must not depend on the effort track
+        # existing, and nothing here should run without a config asking for it.
+        from geocase.benchmark.runner.claude_cli import ClaudeCliClient
+
+        effort = model.get("effort")
+        if effort is None:
+            raise ValueError(
+                f"{model.get('id', '?')}: provider claude-cli needs an "
+                f"effort level — the whole point of the track is the sweep"
+            )
+        kwargs: dict = {"effort": effort}
+        if pacing is not None:
+            # Rate limits, not dollars, are the ceiling here, so the existing
+            # RateLimiter/DailyQuota are reused unchanged.
+            kwargs["limiter"] = RateLimiter(pacing.rpm)
+            kwargs["quota"] = pacing.build_quota()
+        return ClaudeCliClient(**kwargs)
+    raise ValueError(
+        f"{model.get('id', '?')}: unknown provider {provider!r} "
+        f"(expected 'openrouter' or 'claude-cli')"
+    )
+
+
 def _est_model_usd(model: dict, calls: int) -> float | None:
     """Estimated spend for one model, or None when it carries no prices."""
     pricing = model.get("pricing") or {}
@@ -70,10 +140,23 @@ def _est_model_usd(model: dict, calls: int) -> float | None:
     return per_call * calls
 
 
+def _arm_name(model: dict) -> str:
+    """How an arm is named in the plan and in progress lines: ``id @level``.
+
+    Used for every per-trial line too — without the level a two-arm run
+    prints ``trial 1..3`` twice under one name and the operator cannot tell
+    from the terminal which arm a verdict belongs to.
+    """
+    effort = model.get("effort")
+    return model["id"] if effort is None else f"{model['id']} @{effort}"
+
+
 def plan_run(
     config: dict, *, track: str, tasks: list[TaskMeta] | None = None
 ) -> RunPlan:
-    models = _models_for_track(config, track)
+    # Arms, not models: an effort sweep's call count is the number the
+    # operator is deciding about, and one model x five efforts is five runs.
+    models = expand_effort_arms(_models_for_track(config, track))
     trials = int(config.get("defaults", {}).get("trials", 1))
     # Same task list the run will use, so --dry-run's call count and cost
     # ceiling stay truthful under a --domain filter.
@@ -85,12 +168,12 @@ def plan_run(
     for m in models:
         est = _est_model_usd(m, calls_per_model)
         if est is None:
-            unpriced.append(m["id"])
+            unpriced.append(_arm_name(m))
         else:
-            est_by_model[m["id"]] = est
+            est_by_model[_arm_name(m)] = est
     return RunPlan(
         calls=len(models) * calls_per_model,
-        models=[m["id"] for m in models],
+        models=[_arm_name(m) for m in models],
         trials=trials,
         budget_ceiling_usd=config.get("budget", {}).get("max_usd_total"),
         est_usd=sum(est_by_model.values()) if est_by_model else None,
@@ -101,6 +184,23 @@ def plan_run(
 
 def print_plan(plan: RunPlan, *, track: str = "bare") -> None:
     """The dry-run summary: call count *and* estimated spend, per model."""
+    if track == "effort":
+        # The effort track's cost column is intentionally empty, so a dollar
+        # estimate here would be worse than no estimate: it would put a number
+        # on something that is not billed. What is scarce is throughput.
+        print(
+            f"track=effort: {len(plan.models)} arms x {plan.trials} trials x "
+            f"{plan.calls // max(len(plan.models) * plan.trials, 1)} tasks "
+            f"= {plan.calls} CLI invocations, serial"
+        )
+        for arm in plan.models:
+            print(f"  {arm}")
+        print(
+            "  cost: not estimated — this track runs on a subscription seat "
+            "and records no spend. The ceiling is your interactive rate "
+            "limit, which your own editor session is also drawing on."
+        )
+        return
     ceiling = (
         f"${plan.budget_ceiling_usd:.2f}"
         if plan.budget_ceiling_usd is not None
@@ -159,6 +259,58 @@ def _run_dir_suffix(tasks: list[TaskMeta]) -> str:
     return "" if domains == ["geo"] else f"_{domains[0]}"
 
 
+def _arm_suffix(model: dict) -> str:
+    """The effort level in the run-dir name (Plan 45 §3.2).
+
+    Load-bearing: without it two efforts of one model land in one directory
+    and ``--resume`` skips the second as already done — a silent wrong result,
+    not an error. A model with no effort keeps the historical name.
+
+    Bare ``-<level>`` rather than ``-effort-<level>``: the track name is
+    already in the directory, and ``_effort_effort-low`` reads as a bug.
+    """
+    effort = model.get("effort")
+    return "" if effort is None else f"-{effort}"
+
+
+def _provenance(model: dict, track: str) -> dict:
+    """What every record and meta of this arm must say about itself.
+
+    Plan 45 Phase 4. The ``preamble`` marker is the deliverable and the rest
+    is bookkeeping: without it someone eventually reads a 15-arm effort table
+    beside OpenRouter bare numbers and concludes something false about a
+    model. ``claude -p`` never sees the task prompt in isolation — it carries
+    ~23 800 tokens of Claude Code harness that no flag removes — so the
+    record has to say so in its own fields, not in a doc somewhere.
+    """
+    provider = model.get("provider", "openrouter")
+    if provider == "openrouter":
+        # Byte-for-byte what the bare path has always written.
+        return {
+            "provider": "openrouter",
+            "track": track,
+            "protocol": "openrouter-chat",
+            "extra": {},
+        }
+    from geocase.benchmark.runner.claude_cli import detect_cli_version
+
+    return {
+        "provider": provider,
+        "track": track,
+        # `claude-code` already names this loop on the manual track
+        # (manual.PROTOCOLS); reusing it beats inventing a parallel word.
+        "protocol": "claude-code",
+        "extra": {
+            "effort": model["effort"],
+            # Read off the installed CLI, not a literal: a hardcoded version
+            # that has drifted from the binary on PATH makes the record
+            # confidently wrong about the one thing it exists to pin.
+            "harness_version": f"claude-cli/{detect_cli_version()}",
+            "preamble": "claude-code-harness",
+        },
+    }
+
+
 def run_bare_track(
     config: dict,
     *,
@@ -166,7 +318,14 @@ def run_bare_track(
     tasks: list[TaskMeta] | None = None,
     resume: bool = True,
     pacing: Pacing | None = None,
+    track: str = "bare",
 ) -> None:
+    """Run one single-completion track: ``bare`` (OpenRouter) or ``effort``.
+
+    The two share every downstream step — extraction, grading, records — and
+    differ only in which client answers and what the record says about the
+    prompt the model actually saw (Plan 45).
+    """
     # Imported here so --dry-run and the unit tests never need credentials.
     from geocase.benchmark.runner.bare import run_bare_task
 
@@ -183,12 +342,16 @@ def run_bare_track(
     # whole budget before the cheap models are ever reached.
     max_usd_per_model = budget.get("max_usd_per_model")
     tracker = CostTracker(max_usd_total)
-    client = OpenRouterClient() if pacing is None else pacing.build_client()
     date = dt.date.today().isoformat()
     failures: Counter[str] = Counter()
 
-    for model in _models_for_track(config, "bare"):
-        run_dir = out_root / f"{date}_{_slug(model['id'])}_bare{suffix}"
+    for model in expand_effort_arms(_models_for_track(config, track)):
+        # Per arm, not per run: two efforts of one model are two clients.
+        client = _build_client(model, pacing)
+        arm = _arm_suffix(model)
+        label = _arm_name(model)
+        prov = _provenance(model, track)
+        run_dir = out_root / f"{date}_{_slug(model['id'])}_{track}{suffix}{arm}"
         model_tracker = CostTracker(max_usd_per_model)
         model_cost = 0.0
         outcomes_by_trial: dict[int, list[TrialOutcome]] = {}
@@ -219,10 +382,10 @@ def run_bare_track(
                     # failed task — it grades as MISSING, since no module came
                     # back — and the run goes on to the next task. Only the
                     # budget abort above is allowed to stop the run.
-                    _write_failure(gen_dir, task, model["id"], trial, exc)
+                    _write_failure(gen_dir, task, model["id"], trial, exc, prov)
                     failures[model["id"]] += 1
                     print(
-                        f"{model['id']} trial {trial} {task.name}: "
+                        f"{label} trial {trial} {task.name}: "
                         f"FAILED ({type(exc).__name__}: {exc}) "
                         f"(spent ${tracker.spent:.4f})",
                         file=sys.stderr,
@@ -235,7 +398,7 @@ def run_bare_track(
                     model_tracker.add(result.cost)
                 except BudgetExceededError as exc:
                     print(
-                        f"{model['id']}: per-model budget reached ({exc}) — "
+                        f"{label}: per-model budget reached ({exc}) — "
                         f"moving to the next model",
                         file=sys.stderr,
                     )
@@ -257,9 +420,13 @@ def run_bare_track(
                     "task": task.name,
                     "model": model["id"],
                     "trial": trial,
-                    "track": "bare",
-                    "protocol": "openrouter-chat",
+                    "track": prov["track"],
+                    "protocol": prov["protocol"],
+                    **prov["extra"],
                     "prompt_sha256": prompt_sha,
+                    # Which prompt.md the hash describes (Plan 46 §0.3). Absent
+                    # on pre-Plan-46 metas, which the hash pin reads as 1.
+                    "prompt_version": task.prompt_version,
                     "cost_usd": result.cost,
                     "usage": result.usage,
                     "extracted": result.code is not None,
@@ -271,18 +438,18 @@ def run_bare_track(
                 # and was written to disk. Correctness is not known until the
                 # grading pass below.
                 print(
-                    f"{model['id']} trial {trial} {task.name}: "
+                    f"{label} trial {trial} {task.name}: "
                     f"{'code received' if result.code else 'NO CODE BLOCK'} "
                     f"(spent ${tracker.spent:.4f})"
                 )
-            print(f"grading {model['id']} trial {trial} ...")
+            print(f"grading {label} trial {trial} ...")
             try:
                 outcomes = grade_in_subprocess(gen_dir, tasks=tasks)
             except Exception as exc:  # noqa: BLE001
                 # The generated code is already on disk and can be re-graded
                 # offline, so a grading crash must not cost the remaining models.
                 print(
-                    f"{model['id']} trial {trial}: GRADING FAILED "
+                    f"{label} trial {trial}: GRADING FAILED "
                     f"({type(exc).__name__}: {exc}) — generations kept at "
                     f"{gen_dir}, re-grade offline",
                     file=sys.stderr,
@@ -291,7 +458,7 @@ def run_bare_track(
             graded = [o.model_dump(mode="json") for o in outcomes]
             (gen_dir / "graded.json").write_text(json.dumps(graded, indent=2))
             outcomes_by_trial[trial] = outcomes
-            _print_verdicts(model["id"], trial, outcomes)
+            _print_verdicts(label, trial, outcomes)
         # One run.json per model, written even when trials failed to grade —
         # its whole purpose is to record that a run is incomplete.
         record = write_bare_record(
@@ -301,13 +468,21 @@ def run_bare_track(
             date=date,
             config=config,
             outcomes_by_trial=outcomes_by_trial,
-            cost_usd=model_cost,
+            # None, not 0.0, on a track whose costs are list prices that were
+            # never billed: a zero would read as "measured, and it was free".
+            cost_usd=model_cost if prov["provider"] == "openrouter" else None,
             domain=tasks[0].domain,
+            provider=prov["provider"],
+            track=prov["track"],
+            protocol=prov["protocol"],
+            effort=prov["extra"].get("effort"),
+            harness_version=prov["extra"].get("harness_version"),
+            preamble=prov["extra"].get("preamble"),
         )
         integrity = record["integrity"]
         if not integrity["publishable"]:
             print(
-                f"{model['id']}: NOT PUBLISHABLE — {integrity['api_failures']} of "
+                f"{label}: NOT PUBLISHABLE — {integrity['api_failures']} of "
                 f"{integrity['tasks_attempted']} task(s) failed at the API. "
                 f"Any rate over this run has those in its denominator; re-run "
                 f"before quoting it.",
@@ -339,13 +514,19 @@ def _is_api_failure(meta_path: Path) -> bool:
 
 
 def _write_failure(
-    gen_dir: Path, task: TaskMeta, model_id: str, trial: int, exc: BaseException
+    gen_dir: Path,
+    task: TaskMeta,
+    model_id: str,
+    trial: int,
+    exc: BaseException,
+    prov: dict | None = None,
 ) -> None:
     """Record a failed task on disk so grading sees it as MISSING.
 
     ``status: api_failure`` in the meta marks it as a runner/API failure rather
     than a model that answered badly — the two must not be confused when the
     silent-failure rate is read off these files."""
+    prov = prov or {"track": "bare", "protocol": "openrouter-chat", "extra": {}}
     detail = f"{type(exc).__name__}: {exc}"
     (gen_dir / f"{task.name}.reply.md").write_text(f"<!-- api failure: {detail} -->\n")
     (gen_dir / task.module).write_text(f"# api failure: {detail}\n")
@@ -353,8 +534,9 @@ def _write_failure(
         "task": task.name,
         "model": model_id,
         "trial": trial,
-        "track": "bare",
-        "protocol": "openrouter-chat",
+        "track": prov["track"],
+        "protocol": prov["protocol"],
+        **prov["extra"],
         "status": "api_failure",
         "error_type": type(exc).__name__,
         "detail": detail,
@@ -390,14 +572,35 @@ def _print_verdicts(model_id: str, trial: int, outcomes: list[TrialOutcome]) -> 
     )
 
 
+#: What every oracle imports. The grader runs in ``sys.executable`` — the
+#: runner's own interpreter — so if these do not import here they will not
+#: import there, and every trial grades as LOUD on ``ModuleNotFoundError``.
+GRADER_MODULES: tuple[str, ...] = ("numpy", "pyproj", "shapely")
+
+
+def missing_grader_modules() -> list[str]:
+    """Names in :data:`GRADER_MODULES` that this interpreter cannot import."""
+    missing = []
+    for name in GRADER_MODULES:
+        try:
+            importlib.import_module(name)
+        except ImportError:
+            missing.append(name)
+    return missing
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="geocase.benchmark run")
     ap.add_argument("--config", type=Path, required=True)
     ap.add_argument(
         "--track",
-        choices=["bare"],
+        choices=["bare", "effort"],
         default="bare",
-        help="agentic is manual-protocol-only in the one-off cut",
+        help="bare = one OpenRouter completion per task; effort = the same "
+        "task through `claude -p` at each --effort level (Plan 45). "
+        "Effort results are comparable within the effort track only: every "
+        "invocation carries the Claude Code harness preamble. "
+        "agentic is manual-protocol-only in the one-off cut",
     )
     ap.add_argument(
         "--trials",
@@ -430,6 +633,19 @@ def main(argv: list[str] | None = None) -> int:
     if args.max_usd is not None:
         config.setdefault("budget", {})["max_usd_total"] = args.max_usd
 
+    # Before anything is spent, dry-run included: on 2026-09-14 a run launched
+    # under the wrong interpreter made 138 calls whose every grading pass then
+    # died on import, and rewrote three records empty on resume.
+    missing = missing_grader_modules()
+    if missing:
+        print(
+            f"error: the grader cannot import {', '.join(missing)} under "
+            f"{sys.executable} — activate the conda `geocase` env "
+            f"(`conda activate geocase`) and rerun",
+            file=sys.stderr,
+        )
+        return 2
+
     from geocase.benchmark.cli import EmptySelectionError, select_tasks
 
     try:
@@ -446,10 +662,22 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
-    plan = plan_run(config, track=args.track, tasks=tasks)
+    try:
+        plan = plan_run(config, track=args.track, tasks=tasks)
+    except ValueError as exc:
+        # A bad `effort:` level is a config error, not a crash — and it must
+        # surface under --dry-run, before any invocation is spent.
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    if not plan.models:
+        print(
+            f"error: no models in {args.config} declare tracks: [{args.track}]",
+            file=sys.stderr,
+        )
+        return 2
     pacing = policy_from_args(args, config)
     print_plan(plan, track=args.track)
-    print(pacing.describe())
+    print(pacing.describe(track=args.track))
     if args.dry_run:
         return 0
     if not confirm_estimate(plan, yes=args.yes):
@@ -462,6 +690,7 @@ def main(argv: list[str] | None = None) -> int:
             tasks=tasks,
             resume=not args.no_resume,
             pacing=pacing,
+            track=args.track,
         )
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)

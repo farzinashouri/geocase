@@ -14,6 +14,11 @@ from geocase.benchmark._oracle_utils import rel_ok
 # nodata -9999 at (2,2) and (2,3).
 NODATA = -9999.0
 
+SOURCES = {
+    "NODATA": "author-chosen: the sentinel written into the synthetic raster's "
+    "own header, which is where the model's code must read it from",
+}
+
 
 def _make_raster(path: Path) -> None:
     import rasterio

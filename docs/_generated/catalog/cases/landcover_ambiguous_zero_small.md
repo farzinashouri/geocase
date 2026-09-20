@@ -60,6 +60,7 @@ Surface the sentinel/class collision at 0. The sibling case ``landcover_small`` 
 
 ## Risk types covered
 
+- [`failure_mode/consumer`](../risk/failure-mode-consumer.md)
 - `nodata/ambiguous_zero`
 - [`nodata/ignored`](../risk/nodata-ignored.md)
 - [`scaling/category_misread`](../risk/scaling-category-misread.md)
@@ -164,9 +165,9 @@ why every fixture must sit inside the regeneration gate.
 
 - [Land Cover Small](landcover_small.md) -- `landcover_small`
 - [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
+- [Water Mask Small](water_mask_small.md) -- `water_mask_small`
+- [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 - [DEM Small](dem_small.md) -- `dem_small`
-- [Multispectral Sentinel-2-like Small](multispectral_s2_like_small.md) -- `multispectral_s2_like_small`
-- [NDVI Scaled Int16 Small](ndvi_scaled_int16_small.md) -- `ndvi_scaled_int16_small`
 
 <script type="application/ld+json">
 {
@@ -184,6 +185,7 @@ why every fixture must sit inside the regeneration gate.
   "keywords": [
     "categorical",
     "delivery:single-file",
+    "failure_mode/consumer",
     "geography:utm",
     "geotiff",
     "landcover",

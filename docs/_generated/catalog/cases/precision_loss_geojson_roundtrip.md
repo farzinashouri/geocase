@@ -61,10 +61,11 @@ Expose precision loss during GeoJSON text serialization. Detect workflows where 
 
 ## Risk types covered
 
+- [`failure_mode/reference_implementation`](../risk/failure-mode-reference-implementation.md)
 - [`format/limitation`](../risk/format-limitation.md)
 - `precision/coordinate_drift`
 - [`precision/loss`](../risk/precision-loss.md)
-- `precision/roundtrip_degradation`
+- [`precision/roundtrip_degradation`](../risk/precision-roundtrip-degradation.md)
 
 ## Expected behavior
 
@@ -75,6 +76,16 @@ Expose precision loss during GeoJSON text serialization. Detect workflows where 
 | `expect_crs` | yes |
 | `expected_epsg` | `4326` |
 | `expected_geometry_types` | `Point` |
+
+## Known consumer divergences
+
+Disagreements already investigated on this case. If your reader reproduces one of these, it is catalogued &mdash; not a new finding.
+
+**gdal** &mdash; GDAL d6fd56f52d (also GDAL 3.12.2), WKT and GeoJSON writers
+
+Coordinates with |v| in [1e-14, 1e-13) are written as 0 by both the WKT and the GeoJSON writers -- relative error 1.0, silently, with no error and no warning. Not a precision floor: the default is 15 decimal places and 1e-14 is 0.00000000000001, 14 places. ogr/ogrlibjsonutils.cpp:158 formats through OGRFormatDouble(..., OGRWktOptions(15, round=true), 1), which calls intelliround at ogr/ogrutils.cpp:161-169; that branch tests s[len-3] through s[len-9] for zeros and then drops the last 8 characters, including the untested s[len-2], which for "0.000000000000010" holds the only significant digit. A brute force over 300000 coordinates puts the affected class at exactly [1e-14, 1e-13). Set SIGNIFICANT_FIGURES, or write a binary format, for coordinates in that class.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/44-gdal-as-target-and-the-numeric-axis.md>
 
 ## Notes
 
@@ -152,11 +163,11 @@ GeoJSON's human-readable text format trades some precision for readability.
 
 ## Related cases
 
+- [Numeric Boundary: 17 Significant Digits](numeric_boundary_17_significant_digits.md) -- `numeric_boundary_17_significant_digits`
+- [Numeric Boundary: 1e-14](numeric_boundary_1e14.md) -- `numeric_boundary_1e14`
+- [Numeric Boundary: Trailing Nines](numeric_boundary_trailing_nines.md) -- `numeric_boundary_trailing_nines`
+- [Numeric Boundary: Trailing Zeros](numeric_boundary_trailing_zeros.md) -- `numeric_boundary_trailing_zeros`
 - [Format-limited Precision Polygon](format_limited_precision_polygon.md) -- `format_limited_precision_polygon`
-- [Empty Geometry in GeoPackage](empty_geometry_gpkg.md) -- `empty_geometry_gpkg`
-- [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
-- [Shapefile Legacy DBF Encoding](shapefile_encoding_legacy.md) -- `shapefile_encoding_legacy`
-- [Shapefile Field Name Truncation](shapefile_field_truncation.md) -- `shapefile_field_truncation`
 
 <script type="application/ld+json">
 {
@@ -173,6 +184,7 @@ GeoJSON's human-readable text format trades some precision for readability.
   },
   "keywords": [
     "coordinate_drift",
+    "failure_mode/reference_implementation",
     "format/limitation",
     "format_specific",
     "geojson",

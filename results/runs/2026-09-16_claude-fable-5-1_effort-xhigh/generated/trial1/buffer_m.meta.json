@@ -1,0 +1,16 @@
+{
+  "task": "buffer_m",
+  "model": "claude-fable-5-1",
+  "trial": 1,
+  "track": "effort",
+  "protocol": "claude-code",
+  "effort": "xhigh",
+  "harness_version": "claude-cli/2.1.263",
+  "preamble": "claude-code-harness",
+  "status": "api_failure",
+  "error_type": "ChatFailedError",
+  "detail": "ChatFailedError: claude-fable-5-1 at effort xhigh: timed out after 600s",
+  "cost_usd": null,
+  "usage": {},
+  "extracted": false
+}

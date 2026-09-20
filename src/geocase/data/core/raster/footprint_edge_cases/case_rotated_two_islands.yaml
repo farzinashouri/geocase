@@ -20,6 +20,8 @@ tags:
   - rotated
 
 risk_types:
+  # Plan 44 phase 4 -- whose failure mode this case is.
+  - failure_mode/consumer
   - footprint/generation_error
   - transform/rotated
 

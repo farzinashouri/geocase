@@ -104,9 +104,9 @@ Thin polygon that is valid in high-precision formats but vulnerable to rounding-
 
 - [GeoJSON Precision Loss Roundtrip](precision_loss_geojson_roundtrip.md) -- `precision_loss_geojson_roundtrip`
 - [Format-Limited KML Case](format_limited_kml_case.md) -- `format_limited_kml_case`
-- [Shapefile Ring Orientation Reversal](shapefile_ring_orientation.md) -- `shapefile_ring_orientation`
-- [Dense Ring Polygon (4096 vertices)](dense_ring_polygon_4k.md) -- `dense_ring_polygon_4k`
-- [Dense Ring Polygon (4096 vertices, GeoPackage)](dense_ring_polygon_4k_gpkg.md) -- `dense_ring_polygon_4k_gpkg`
+- [Numeric Boundary: 1e-14](numeric_boundary_1e14.md) -- `numeric_boundary_1e14`
+- [Numeric Boundary: Trailing Nines](numeric_boundary_trailing_nines.md) -- `numeric_boundary_trailing_nines`
+- [Numeric Boundary: Trailing Zeros](numeric_boundary_trailing_zeros.md) -- `numeric_boundary_trailing_zeros`
 
 <script type="application/ld+json">
 {

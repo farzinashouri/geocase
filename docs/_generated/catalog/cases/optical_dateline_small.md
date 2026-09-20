@@ -61,7 +61,8 @@ Confirm GeoCase handles an RGB optical scene whose extent crosses the antimeridi
 ## Risk types covered
 
 - [`extent/antimeridian`](../risk/extent-antimeridian.md)
-- `extent/bounds_normalization`
+- [`extent/bounds_normalization`](../risk/extent-bounds-normalization.md)
+- [`failure_mode/reference_implementation`](../risk/failure-mode-reference-implementation.md)
 
 ## Expected behavior
 
@@ -101,6 +102,12 @@ TileJSON bounds/center and /info.geojson carry longitudes greater than 180 for t
 
 Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-consumer-round-2-and-the-stac-adapter.md>
 
+**gdal** &mdash; GDAL d6fd56f52d (also GDAL 3.12.2), any projected target SRS
+
+gdal.AutoCreateWarpedVRT(ds, None, "EPSG:3857") returns a dataset with RasterYSize == 0 for this raster, with CE_None and no warning. PROJ wraps the eastern bound of 180.22 to -20013018 m, so GDALSuggestedWarpOutput2 sees an X span of ~40000 km against a Y span of ~35 km, derives one square pixel size from the diagonal, and at alg/gdaltransformer.cpp:1141-1142 rounds *pnLines to 0. The too-large direction is clamped twelve lines above; the rounds-to-zero direction is not. The antimeridian handling at gdaltransformer.cpp:1474-1491 fires only when the destination SRS is geographic, so a projected target gets none. The caller sees an invalid GDALDataset and only a later Create reports "Attempt to create 23x0 dataset is illegal", which names the symptom and not the cause. Split or wrap the footprint before warping to a projected CRS.
+
+Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/44-gdal-as-target-and-the-numeric-axis.md>
+
 ## Required capabilities
 
 - `load`
@@ -123,11 +130,11 @@ Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-
 
 ## Related cases
 
+- [Optical Dateline West Small](optical_dateline_west_small.md) -- `optical_dateline_west_small`
 - [Optical Equator Small](optical_equator_small.md) -- `optical_equator_small`
 - [Optical Polar Small](optical_polar_small.md) -- `optical_polar_small`
 - [Optical RGB Small](optical_rgb_small.md) -- `optical_rgb_small`
 - [DEM Small](dem_small.md) -- `dem_small`
-- [Multispectral Sentinel-2-like Small](multispectral_s2_like_small.md) -- `multispectral_s2_like_small`
 
 <script type="application/ld+json">
 {
@@ -147,6 +154,7 @@ Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-
     "eo",
     "extent/antimeridian",
     "extent/bounds_normalization",
+    "failure_mode/reference_implementation",
     "geography:dateline",
     "geotiff",
     "optical",
