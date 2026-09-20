@@ -227,9 +227,21 @@ def test_committed_records_regenerate_byte_identically(run_dir: Path):
     than through ``backfill_bare_record``: backfill reconstructs a record from
     the metas alone and cannot recover ``model.label``, which is a property of
     that function and not of the shape under test here.
+
+    ``grading_env`` is the one field that is a property of the *machine* rather
+    than of the record's inputs, so a run carrying one is skipped off its own
+    environment: regenerating it elsewhere would rewrite 3.14/rasterio 1.5.0 as
+    3.11/rasterio 1.4.4 and call the difference a shape change.
     """
-    from geocase.benchmark.runner.record import write_bare_record
+    from geocase.benchmark.runner.record import grading_env, write_bare_record
     from geocase.benchmark.taxonomy import TrialOutcome
+
+    recorded_env = json.loads((run_dir / "run.json").read_text()).get("grading_env")
+    if recorded_env is not None and recorded_env != grading_env():
+        pytest.skip(
+            f"{run_dir.name} records a different grading env — regenerating "
+            f"here would overwrite it with this machine's versions"
+        )
 
     before = (run_dir / "run.json").read_text()
     recorded = json.loads(before)
@@ -255,6 +267,7 @@ def test_committed_records_regenerate_byte_identically(run_dir: Path):
             effort=recorded.get("effort"),
             harness_version=recorded.get("harness_version"),
             preamble=recorded.get("preamble"),
+            record_grading_env="grading_env" in recorded,
         )
         after = (run_dir / "run.json").read_text()
     finally:

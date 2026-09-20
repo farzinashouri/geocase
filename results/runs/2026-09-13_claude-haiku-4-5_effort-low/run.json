@@ -17,6 +17,14 @@
     "name": "geocase-benchmark",
     "version": "2.0.0.dev0"
   },
+  "grading_env": {
+    "python": "3.14",
+    "rasterio": "1.5.0",
+    "shapely": "2.1.2",
+    "pyproj": "3.7.2",
+    "numpy": "2.4.3",
+    "scikit-learn": "1.8.0"
+  },
   "config": {
     "trials": 3,
     "temperature": null,
