@@ -69,12 +69,15 @@ dependencies = [
 # unimportable. See the install-shapes section of README.md.
 vector = ["geopandas>=0.14,<2", "shapely>=2.0,<3", "pyarrow>=14.0,<23"]
 raster = ["rasterio>=1.3,<2"]
+# The raster primitive (geocase.raster). numpy only, no reader: it is an
+# extra, not core, so plain `geocase` never touches an existing numpy (#44).
+array = ["numpy>=1.24,<3"]
 # Writing fixture files. The raster primitive itself needs no writer: its
 # .array/.transform/.crs_wkt are public so a caller who already uses osgeo.gdal
 # can build the file however they like.
-write = ["rasterio>=1.3,<2"]
+write = ["numpy>=1.24,<3", "rasterio>=1.3,<2"]
 netcdf = ["xarray>=2023.1,<2027", "netCDF4>=1.6,<2"]
-all = ["geocase[vector,raster,netcdf]"]
+all = ["geocase[vector,raster,netcdf,array]"]
 # The benchmark runner (Plan 15). scikit-learn is here because committed
 # generated modules may import it during re-grading.
 bench = ["geocase[vector,raster]", "httpx>=0.27,<1", "scikit-learn>=1.4,<2"]

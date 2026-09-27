@@ -121,6 +121,9 @@ Plain `geocase` is enough to enumerate, select and resolve every case, because `
 is just a path and you already have the readers. Use it. `[all]` re-resolves numpy and pandas
 and can shadow or break a working stack — it is for greenfield environments only.
 
+`geocase.raster`, the in-memory raster fixture builder, needs numpy. If your stack has no
+numpy, add the `array` extra: `pip install "geocase[array]"`.
+
 A conda-forge feedstock does not exist yet. When one does, installing from it
 will not carry the extras, since bundling GDAL would make the conda package far
 heavier than the PyPI equivalent:
@@ -213,7 +216,7 @@ If a GeoCase marker is missing, resolves no cases, refers to an unknown suite, o
 - [`docs/assertions-reference.md`](docs/assertions-reference.md)
 - [`docs/examples-index.md`](docs/examples-index.md)
 - [`docs/benchmark/quickstart.md`](docs/benchmark/quickstart.md) — the LLM benchmark built on the catalog. **Experimental:** not part of the v1.0 compatibility promise and not published to the docs site.
-- [`src/geocase/raster/`](src/geocase/raster/) — `geocase.raster`, a dependency-free raster primitive plus Sentinel-1/2 presets
+- [`src/geocase/raster/`](src/geocase/raster/) — `geocase.raster`, a raster primitive needing only numpy (the `array` extra) plus Sentinel-1/2 presets
 - [`docs/plans/development-plan.md`](docs/plans/development-plan.md)
 - [`docs/contributing/workflow.md`](docs/contributing/workflow.md)
 - [`docs/design/case-recommendation-service.md`](docs/design/case-recommendation-service.md)
