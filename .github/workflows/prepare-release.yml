@@ -1,0 +1,64 @@
+# Open a release PR from one input (Plan 50).
+#
+# Actions → "Prepare release" → Run workflow → version (e.g. 1.2.0). It bumps
+# pyproject.toml, renames CHANGELOG.md's [Unreleased] section to the version
+# and today's date, regenerates docs/changelog.md, and opens "Release <version>".
+# Merging that PR starts release.yml, which tags and publishes.
+#
+# A PR opened with GITHUB_TOKEN starts no workflow, so this job starts CI on the
+# release branch itself (`workflow_dispatch` is the one event GITHUB_TOKEN may
+# trigger). The checks then show on the PR. Needs the repository setting
+# "Allow GitHub Actions to create and approve pull requests".
+
+name: Prepare release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, e.g. 1.2.0 or 1.2.0rc1"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Bump version and date the changelog
+        run: |
+          python scripts/prepare_release.py "$VERSION"
+          python scripts/generate_changelog_page.py
+      - name: Push the release branch and open the PR
+        run: |
+          branch="release/v$VERSION"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git commit -am "Prepare $VERSION: bump version, date the changelog"
+          git push origin "$branch"
+          python scripts/changelog_section.py "$VERSION" > section.md
+          {
+            echo "Merging this PR releases **$VERSION**: release.yml tags \`v$VERSION\`, uploads to TestPyPI, smoke-tests it, then waits for approval on the \`pypi\` environment."
+            echo
+            echo "## Changelog"
+            echo
+            cat section.md
+          } > body.md
+          gh pr create --base main --head "$branch" --title "Release $VERSION" --body-file body.md --label release
+          gh workflow run ci.yml --ref "$branch"

@@ -1,35 +1,92 @@
-# Build and publish, triggered by a version tag or run by hand.
+# The release pipeline (Plan 50). One human step: approving the PyPI upload.
+#
+#   push to main ─► tag ─► build ─► TestPyPI ─► smoke (TestPyPI) ─► [approve] PyPI
+#                                                  ─► smoke (PyPI) ─► GitHub release
+#
+# A push to main releases when `pyproject.toml`'s version has no tag yet and
+# CHANGELOG.md has its section -- i.e. when a release PR from
+# prepare-release.yml is merged. Every other push stops at the `tag` job.
+#
+# The tag is created here, not by a separate workflow: a tag pushed with
+# GITHUB_TOKEN starts no workflow, so the pipeline continues in the same run.
+# Pushing a tag by hand (`git tag -a vX.Y.Z && git push origin vX.Y.Z`) and a
+# manual `workflow_dispatch` run still work.
 #
 # Uploading uses PyPI's OIDC trusted publishing: GitHub mints a short-lived
 # JWT, PyPI exchanges it for an API token good for ~15 minutes. No API token is
 # ever stored as a repository secret, so there is nothing to leak or rotate.
 # That is what `permissions: id-token: write` grants -- it is scoped per job,
-# and only the two publish jobs get it.
+# and only the two publish jobs get it (tests/unit/test_release_workflow.py).
 
 name: Release
 
 on:
   push:
+    branches: [main]
     tags:
-      # rc tags (v1.0.0rc1) and final tags (v1.0.0) both build; which registry
-      # they upload to is chosen by the environment picked when the run is
-      # approved.
       - "v[0-9]+.[0-9]+.[0-9]+"
       - "v[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
   # Manual runs build from whatever ref is selected, so there is no tag to
   # check the artifact version against -- see the `Verify artifacts` step.
-  # Prefer the tag path for anything reaching real PyPI: the tag is what
-  # records which commit an immutable release was built from.
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
+  # Decides whether this run releases, and which version.
+  tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      release: ${{ steps.decide.outputs.release }}
+      version: ${{ steps.decide.outputs.version }}
+      tagged: ${{ steps.decide.outputs.tagged }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - id: decide
+        run: |
+          version=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            echo "release=true" >> "$GITHUB_OUTPUT"; echo "tagged=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            echo "release=true" >> "$GITHUB_OUTPUT"; echo "tagged=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Push to main: release only an untagged version with a changelog section.
+          if git ls-remote --exit-code --tags origin "refs/tags/v$version" >/dev/null; then
+            echo "v$version is already tagged; nothing to release."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          elif ! python scripts/changelog_section.py "$version" >/dev/null; then
+            echo "::notice::$version has no CHANGELOG.md section; not releasing."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "v$version" -m "GeoCase $version"
+            git push origin "v$version"
+            echo "release=true" >> "$GITHUB_OUTPUT"; echo "tagged=true" >> "$GITHUB_OUTPUT"
+          fi
+
   build:
+    needs: [tag]
+    if: needs.tag.outputs.release == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.tag.outputs.tagged == 'true' && format('v{0}', needs.tag.outputs.version) || github.sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -59,20 +116,15 @@ jobs:
       # The gate. PyPI artifacts are immutable, so a wheel missing
       # `geocase/data/**` would be a permanently broken release. This checks
       # every case indexed in `case-index.yaml` is present, that the version
-      # matches the tag,
-      # and that no `__pycache__`/`.pyc`/`.DS_Store` slipped in.
+      # matches the tag, and that no `__pycache__`/`.pyc`/`.DS_Store` slipped in.
       #
-      # `--expected-version` is only passed on a tag push. On a manual run
-      # GITHUB_REF_NAME is the branch (`main`), which is not a version and
-      # would fail the check. Passing a hand-typed version instead would be
-      # worse than passing none: the verifier always cross-checks the wheel
-      # and sdist against `pyproject.toml`, so that check still runs -- what
-      # a manual run gives up is only the tag/artifact agreement, which is
-      # exactly the thing a manual run has no tag to assert.
+      # `--expected-version` is passed whenever there is a tag. A manual run
+      # has none; the verifier still cross-checks the wheel and sdist against
+      # `pyproject.toml`.
       - name: Verify artifacts
         run: |
-          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
-            python scripts/verify_dist.py dist/ --expected-version "${GITHUB_REF_NAME}"
+          if [ "${{ needs.tag.outputs.tagged }}" = "true" ]; then
+            python scripts/verify_dist.py dist/ --expected-version "v${{ needs.tag.outputs.version }}"
           else
             python scripts/verify_dist.py dist/
           fi
@@ -86,11 +138,8 @@ jobs:
           path: dist/
           retention-days: 30
 
-  # Both publish jobs are gated on a GitHub Environment, which is what makes
-  # them manual: the run pauses for approval before uploading. Cutting a tag
-  # and uploading should not be the same action, because the upload cannot be
-  # undone.
-
+  # No approval: TestPyPI is the rehearsal. `skip-existing` because a version
+  # rehearsed by hand (1.1.0) is already there.
   publish-testpypi:
     needs: [build]
     runs-on: ubuntu-latest
@@ -105,9 +154,47 @@ jobs:
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
 
+  # Install what TestPyPI now serves, in a clean runner, and check it. The
+  # report in the job summary is what the owner reads before approving PyPI.
+  smoke-testpypi:
+    needs: [tag, publish-testpypi]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [core, array]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install from TestPyPI
+        env:
+          SPEC: ${{ matrix.mode == 'array' && 'geocase[array]' || 'geocase' }}==${{ needs.tag.outputs.version }}
+        run: |
+          # TestPyPI does not mirror pydantic or pyyaml, hence the extra index.
+          # Its index can lag the upload by a little; retry.
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            pip install --no-cache-dir --index-url https://test.pypi.org/simple/ \
+              --extra-index-url https://pypi.org/simple/ "$SPEC" pytest && exit 0
+            sleep 30
+          done
+          exit 1
+      - name: Smoke test
+        # Run outside the checkout so nothing imports from it.
+        working-directory: ${{ runner.temp }}
+        run: |
+          python "$GITHUB_WORKSPACE/scripts/smoke_release.py" \
+            --version "${{ needs.tag.outputs.version }}" --mode ${{ matrix.mode }} \
+            --summary "$GITHUB_STEP_SUMMARY"
+          printf 'def test_fixture(geocase_registry):\n    assert geocase_registry\n' > test_plugin.py
+          python -m pytest -q test_plugin.py
+
+  # The one human step: the `pypi` environment has a required reviewer.
   publish-pypi:
-    needs: [build]
+    needs: [smoke-testpypi]
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
@@ -118,3 +205,59 @@ jobs:
           name: dist
           path: dist/
       - uses: pypa/gh-action-pypi-publish@release/v1
+
+  smoke-pypi:
+    needs: [tag, publish-pypi]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [core, array]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install from PyPI
+        env:
+          SPEC: ${{ matrix.mode == 'array' && 'geocase[array]' || 'geocase' }}==${{ needs.tag.outputs.version }}
+        run: |
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            pip install --no-cache-dir "$SPEC" pytest && exit 0
+            sleep 30
+          done
+          exit 1
+      - name: Smoke test
+        working-directory: ${{ runner.temp }}
+        run: |
+          python "$GITHUB_WORKSPACE/scripts/smoke_release.py" \
+            --version "${{ needs.tag.outputs.version }}" --mode ${{ matrix.mode }} \
+            --summary "$GITHUB_STEP_SUMMARY"
+          printf 'def test_fixture(geocase_registry):\n    assert geocase_registry\n' > test_plugin.py
+          python -m pytest -q test_plugin.py
+
+  # Release notes come from the changelog; the open `release` issue naming this
+  # version is closed. Skipped on manual runs, which have no tag.
+  github-release:
+    needs: [tag, smoke-pypi]
+    if: needs.tag.outputs.tagged == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VERSION: ${{ needs.tag.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create the GitHub release
+        run: |
+          python scripts/changelog_section.py "$VERSION" > notes.md
+          flags=""
+          case "$VERSION" in *rc*) flags="--prerelease" ;; esac
+          gh release create "v$VERSION" --title "GeoCase $VERSION" --notes-file notes.md $flags
+      - name: Close the release issue
+        run: |
+          for n in $(gh issue list --state open --label release --search "$VERSION in:title" --json number -q '.[].number'); do
+            gh issue close "$n" --comment "Released: https://pypi.org/project/geocase/$VERSION/ (run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
+          done

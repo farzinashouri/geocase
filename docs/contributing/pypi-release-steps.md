@@ -3,138 +3,80 @@
 The short checklist for putting a version on pypi.org. The reasons behind each
 step are in [Releasing](releasing.md); conda-forge is covered there too, not here.
 
-The examples use `1.1.0`. Replace it with the version you release.
+Since Plan 50 the release is one pipeline with **two human actions**: merge the
+release PR, and approve the PyPI upload. Everything else runs in
+`.github/workflows/prepare-release.yml` and `.github/workflows/release.yml`.
 
 **Rule to remember:** a version uploaded to PyPI can never be uploaded again, even
-after you delete it. Every step before step 6 exists so that step 6 happens once.
+after you delete it. The approval in step 4 is the point of no return.
 
-## 0. One-time: make uploads wait for your approval
+## 0. One-time setup (check before a release)
 
-Do this once per repository. Check it before every release.
+- *Settings → Environments → `pypi`*: **Required reviewers** includes you.
+  `testpypi` has no reviewer: it is the rehearsal and runs by itself.
+- *Settings → Actions → General → Workflow permissions*: **Allow GitHub Actions
+  to create and approve pull requests** is ticked (needed by step 1).
+- Trusted publishing is set up on pypi.org and test.pypi.org
+  ([Releasing → One-time setup](releasing.md#one-time-setup)).
 
-1. GitHub → repository → *Settings* → *Environments*.
-2. Open `pypi`. Under *Deployment protection rules*, tick **Required reviewers**
-   and add yourself. Save.
-3. Do the same for `testpypi`.
-
-Without this, the publish jobs in `release.yml` do not pause: pushing a tag, or
-running the workflow by hand, uploads to TestPyPI **and** PyPI at once.
-
-Check it from a terminal (both lines must show `reviewers=1`):
+Check the reviewers from a terminal (`pypi` must show `reviewers=1`):
 
 ```bash
 gh api repos/farzinashouri/geocase/environments \
   -q '.environments[]|select(.name|test("pypi"))|"\(.name) reviewers=\([.protection_rules[]?|select(.type=="required_reviewers")]|length)"'
 ```
 
-Trusted publishing (OIDC) must also be set up on pypi.org and test.pypi.org; see
-[Releasing → One-time setup](releasing.md#one-time-setup). It is already done for
-`geocase`.
+## 1. Start the release (automatic)
 
-## 1. Check that `main` is ready
-
-- `version` in `pyproject.toml` is `1.1.0`.
-- `CHANGELOG.md` has a `## [1.1.0] — <date>` section, and `docs/changelog.md` is
-  regenerated (`python scripts/generate_changelog_page.py --check`).
-- CI is green on the latest `main` commit.
-- The version is not on PyPI yet:
+Make sure `CHANGELOG.md` has a non-empty `## [Unreleased]` section on `main`.
+Then: *Actions → **Prepare release** → Run workflow* → version, e.g. `1.2.0`.
+Or from a terminal:
 
 ```bash
-curl -s https://pypi.org/pypi/geocase/json \
-  | python -c 'import json,sys; print(sorted(json.load(sys.stdin)["releases"]))'
+gh workflow run prepare-release.yml -f version=1.2.0
 ```
 
-## 2. Build and check locally
+It bumps `pyproject.toml`, renames `[Unreleased]` to `[1.2.0] — <today>`,
+regenerates `docs/changelog.md`, and opens the PR **"Release 1.2.0"** with CI
+running on it. It refuses a version that is not greater than the current one,
+and an empty `[Unreleased]` section.
 
-```bash
-git switch main && git pull
-rm -rf dist/
-python -m build
-python scripts/verify_dist.py dist/ --expected-version v1.1.0
-twine check dist/*
-```
+## 2. Merge the release PR (you)
 
-All three must pass. If one fails, fix it on a branch and merge first. Nothing is
-spent yet.
+Read the PR: the version and the changelog text are what will be published.
+Merge it when CI is green.
 
-## 3. Rehearse on TestPyPI
+## 3. Tag, build, TestPyPI, smoke test (automatic)
 
-Run the release workflow by hand, without a tag:
+Merging starts **Release** on `main`. It:
 
-1. GitHub → *Actions* → **Release** → *Run workflow* → branch `main` → *Run*.
-2. Wait for the `build` job to pass.
-3. The run now waits on two approvals. **Approve `publish-testpypi`.**
-   **Reject `publish-pypi`.**
+1. tags `v1.2.0`;
+2. builds the wheel and sdist and runs `verify_dist.py` and `twine check`;
+3. uploads to TestPyPI;
+4. installs from TestPyPI in clean runners — plain `geocase` and
+   `geocase[array]` — and runs `scripts/smoke_release.py` plus one pytest-fixture
+   test. The results are in the run's **Summary** tab.
 
-This uploads `1.1.0` to TestPyPI only. TestPyPI is a separate registry, so this
-does not use up the real `1.1.0`.
+If any of this fails, nothing reached PyPI. Fix it and release a new version:
+the version number is not spent, but the tag is, so delete the tag first
+(`git push origin :refs/tags/v1.2.0`) or bump.
 
-## 4. Test the TestPyPI package in a clean environment
+## 4. Approve the PyPI upload (you)
 
-```bash
-python -m venv /tmp/gc && . /tmp/gc/bin/activate
-pip install --index-url https://test.pypi.org/simple/ \
-  --extra-index-url https://pypi.org/simple/ geocase==1.1.0
-python -c "import geocase; print(geocase.__version__, len(geocase.list_cases()))"   # 1.1.0 174
-python -c "import geocase; print(geocase.load_case('cog_multispectral_small').primary_path.exists())"   # True
-pytest --collect-only 2>&1 | head   # the plugin registers
-deactivate
-```
+Open the run (*Actions → Release*), read the smoke-test tables in the
+**Summary**, then *Review deployments → `pypi` → Approve and deploy*.
 
-The `--extra-index-url` is needed because TestPyPI does not have `pydantic` or
-`pyyaml`.
+## 5. Verify and publish the release (automatic)
 
-If the release adds or changes an extra, install it too. For `1.1.0`, the `array`
-extra:
+After the upload the pipeline installs from real PyPI and runs the same smoke
+test, creates the GitHub release `v1.2.0` with the changelog section as notes,
+and closes the open `release` issue whose title names the version.
 
-```bash
-pip install --index-url https://test.pypi.org/simple/ \
-  --extra-index-url https://pypi.org/simple/ "geocase[array]==1.1.0"
-python -c "from geocase.raster import raster_fixture; print('ok')"
-```
+Check <https://pypi.org/project/geocase/1.2.0/#files> lists a wheel and an sdist
+if you want to see it yourself.
 
-If anything fails here, stop. Fix it, bump to a new version, and start again from
-step 1. Do not tag.
+## Without the pipeline
 
-## 5. Tag the release
-
-```bash
-git switch main && git pull
-git tag -a v1.1.0 -m "GeoCase 1.1.0"
-git push origin v1.1.0
-```
-
-The tag starts the release workflow again, and `build` checks that the tag, the
-artifact names and `pyproject.toml` agree.
-
-## 6. Approve the PyPI upload
-
-1. GitHub → *Actions* → the **Release** run for `v1.1.0`.
-2. Wait for `build` to pass.
-3. **Approve `publish-pypi`.**
-4. **Reject `publish-testpypi`.** `1.1.0` is already on TestPyPI from step 3, and
-   a second upload of it would fail.
-
-This is the step that cannot be undone.
-
-## 7. Verify on PyPI
-
-```bash
-python -m venv /tmp/gc2 && . /tmp/gc2/bin/activate
-pip install geocase==1.1.0
-python -c "import geocase; print(geocase.__version__, len(geocase.__all__))"   # 1.1.0 29
-deactivate
-```
-
-Open <https://pypi.org/project/geocase/1.1.0/#files> and check that it lists
-**both** a wheel (`.whl`) and an sdist (`.tar.gz`). conda-forge builds from the
-sdist.
-
-## 8. Finish
-
-- If the upload date differs from the date in `CHANGELOG.md`, correct the date
-  and regenerate `docs/changelog.md`.
-- Create the GitHub release from the tag:
-  `gh release create v1.1.0 --title "GeoCase 1.1.0" --notes-from-tag`, or paste
-  the changelog section as notes.
-- Close the release issue.
+A hand-pushed tag (`git tag -a v1.2.0 -m "GeoCase 1.2.0" && git push origin v1.2.0`)
+runs the same pipeline from step 3. A manual *Run workflow* on **Release** builds
+whatever ref you pick and has no tag, so it skips the GitHub release.
