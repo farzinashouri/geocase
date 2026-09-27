@@ -1,0 +1,57 @@
+# Effort track (Plan 45) — Opus 4.8 at two efforts, run through the Claude
+# Code CLI on a subscription seat.
+#
+# Separate from `models-claude-effort.yaml` rather than an entry in it: that
+# file is the declared 15-arm sweep (three models x five levels) and its own
+# sequencing note says not to commit to the remaining arms until the effort
+# signal is confirmed per trap_category. This is one operator-requested probe
+# at `low` and `medium`, not a fourth row of that matrix.
+#
+# READ THIS BEFORE COMPARING ANYTHING FROM THIS CONFIG TO A BARE RUN.
+# `claude -p` has no bare-completion mode: every invocation carries the Claude
+# Code harness preamble that no flag removes (--system-prompt replaces the task
+# system prompt, not the harness; disabling every tool made the payload
+# larger). So the model never sees the task prompt in isolation,
+# `prompt_sha256` no longer describes what it saw, and the preamble shifts with
+# every CLI release. Results here are comparable **within the effort track
+# only** — same harness, same preamble, varying only model and effort. Every
+# run.json written from this config says so in its own fields:
+# `track: effort`, `preamble: claude-code-harness`, `harness_version`.
+
+defaults:
+  trials: 1
+  # The CLI exposes no temperature knob. Null rather than a number, because a
+  # recorded 0.2 that was never sent is a provenance lie.
+  temperature: null
+  exec_timeout_s: 60
+
+budget:
+  # Zero, and it can only ever fire as an alarm. ClaudeCliClient reports
+  # cost=None by design: `modelUsage` gives "costBasis": "list", which is not
+  # what a subscription is billed. If a cost ever reaches the tracker from
+  # this config, something has started metering — abort rather than spend.
+  max_usd_total: 0.0
+
+# The real scarce resource on this track is throughput against the operator's
+# own interactive rate limits — the same seat their editor is using. rpm is
+# deliberately low: a sweep that saturates the limit locks the operator out of
+# their own tools for the duration.
+limits:
+  rpm: 6
+  requests_per_day: 400
+  quota_file: .geocase_quota_claude.json
+
+models:
+  # `claude-opus-4-8` verified against CLI 2.1.274 on 2026-09-20: one live
+  # `--effort low` call returned `canonicalModel: "claude-opus-4-8"`,
+  # `provider: firstParty`. The id is passed straight to `claude --model` with
+  # no validation on our side, so a typo would fail per-call, not at launch.
+  #
+  # Two levels, not five: `low` and `medium` are the bottom of the axis, where
+  # Plan 45's thinking-token spread (46 -> 3 965 tokens from `low` to `max`)
+  # is narrowest. 23 geo tasks x 2 efforts x 1 trial = 46 invocations.
+  - id: claude-opus-4-8
+    label: Opus 4.8 (Claude Code CLI)
+    tracks: [effort]
+    provider: claude-cli
+    effort: [low, medium]
