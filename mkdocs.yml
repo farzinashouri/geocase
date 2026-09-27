@@ -79,6 +79,7 @@ nav:
   - Contributing:
       - Workflow: contributing/workflow.md
       - Releasing: contributing/releasing.md
+      - PyPI Release Steps: contributing/pypi-release-steps.md
       - PyPI Publishing Practices: contributing/pypi-publishing-practices.md
       - Viewing Schematics: contributing/viewing-schematics.md
       - Structure & Planning: contributing/structure-and-planning.md

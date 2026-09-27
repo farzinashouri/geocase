@@ -3,6 +3,8 @@
 How a GeoCase version reaches PyPI and conda-forge. For the general reasoning
 behind these steps — portable to any Python package — see
 [PyPI publishing practices](pypi-publishing-practices.md).
+For the short step-by-step checklist, see
+[PyPI release steps](pypi-release-steps.md).
 
 The governing constraint is that **PyPI artifacts are immutable**. A version
 number, once uploaded, can never be reused — not after a deletion, not after a
@@ -38,6 +40,12 @@ the tag is already cut.
 Create the two environments under the repository's *Settings → Environments*.
 Adding a required reviewer to each is what makes publishing a deliberate,
 approved step rather than an automatic consequence of pushing a tag.
+
+!!! warning "Check the reviewers exist"
+
+    As of 2026-09-27 neither environment had a required reviewer, so the publish
+    jobs did not pause: a tag push uploaded to TestPyPI and PyPI at once. Step 0
+    of [PyPI release steps](pypi-release-steps.md) shows how to add and check them.
 
 A *pending* publisher works before the project exists on PyPI, which is exactly
 the first-release case; it converts to a normal publisher on first upload.
