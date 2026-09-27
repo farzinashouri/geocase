@@ -18,6 +18,14 @@ door.
     from geocase.raster.presets import sentinel2_l2a
 """
 
+try:
+    import numpy  # noqa: F401
+except ImportError as exc:  # pragma: no cover - exercised by a sys.modules patch
+    raise ImportError(
+        "geocase.raster needs numpy, which the core install does not include; "
+        'install it with: pip install "geocase[array]"'
+    ) from exc
+
 from geocase.raster.primitive import (
     DEFAULT_SIZE,
     MIN_USEFUL_SIZE,

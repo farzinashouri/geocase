@@ -28,6 +28,19 @@ the entry verbatim.
 
 ## [1.1.0] — 2026-09-27
 
+### Added — the `array` extra for `geocase.raster` (#44)
+
+`geocase.raster` imports numpy, but numpy is not a core dependency, so on a plain
+`pip install geocase` without numpy, `import geocase.raster` failed with
+`ModuleNotFoundError: No module named 'numpy'`. It now raises
+`ImportError: geocase.raster needs numpy ... pip install "geocase[array]"`.
+
+- New extra `array = ["numpy>=1.24,<3"]`; `all` includes it, and `write` now lists
+  numpy explicitly.
+- Core stays `pydantic`, `pyyaml`, `geofacts`: plain `geocase` still never installs or
+  changes numpy.
+- The docs no longer call `geocase.raster` "dependency-free".
+
 ### Changed — benchmark prompts (Plan 46 Phase 0)
 
 Two task prompts were edited, so their `prompt_sha256` moved. Each task now

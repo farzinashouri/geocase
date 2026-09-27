@@ -77,6 +77,14 @@ The extras exist for the convenience loaders — `case.load()` returning a GeoDa
 `[all]` re-resolves numpy and pandas and can shadow or break a working geospatial
 environment. Use it only in a greenfield one.
 
+`geocase.raster`, the in-memory raster fixture builder, needs numpy and no reader. Core does
+not include numpy, so that plain `geocase` never changes the numpy of an existing stack. If
+your environment has no numpy, install the `array` extra:
+
+```bash
+pip install "geocase[array]"
+```
+
 ---
 
 ## Your first GeoCase test
