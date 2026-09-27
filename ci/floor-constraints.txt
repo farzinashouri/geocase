@@ -1,0 +1,7 @@
+# Lowest versions the core install claims to support (pyproject.toml `>=`
+# bounds). Used by the `floor` CI job; tests/unit/test_floor_constraints.py
+# keeps these equal to pyproject.toml.
+pydantic==2.0
+pyyaml==6.0
+geofacts==0.1.2
+pytest==7.0
