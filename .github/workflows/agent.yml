@@ -7,9 +7,10 @@
 name: Agent
 
 on:
-  # Disabled until the triage-only dry run (#42) is reviewed; #43 enables:
-  # schedule:
-  #   - cron: "17 1 * * 1-5"   # weekday nights, 01:17 UTC
+  # Enabled by #43 after the triage-only dry run (#42) was reviewed.
+  # One issue per run: the prompt implements only the top agent:ready issue.
+  schedule:
+    - cron: "17 1 * * 1-5"   # weekday nights, 01:17 UTC
   workflow_dispatch:
     inputs:
       mode:

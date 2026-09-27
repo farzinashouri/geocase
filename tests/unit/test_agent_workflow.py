@@ -1,8 +1,8 @@
 """Structure of `.github/workflows/agent.yml` (Plan 49, issue #41).
 
 The agent runs unattended, so its rails are pinned here rather than trusted to
-the prompt alone: manual trigger with a triage-only mode, no live schedule
-until the dry run (#42) is reviewed, a time box, the GDAL environment the
+the prompt alone: manual trigger with a triage-only mode, a weekday-night
+schedule (enabled by #43 after the #42 dry run), a time box, the GDAL environment the
 catalog gates need, and a tool deny list that blocks merge, tag, release and
 pushes to main even if the model ignores the prompt.
 """
@@ -46,9 +46,14 @@ def test_manual_trigger_has_triage_only_mode(wf: dict[str, Any]) -> None:
     assert mode["default"] == "triage"
 
 
-def test_schedule_is_disabled_until_dry_run_reviewed(wf: dict[str, Any]) -> None:
-    # #43 enables the cron after the #42 dry run.
-    assert "schedule" not in wf["on"]
+def test_runs_weekday_nights(wf: dict[str, Any]) -> None:
+    # Enabled by #43 after the #42 dry run was reviewed.
+    assert wf["on"]["schedule"] == [{"cron": "17 1 * * 1-5"}]
+
+
+def test_scheduled_runs_use_full_mode(wf: dict[str, Any]) -> None:
+    # A cron run has no inputs, so the prompt must fall back to full mode.
+    assert "github.event.inputs.mode || 'full'" in _claude_step(wf)["with"]["prompt"]
 
 
 def test_time_boxed_and_serialised(wf: dict[str, Any]) -> None:
