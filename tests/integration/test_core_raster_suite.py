@@ -17,11 +17,13 @@ from pathlib import Path
 
 import pytest
 
-from geocase.assertions.metadata import assert_matches_raster_hints
-from geocase.cases.factory import create_case
-from geocase.catalog.loader import load_case_index, load_case_metadata
-from geocase.catalog.registry import get_registry
-from geocase.loaders.rasterio_loader import open_raster
+pytest.importorskip("rasterio")
+
+from geocase.assertions.metadata import assert_matches_raster_hints  # noqa: E402
+from geocase.cases.factory import create_case  # noqa: E402
+from geocase.catalog.loader import load_case_index, load_case_metadata  # noqa: E402
+from geocase.catalog.registry import get_registry  # noqa: E402
+from geocase.loaders.rasterio_loader import open_raster  # noqa: E402
 
 pytest.importorskip("rasterio")
 

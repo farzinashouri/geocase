@@ -36,6 +36,28 @@ jobs:
       # arbitrary. The floor lands in v1.1, once the number has settled.
       - run: python -m pytest tests -q --cov=geocase --cov-report=term
 
+  # The converse of the upper bounds in pyproject.toml (Plan 40 Phase 1): the
+  # plain `pip install geocase` shape, every core dependency at its declared
+  # minimum, Python at its floor, no extras. `ci/floor-constraints.txt` pins
+  # the minimums; tests/unit/test_floor_constraints.py keeps it equal to
+  # pyproject.toml, so a raised `>=` bound is re-proven here, not assumed.
+  #
+  # Tests that need an extra carry `@pytest.mark.requires(...)` and skip.
+  # `tests/benchmark` is left out whole: it is the `[bench]` extra and outside
+  # the compatibility promise.
+  floor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -c ci/floor-constraints.txt -e . pytest
+          python -m pip list
+      - run: python -m pytest tests -q --ignore=tests/benchmark
+
   lint:
     runs-on: ubuntu-latest
     steps:

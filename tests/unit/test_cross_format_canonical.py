@@ -27,12 +27,16 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-import shapely
-from pyproj import CRS
 
-from geocase.catalog.loader import load_case_index, load_case_metadata
-from geocase.catalog.models import CaseMetadata
-from geocase.catalog.roots import materialize_case
+pytest.importorskip("shapely")
+pytest.importorskip("pyproj")
+
+import shapely  # noqa: E402
+from pyproj import CRS  # noqa: E402
+
+from geocase.catalog.loader import load_case_index, load_case_metadata  # noqa: E402
+from geocase.catalog.models import CaseMetadata  # noqa: E402
+from geocase.catalog.roots import materialize_case  # noqa: E402
 
 _SRC = Path(__file__).resolve().parents[2] / "src" / "geocase"
 _CASE_INDEX = _SRC / "metadata" / "case-index.yaml"

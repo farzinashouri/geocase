@@ -153,6 +153,16 @@ gained a `known_divergences` record apiece, so a repeat differential run against
 GDAL reports `known` rather than `diverged`. This changes differential output
 only; it does not affect selection.
 
+### Added — CI
+
+- **A `floor` job** installs GeoCase on Python 3.11 with every core dependency
+  at its declared minimum (`pydantic==2.0`, `pyyaml==6.0`, `geofacts==0.1.2`,
+  `pytest==7.0`, pinned in `ci/floor-constraints.txt`) and no extras, then runs
+  `tests/` without `tests/benchmark`. A unit test keeps the pins equal to the
+  `>=` bounds in `pyproject.toml`. Tests that need an extra now carry
+  `@pytest.mark.requires(...)` and skip without it. No dependency bound
+  changed.
+
 ## [1.0.0] — 2026-09-05
 
 The first stable release. Everything below landed after the 2026-08-02 feature freeze

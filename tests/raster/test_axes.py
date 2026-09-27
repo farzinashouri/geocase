@@ -8,10 +8,13 @@ correct code and assert it does not.
 
 from __future__ import annotations
 
-import numpy as np
 import pytest
 
-from geocase.raster import axes
+pytest.importorskip("numpy")
+
+import numpy as np  # noqa: E402
+
+from geocase.raster import axes  # noqa: E402
 
 
 class TestNodataBorder:

@@ -175,6 +175,8 @@ This repository uses GitHub Actions, defined in `.github/workflows/`.
   `validate_catalog.py`, fixture and checksum gates, generated-page freshness)
 - `tests` — the whole `tests/` directory on Python 3.11 and 3.14, reporting
   coverage (not gated)
+- `floor` — the suite with no extras at the lowest declared core versions on
+  Python 3.11
 - `lint` — `ruff format --check` and `ruff check` over `src` and `tests`
 - `typecheck` — `mypy src`
 - `docs` — `mkdocs build --strict`

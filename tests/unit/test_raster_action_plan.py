@@ -168,6 +168,7 @@ class TestStep4Priority1Fixtures:
 class TestStep5RasterAssertions:
     """New raster assertion helpers should exist in assertions.raster."""
 
+    @pytest.mark.requires("shapely")
     @pytest.mark.parametrize(
         "name",
         [
@@ -186,6 +187,7 @@ class TestStep5RasterAssertions:
             getattr(raster_assertions, name)
         ), f"Missing raster assertion helper '{name}'"
 
+    @pytest.mark.requires("shapely")
     def test_metadata_dispatch_covers_new_fields(self):
         """``assert_matches_raster_hints`` dispatches the new typed fields.
 

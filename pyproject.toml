@@ -132,6 +132,9 @@ markers = [
     # here because this repository's own suite runs with the plugin under test.
     # `slow` was declared here and used zero times — dropped in Step 13.5.
     "remote: a GeoCase case whose data is not bundled with the package",
+    # Handled in tests/conftest.py. Lets the `floor` CI job run the suite
+    # with no extras installed.
+    "requires(*modules): skip unless every named optional module is importable",
 ]
 
 [tool.mypy]

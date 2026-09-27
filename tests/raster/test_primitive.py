@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
-import numpy as np
 import pytest
 
-from geocase.raster import DEFAULT_SIZE, MIN_USEFUL_SIZE, raster_fixture
+pytest.importorskip("numpy")
+
+import numpy as np  # noqa: E402
+
+from geocase.raster import DEFAULT_SIZE, MIN_USEFUL_SIZE, raster_fixture  # noqa: E402
 
 
 def test_escape_hatch_needs_no_writer() -> None:
