@@ -20,6 +20,20 @@ the case and the geometry costs them five seconds.
 A user hitting a break searches for the case id or the error text, so both belong in
 the entry verbatim.
 
+## [Unreleased]
+
+### Added — one-click release pipeline (Plan 50)
+
+Tooling only; nothing in the package changes.
+
+- `prepare-release.yml`: one input (the version) opens the release PR, using the new
+  `scripts/prepare_release.py`.
+- `release.yml`: a merged release PR tags the version, uploads to TestPyPI without
+  approval, smoke-tests the TestPyPI package in clean runners
+  (`scripts/smoke_release.py`, core and `[array]`), waits for approval before PyPI,
+  then smoke-tests PyPI, creates the GitHub release from
+  `scripts/changelog_section.py`, and closes the release issue.
+
 ## [1.1.0] — 2026-09-27
 
 ### Added — the `array` extra for `geocase.raster` (#44)

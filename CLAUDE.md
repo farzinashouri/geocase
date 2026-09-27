@@ -49,6 +49,8 @@ python scripts/generate_vector_coverage_matrix.py --output docs/_generated/vecto
 python scripts/generate_raster_coverage_matrix.py --output docs/_generated/raster-coverage-matrix.md
 ```
 
+Releasing (Plan 50): `gh workflow run prepare-release.yml -f version=X.Y.Z` opens the release PR (bumps `pyproject.toml`, dates `[Unreleased]` in `CHANGELOG.md`); merging it makes `release.yml` tag, build, upload to TestPyPI, smoke-test it (`scripts/smoke_release.py`), then wait for the owner's approval on the `pypi` environment. **Never approve the `pypi` deployment yourself** — that approval is the owner's one irreversible step. See [docs/contributing/pypi-release-steps.md](docs/contributing/pypi-release-steps.md).
+
 Benchmark runner: `python -m geocase.benchmark grade ...` (see `src/geocase/benchmark/cli.py`). `python -m geocase.benchmark report --runs results/runs --domain geo` compares runs (task x model matrix, per-`trap_category` rates with Wilson intervals, reproducible-silent at k>=3, seconds per trial from each call's `usage.duration_s`; `--coverage` lists catalog risk families no task exercises).
 
 ## Architecture

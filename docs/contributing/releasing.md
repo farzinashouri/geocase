@@ -41,11 +41,12 @@ Create the two environments under the repository's *Settings → Environments*.
 Adding a required reviewer to each is what makes publishing a deliberate,
 approved step rather than an automatic consequence of pushing a tag.
 
-!!! warning "Check the reviewers exist"
+!!! warning "Only `pypi` has a reviewer"
 
-    As of 2026-09-27 neither environment had a required reviewer, so the publish
-    jobs did not pause: a tag push uploaded to TestPyPI and PyPI at once. Step 0
-    of [PyPI release steps](pypi-release-steps.md) shows how to add and check them.
+    Until 2026-09-27 neither environment had a required reviewer, so a tag push
+    uploaded to TestPyPI and PyPI at once. Now `pypi` requires the owner's
+    approval and `testpypi` deliberately has none: the TestPyPI upload is the
+    rehearsal the pipeline smoke-tests before asking for that approval.
 
 A *pending* publisher works before the project exists on PyPI, which is exactly
 the first-release case; it converts to a normal publisher on first upload.
@@ -91,87 +92,25 @@ package.
 
 ## Release sequence
 
-### 1. Land the work
+Since Plan 50 the sequence is automated: **Prepare release** opens a release PR,
+merging it starts **Release**, which tags, builds, uploads to TestPyPI, smoke-tests
+the TestPyPI package in clean runners, and waits for approval before PyPI. After
+the upload it smoke-tests PyPI, creates the GitHub release and closes the release
+issue. The steps, and the two actions left to a person, are in
+[PyPI release steps](pypi-release-steps.md).
 
-Merge to `main` with a green pipeline. Tags are cut from `main`.
+The manual TestPyPI rehearsal that 1.0.0 needed (an rc version bump and back) is
+gone: TestPyPI is a separate registry, so the pipeline uploads the real version
+there first, with `skip-existing` so a version rehearsed by hand does not fail.
 
-### 2. Dry run against TestPyPI
-
-Never spend the real version number on a rehearsal. The rc needs a real version
-bump, not just an rc tag — `verify_dist.py` enforces that the tag and
-`pyproject.toml` agree:
-
-```bash
-# set version = "1.0.1rc1" in pyproject.toml, commit
-git tag -a v1.0.1rc1 -m "GeoCase 1.0.1rc1"
-git push origin v1.0.1rc1
-```
-
-!!! note "rc numbers are spent too"
-
-    `1.0.0rc1`, `1.0.0rc2` and `1.0.0rc3` were used in the run-up to 1.0.0 and are
-    on PyPI. TestPyPI is a separate registry but the same rule applies there: a
-    version, once uploaded, cannot be reused. Pick the next unused rc for the
-    version you are actually rehearsing.
-
-Pushing the tag runs the `build` job automatically. The `publish-testpypi` job
-then waits on the `testpypi` environment — **approve it** from the run's page in
-the Actions tab to upload.
-
-`release.yml` also accepts `workflow_dispatch`, so a rehearsal can be run from
-the Actions tab against any ref without cutting a tag. The trade-off: with no
-tag there is nothing to check the artifact version against, so the run verifies
-the wheel and sdist against `pyproject.toml` only. Prefer the tag for anything
-reaching real PyPI — a PyPI release is immutable, and the tag is what records
-which commit it was built from.
-
-Verify the result in a clean environment:
+To check a published version by hand, the same things the smoke test checks:
 
 ```bash
 python -m venv /tmp/gc && . /tmp/gc/bin/activate
-pip install --index-url https://test.pypi.org/simple/ \
-  --extra-index-url https://pypi.org/simple/ geocase==1.0.1rc1
-python -c "import geocase; print(geocase.__version__, len(geocase.__all__))"  # 1.0.1rc1 29
-# bundled data really materialised, not just importable
-python -c "import geocase; c = geocase.load_case('cog_multispectral_small'); print(c.primary_path.exists())"
+pip install geocase==1.1.0
+python -c "import geocase; print(geocase.__version__, len(geocase.__all__))"   # 1.1.0 29
 python -c "import geocase; print(len(geocase.list_cases()))"   # 174
-pytest --collect-only 2>&1 | head   # plugin registers
 ```
-
-The `--extra-index-url` is required: TestPyPI does not mirror `pydantic` or
-`pyyaml`.
-
-This step is what catches an OIDC misconfiguration, which otherwise surfaces as
-a 403 at upload time on the real registry.
-
-### 3. Publish to PyPI
-
-Bump back to `1.0.0`, commit, then:
-
-```bash
-git tag -a v1.0.0 -m "GeoCase 1.0.0"
-git push origin v1.0.0
-```
-
-**Approve `publish-pypi`** on the `pypi` environment. Both publish jobs sit
-behind an environment gate because cutting a tag and uploading should not be the
-same action.
-
-Verify:
-
-```bash
-python -m venv /tmp/gc2 && . /tmp/gc2/bin/activate
-pip install geocase==1.0.0
-python -c "import geocase; print(len(geocase.__all__))"   # 27
-```
-
-Confirm the project page lists **both** a wheel and an sdist — conda-forge needs
-the sdist in the next step.
-
-### 4. Update the changelog date
-
-`CHANGELOG.md` records the release date. If the upload slipped past the date in
-the entry, correct it rather than leaving a false one.
 
 ## conda-forge
 
@@ -197,10 +136,7 @@ PyPI upload.
 
 ## Subsequent releases
 
-1. Bump `version` in `pyproject.toml`; update `CHANGELOG.md`.
-2. Local gate, merge to `main`.
-3. Tag `vX.Y.Z`, push, approve `publish-pypi`.
+1. Keep `CHANGELOG.md`'s `[Unreleased]` section current as work lands.
+2. Run **Prepare release** with the new version; merge its PR.
+3. Approve `publish-pypi` after reading the smoke-test summary.
 4. Merge the autotick bot's conda-forge PR.
-
-The TestPyPI rehearsal is worth repeating for anything touching packaging —
-`pyproject.toml` build targets, new data directories, a Python version bump.
