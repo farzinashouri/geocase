@@ -26,7 +26,7 @@ the case and the geometry costs them five seconds.
 A user hitting a break searches for the case id or the error text, so both belong in
 the entry verbatim.
 
-## [Unreleased]
+## [1.1.0] — 2026-09-27
 
 ### Changed — benchmark prompts (Plan 46 Phase 0)
 
