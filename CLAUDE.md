@@ -84,7 +84,7 @@ Core data flow — keep this mental model:
 
 ## Working rules (non-negotiable)
 
-- **Never commit or push.** Do not run `git commit`, `git push`, or merge a PR. Leave the work in the working tree, say what changed, and let the user commit. (Enforced by a PreToolUse deny hook in `.claude/settings.json`.)
+- **Committing, pushing, opening and merging PRs are allowed.** `git commit`, `git push`, `gh pr create` and `gh pr merge` are permitted by `.claude/settings.json`. `git revert` stays denied.
 - **Config goes in `.claude/settings.json`,** not `settings.local.json`. Permissions, hooks, and env belong in the committed project file; `settings.local.json` holds only personal overrides.
 - **Deletion always asks.** `rm`, `rmdir`, `git clean`, and `find -delete` require explicit user confirmation, even in auto mode.
 - **TDD, always.** In both plans and implementation: write the failing unit test first, watch it fail, then write the code that makes it pass. A plan phase that ships code without a preceding test is malformed.
