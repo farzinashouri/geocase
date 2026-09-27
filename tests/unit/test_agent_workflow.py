@@ -81,3 +81,11 @@ def test_runs_the_committed_prompt(wf: dict[str, Any]) -> None:
 )
 def test_irreversible_actions_are_denied(wf: dict[str, Any], denied: str) -> None:
     assert denied in _claude_step(wf)["with"]["claude_args"]
+
+
+@pytest.mark.parametrize("allowed", ["Bash(gh:*)", "Bash(git:*)", "Edit", "Write"])
+def test_work_tools_are_allowed(wf: dict[str, Any], allowed: str) -> None:
+    # Headless runs cannot answer a permission prompt: without an allow list
+    # every gh/git call is denied and the run "succeeds" having done nothing
+    # (the first #42 dry run, 4 denials in 8 turns). The deny list still wins.
+    assert allowed in _claude_step(wf)["with"]["claude_args"]
