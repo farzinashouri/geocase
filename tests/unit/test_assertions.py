@@ -5,17 +5,26 @@ Exercises all assertion functions against the real bundled test data.
 
 from pathlib import Path
 
-import geopandas as gpd
-import numpy as np
 import pytest
 
-from geocase.assertions.crs import assert_crs_units, assert_epsg, assert_has_crs
-from geocase.assertions.footprint import (
+pytest.importorskip("numpy")
+pytest.importorskip("shapely")
+pytest.importorskip("geopandas")
+
+import geopandas as gpd  # noqa: E402
+import numpy as np  # noqa: E402
+
+from geocase.assertions.crs import (  # noqa: E402
+    assert_crs_units,
+    assert_epsg,
+    assert_has_crs,
+)
+from geocase.assertions.footprint import (  # noqa: E402
     assert_footprint_no_holes,
     assert_footprint_rectangularity,
     assert_footprint_similar_to_expected,
 )
-from geocase.assertions.geometry import (
+from geocase.assertions.geometry import (  # noqa: E402
     assert_feature_count,
     assert_geometry_type,
     assert_has_holes,
@@ -23,12 +32,12 @@ from geocase.assertions.geometry import (
     assert_no_holes,
     assert_valid_geometry,
 )
-from geocase.assertions.metadata import (
+from geocase.assertions.metadata import (  # noqa: E402
     assert_case_loadable,
     assert_matches_raster_hints,
     assert_matches_vector_hints,
 )
-from geocase.assertions.raster import (
+from geocase.assertions.raster import (  # noqa: E402
     assert_band_count,
     assert_dtype,
     assert_no_nodata_pixels,
@@ -36,15 +45,15 @@ from geocase.assertions.raster import (
     assert_nodata_value,
     assert_shape,
 )
-from geocase.assertions.topology import (
+from geocase.assertions.topology import (  # noqa: E402
     assert_no_duplicates,
     assert_no_null_geometries,
     assert_no_self_intersections,
 )
-from geocase.cases.factory import create_case
-from geocase.cases.raster import RasterCase
-from geocase.cases.vector import VectorCase
-from geocase.catalog.loader import load_case_metadata
+from geocase.cases.factory import create_case  # noqa: E402
+from geocase.cases.raster import RasterCase  # noqa: E402
+from geocase.cases.vector import VectorCase  # noqa: E402
+from geocase.catalog.loader import load_case_metadata  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Path constants

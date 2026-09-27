@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import numpy as np
 import pytest
 
+pytest.importorskip("numpy")
 pytest.importorskip("rasterio")
+
+import numpy as np  # noqa: E402
 
 from geocase.assertions.raster import (
     assert_band_count,

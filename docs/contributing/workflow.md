@@ -14,7 +14,7 @@ GeoCase has a complete folder structure, 174 bundled cases, and fully implemente
 - Plugin errors now call out common setup problems directly, including missing markers, unknown suites, empty selections, and ambiguous single-case usage.
 - Plugin-driven examples were added/updated in `examples/` (CRS, dateline, GDAL footprint, real geospatial function).
 - Selector model now supports first-class `geometry_type` filtering end-to-end.
-- CI jobs are implemented for catalog validation, tests, lint, typecheck, and docs. (This entry originally described GitLab CI files under `ci/`; that layout was never adopted — CI is GitHub Actions in `.github/workflows/`.)
+- CI jobs are implemented for catalog validation, tests, the dependency floor, lint, typecheck, and docs. (This entry originally described GitLab CI files under `ci/`; that layout was never adopted — CI is GitHub Actions in `.github/workflows/`.)
 - Practical docs were added for usage and product direction:
 	- [`docs/testing-your-function-with-geocase.md`](../testing-your-function-with-geocase.md)
 	- [`docs/design/case-recommendation-service.md`](https://github.com/farzinashouri/geocase/blob/main/docs/design/case-recommendation-service.md)
@@ -279,9 +279,13 @@ pytest tests/unit/test_case_models.py
 ### CI job segmentation
 
 CI runs on GitHub Actions. `.github/workflows/ci.yml` fires on push and pull
-request and defines five jobs:
+request and defines six jobs:
 
 - `tests` — the suite on a Python 3.11/3.14 matrix
+- `floor` — the suite on Python 3.11 with every core dependency at its
+  declared minimum (`ci/floor-constraints.txt`) and no extras; tests that need
+  an extra carry `@pytest.mark.requires(...)` and skip, `tests/benchmark` is
+  left out
 - `lint` — `ruff format --check` and `ruff check` over `src` and `tests`
 - `typecheck` — `mypy src`
 - `docs` — `mkdocs build --strict`

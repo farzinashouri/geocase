@@ -15,6 +15,8 @@ import subprocess
 import sys
 import textwrap
 
+import pytest
+
 PROGRAM = textwrap.dedent(
     """
     import sys, importlib.abc
@@ -54,6 +56,7 @@ PROGRAM = textwrap.dedent(
 )
 
 
+@pytest.mark.requires("numpy")
 def test_fixtures_build_without_rasterio() -> None:
     result = subprocess.run(
         [sys.executable, "-c", PROGRAM], capture_output=True, text=True

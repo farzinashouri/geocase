@@ -14,13 +14,15 @@ from pathlib import Path
 
 import pytest
 
-from geocase.assertions.format_compliance import (
+pytest.importorskip("shapely")
+
+from geocase.assertions.format_compliance import (  # noqa: E402
     assert_format_compliance,
     assert_geoparquet_metadata,
     registered_format_validators,
 )
-from geocase.catalog.loader import load_case_index, load_case_metadata
-from geocase.catalog.models import CaseMetadata, FormatType
+from geocase.catalog.loader import load_case_index, load_case_metadata  # noqa: E402
+from geocase.catalog.models import CaseMetadata, FormatType  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Path constants

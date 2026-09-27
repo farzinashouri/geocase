@@ -23,6 +23,7 @@ Two are maintained deliberately and are **not** interchangeable (see [docs/contr
 pytest tests -q                      # the suite (testpaths = tests, so examples/ needs naming)
 pytest tests/unit/test_x.py::test_y  # single test
 pytest examples -q                   # demo corpus; needs the conda env
+pip install -c ci/floor-constraints.txt -e . pytest && pytest tests --ignore=tests/benchmark   # `floor` CI job: 3.11, core deps at their minimums, no extras
 ruff format --check src tests && ruff check src tests   # lint gate (ruff pinned 0.15.7)
 mypy src                             # typecheck gate (src only)
 mkdocs build --strict                # docs gate; broken internal links fail

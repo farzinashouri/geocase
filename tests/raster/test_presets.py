@@ -2,11 +2,18 @@
 
 from __future__ import annotations
 
-import numpy as np
 import pytest
 from geofacts.sentinel2 import boa_offset, quantification, to_reflectance
 
-from geocase.raster.presets import DEFAULT_SIZE, sentinel1_grd, sentinel2_l2a
+pytest.importorskip("numpy")
+
+import numpy as np  # noqa: E402
+
+from geocase.raster.presets import (  # noqa: E402
+    DEFAULT_SIZE,
+    sentinel1_grd,
+    sentinel2_l2a,
+)
 
 rasterio = pytest.importorskip("rasterio")
 

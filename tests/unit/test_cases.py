@@ -272,6 +272,7 @@ class TestVectorCase:
         with pytest.raises(ValueError, match="category='vector'"):
             VectorCase(meta, _NODATA)
 
+    @pytest.mark.requires("geopandas")
     def test_load_simple_polygon(self):
         """Test load simple polygon."""
         meta = _load_meta(_SIMPLE)
@@ -280,6 +281,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.crs is not None
 
+    @pytest.mark.requires("geopandas")
     def test_load_simple_point(self):
         """Test load simple point."""
         meta = _load_meta(_POINT)
@@ -289,6 +291,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Point"
 
+    @pytest.mark.requires("geopandas")
     def test_load_polygon_with_hole(self):
         """Test load polygon with hole."""
         meta = _load_meta(_HOLE)
@@ -298,6 +301,7 @@ class TestVectorCase:
         # Polygon with hole has at least one interior ring
         assert len(list(geom.interiors)) == 1
 
+    @pytest.mark.requires("geopandas")
     def test_load_self_intersecting(self):
         """Test load self intersecting."""
         meta = _load_meta(_SELF_INTER)
@@ -307,6 +311,7 @@ class TestVectorCase:
         # Self-intersecting polygon is not valid by OGC standards
         assert geom.is_valid is False
 
+    @pytest.mark.requires("geopandas")
     def test_load_dateline_crossing(self):
         """Test load dateline crossing."""
         meta = _load_meta(_DATELINE)
@@ -317,6 +322,7 @@ class TestVectorCase:
         bounds = gdf.total_bounds  # [minx, miny, maxx, maxy]
         assert bounds[0] >= 170.0
 
+    @pytest.mark.requires("geopandas")
     def test_load_gpkg(self):
         """Test load gpkg."""
         meta = _load_meta(_ENCODING)
@@ -325,6 +331,7 @@ class TestVectorCase:
         assert len(gdf) == 3
         assert "Café" in gdf["name"].values
 
+    @pytest.mark.requires("geopandas")
     def test_load_shapefile(self):
         """Test load shapefile."""
         meta = _load_meta(_SHAPEFILE)
@@ -334,6 +341,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Polygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_shapefile_point(self):
         """Test load shapefile point."""
         meta = _load_meta(_SHAPEFILE_POINT)
@@ -343,6 +351,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Point"
 
+    @pytest.mark.requires("geopandas")
     def test_load_shapefile_linestring(self):
         """Test load shapefile linestring."""
         meta = _load_meta(_SHAPEFILE_LINE)
@@ -352,6 +361,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "LineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_shapefile_multipoint(self):
         """Test load shapefile multipoint."""
         meta = _load_meta(_SHAPEFILE_MULTIPOINT)
@@ -361,6 +371,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiPoint"
 
+    @pytest.mark.requires("geopandas")
     def test_load_shapefile_multilinestring(self):
         """Test load shapefile multilinestring."""
         meta = _load_meta(_SHAPEFILE_MULTILINE)
@@ -370,6 +381,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiLineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_shapefile_multipolygon(self):
         """Test load shapefile multipolygon."""
         meta = _load_meta(_SHAPEFILE_MULTIPOLY)
@@ -379,6 +391,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiPolygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_geopackage_point(self):
         """Test load geopackage point."""
         meta = _load_meta(_GPKG_POINT)
@@ -388,6 +401,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Point"
 
+    @pytest.mark.requires("geopandas")
     def test_load_geopackage_linestring(self):
         """Test load geopackage linestring."""
         meta = _load_meta(_GPKG_LINE)
@@ -397,6 +411,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "LineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_geopackage_polygon(self):
         """Test load geopackage polygon."""
         meta = _load_meta(_GPKG_POLY)
@@ -406,6 +421,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Polygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_geopackage_multipoint(self):
         """Test load geopackage multipoint."""
         meta = _load_meta(_GPKG_MULTIPOINT)
@@ -415,6 +431,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiPoint"
 
+    @pytest.mark.requires("geopandas")
     def test_load_geopackage_multilinestring(self):
         """Test load geopackage multilinestring."""
         meta = _load_meta(_GPKG_MULTILINE)
@@ -424,6 +441,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiLineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_geopackage_multipolygon(self):
         """Test load geopackage multipolygon."""
         meta = _load_meta(_GPKG_MULTIPOLY)
@@ -433,6 +451,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiPolygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_csv_wkt_point(self):
         """Test load csv wkt point."""
         meta = _load_meta(_CSV_WKT_POINT)
@@ -441,6 +460,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "Point"
 
+    @pytest.mark.requires("geopandas")
     def test_load_csv_wkt_polygon(self):
         """Test load csv wkt polygon."""
         meta = _load_meta(_CSV_WKT_POLY)
@@ -449,6 +469,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "Polygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_csv_wkt_multipoint(self):
         """Test load csv wkt multipoint."""
         meta = _load_meta(_CSV_WKT_MULTIPOINT)
@@ -457,6 +478,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "MultiPoint"
 
+    @pytest.mark.requires("geopandas")
     def test_load_csv_wkt_multilinestring(self):
         """Test load csv wkt multilinestring."""
         meta = _load_meta(_CSV_WKT_MULTILINE)
@@ -465,6 +487,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "MultiLineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_csv_wkt_multipolygon(self):
         """Test load csv wkt multipolygon."""
         meta = _load_meta(_CSV_WKT_MULTIPOLY)
@@ -473,6 +496,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "MultiPolygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_gml(self):
         """Test load gml."""
         meta = _load_meta(_GML)
@@ -482,6 +506,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Point"
 
+    @pytest.mark.requires("geopandas")
     def test_load_gml_polygon(self):
         """Test load gml polygon."""
         meta = _load_meta(_GML_POLYGON)
@@ -491,6 +516,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Polygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_gml_linestring(self):
         """Test load gml linestring."""
         meta = _load_meta(_GML_LINE)
@@ -500,6 +526,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "LineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_gml_multipoint(self):
         """Test load gml multipoint."""
         meta = _load_meta(_GML_MULTIPOINT)
@@ -509,6 +536,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiPoint"
 
+    @pytest.mark.requires("geopandas")
     def test_load_gml_multilinestring(self):
         """Test load gml multilinestring."""
         meta = _load_meta(_GML_MULTILINE)
@@ -518,6 +546,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiLineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_gml_multipolygon(self):
         """Test load gml multipolygon."""
         meta = _load_meta(_GML_MULTIPOLY)
@@ -527,6 +556,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiPolygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_csv_wkt(self):
         """Test load csv wkt."""
         meta = _load_meta(_CSV_WKT)
@@ -536,6 +566,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "LineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_sqlite(self):
         """Test load sqlite."""
         meta = _load_meta(_SQLITE)
@@ -545,6 +576,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Polygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_kml(self):
         """Test load kml."""
         meta = _load_meta(_KML)
@@ -554,6 +586,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Point"
 
+    @pytest.mark.requires("geopandas")
     def test_load_kml_polygon(self):
         """Test load kml polygon."""
         meta = _load_meta(_KML_POLYGON)
@@ -563,6 +596,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Polygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_kml_linestring(self):
         """Test load kml linestring."""
         meta = _load_meta(_KML_LINE)
@@ -572,6 +606,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "LineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_kml_multipoint(self):
         """Test load kml multipoint."""
         meta = _load_meta(_KML_MULTIPOINT)
@@ -581,6 +616,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiPoint"
 
+    @pytest.mark.requires("geopandas")
     def test_load_kml_multilinestring(self):
         """Test load kml multilinestring."""
         meta = _load_meta(_KML_MULTILINE)
@@ -590,6 +626,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiLineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_kml_multipolygon(self):
         """Test load kml multipolygon."""
         meta = _load_meta(_KML_MULTIPOLY)
@@ -599,6 +636,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiPolygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_wkt(self):
         """Test load wkt."""
         meta = _load_meta(_WKT)
@@ -608,6 +646,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Polygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_wkt_point(self):
         """Test load wkt point."""
         meta = _load_meta(_WKT_POINT)
@@ -616,6 +655,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "Point"
 
+    @pytest.mark.requires("geopandas")
     def test_load_wkt_linestring(self):
         """Test load wkt linestring."""
         meta = _load_meta(_WKT_LINE)
@@ -624,6 +664,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "LineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_wkt_multipoint(self):
         """Test load wkt multipoint."""
         meta = _load_meta(_WKT_MULTIPOINT)
@@ -632,6 +673,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "MultiPoint"
 
+    @pytest.mark.requires("geopandas")
     def test_load_wkt_multilinestring(self):
         """Test load wkt multilinestring."""
         meta = _load_meta(_WKT_MULTILINE)
@@ -640,6 +682,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "MultiLineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_wkt_multipolygon(self):
         """Test load wkt multipolygon."""
         meta = _load_meta(_WKT_MULTIPOLY)
@@ -648,6 +691,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "MultiPolygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_wkb(self):
         """Test load wkb."""
         meta = _load_meta(_WKB)
@@ -657,6 +701,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Polygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_wkb_point(self):
         """Test load wkb point."""
         meta = _load_meta(_WKB_POINT)
@@ -665,6 +710,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "Point"
 
+    @pytest.mark.requires("geopandas")
     def test_load_wkb_linestring(self):
         """Test load wkb linestring."""
         meta = _load_meta(_WKB_LINE)
@@ -673,6 +719,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "LineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_wkb_multipoint(self):
         """Test load wkb multipoint."""
         meta = _load_meta(_WKB_MULTIPOINT)
@@ -681,6 +728,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "MultiPoint"
 
+    @pytest.mark.requires("geopandas")
     def test_load_wkb_multilinestring(self):
         """Test load wkb multilinestring."""
         meta = _load_meta(_WKB_MULTILINE)
@@ -689,6 +737,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "MultiLineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_wkb_multipolygon(self):
         """Test load wkb multipolygon."""
         meta = _load_meta(_WKB_MULTIPOLY)
@@ -697,6 +746,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "MultiPolygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_sqlite_point(self):
         """Test load sqlite point."""
         meta = _load_meta(_SQLITE_POINT)
@@ -705,6 +755,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "Point"
 
+    @pytest.mark.requires("geopandas")
     def test_load_sqlite_linestring(self):
         """Test load sqlite linestring."""
         meta = _load_meta(_SQLITE_LINE)
@@ -713,6 +764,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "LineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_sqlite_multipoint(self):
         """Test load sqlite multipoint."""
         meta = _load_meta(_SQLITE_MULTIPOINT)
@@ -721,6 +773,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "MultiPoint"
 
+    @pytest.mark.requires("geopandas")
     def test_load_sqlite_multilinestring(self):
         """Test load sqlite multilinestring."""
         meta = _load_meta(_SQLITE_MULTILINE)
@@ -729,6 +782,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "MultiLineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_sqlite_multipolygon(self):
         """Test load sqlite multipolygon."""
         meta = _load_meta(_SQLITE_MULTIPOLY)
@@ -737,6 +791,7 @@ class TestVectorCase:
         assert len(gdf) == 1
         assert gdf.geometry.iloc[0].geom_type == "MultiPolygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_flatgeobuf(self):
         """Test load flatgeobuf."""
         meta = _load_meta(_FLATGEOBUF)
@@ -746,6 +801,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Polygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_flatgeobuf_point(self):
         """Test load flatgeobuf point."""
         meta = _load_meta(_FLATGEOBUF_POINT)
@@ -755,6 +811,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Point"
 
+    @pytest.mark.requires("geopandas")
     def test_load_flatgeobuf_linestring(self):
         """Test load flatgeobuf linestring."""
         meta = _load_meta(_FLATGEOBUF_LINE)
@@ -764,6 +821,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "LineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_flatgeobuf_multipoint(self):
         """Test load flatgeobuf multipoint."""
         meta = _load_meta(_FLATGEOBUF_MULTIPOINT)
@@ -773,6 +831,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiPoint"
 
+    @pytest.mark.requires("geopandas")
     def test_load_flatgeobuf_multilinestring(self):
         """Test load flatgeobuf multilinestring."""
         meta = _load_meta(_FLATGEOBUF_MULTILINE)
@@ -782,6 +841,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiLineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_flatgeobuf_multipolygon(self):
         """Test load flatgeobuf multipolygon."""
         meta = _load_meta(_FLATGEOBUF_MULTIPOLY)
@@ -791,6 +851,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiPolygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_parquet(self):
         """Test load parquet."""
         meta = _load_meta(_PARQUET)
@@ -800,6 +861,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Polygon"
 
+    @pytest.mark.requires("geopandas")
     def test_load_feather(self):
         """Test load feather."""
         meta = _load_meta(_FEATHER)
@@ -809,6 +871,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Point"
 
+    @pytest.mark.requires("geopandas")
     def test_load_geoarrow(self):
         """Test load geoarrow."""
         meta = _load_meta(_GEOARROW)
@@ -818,6 +881,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "LineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_parquet_multilinestring(self):
         """Test load parquet multilinestring."""
         meta = _load_meta(_PARQUET_MULTILINE)
@@ -827,6 +891,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiLineString"
 
+    @pytest.mark.requires("geopandas")
     def test_load_feather_multipoint(self):
         """Test load feather multipoint."""
         meta = _load_meta(_FEATHER_MULTIPOINT)
@@ -836,6 +901,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "MultiPoint"
 
+    @pytest.mark.requires("geopandas")
     def test_load_arrow_point(self):
         """Test load arrow point."""
         meta = _load_meta(_ARROW_POINT)
@@ -845,6 +911,7 @@ class TestVectorCase:
         assert gdf.crs is not None
         assert gdf.geometry.iloc[0].geom_type == "Point"
 
+    @pytest.mark.requires("geopandas")
     def test_crs_preserved(self):
         """Test crs preserved."""
         meta = _load_meta(_SIMPLE)
@@ -852,6 +919,7 @@ class TestVectorCase:
         gdf = case.load()
         assert gdf.crs.to_epsg() == 4326
 
+    @pytest.mark.requires("geopandas")
     def test_missing_file_raises(self):
         """Test missing file raises."""
         meta = _load_meta(_SIMPLE)
@@ -888,6 +956,7 @@ class TestRasterCase:
         with pytest.raises(ValueError, match="category='raster'"):
             RasterCase(meta, _SIMPLE)
 
+    @pytest.mark.requires("rasterio")
     def test_open_nodata_raster(self):
         """Test open nodata raster."""
         meta = _load_meta(_NODATA)
@@ -898,6 +967,7 @@ class TestRasterCase:
             assert src.height == 10
             assert src.nodata == -9999.0
 
+    @pytest.mark.requires("rasterio")
     def test_open_crs(self):
         """Test open crs."""
         meta = _load_meta(_NODATA)
@@ -905,6 +975,7 @@ class TestRasterCase:
         with case.open() as src:
             assert src.crs.to_epsg() == 32633
 
+    @pytest.mark.requires("rasterio")
     def test_open_utm_boundary(self):
         """Test open utm boundary."""
         meta = _load_meta(_UTM)
@@ -914,6 +985,7 @@ class TestRasterCase:
             assert src.width == 20
             assert src.height == 20
 
+    @pytest.mark.requires("rasterio")
     def test_open_rotated_raster_preserves_affine_terms(self):
         """Test open rotated raster preserves affine terms."""
         meta = load_case_metadata(_RASTER_EDGE / "case_rotated_two_islands.yaml")
@@ -926,6 +998,7 @@ class TestRasterCase:
             assert src.transform.d != 0.0
             assert src.nodata == -9999.0
 
+    @pytest.mark.requires("rasterio")
     def test_read_rotated_raster_profile_keeps_non_axis_aligned_transform(self):
         """Test read rotated raster profile keeps non axis aligned transform."""
         meta = load_case_metadata(_RASTER_EDGE / "case_rotated_two_islands.yaml")
@@ -939,6 +1012,7 @@ class TestRasterCase:
         assert transform.d != 0.0
         assert profile["driver"] == "GTiff"
 
+    @pytest.mark.requires("rasterio")
     def test_open_multiband_raster(self):
         """Test open multiband raster."""
         meta = _load_meta(_MULTIBAND)
@@ -948,6 +1022,7 @@ class TestRasterCase:
             assert src.width == 10
             assert src.height == 10
 
+    @pytest.mark.requires("rasterio")
     def test_read_multiband_raster_bands_are_distinct(self):
         """Test read multiband raster bands are distinct."""
         meta = _load_meta(_MULTIBAND)
@@ -968,6 +1043,7 @@ class TestRasterCase:
         assert (band2 != band3).any()
         assert (band1 != band3).any()
 
+    @pytest.mark.requires("rasterio")
     @pytest.mark.parametrize(
         ("case_dir", "expected_dtype"),
         [
@@ -987,6 +1063,7 @@ class TestRasterCase:
             assert src.height == 10
             assert src.dtypes == (expected_dtype,)
 
+    @pytest.mark.requires("rasterio")
     @pytest.mark.parametrize(
         ("case_dir", "expected_dtype"),
         [
@@ -1008,6 +1085,7 @@ class TestRasterCase:
         assert profile["dtype"] == expected_dtype
         assert profile["driver"] == "GTiff"
 
+    @pytest.mark.requires("rasterio")
     def test_read_band(self):
         """Test read band."""
         meta = _load_meta(_NODATA)
@@ -1017,6 +1095,7 @@ class TestRasterCase:
         assert nodata == -9999.0
         assert profile["driver"] == "GTiff"
 
+    @pytest.mark.requires("rasterio")
     def test_nodata_pixels_present(self):
         """Test nodata pixels present."""
 
@@ -1063,6 +1142,7 @@ class TestNetCDFCase:
         with pytest.raises(ValueError, match="category='netcdf'"):
             NetCDFCase(meta, _SIMPLE)
 
+    @pytest.mark.requires("xarray")
     def test_load_dataset(self):
         """Test load dataset."""
         meta = _load_meta(_LATLON)
@@ -1071,6 +1151,7 @@ class TestNetCDFCase:
         assert "temperature" in ds.data_vars
         ds.close()
 
+    @pytest.mark.requires("xarray")
     def test_dimensions(self):
         """Test dimensions."""
         meta = _load_meta(_LATLON)
@@ -1082,6 +1163,7 @@ class TestNetCDFCase:
         assert ds.sizes["longitude"] == 8
         ds.close()
 
+    @pytest.mark.requires("xarray")
     def test_coordinates(self):
         """Test coordinates."""
         meta = _load_meta(_LATLON)
@@ -1091,6 +1173,7 @@ class TestNetCDFCase:
         assert ds["latitude"].values[-1] == 50.0
         ds.close()
 
+    @pytest.mark.requires("xarray")
     def test_fill_value(self):
         """Test fill value."""
         meta = _load_meta(_LATLON)
@@ -1101,6 +1184,7 @@ class TestNetCDFCase:
         assert temp.encoding.get("_FillValue") == -9999.0
         ds.close()
 
+    @pytest.mark.requires("xarray")
     def test_cf_conventions(self):
         """Test cf conventions."""
         meta = _load_meta(_LATLON)
@@ -1109,6 +1193,7 @@ class TestNetCDFCase:
         assert ds.attrs.get("Conventions") == "CF-1.8"
         ds.close()
 
+    @pytest.mark.requires("xarray")
     def test_missing_file_raises(self):
         """Test missing file raises."""
         meta = _load_meta(_LATLON)
@@ -1167,6 +1252,7 @@ class TestCreateCase:
         with pytest.raises(ValueError, match="satellite"):
             create_case(meta2, _SIMPLE)
 
+    @pytest.mark.requires("geopandas")
     def test_factory_produces_loadable_vector(self):
         """Test factory produces loadable vector."""
         meta = _load_meta(_DATELINE)
@@ -1175,6 +1261,7 @@ class TestCreateCase:
         gdf = case.load()
         assert len(gdf) == 1
 
+    @pytest.mark.requires("rasterio")
     def test_factory_produces_loadable_raster(self):
         """Test factory produces loadable raster."""
         meta = _load_meta(_NODATA)
@@ -1183,6 +1270,7 @@ class TestCreateCase:
         with case.open() as src:
             assert src.count == 1
 
+    @pytest.mark.requires("xarray")
     def test_factory_produces_loadable_netcdf(self):
         """Test factory produces loadable netcdf."""
         meta = _load_meta(_LATLON)

@@ -13,11 +13,16 @@ or corruption during cross-format conversion:
 import json
 from pathlib import Path
 
-import geopandas as gpd
-import pandas as pd
 import pytest
-import shapely
-from shapely.geometry import shape
+
+pytest.importorskip("shapely")
+pytest.importorskip("pandas")
+pytest.importorskip("geopandas")
+
+import geopandas as gpd  # noqa: E402
+import pandas as pd  # noqa: E402
+import shapely  # noqa: E402
+from shapely.geometry import shape  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Path constants

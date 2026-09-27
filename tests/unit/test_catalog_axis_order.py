@@ -75,6 +75,7 @@ def test_gml_file_contains_authority_order_coordinates(case_id: str) -> None:
     assert extent.west - 1.0 <= second <= extent.east + 1.0
 
 
+@pytest.mark.requires("geopandas")
 @pytest.mark.parametrize("case_id", _GML_CASES)
 def test_loaded_geometry_is_lon_first(case_id: str) -> None:
     """OGR reads the URN correctly, so the loaded geometry is *not* swapped.
