@@ -22,6 +22,21 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Added — a reusable differential-round instrument (Plan 51, #46)
+
+`geocase.differential` gains `run_round` and `render_report`, so a new
+differential round (PROJ, GEOS, or your own) no longer hand-rolls the same
+write-up the pyogrio and GDAL rounds each wrote from scratch:
+
+- `run_round(...)` is `compare_cases` plus `summarize`, bundled into a new
+  `RoundReport`.
+- `render_report(report)` renders it as Markdown: an environment table, the
+  outcome counts, and a section per non-`agree` outcome with each result's
+  detail and, for a `known` result, its `upstream_url`.
+- Both are exported from `geocase.differential.__all__`, alongside the
+  existing `compare_cases`/`summarize`. Not part of the `import geocase` v1.0
+  surface, same footing as the rest of the submodule.
+
 ### Added — one-click release pipeline (Plan 50)
 
 Tooling only; nothing in the package changes.
