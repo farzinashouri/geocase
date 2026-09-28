@@ -1,0 +1,27 @@
+# Clear the agent's state labels when an issue closes. Closing an issue never
+# touches its labels, and the agent triages open issues only, so without this a
+# merged PR leaves `agent:pr-open` on its closed issue forever. Structure is
+# pinned by tests/unit/test_agent_labels_workflow.py.
+name: Agent labels
+
+on:
+  issues:
+    types: [closed]
+
+permissions:
+  issues: write
+
+jobs:
+  clear:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: >-
+          gh issue edit "$NUMBER"
+          --remove-label agent:ready
+          --remove-label agent:in-progress
+          --remove-label agent:pr-open
+          --remove-label agent:needs-human
