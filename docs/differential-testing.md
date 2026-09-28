@@ -138,6 +138,45 @@ pass `consumer=`. Omit it to opt out of the catalogue entirely, which is what
 you want when auditing whether the recorded divergences are still real. See
 [Adding a case](adding-a-case.md) for the metadata block.
 
+## One call per round
+
+The pyogrio and GDAL rounds each did the same three things by hand: call
+`compare_cases`, `summarize` the result, then loop over the non-`agree`
+outcomes and format them into prose. `run_round` and `render_report` are that
+third step, done once, so the next round — PROJ, GEOS, or your own — is one
+call instead of a fresh harness:
+
+```python
+from geocase.differential import render_report, run_round
+
+report = run_round(
+    title="PROJ 9.4 vs 9.6, axis-order sensitive transforms",
+    left=partial(transform_with, proj_version="9.4"),
+    right=partial(transform_with, proj_version="9.6"),
+    consumer="proj",
+    category="vector",
+    environment={"PROJ": "9.4.1 vs 9.6.0", "pyproj": "3.7.0"},
+)
+
+print(render_report(report))
+```
+
+`run_round` is `compare_cases` plus `summarize`, bundled into a `RoundReport`;
+every keyword `compare_cases` accepts — `compare=`, `explain=`, `cases=`, and
+selection kwargs forwarded to `list_cases` — works the same way here.
+`render_report` writes it up as Markdown: an environment table when you pass
+one, the outcome counts, then a section per outcome that isn't `agree`, each
+result as `case_id: detail`, with a `known` result's `upstream_url` attached.
+A round with nothing but `agree` says so in one line rather than rendering an
+empty document.
+
+This is a triage report, not the write-up you'd file upstream — turning a
+`diverged` result into something like
+[the pyogrio bug report](https://github.com/farzinashouri/geocase/blob/main/docs/geocase_validate/pyogrio-bug-report.md)
+still takes a person choosing what to lead with and building a minimal repro.
+What `render_report` replaces is the part before that: seeing, at a glance,
+which cases need a person's attention at all.
+
 ## Teaching it what to ignore
 
 The default comparison understands GeoDataFrames — row count first, then

@@ -80,7 +80,7 @@ precedent :mod:`geocase.raster` and :mod:`geocase.assertions` set.
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
@@ -96,6 +96,7 @@ __all__ = [
     "PixelBudgetError",
     "ProbeExplanation",
     "ReaderTimeoutError",
+    "RoundReport",
     "compare_arrays",
     "compare_case",
     "compare_cases",
@@ -105,6 +106,8 @@ __all__ = [
     "explain_divergence",
     "guarded_reader",
     "option_pairs",
+    "render_report",
+    "run_round",
     "summarize",
     "to_common_currency",
 ]
@@ -653,6 +656,159 @@ def summarize(results: Iterable[DifferentialResult]) -> dict[str, int]:
     for result in results:
         counts[result.outcome] += 1
     return counts
+
+
+# ---------------------------------------------------------------------------
+# Plan 51 -- one call per round, instead of hand-rolling the write-up
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class RoundReport:
+    """One differential round's results, ready to write up.
+
+    The pyogrio and GDAL rounds each called :func:`compare_cases`,
+    :func:`summarize`, then hand-formatted the non-``agree`` outcomes into
+    prose. This is the record that write-up needs, bundled once so
+    :func:`render_report` can do the formatting instead of the round author.
+
+    Attributes:
+        title: What the round tested, e.g. ``"pyogrio numpy vs Arrow"``.
+        consumer: The library under test, as passed to :func:`run_round`.
+        results: Every :class:`DifferentialResult`, in catalog order.
+        summary: :func:`summarize` of ``results``.
+        environment: Name to version, e.g. ``{"pyogrio": "0.11.0"}``. A round
+            has to supply this itself — there is no single live environment
+            to introspect when the two readers come from different packages.
+        notes: Freeform prose appended to the report, e.g. a selection caveat.
+    """
+
+    title: str
+    consumer: str | None
+    results: list[DifferentialResult]
+    summary: dict[str, int]
+    environment: dict[str, str] = field(default_factory=dict)
+    notes: str = ""
+
+
+def run_round(
+    *,
+    title: str,
+    left: Reader,
+    right: Reader,
+    compare: Callable[[Any, Any], str | None] = default_compare,
+    consumer: str | None = None,
+    explain: bool = False,
+    environment: dict[str, str] | None = None,
+    notes: str = "",
+    cases: Iterable[CaseMetadata] | None = None,
+    **selection: Any,
+) -> RoundReport:
+    """Run a differential round and bundle it into a :class:`RoundReport`.
+
+    :func:`compare_cases` plus :func:`summarize`, gathered into the one
+    object :func:`render_report` writes up — the two steps every round has
+    needed so far, done once.
+
+    Args:
+        title: See :attr:`RoundReport.title`.
+        left: See :func:`compare_cases`.
+        right: See :func:`compare_cases`.
+        compare: See :func:`compare_cases`.
+        consumer: See :func:`compare_cases`.
+        explain: See :func:`compare_cases`.
+        environment: See :attr:`RoundReport.environment`.
+        notes: See :attr:`RoundReport.notes`.
+        cases: See :func:`compare_cases`.
+        **selection: See :func:`compare_cases`.
+
+    Returns:
+        The round's :class:`RoundReport`.
+    """
+    results = compare_cases(
+        left=left,
+        right=right,
+        compare=compare,
+        consumer=consumer,
+        explain=explain,
+        cases=cases,
+        **selection,
+    )
+    return RoundReport(
+        title=title,
+        consumer=consumer,
+        results=results,
+        summary=summarize(results),
+        environment=environment or {},
+        notes=notes,
+    )
+
+
+def _render_result(result: DifferentialResult) -> str:
+    line = f"- **{result.case_id}**: {result.detail}"
+    if result.known_divergence is not None and result.known_divergence.upstream_url:
+        line += f" ({result.known_divergence.upstream_url})"
+    return line
+
+
+def render_report(report: RoundReport) -> str:
+    """Render a :class:`RoundReport` as Markdown.
+
+    Title, then an environment table (omitted when :attr:`RoundReport.environment`
+    is empty), then the summary counts, then one section per outcome that is
+    not ``agree`` — ``diverged``, ``errored``, ``known`` — each result as
+    ``case_id: detail``, with a ``known`` result's ``upstream_url`` appended
+    when it has one. A round with nothing but ``agree`` says so in one line: a
+    clean run is itself a useful artifact, not an empty document.
+
+    This is a triage report, not filing prose: turning a ``diverged`` result
+    into an issue-tracker write-up still takes a person reading the detail
+    and choosing what to lead with.
+    """
+    lines = [f"# {report.title}", ""]
+
+    if report.consumer:
+        lines.append(f"Consumer: `{report.consumer}`")
+        lines.append("")
+
+    if report.environment:
+        lines.append("| | |")
+        lines.append("|---|---|")
+        for name, version in report.environment.items():
+            lines.append(f"| {name} | {version} |")
+        lines.append("")
+
+    lines.append("| outcome | count |")
+    lines.append("|---|---|")
+    for outcome in ("agree", "diverged", "known", "errored"):
+        lines.append(f"| {outcome} | {report.summary.get(outcome, 0)} |")
+    lines.append("")
+
+    sections: dict[Outcome, str] = {
+        "diverged": "Diverged",
+        "errored": "Errored",
+        "known": "Known",
+    }
+    any_findings = False
+    for outcome, heading in sections.items():
+        matching = [r for r in report.results if r.outcome == outcome]
+        if not matching:
+            continue
+        any_findings = True
+        lines.append(f"## {heading}")
+        lines.append("")
+        lines.extend(_render_result(result) for result in matching)
+        lines.append("")
+
+    if not any_findings:
+        lines.append("No divergences: every case agreed.")
+        lines.append("")
+
+    if report.notes:
+        lines.append(report.notes)
+        lines.append("")
+
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------
