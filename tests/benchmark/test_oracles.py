@@ -611,6 +611,88 @@ def utm_epsg_for(lon, lat):
 """
 
 
+GOOD["area_m2"] = """
+from pyproj import Geod
+from shapely.ops import transform
+
+GEOD = Geod(ellps="WGS84")
+
+def area_m2(geom):
+    # Unwrap onto one side of the antimeridian, then measure on the ellipsoid.
+    shifted = transform(lambda x, y, z=None: (x % 360, y), geom)
+    return abs(GEOD.geometry_area_perimeter(shifted)[0])
+"""
+
+TRAPPED["area_m2"] = """
+import math
+
+def area_m2(geom):
+    # Planar degrees scaled by a mid-latitude factor: fine locally, and a
+    # 358-degree-wide complement across the antimeridian.
+    lat = geom.centroid.y
+    return geom.area * 111_320.0**2 * math.cos(math.radians(lat))
+"""
+
+_BUFFER_TRAPPED = """
+from pyproj import CRS, Transformer
+from shapely.ops import transform
+
+def buffer_m(geom, distance_m):
+    c = geom.centroid
+    aeqd = CRS.from_proj4(
+        f"+proj=aeqd +lat_0={c.y} +lon_0={c.x} +datum=WGS84 +units=m +no_defs"
+    )
+    fwd = Transformer.from_crs("EPSG:4326", aeqd, always_xy=True).transform
+    back = Transformer.from_crs(aeqd, "EPSG:4326", always_xy=True).transform
+    return transform(back, transform(fwd, geom).buffer(distance_m))
+"""
+
+GOOD["buffer_m"] = """
+import numpy as np
+from pyproj import CRS, Transformer
+from shapely.ops import transform
+
+def buffer_m(geom, distance_m):
+    c = geom.centroid
+    lon0 = c.x
+    aeqd = CRS.from_proj4(
+        f"+proj=aeqd +lat_0={c.y} +lon_0={lon0} +datum=WGS84 +units=m +no_defs"
+    )
+    fwd = Transformer.from_crs("EPSG:4326", aeqd, always_xy=True).transform
+    back = Transformer.from_crs(aeqd, "EPSG:4326", always_xy=True).transform
+
+    def unwrapped(x, y, z=None):
+        lon, lat = back(x, y)
+        return lon0 + (np.asarray(lon) - lon0 + 180) % 360 - 180, lat
+
+    return transform(unwrapped, transform(fwd, geom).buffer(distance_m))
+"""
+
+# AEQD centred on the geometry, projected back with longitudes wrapped into
+# [-180, 180]: the ring jumps across the antimeridian and the buffer is invalid.
+TRAPPED["buffer_m"] = _BUFFER_TRAPPED
+
+GOOD["position_at"] = """
+from pyproj import Geod
+
+GEOD = Geod(ellps="WGS84")
+
+def position_at(fixes, t):
+    for (t0, lon0, lat0), (t1, lon1, lat1) in zip(fixes, fixes[1:]):
+        if t0 <= t <= t1:
+            az, _, dist = GEOD.inv(lon0, lat0, lon1, lat1)
+            lon, lat, _ = GEOD.fwd(lon0, lat0, az, dist * (t - t0) / (t1 - t0))
+            return lon, lat
+"""
+
+TRAPPED["position_at"] = """
+def position_at(fixes, t):
+    for (t0, lon0, lat0), (t1, lon1, lat1) in zip(fixes, fixes[1:]):
+        if t0 <= t <= t1:
+            f = (t - t0) / (t1 - t0)
+            return lon0 + f * (lon1 - lon0), lat0 + f * (lat1 - lat0)
+"""
+
 NEW_TASKS = sorted(GOOD)
 
 
@@ -757,3 +839,46 @@ def test_geohash_oracle_neighbors_of_interior_cell():
         "ezefr",
         "ezefx",
     }
+
+
+# ------------------------------------------- Plan 46 Phase 3: edge batteries
+BATTERY_TASKS = ["area_m2", "buffer_m", "position_at", "split_antimeridian"]
+
+
+@pytest.mark.parametrize("name", BATTERY_TASKS)
+def test_battery_has_four_to_six_edges_and_trap_fails_every_one(name, tmp_path):
+    """Each battery edge must catch the trap on its own: an edge the trapped
+    implementation passes is not measuring the trap."""
+    _, outcome = _grade(name, TRAPPED[name], tmp_path)
+    edges = [c for c in outcome.checks if c.kind == CheckKind.EDGE]
+    assert 4 <= len(edges) <= 6, [c.check for c in edges]
+    assert all(c.status == Status.SILENT for c in edges), [
+        (c.check, c.status.value, c.detail) for c in edges
+    ]
+
+
+def _edge_inputs(name):
+    """The WKT each edge check hands to the function under test."""
+    from geocase.benchmark.grading import load_module
+
+    seen = []
+
+    def spy(geom):
+        seen.append(geom.wkt)
+        raise RuntimeError("spy")
+
+    grader = load_module(get_task(name).grader_path)
+    for _, kind, check in grader.build_checks(spy):
+        if kind == "edge":
+            try:
+                check()
+            except RuntimeError:
+                pass
+    return set(seen)
+
+
+def test_area_and_split_antimeridian_edges_no_longer_share_inputs():
+    """The two tasks once shared one byte-identical edge input. The original
+    box stays in both (append-only), so at most that one input is common."""
+    shared = _edge_inputs("area_m2") & _edge_inputs("split_antimeridian")
+    assert len(shared) <= 1, shared

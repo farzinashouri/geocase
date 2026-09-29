@@ -26,7 +26,49 @@ def build_checks(f):
             got, exp, 0.01
         ), f"got {got:.4g}, expected {exp:.4g} (2x1 deg box)"
 
+    def battery(ring, ref_ring):
+        # Same test, other places: the ring jumps across the antimeridian, the
+        # reference is the same ring with longitudes unwrapped past 180.
+        def check():
+            exp = abs(GEOD.geometry_area_perimeter(Polygon(ref_ring))[0])
+            got = f(Polygon(ring))
+            return rel_ok(got, exp, 0.01), f"got {got:.4g}, expected {exp:.4g}"
+
+        return check
+
     return [
         ("berlin_box", "control", control),
         ("antimeridian_box", "edge", dateline),
+        (
+            "antimeridian_westward",
+            "edge",
+            battery(
+                [(-178, 10), (178, 10), (178, 12), (-178, 12)],
+                [(-178, 10), (-182, 10), (-182, 12), (-178, 12)],
+            ),
+        ),
+        (
+            "pole_adjacent_crossing",
+            "edge",
+            battery(
+                [(175, 80), (-175, 80), (-175, 85), (175, 85)],
+                [(175, 80), (185, 80), (185, 85), (175, 85)],
+            ),
+        ),
+        (
+            "equator_crossing",
+            "edge",
+            battery(
+                [(179.5, -1), (-179.5, -1), (-179.5, 1), (179.5, 1)],
+                [(179.5, -1), (180.5, -1), (180.5, 1), (179.5, 1)],
+            ),
+        ),
+        (
+            "southern_hemisphere",
+            "edge",
+            battery(
+                [(-179.5, -60), (179.5, -60), (179.5, -58), (-179.5, -58)],
+                [(-179.5, -60), (-180.5, -60), (-180.5, -58), (-179.5, -58)],
+            ),
+        ),
     ]

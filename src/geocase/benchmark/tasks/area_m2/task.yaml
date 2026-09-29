@@ -11,3 +11,7 @@ origin: step0
 checks:
   - {name: berlin_box, kind: control}
   - {name: antimeridian_box, kind: edge}
+  - {name: antimeridian_westward, kind: edge}
+  - {name: pole_adjacent_crossing, kind: edge}
+  - {name: equator_crossing, kind: edge}
+  - {name: southern_hemisphere, kind: edge}

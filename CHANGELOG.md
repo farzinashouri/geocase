@@ -22,6 +22,22 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Added — benchmark edge batteries, antimeridian tasks (Plan 46 Phase 3, #31)
+
+Benchmark only; no catalog case changed and no `prompt.md` changed. Checks are
+append-only: existing check names keep their meaning.
+
+- `area_m2`, `buffer_m`, `position_at`, `split_antimeridian` each go from one edge
+  check to five. New edge checks: `area_m2` `antimeridian_westward`,
+  `pole_adjacent_crossing`, `equator_crossing`, `southern_hemisphere`; `buffer_m`
+  `dateline_westward`, `pole_adjacent`, `equator_crossing_line`,
+  `southern_hemisphere`; `position_at` `dateline_westward`, `pole_adjacent`,
+  `equator_crossing`, `southern_hemisphere`; `split_antimeridian` `westward_ring`,
+  `pole_adjacent`, `equator_crossing`, `southern_hemisphere`. The new
+  `area_m2` and `split_antimeridian` inputs differ (only the original box is shared).
+- `tests/benchmark/test_results_pin.py` regrades a committed module over the check
+  names recorded in its `graded.json` only; checks added later are not drift.
+
 ### Added — vector differential round (Plan 42 Phases 3–4, #27)
 
 - `geocase.differential.default_compare` now compares `geometry`-dtype frame

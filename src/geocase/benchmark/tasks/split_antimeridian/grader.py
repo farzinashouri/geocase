@@ -47,7 +47,58 @@ def build_checks(f):
             f"area {area:.4g} (expected {exp_area:.4g})"
         )
 
+    def battery(ring, ref_ring):
+        def check():
+            exp_area = abs(GEOD.geometry_area_perimeter(Polygon(ref_ring))[0])
+            got = list(f(Polygon(ring)))
+            area = _total_geodesic_area(got)
+            span = _max_lon_span(got)
+            ok = (
+                len(got) >= 2
+                and all(p.is_valid for p in got)
+                and span < 300
+                and rel_ok(area, exp_area, 0.02)
+            )
+            return ok, (
+                f"{len(got)} part(s), max lon span {span:.1f} deg, "
+                f"area {area:.4g} (expected {exp_area:.4g})"
+            )
+
+        return check
+
     return [
         ("non_crossing_passthrough", "control", control),
         ("crossing_box_two_parts", "edge", crossing),
+        (
+            "westward_ring",
+            "edge",
+            battery(
+                [(-175, -20), (175, -20), (175, -15), (-175, -15)],
+                [(-175, -20), (-185, -20), (-185, -15), (-175, -15)],
+            ),
+        ),
+        (
+            "pole_adjacent",
+            "edge",
+            battery(
+                [(176, 82), (-176, 82), (-176, 86), (176, 86)],
+                [(176, 82), (184, 82), (184, 86), (176, 86)],
+            ),
+        ),
+        (
+            "equator_crossing",
+            "edge",
+            battery(
+                [(178, -1), (-178, -1), (-178, 1), (178, 1)],
+                [(178, -1), (182, -1), (182, 1), (178, 1)],
+            ),
+        ),
+        (
+            "southern_hemisphere",
+            "edge",
+            battery(
+                [(-179, -70), (179, -70), (179, -65), (-179, -65)],
+                [(-179, -70), (-181, -70), (-181, -65), (-179, -65)],
+            ),
+        ),
     ]
