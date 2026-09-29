@@ -207,8 +207,16 @@ def _frames_differ(left: Any, right: Any) -> str | None | object:
     for column in left_columns:
         left_values = list(left[column])
         right_values = list(right[column])
+        is_geometry = (
+            str(getattr(left[column], "dtype", "")) == "geometry"
+            and str(getattr(right[column], "dtype", "")) == "geometry"
+        )
         for row, (a, b) in enumerate(zip(left_values, right_values, strict=True)):
-            if not _values_equal(a, b):
+            if is_geometry:
+                difference = compare_geometries(a, b)
+                if difference is not None:
+                    return f"column {column!r} differs at row {row}: {difference}"
+            elif not _values_equal(a, b):
                 return f"column {column!r} differs at row {row}: {a!r} vs {b!r}"
     return None
 

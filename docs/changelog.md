@@ -28,6 +28,15 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Added — vector differential round (Plan 42 Phases 3–4, #27)
+
+- `geocase.differential.default_compare` now compares `geometry`-dtype frame
+  columns with `compare_geometries`, so a frame divergence reports
+  `geometry state differs: NULL vs EMPTY` (or `NaN-coordinate vs present`,
+  or `POINT EMPTY vs POLYGON EMPTY`) instead of two reprs. No case changed.
+- `examples/test_differential_vector.py`: pyogrio vs. raw OGR + GEOS over the
+  vector corpus. Result: 104 agree, 0 diverged, 0 errored — no finding.
+
 ### Added — a reusable differential-round instrument (Plan 51, #46)
 
 `geocase.differential` gains `run_round` and `render_report`, so a new
