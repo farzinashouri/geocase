@@ -293,7 +293,11 @@ An issue is `agent:ready` when a person could finish it without asking you
 anything:
 
 - say what "done" means, as a checklist;
-- name the files, plan section or case ids involved;
+- name the files and case ids involved;
+- **copy the plan section into the body.** `docs/plans/` is gitignored, so
+  the agent's checkout does not contain it; a body that only says "See
+  docs/plans/…" is not ready. Triage removes `agent:ready` from such issues
+  and asks for the section;
 - state dependencies as `Depends on #N`;
 - keep it to one PR's worth of work.
 

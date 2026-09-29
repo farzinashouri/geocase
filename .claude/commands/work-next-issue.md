@@ -11,6 +11,12 @@ The design is in Plan 49 (local only); this file is the contract.
    right one. If unclear, comment one specific question and add
    `agent:needs-human`. Issues with a new comment from the owner since the
    agent's last question: remove `agent:needs-human`, re-triage.
+   **Self-contained check** (every `agent:ready` issue, new or old):
+   `docs/plans/` is not in this checkout, so the body alone must say what to
+   build and what "done" means. If it only points to a plan ("See
+   docs/plans/…", "Plan NN §x") without copying the section, or leaves a
+   choice open, remove `agent:ready`, add `operator`, and comment naming the
+   missing section or the open choice. Never pick such an issue in step 4.
 2. **Queue.** Rewrite the body of the pinned issue titled
    "📋 Development queue": Next up (agent) / Waiting on you (one action each) /
    In review / Blocked / Done this week. Rank: unblocks the release →
