@@ -71,3 +71,13 @@ jobs:
             --disallowedTools "Bash(gh pr merge:*)" "Bash(git tag:*)" "Bash(gh release:*)"
             "Bash(git push origin main:*)" "Bash(git push -f:*)" "Bash(git push --force:*)"
             "Bash(git revert:*)" "Bash(rm -rf:*)" "Bash(gh workflow run:*)"
+      # The model may not merge (deny list above). This fixed step turns on
+      # GitHub auto-merge for open agent/* PRs: each merges once the checks
+      # required by the main_protected ruleset pass, and never bypasses them.
+      - name: Enable auto-merge on agent PRs
+        run: |
+          gh pr list --state open --json number,headRefName \
+            --jq '.[] | select(.headRefName | startswith("agent/")) | .number' |
+          while read -r pr; do
+            gh pr merge "$pr" --auto --merge || echo "::warning::auto-merge not enabled on #$pr"
+          done

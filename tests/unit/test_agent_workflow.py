@@ -94,3 +94,24 @@ def test_work_tools_are_allowed(wf: dict[str, Any], allowed: str) -> None:
     # every gh/git call is denied and the run "succeeds" having done nothing
     # (the first #42 dry run, 4 denials in 8 turns). The deny list still wins.
     assert allowed in _claude_step(wf)["with"]["claude_args"]
+
+
+def _auto_merge_step(wf: dict[str, Any]) -> dict[str, Any]:
+    (step,) = [
+        s for s in _steps(wf) if s.get("name") == "Enable auto-merge on agent PRs"
+    ]
+    return step
+
+
+def test_auto_merge_runs_after_claude(wf: dict[str, Any]) -> None:
+    # The model stays denied `gh pr merge`; a fixed step turns on GitHub
+    # auto-merge instead, so a PR merges only once the required checks pass.
+    steps = _steps(wf)
+    assert steps.index(_auto_merge_step(wf)) > steps.index(_claude_step(wf))
+
+
+def test_auto_merge_only_touches_agent_branches(wf: dict[str, Any]) -> None:
+    run = _auto_merge_step(wf)["run"]
+    assert 'startswith("agent/")' in run
+    assert "gh pr merge" in run and "--auto" in run
+    assert "--admin" not in run  # never bypass the required checks
