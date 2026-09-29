@@ -26,5 +26,6 @@ The design is in Plan 49 (local only); this file is the contract.
    would change; deletion/revert/tag/release is needed; gates are red after two
    fix attempts; "done" is ambiguous.
 7. **PR.** `gh pr create` with `Closes #N`, a summary, and gate results. Label
-   the issue `agent:pr-open`. Never merge, tag, release, or push to `main`.
+   the issue `agent:pr-open`. Never merge, tag, release, or push to `main`: a later
+   workflow step turns on auto-merge, and the PR merges when CI passes.
 8. Update the queue issue once more, then end. One issue per run.

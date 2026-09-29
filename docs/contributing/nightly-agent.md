@@ -3,8 +3,9 @@
 GeoCase runs a semi-autonomous development agent on GitHub Actions. On
 weekday nights it triages the open issues, rewrites the pinned
 **📋 Development queue** issue, implements the top `agent:ready` issue on a
-branch and opens a pull request. A person reviews and merges every PR. The
-agent never merges, tags, releases or pushes to `main`.
+branch and opens a pull request. A fixed workflow step then turns on GitHub
+auto-merge, so the PR merges by itself once the required CI checks pass. The
+model itself never merges, tags, releases or pushes to `main`.
 
 This page has two parts:
 
@@ -114,7 +115,11 @@ Editing permissions keeps the token value, so the secret does not change.
    typecheck, catalog, floor, docs) before merging. The admin role can bypass
    it, so the maintainer can still push small changes directly. The agent's
    token does not need to bypass it, because the agent never pushes to `main`.
-3. **Create the labels.** The system uses them as a state machine (see
+   These required checks are the only gate before an agent PR merges.
+3. **Allow auto-merge:** Settings → General → Pull Requests → tick
+   **"Allow auto-merge"**, or run
+   `gh api -X PATCH repos/<owner>/<repo> -F allow_auto_merge=true`.
+4. **Create the labels.** The system uses them as a state machine (see
    [Labels](#labels)):
 
     ```bash
@@ -129,7 +134,7 @@ Editing permissions keeps the token value, so the secret does not change.
     gh label create priority:3 --description "Rank 3"
     ```
 
-4. **Create and pin the queue issue.** The prompt finds it by its exact title:
+5. **Create and pin the queue issue.** The prompt finds it by its exact title:
 
     ```bash
     gh issue create --title "📋 Development queue" --body "The agent rewrites this body on every run."
@@ -175,6 +180,7 @@ What each part does:
 | PATH step | appends `$CONDA_PREFIX/bin` to `$GITHUB_PATH` | Claude's Bash tool does not use a login shell and would otherwise not find the env |
 | Action | `anthropics/claude-code-action@v1` | Runs Claude Code with the prompt |
 | Turn limit | `--max-turns 120` | A typical full run uses 50–60 |
+| Auto-merge step | after Claude: `gh pr merge <n> --auto --merge` for every open `agent/*` PR | The PR merges when the required checks pass. It never uses `--admin`, so it cannot bypass them |
 
 **Tool limits.** The action is non-interactive, so any tool not on
 `--allowedTools` is denied. (The first dry run did nothing for this reason.)
@@ -185,7 +191,8 @@ What each part does:
   `git tag`, `gh release`, `git push origin main`, `git push -f`,
   `git push --force`, `git revert`, `rm -rf`, `gh workflow run`.
 
-The deny list is the hard guarantee. The prompt repeats the same rules, but
+`gh pr merge` stays denied to the model on purpose: merging is done by the
+fixed auto-merge step, which cannot skip the checks. The deny list is the hard guarantee. The prompt repeats the same rules, but
 the deny list is what enforces them.
 
 ### 7. The label cleanup: `.github/workflows/agent-labels.yml`
@@ -214,7 +221,8 @@ needed.
     ```
 
     Check that a branch `agent/<n>-<slug>` was pushed, a PR was opened by the
-    token owner, and **CI started on the PR by itself**. If CI did not start,
+    token owner, **CI started on the PR by itself**, and the PR shows
+    "Auto-merge enabled". If CI did not start,
     the run fell back to `GITHUB_TOKEN`: check that `AGENT_GH_TOKEN` exists.
 
 3. The schedule is active as soon as `agent.yml` is on the default branch.
@@ -226,7 +234,7 @@ needed.
 - [ ] `CLAUDE_CODE_OAUTH_TOKEN` secret set (`claude setup-token`)
 - [ ] `AGENT_GH_TOKEN` fine-grained PAT with Contents, Pull requests, Issues: read and write
 - [ ] Reminder set before the PAT expires
-- [ ] Actions may create PRs; `main` protected by required checks
+- [ ] Actions may create PRs; `main` protected by required checks; auto-merge allowed
 - [ ] Labels created; queue issue created and pinned
 - [ ] `work-next-issue.md`, `agent.yml`, `agent-labels.yml` on the default branch
 - [ ] Triage run and full run both checked; CI starts on the agent's PR
@@ -245,7 +253,8 @@ you: file/label issues ──► night: agent triages, rewrites queue,
                    ▼                                             ▼
           PR opened (agent:pr-open)                  stopped (agent:needs-human)
                    │                                             │
-      you: review, merge or request changes         you: answer the comment
+      CI green → merges itself;                     you: answer the comment
+      CI red → stays open for you
                    │                                             │
    issue closes, labels cleared automatically      next run re-triages the issue
 ```
@@ -254,7 +263,8 @@ Your work each morning:
 
 1. Open the pinned **📋 Development queue** issue. It is the single place to
    look. *Waiting on you* lists one action per item.
-2. Review PRs listed under *In review*. Merge when CI is green and you agree.
+2. Read what merged overnight (*Done this week*), and look at any PR under
+   *In review* that did not merge: its CI failed.
 3. Answer every `agent:needs-human` comment.
 
 ### Labels
@@ -265,7 +275,7 @@ Each open issue has exactly one state label and one priority label.
 |---|---|---|
 | `agent:ready` | Scoped, testable, no decision pending. The agent may take it | you, or triage |
 | `agent:in-progress` | A run has claimed it | agent |
-| `agent:pr-open` | A PR exists and waits for your review | agent |
+| `agent:pr-open` | A PR exists; it merges itself when CI passes | agent |
 | `agent:needs-human` | The agent stopped; its last comment says what it needs | agent |
 | `operator` | Only you can do it: money, accounts, identity, public posts, decisions | you, or triage |
 | `blocked` | Waits on another issue, a date or funding (`Blocked by #N`, `Not before YYYY-MM-DD`) | you, or triage |
@@ -318,12 +328,16 @@ branch when:
 comment, removes `agent:needs-human` and re-triages the issue. If the answer
 makes it ready, you can also set `agent:ready` yourself.
 
-### Reviewing an agent PR
+### Agent PRs and auto-merge
 
 - The PR body lists what was done, what was not done, and the gate results.
 - CI runs on it automatically (with `AGENT_GH_TOKEN` set).
-- Merge it yourself. `Closes #N` closes the issue, and `agent-labels.yml`
-  clears the labels.
+- It merges by itself when the required checks pass. `Closes #N` closes the
+  issue, and `agent-labels.yml` clears the labels.
+- To stop one PR from merging, cancel it before CI finishes:
+  `gh pr merge <n> --disable-auto`.
+- To stop auto-merge for all PRs, untick "Allow auto-merge" in the repository
+  settings. The step then only prints a warning, and PRs wait for you.
 - To ask for changes, comment on the PR and label the issue
   `agent:needs-human` or `agent:ready`. Or push fixes to the branch yourself.
 - An agent PR that says `Refs #N` instead of `Closes #N` finished only part of
@@ -349,6 +363,9 @@ Scheduled runs always use `full` mode. Manual runs default to `triage`.
 - GitHub Actions minutes: one run is about 7–10 minutes, most of it building
   the conda environment.
 - Hard caps: 60 minutes, 120 turns, 1 PR per run, 3 open agent PRs.
+- With auto-merge, CI is the only check before code reaches `main`. A PR whose
+  tests pass but whose change is wrong is merged; review merged PRs
+  afterwards and fix with a new issue.
 
 ### Troubleshooting
 
@@ -360,4 +377,5 @@ Scheduled runs always use `full` mode. Manual runs default to `triage`.
 | Authentication error in the Claude step | OAuth token revoked or expired | `claude setup-token`, then `gh secret set CLAUDE_CODE_OAUTH_TOKEN` |
 | Queue issue not updated | Its title changed, or it is not pinned | Restore the exact title "📋 Development queue" |
 | Run started hours after 01:17 UTC | GitHub delays scheduled runs under load | Expected; no fix |
+| PR has green CI but did not merge | Auto-merge not allowed in settings, or the step warned | Check the run's "Enable auto-merge" step; tick "Allow auto-merge" |
 | Closed issue still has `agent:pr-open` | `agent-labels.yml` missing or failed | Check the "Agent labels" run for that issue |
