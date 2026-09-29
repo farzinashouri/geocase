@@ -78,6 +78,7 @@ nav:
   - Changelog: changelog.md
   - Contributing:
       - Workflow: contributing/workflow.md
+      - Nightly Agent: contributing/nightly-agent.md
       - Releasing: contributing/releasing.md
       - PyPI Release Steps: contributing/pypi-release-steps.md
       - PyPI Publishing Practices: contributing/pypi-publishing-practices.md
