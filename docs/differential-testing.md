@@ -311,6 +311,18 @@ between those three. A comparator that folds them into "missing" reports
 agreement on all three; one that folds them into "different" reports a finding
 on every curated empty geometry in the corpus.
 
+`default_compare` applies it to every `geometry`-dtype column of a
+GeoDataFrame, so a frame-level finding names the state
+(`column 'geometry' differs at row 0: geometry state differs: NULL vs EMPTY`)
+rather than just printing two reprs.
+
+`examples/test_differential_vector.py` is the vector round built on this:
+pyogrio against raw `osgeo.ogr` -> WKB -> shapely/GEOS, over every openable
+vector case. It agrees on all 104. (The six `*_csv_wkt_baseline` cases first
+looked like divergences; they were a harness artifact -- OGR's CSV driver
+leaves the WKT text column as an attribute, so pyogrio returns a plain
+`DataFrame`, not a geometry.)
+
 ## Explain a divergence class once
 
 The pyproj sweep fired four probes and all four were expected behaviour:
