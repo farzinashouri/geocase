@@ -11,3 +11,7 @@ origin: plan15
 checks:
   - {name: non_crossing_passthrough, kind: control}
   - {name: crossing_box_two_parts, kind: edge}
+  - {name: westward_ring, kind: edge}
+  - {name: pole_adjacent, kind: edge}
+  - {name: equator_crossing, kind: edge}
+  - {name: southern_hemisphere, kind: edge}

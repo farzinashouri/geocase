@@ -11,3 +11,7 @@ origin: step0
 checks:
   - {name: 1km_at_lat50, kind: control}
   - {name: 50km_across_dateline, kind: edge}
+  - {name: dateline_westward, kind: edge}
+  - {name: pole_adjacent, kind: edge}
+  - {name: equator_crossing_line, kind: edge}
+  - {name: southern_hemisphere, kind: edge}

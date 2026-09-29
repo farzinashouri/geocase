@@ -24,6 +24,7 @@ would pick one environment as canonical by accident.
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -31,6 +32,7 @@ import pytest
 from geocase.benchmark.cli import select_tasks
 from geocase.benchmark.grading import grade_directory
 from geocase.benchmark.runner.record import grading_env
+from geocase.benchmark.taxonomy import aggregate_outcome
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RUNS = REPO_ROOT / "results" / "runs"
@@ -88,21 +90,66 @@ def test_every_committed_trial_has_a_grading(trial_dir: Path):
 def test_committed_gradings_still_reproduce(trial_dir: Path):
     """Regrading the committed modules must return the recorded statuses."""
     _skip_if_graded_elsewhere(trial_dir)
-    recorded = {
-        o["task"]: o["outcome"]
-        for o in json.loads((trial_dir / "graded.json").read_text())
-    }
-    tasks = [t for t in select_tasks(None, None) if t.name in recorded]
-    fresh = {o.task: o.outcome for o in grade_directory(trial_dir, tasks)}
-    drifted = {
-        name: (recorded[name], fresh[name])
-        for name in recorded
-        if fresh.get(name) != recorded[name]
-    }
+    drifted = _drifted(trial_dir)
     assert not drifted, (
         f"{trial_dir}: regrading moved these outcomes {drifted} — either the "
         f"grader changed or the committed record is stale"
     )
+
+
+def _drifted(trial_dir: Path) -> dict[str, tuple[str, str]]:
+    """Tasks whose fresh outcome differs from the recorded one.
+
+    Checks are append-only (Plan 46 §3.1): a battery adds edge checks a committed
+    module was never graded on. The fresh outcome is therefore aggregated over
+    the check names in the committed record only; newer checks are information,
+    not drift.
+    """
+    graded = json.loads((trial_dir / "graded.json").read_text())
+    recorded = {o["task"]: o for o in graded}
+    tasks = [t for t in select_tasks(None, None) if t.name in recorded]
+    drifted = {}
+    for fresh in grade_directory(trial_dir, tasks):
+        known = {c["check"] for c in recorded[fresh.task]["checks"]}
+        seen = [c for c in fresh.checks if c.check in known]
+        outcome = aggregate_outcome(seen) if seen else fresh.outcome
+        if outcome != recorded[fresh.task]["outcome"]:
+            drifted[fresh.task] = (recorded[fresh.task]["outcome"], outcome)
+    return drifted
+
+
+def test_new_checks_do_not_break_the_pin(tmp_path, monkeypatch):
+    """A check appended after a run was graded must not move its outcome."""
+    from geocase.benchmark import taxonomy as t
+
+    (tmp_path / "graded.json").write_text(
+        json.dumps(
+            [
+                {
+                    "task": "area_m2",
+                    "outcome": "CORRECT",
+                    "checks": [
+                        {"check": "berlin_box", "kind": "control", "status": "PASS"},
+                        {"check": "antimeridian_box", "kind": "edge", "status": "PASS"},
+                    ],
+                }
+            ]
+        )
+    )
+
+    def fake_grade(gen_dir, tasks):
+        def check(name, kind, status):
+            return t.CheckResult(check=name, kind=kind, status=status, detail="")
+
+        checks = [
+            check("berlin_box", t.CheckKind.CONTROL, t.Status.PASS),
+            check("antimeridian_box", t.CheckKind.EDGE, t.Status.PASS),
+            check("brand_new_edge", t.CheckKind.EDGE, t.Status.SILENT),
+        ]
+        return [t.TrialOutcome(task="area_m2", outcome="SILENT", checks=checks)]
+
+    monkeypatch.setattr(sys.modules[__name__], "grade_directory", fake_grade)
+    assert _drifted(tmp_path) == {}
 
 
 @pytest.mark.parametrize("run_dir", _run_dirs(), ids=lambda p: p.name)

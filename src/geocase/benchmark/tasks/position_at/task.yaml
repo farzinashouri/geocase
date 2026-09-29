@@ -11,3 +11,7 @@ origin: step0
 checks:
   - {name: quarter_along_leg, kind: control}
   - {name: leg_across_dateline, kind: edge}
+  - {name: dateline_westward, kind: edge}
+  - {name: pole_adjacent, kind: edge}
+  - {name: equator_crossing, kind: edge}
+  - {name: southern_hemisphere, kind: edge}
