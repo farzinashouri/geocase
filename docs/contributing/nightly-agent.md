@@ -234,6 +234,7 @@ needed.
 - [ ] `CLAUDE_CODE_OAUTH_TOKEN` secret set (`claude setup-token`)
 - [ ] `AGENT_GH_TOKEN` fine-grained PAT with Contents, Pull requests, Issues: read and write
 - [ ] Reminder set before the PAT expires
+- [ ] Optional: `OPENROUTER_API_KEY` secret for bare-track benchmark issues (`gh secret set OPENROUTER_API_KEY --body "$OPENROUTER_API_KEY"`); give the key a credit limit on OpenRouter, since the agent spends it unattended
 - [ ] Actions may create PRs; `main` protected by required checks; auto-merge allowed
 - [ ] Labels created; queue issue created and pinned
 - [ ] `work-next-issue.md`, `agent.yml`, `agent-labels.yml` on the default branch

@@ -38,6 +38,9 @@ jobs:
       # ci.yml, so the agent's PRs arrive untested until someone pushes to
       # them. Without the secret the run still works on GITHUB_TOKEN.
       GH_TOKEN: ${{ secrets.AGENT_GH_TOKEN || github.token }}
+      # Bare-track benchmark runs (non-Claude models only). The key carries a
+      # credit limit set on OpenRouter, which caps what the agent can spend.
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
     steps:
       - uses: actions/checkout@v4
         with:
