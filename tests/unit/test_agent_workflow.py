@@ -57,7 +57,9 @@ def test_scheduled_runs_use_full_mode(wf: dict[str, Any]) -> None:
 
 
 def test_time_boxed_and_serialised(wf: dict[str, Any]) -> None:
-    assert wf["jobs"]["agent"]["timeout-minutes"] == 60
+    # 180, not 60: bare-track benchmark runs against rate-limited free models
+    # take longer than an hour.
+    assert wf["jobs"]["agent"]["timeout-minutes"] == 180
     assert wf["concurrency"]["cancel-in-progress"] is False
 
 
