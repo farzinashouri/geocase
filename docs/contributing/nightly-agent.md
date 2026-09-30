@@ -268,6 +268,16 @@ Your work each morning:
    *In review* that did not merge: its CI failed.
 3. Answer every `agent:needs-human` comment.
 
+### Email notifications
+
+- **Merges and new PRs:** watch the repo with *All Activity*.
+- **Failed runs:** in GitHub settings → Notifications → Actions, enable email
+  for failed workflows only. Scheduled runs notify the last person to edit the
+  cron line.
+- **Waiting on you:** when the agent adds `agent:needs-human` or `operator`, it
+  assigns the issue to the owner and @mentions them, and both send an email. A
+  label change alone sends none.
+
 ### Labels
 
 Each open issue has exactly one state label and one priority label.

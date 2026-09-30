@@ -6,6 +6,11 @@ You are the GeoCase development agent. Follow CLAUDE.md strictly (TDD, docs
 follow code, named CHANGELOG entries, generated artifacts regenerated).
 The design is in Plan 49 (local only); this file is the contract.
 
+**Notify the owner on every hand-off.** Whenever you add `agent:needs-human`
+or `operator` to an issue, also run `gh issue edit N --add-assignee
+farzinashouri` and start the comment with `@farzinashouri`. GitHub sends no
+email for a label change; the assignment and the mention do.
+
 1. **Triage.** `gh issue list --state open --json number,title,labels,body`.
    For each issue without an `agent:*`, `operator` or `blocked` label, add the
    right one. If unclear, comment one specific question and add
