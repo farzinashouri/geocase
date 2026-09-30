@@ -272,7 +272,7 @@ def zonal_mean(raster_path, polygon):
                 x, y = src.transform * (col + 0.5, row + 0.5)
                 if polygon.contains(Point(x, y)):
                     v = float(arr[row, col])
-                    if nodata is None or v != nodata:
+                    if v == v and (nodata is None or v != nodata):
                         vals.append(v)
     return sum(vals) / len(vals) if vals else None
 """
@@ -693,6 +693,45 @@ def position_at(fixes, t):
             return lon0 + f * (lon1 - lon0), lat0 + f * (lat1 - lat0)
 """
 
+GOOD["sample_at"] = """
+import math
+import rasterio
+from pyproj import Transformer
+
+def sample_at(raster_path, lon, lat):
+    with rasterio.open(raster_path) as src:
+        t = Transformer.from_crs("EPSG:4326", src.crs, always_xy=True)
+        x, y = t.transform(lon, lat)
+        row, col = src.index(x, y)
+        v = float(src.read(1)[row, col])
+        nd = src.nodata
+        if nd is not None and (v == nd or (math.isnan(nd) and math.isnan(v))):
+            return None
+        return v
+"""
+
+TRAPPED["sample_at"] = """
+import rasterio
+from pyproj import Transformer
+
+def sample_at(raster_path, lon, lat):
+    with rasterio.open(raster_path) as src:
+        t = Transformer.from_crs("EPSG:4326", src.crs, always_xy=True)
+        x, y = t.transform(lon, lat)
+        row, col = src.index(x, y)
+        return float(src.read(1)[row, col])  # the sentinel comes back as data
+"""
+
+GOOD["label_point"] = """
+def label_point(poly):
+    return poly.representative_point()
+"""
+
+TRAPPED["label_point"] = """
+def label_point(poly):
+    return poly.centroid  # lands in holes, notches and gaps
+"""
+
 NEW_TASKS = sorted(GOOD)
 
 
@@ -882,3 +921,29 @@ def test_area_and_split_antimeridian_edges_no_longer_share_inputs():
     box stays in both (append-only), so at most that one input is common."""
     shared = _edge_inputs("area_m2") & _edge_inputs("split_antimeridian")
     assert len(shared) <= 1, shared
+
+
+# --------------------------------------- Plan 46 Phase 3.3: raster/predicate
+BATTERY_33 = ["sample_at", "zonal_mean", "tag_points", "label_point", "fix_geometry"]
+# sample_at's last edge asks that a real -9999 survive under a NaN nodata; the
+# plain-read trap passes it by construction, so it is not held to "every edge".
+_ANY_EDGE_ONLY = {"sample_at"}
+
+
+@pytest.mark.parametrize("name", BATTERY_33)
+def test_33_battery_has_four_to_six_edges(name, tmp_path):
+    _, outcome = _grade(name, GOOD[name], tmp_path)
+    edges = [c for c in outcome.checks if c.kind == CheckKind.EDGE]
+    assert 4 <= len(edges) <= 6, [c.check for c in edges]
+    assert all(c.status == Status.PASS for c in edges), [
+        (c.check, c.status.value, c.detail) for c in outcome.checks
+    ]
+
+
+@pytest.mark.parametrize("name", [n for n in BATTERY_33 if n not in _ANY_EDGE_ONLY])
+def test_33_trap_fails_every_edge(name, tmp_path):
+    _, outcome = _grade(name, TRAPPED[name], tmp_path)
+    edges = [c for c in outcome.checks if c.kind == CheckKind.EDGE]
+    assert all(c.status == Status.SILENT for c in edges), [
+        (c.check, c.status.value, c.detail) for c in edges
+    ]

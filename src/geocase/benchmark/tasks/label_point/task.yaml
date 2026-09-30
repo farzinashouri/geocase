@@ -12,3 +12,5 @@ checks:
   - {name: square, kind: control}
   - {name: donut, kind: edge}
   - {name: c_shape, kind: edge}
+  - {name: multipolygon_gap, kind: edge}
+  - {name: thin_l_band, kind: edge}
