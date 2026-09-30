@@ -11,3 +11,6 @@ origin: step0
 checks:
   - {name: valid_pixel_utm_raster, kind: control}
   - {name: nodata_sentinel, kind: edge}
+  - {name: bottom_up_sentinel, kind: edge}
+  - {name: non_square_sentinel, kind: edge}
+  - {name: nan_nodata_keeps_minus_9999, kind: edge}

@@ -11,3 +11,7 @@ origin: plan15
 checks:
   - {name: full_clean_region, kind: control}
   - {name: partial_pixels_and_nodata, kind: edge}
+  - {name: bottom_up_transform, kind: edge}
+  - {name: non_square_pixels, kind: edge}
+  - {name: all_nodata_window, kind: edge}
+  - {name: nan_beside_sentinel, kind: edge}

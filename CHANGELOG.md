@@ -22,6 +22,20 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Added — benchmark edge batteries, raster and predicate tasks (Plan 46 Phase 3.3, #31)
+
+Benchmark only; no catalog case changed and no `prompt.md` changed. Append-only.
+
+- `sample_at` (1 → 4 edges): `bottom_up_sentinel`, `non_square_sentinel`,
+  `nan_nodata_keeps_minus_9999`.
+- `zonal_mean` (1 → 5): `bottom_up_transform`, `non_square_pixels`,
+  `all_nodata_window`, `nan_beside_sentinel`.
+- `tag_points` (1 → 4): `point_on_outer_boundary`, `point_on_corner_vertex`,
+  `point_on_hole_boundary`.
+- `label_point` (2 → 4): `multipolygon_gap`, `thin_l_band`.
+- `fix_geometry` (1 → 4): `bowtie_southern_offset`, `bowtie_tiny_coordinates`,
+  `bowtie_unequal_lobes`.
+
 ### Added — benchmark edge batteries, antimeridian tasks (Plan 46 Phase 3, #31)
 
 Benchmark only; no catalog case changed and no `prompt.md` changed. Checks are

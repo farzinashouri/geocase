@@ -11,3 +11,6 @@ origin: plan15
 checks:
   - {name: valid_input_unchanged, kind: control}
   - {name: bowtie_keeps_both_lobes, kind: edge}
+  - {name: bowtie_southern_offset, kind: edge}
+  - {name: bowtie_tiny_coordinates, kind: edge}
+  - {name: bowtie_unequal_lobes, kind: edge}

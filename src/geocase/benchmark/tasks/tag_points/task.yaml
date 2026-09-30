@@ -11,3 +11,6 @@ origin: plan15
 checks:
   - {name: interior_points, kind: control}
   - {name: point_on_shared_edge, kind: edge}
+  - {name: point_on_outer_boundary, kind: edge}
+  - {name: point_on_corner_vertex, kind: edge}
+  - {name: point_on_hole_boundary, kind: edge}
