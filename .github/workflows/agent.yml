@@ -32,7 +32,7 @@ permissions:
 jobs:
   agent:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 180
     env:
       # Prefer a fine-grained PAT: PRs opened with GITHUB_TOKEN do not trigger
       # ci.yml, so the agent's PRs arrive untested until someone pushes to

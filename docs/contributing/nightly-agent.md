@@ -174,7 +174,7 @@ What each part does:
 | Manual start | `workflow_dispatch` with input `mode` = `triage` (default) or `full` | Test runs without writing code |
 | Concurrency | group `agent`, no cancel | Never two runs at once |
 | Permissions | contents, pull-requests, issues: write; id-token: write | Used when running on the `GITHUB_TOKEN` fallback |
-| Timeout | 60 minutes | Cost and runaway cap |
+| Timeout | 180 minutes | Cost and runaway cap; bare-track benchmark runs against rate-limited free models need more than an hour |
 | Checkout | `fetch-depth: 0`, with the agent token | Full history, and pushes use the agent token |
 | Environment | `setup-miniconda` from `environment.yml` | Only the conda env has GDAL/`osgeo`, which the catalog gates and `examples/` need |
 | PATH step | appends `$CONDA_PREFIX/bin` to `$GITHUB_PATH` | Claude's Bash tool does not use a login shell and would otherwise not find the env |
@@ -367,7 +367,7 @@ Scheduled runs always use `full` mode. Manual runs default to `triage`.
   price estimate; the real limit is the seat's rate limit.
 - GitHub Actions minutes: one run is about 7–10 minutes, most of it building
   the conda environment.
-- Hard caps: 60 minutes, 120 turns, 1 PR per run, 3 open agent PRs.
+- Hard caps: 180 minutes, 120 turns, 1 PR per run, 3 open agent PRs.
 - With auto-merge, CI is the only check before code reaches `main`. A PR whose
   tests pass but whose change is wrong is merged; review merged PRs
   afterwards and fix with a new issue.
