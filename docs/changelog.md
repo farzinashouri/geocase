@@ -28,6 +28,15 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Fixed — benchmark report merged two runs of one model (#70)
+
+Benchmark only. `python -m geocase.benchmark report` keyed every table by the
+column header, so two publishable runs with the same model label overwrote
+each other: both columns showed the later run, and REPRODUCIBLE SILENT read
+the earlier run's k. A header that more than one run shares now carries the
+run date, e.g. `Nemotron 3 Ultra 550B A55B (free) (2026-10-01)`. Headers used
+by one run are unchanged.
+
 ### Added — benchmark edge batteries, raster and predicate tasks (Plan 46 Phase 3.3, #31)
 
 Benchmark only; no catalog case changed and no `prompt.md` changed. Append-only.

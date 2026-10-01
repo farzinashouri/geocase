@@ -264,6 +264,41 @@ def test_effort_columns_carry_the_preamble_marker(tmp_path):
     assert runs[0].column == "Claude X @low [claude-code-harness]"
 
 
+def test_two_runs_of_one_model_get_two_columns(tmp_path):
+    """Two publishable runs with one label were keyed by one column, so the
+    later run overwrote the earlier in every table and the k=3 run read as
+    the k=2 one ("not claimed at k=2") under REPRODUCIBLE SILENT (#70)."""
+    _write_run(
+        tmp_path,
+        "2026-08-12_model-e_bare",
+        model_id="org/model-e",
+        label="Model E",
+        trials={"buffer_m": [CORRECT, CORRECT]},
+    )
+    _write_run(
+        tmp_path,
+        "2026-10-01_model-e_bare",
+        model_id="org/model-e",
+        label="Model E",
+        trials={"buffer_m": [TRAPPED, TRAPPED, TRAPPED]},
+    )
+    runs, _ = load_runs(tmp_path, domain="geo")
+    assert [r.column for r in runs] == ["Model E (2026-08-12)", "Model E (2026-10-01)"]
+    matrix = build_matrix(runs, TASKS)
+    assert matrix["buffer_m"]["Model E (2026-08-12)"] == ["C", "C"]
+    assert matrix["buffer_m"]["Model E (2026-10-01)"] == ["T", "T", "T"]
+    repro = reproducible_silent(runs, TASKS)
+    assert repro["Model E (2026-10-01)"] == ["buffer_m"]
+    out = io.StringIO()
+    report_mod.main(["--runs", str(tmp_path), "--domain", "geo"], out=out)
+    assert "Model E (2026-10-01): buffer_m" in out.getvalue()
+
+
+def test_a_label_used_once_keeps_its_plain_column(runs_root):
+    runs, _ = load_runs(runs_root, domain="geo")
+    assert runs[0].column == "Model A"
+
+
 def test_mixed_domains_are_refused_without_a_domain_filter(tmp_path, capsys):
     _write_run(
         tmp_path,

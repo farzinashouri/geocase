@@ -78,10 +78,12 @@ class RunView:
     #: [(trial, seconds or None)] per timed call, read off the metas — never
     #: off ``run.json``, so committed records need not move to gain a clock.
     call_seconds: list[tuple[int, float | None]] = field(default_factory=list)
+    #: Set by :func:`load_runs` when another run shares this header.
+    disambiguator: str | None = None
 
     @property
-    def column(self) -> str:
-        """The column header: label, effort level, and the preamble marker.
+    def base_column(self) -> str:
+        """Label, effort level, and the preamble marker.
 
         The marker is not decoration. Without it an effort column eventually
         gets read beside a bare column and something false is concluded
@@ -94,8 +96,21 @@ class RunView:
         return name
 
     @property
+    def column(self) -> str:
+        """The column header, unique per run. Every table is a dict keyed by
+        it, so two runs under one header would overwrite each other (#70)."""
+        if self.disambiguator:
+            return f"{self.base_column} ({self.disambiguator})"
+        return self.base_column
+
+    @property
     def sort_key(self) -> tuple:
-        return (self.track, self.label, _EFFORT_ORDER.get(self.effort or "", -1))
+        return (
+            self.track,
+            self.label,
+            _EFFORT_ORDER.get(self.effort or "", -1),
+            self.run_id,
+        )
 
 
 @dataclass
@@ -236,7 +251,23 @@ def load_runs(
             continue
         views.append(view)
     views.sort(key=lambda v: v.sort_key)
+    _disambiguate(views)
     return views, excluded
+
+
+def _disambiguate(views: list[RunView]) -> None:
+    """Suffix the run date onto headers that more than one run shares, or the
+    whole run id if the date does not separate them either."""
+    by_column: dict[str, list[RunView]] = {}
+    for view in views:
+        by_column.setdefault(view.base_column, []).append(view)
+    for group in by_column.values():
+        if len(group) < 2:
+            continue
+        dates = [v.run_id.split("_", 1)[0] for v in group]
+        unique = len(set(dates)) == len(dates)
+        for view, date in zip(group, dates, strict=True):
+            view.disambiguator = date if unique else view.run_id
 
 
 # ------------------------------------------------------------------ tables
