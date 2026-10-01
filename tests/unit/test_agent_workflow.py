@@ -98,6 +98,20 @@ def test_work_tools_are_allowed(wf: dict[str, Any], allowed: str) -> None:
     assert allowed in _claude_step(wf)["with"]["claude_args"]
 
 
+def test_transcript_is_uploaded_even_on_failure(wf: dict[str, Any]) -> None:
+    # Runs on #70 and #67 ended "success" after ~30 turns with no branch or
+    # comment, and the log held no transcript to say why. Keep it as an artifact.
+    claude = _claude_step(wf)
+    (upload,) = [
+        s for s in _steps(wf) if s.get("uses", "").startswith("actions/upload-artifact")
+    ]
+    assert upload["if"] == "always()"
+    assert upload["with"]["path"] == (
+        "${{ steps." + claude["id"] + ".outputs.execution_file }}"
+    )
+    assert _steps(wf).index(upload) > _steps(wf).index(claude)
+
+
 def _auto_merge_step(wf: dict[str, Any]) -> dict[str, Any]:
     (step,) = [
         s for s in _steps(wf) if s.get("name") == "Enable auto-merge on agent PRs"
