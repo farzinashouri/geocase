@@ -11,6 +11,12 @@ or `operator` to an issue, also run `gh issue edit N --add-assignee
 farzinashouri` and start the comment with `@farzinashouri`. GitHub sends no
 email for a label change; the assignment and the mention do.
 
+**Wait for long commands.** A Bash command that runs past 120 s is
+moved to the background; a benchmark run always is. Do not end the turn then: poll
+its output file (`until grep -q ... file; do sleep 30; done`) until it
+finishes, and never end a run with an issue still `agent:in-progress` and no
+comment on it.
+
 1. **Triage.** `gh issue list --state open --json number,title,labels,body`.
    For each issue without an `agent:*`, `operator` or `blocked` label, add the
    right one. If unclear, comment one specific question and add

@@ -63,6 +63,19 @@ def test_time_boxed_and_serialised(wf: dict[str, Any]) -> None:
     assert wf["concurrency"]["cancel-in-progress"] is False
 
 
+def test_turn_cap_fits_a_full_issue(wf: dict[str, Any]) -> None:
+    # #25 took 144 turns; at 120 the action marked a finished run as failed
+    # and skipped the auto-merge step.
+    assert "--max-turns 250" in _claude_step(wf)["with"]["claude_args"]
+
+
+def test_prompt_waits_for_background_commands() -> None:
+    # Bash moves a command past 120 s to the background; a benchmark run is
+    # one, and ending the turn then leaves the issue in-progress with no trace.
+    prompt = (ROOT / ".claude" / "commands" / "work-next-issue.md").read_text()
+    assert "moved to the background" in prompt
+
+
 def test_uses_conda_env_with_gdal(wf: dict[str, Any]) -> None:
     conda = [
         s
