@@ -1,3 +1,7 @@
+---
+description: The current state of GeoCase and its development workflow, covering environments, CI jobs, testing and how to write a post.
+---
+
 # Workflow
 
 This document describes the current state of the GeoCase project and the workflow being followed to bring it from skeleton to working product.
@@ -301,6 +305,28 @@ request and defines six jobs:
 ```bash
 mkdocs serve
 ```
+
+### Writing a post
+
+Posts live in `docs/posts/` and are published by the Material blog plugin
+under **Articles**. Start a draft with `scripts/scaffold_post.py` (it prefills
+the front matter and the ground-truth numbers from the catalog).
+
+- **Front matter.** Every post needs `date:`, a non-empty `description:` (the
+  search snippet and the Open Graph text), `categories:` (one of the risk
+  families), and, so the catalog hubs can link back, `risk_types:` (canonical
+  `family/specific` terms) and `cases:` (case ids).
+- **Substance rule.** A post must contain a finding a reader cannot get from
+  the catalog page alone: a number from the case's ground truth, a failing
+  call and its fix. No post that only restates a case description.
+- **Future-dating.** A post dated in the future is built as a draft
+  (`draft_if_future_date`) and goes live on its date; `pages.yml` rebuilds the
+  site daily at 06:00 UTC for that reason.
+- **Drafts.** Scaffolded drafts contain `TODO:` markers; a post with `TODO:`
+  must carry `draft: true` (`tests/unit/test_site_config.py` enforces it).
+- **Embargo rule.** Nothing is published about a finding that is not yet filed
+  upstream; see
+  [Plan 43](https://github.com/farzinashouri/geocase/blob/main/docs/plans/43-upstream-filing-queue.md).
 
 ---
 

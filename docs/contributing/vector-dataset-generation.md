@@ -1,3 +1,7 @@
+---
+description: How the bundled GeoCase vector fixtures are generated and what a comprehensive vector dataset needs to cover.
+---
+
 # Vector Dataset Generation
 
 > Consolidated from historical docs: `vector-dataset-generation-plan.md`, `building-comprehensive-vector-dataset.md`

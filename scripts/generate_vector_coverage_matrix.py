@@ -274,6 +274,13 @@ def _build_markdown(entries: list[object]) -> str:
             edge_status[label] = "✅ present"
 
     lines: list[str] = []
+    lines.append("---")
+    lines.append(
+        "description: Which vector geometry types, formats and edge cases the bundled GeoCase "
+        "catalog covers today, against the target."
+    )
+    lines.append("---")
+    lines.append("")
     lines.append("### Coverage matrix (current vs target)")
     lines.append("")
     lines.append('Use this matrix as the release gate for "comprehensive" status.')

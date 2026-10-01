@@ -1,3 +1,7 @@
+---
+description: The short checklist for publishing a GeoCase version to PyPI, ending in the owner approval step.
+---
+
 # PyPI release, step by step
 
 The short checklist for putting a version on pypi.org. The reasons behind each

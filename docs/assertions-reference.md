@@ -1,3 +1,7 @@
+---
+description: Reusable GeoCase assertion helpers for CRS, footprint, geometry, topology, raster and format-compliance checks in your own tests.
+---
+
 # Assertions Reference
 
 GeoCase provides reusable assertion helpers for common geospatial expectations.

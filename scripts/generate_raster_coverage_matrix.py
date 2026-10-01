@@ -157,6 +157,13 @@ def _build_markdown(entries: list[object]) -> str:
     )
 
     lines: list[str] = []
+    lines.append("---")
+    lines.append(
+        "description: Which raster dtypes, band counts, NoData conventions and edge cases the "
+        "bundled GeoCase catalog covers today, against the target."
+    )
+    lines.append("---")
+    lines.append("")
     lines.append("### Raster coverage matrix (current vs target)")
     lines.append("")
     lines.append(f"Total bundled raster cases scanned: **{len(entries)}**.")

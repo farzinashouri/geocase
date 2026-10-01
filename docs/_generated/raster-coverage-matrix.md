@@ -1,3 +1,7 @@
+---
+description: Which raster dtypes, band counts, NoData conventions and edge cases the bundled GeoCase catalog covers today, against the target.
+---
+
 ### Raster coverage matrix (current vs target)
 
 Total bundled raster cases scanned: **47**.

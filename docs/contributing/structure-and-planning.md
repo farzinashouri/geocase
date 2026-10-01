@@ -1,3 +1,7 @@
+---
+description: GeoCase project structure, implementation status and planning conventions for contributors.
+---
+
 # Structure and Planning
 
 > **Status (August 2026):** Core implementation is complete; `pytest tests -q` is green at

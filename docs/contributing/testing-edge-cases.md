@@ -1,3 +1,7 @@
+---
+description: Strategy for testing geospatial edge cases with GeoCase, including invalid geometries and parametrized case filtering.
+---
+
 # Testing Edge Cases
 
 > Consolidated from historical docs: `invalid-geometry-testing-strategy.md`, `adding-invalid-geometry-edge-cases.md`, `test-parametrization-filtering.md`

@@ -1,3 +1,7 @@
+---
+description: Why raster dtype coverage (int8 to float64) is related to, but not the same as, radiometric resolution in the GeoCase raster catalog.
+---
+
 # Raster Dtypes and Radiometric Resolution
 
 This note explains why the Phase 3 roadmap item
