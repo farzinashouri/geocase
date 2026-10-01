@@ -68,7 +68,7 @@ jobs:
             Mode: ${{ github.event.inputs.mode || 'full' }}. In triage mode do steps 1-2 only.
             Follow .claude/commands/work-next-issue.md exactly.
           claude_args: >-
-            --max-turns 120
+            --max-turns 250
             --allowedTools "Read" "Edit" "Write" "Glob" "Grep"
             "Bash(gh:*)" "Bash(git:*)" "Bash(python:*)" "Bash(pytest:*)"
             "Bash(ruff:*)" "Bash(mypy:*)" "Bash(mkdocs:*)"

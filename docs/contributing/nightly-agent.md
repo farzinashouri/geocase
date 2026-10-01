@@ -179,7 +179,7 @@ What each part does:
 | Environment | `setup-miniconda` from `environment.yml` | Only the conda env has GDAL/`osgeo`, which the catalog gates and `examples/` need |
 | PATH step | appends `$CONDA_PREFIX/bin` to `$GITHUB_PATH` | Claude's Bash tool does not use a login shell and would otherwise not find the env |
 | Action | `anthropics/claude-code-action@v1` | Runs Claude Code with the prompt |
-| Turn limit | `--max-turns 120` | A typical full run uses 50–60 |
+| Turn limit | `--max-turns 250` | A typical full run uses 50–60; #25 used 144 |
 | Auto-merge step | after Claude: `gh pr merge <n> --auto --merge` for every open `agent/*` PR | The PR merges when the required checks pass. It never uses `--admin`, so it cannot bypass them |
 
 **Tool limits.** The action is non-interactive, so any tool not on
@@ -377,7 +377,7 @@ Scheduled runs always use `full` mode. Manual runs default to `triage`.
   price estimate; the real limit is the seat's rate limit.
 - GitHub Actions minutes: one run is about 7–10 minutes, most of it building
   the conda environment.
-- Hard caps: 180 minutes, 120 turns, 1 PR per run, 3 open agent PRs.
+- Hard caps: 180 minutes, 250 turns, 1 PR per run, 3 open agent PRs.
 - With auto-merge, CI is the only check before code reaches `main`. A PR whose
   tests pass but whose change is wrong is merged; review merged PRs
   afterwards and fix with a new issue.
