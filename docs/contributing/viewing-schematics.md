@@ -1,3 +1,7 @@
+---
+description: How to read the small SVG diagrams on each generated GeoCase case page and how they are rendered.
+---
+
 # Viewing the catalog diagrams
 
 Each generated case page carries a small SVG diagram — a polygon, a line, a raster grid —

@@ -1,3 +1,7 @@
+---
+description: Run one pytest test across many GeoCase cases using markers and metadata-driven parameterization.
+---
+
 # Using parameterized tests
 
 GeoCase is designed to make metadata-driven parameterization natural.

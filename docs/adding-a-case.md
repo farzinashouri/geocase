@@ -807,6 +807,11 @@ python scripts/build_case_index.py --check
 python scripts/validate_catalog.py
 ```
 
+A blog post links back from a case page when its front matter lists the case
+id under `cases:` (and from a risk hub via `risk_types:`); `generate_catalog_pages.py`
+adds the "Read more" section. See "Writing a post" in
+[Workflow](contributing/workflow.md).
+
 ---
 
 ## Related docs

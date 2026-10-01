@@ -1,3 +1,7 @@
+---
+description: Index of the runnable GeoCase examples that show realistic geospatial test workflows with pytest.
+---
+
 # Examples Index
 
 The `examples/` directory shows how to use GeoCase in realistic test workflows.

@@ -1,3 +1,7 @@
+---
+description: A contributor-level map of the GeoCase codebase, its packages and its v1.0 public surface.
+---
+
 # Codebase Summary
 
 > Created: June 2026 — revised August 2026 for the v1.0 release.

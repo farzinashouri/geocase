@@ -1,3 +1,7 @@
+---
+description: Which vector geometry types, formats and edge cases the bundled GeoCase catalog covers today, against the target.
+---
+
 ### Coverage matrix (current vs target)
 
 Use this matrix as the release gate for "comprehensive" status.

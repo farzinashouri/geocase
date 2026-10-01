@@ -33,8 +33,18 @@ theme:
 # native libcairo/libfreetype libraries, which are not on the docs runner, and
 # an unverifiable plugin would turn the `docs` gate red. Tracked in the
 # roadmap's Deferred work.
+#
+# `blog` serves docs/posts/. Posts dated in the future build as drafts, and
+# pages.yml rebuilds daily so they go live on their date. Categories are free
+# (the plan said "nine risk families"; the vocabulary has 15, so a closed list
+# here would drift from catalog/risk_types.py).
 plugins:
   - search
+  - blog:
+      blog_dir: posts
+      draft_if_future_date: true
+      post_url_format: "{slug}"
+      archive: false
 
 extra:
   social:
@@ -59,6 +69,7 @@ nav:
   - Getting Started: getting-started.md
   - Philosophy: philosophy.md
   - Validation Report: validation.md
+  - Articles: posts/index.md
   - Catalog:
       - Browse Cases: _generated/catalog/index.md
       - Compare All Cases: _generated/catalog/compare.md

@@ -1,3 +1,7 @@
+---
+description: How GeoCase describes larger remote geospatial datasets in manifests and what happens when their data is not available locally.
+---
+
 # Remote datasets
 
 GeoCase keeps its bundled core intentionally small. Larger or richer cases can be stored remotely and fetched on demand.

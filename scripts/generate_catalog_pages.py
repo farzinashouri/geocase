@@ -23,7 +23,10 @@ import re
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
+from datetime import date
+from typing import Any, NamedTuple
+
+import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
@@ -676,6 +679,71 @@ def _files_section(case: Any, case_dir: Path | None, repo_url: str) -> list[str]
     return lines
 
 
+POSTS_DIR = REPO_ROOT / "docs" / "posts"
+
+
+class Post(NamedTuple):
+    """A published blog post, as far as the catalog pages need to know it."""
+
+    title: str
+    #: Path under the posts directory, posix separators.
+    path: str
+    risk_types: tuple[str, ...]
+    cases: tuple[str, ...]
+
+
+def _load_posts(posts_dir: Path, today: date | None = None) -> list[Post]:
+    """Read the front matter of every live post under ``posts_dir``.
+
+    Draft posts and posts dated in the future are skipped: the blog plugin does
+    not build them, so a link to one would fail ``mkdocs build --strict``.
+    """
+    if not posts_dir.is_dir():
+        return []
+    today = today or date.today()
+    posts: list[Post] = []
+    for path in sorted(posts_dir.rglob("*.md")):
+        if path.name == "index.md":
+            continue
+        text = path.read_text(encoding="utf-8")
+        if not text.startswith("---\n") or "\n---" not in text[4:]:
+            continue
+        meta = yaml.safe_load(text[4 : text.index("\n---", 4)]) or {}
+        raw_date = meta.get("date")
+        if isinstance(raw_date, dict):
+            raw_date = raw_date.get("created")
+        if meta.get("draft") is True or (
+            isinstance(raw_date, date) and raw_date > today
+        ):
+            continue
+        heading = re.search(r"^# (.+)$", text, re.MULTILINE)
+        title = meta.get("title") or (heading.group(1) if heading else path.stem)
+        posts.append(
+            Post(
+                title=str(title),
+                path=path.relative_to(posts_dir).as_posix(),
+                risk_types=tuple(meta.get("risk_types") or ()),
+                cases=tuple(meta.get("cases") or ()),
+            )
+        )
+    return posts
+
+
+def _read_more(posts: list[Post]) -> list[str]:
+    """A ``Read more`` section linking each post; empty when there are none.
+
+    Generated pages sit at ``_generated/catalog/<facet>/<name>.md``, three
+    levels below ``docs/``, where ``posts/`` lives.
+    """
+    if not posts:
+        return []
+    lines = ["## Read more", ""]
+    for post in sorted(posts, key=lambda item: item.path):
+        lines.append(f"- [{post.title}](../../../posts/{post.path})")
+    lines.append("")
+    return lines
+
+
 def _render_case_page(
     case: Any,
     all_cases: list[Any],
@@ -683,6 +751,7 @@ def _render_case_page(
     hub_risks: set[str],
     case_dir: Path | None = None,
     repo_url: str = DEFAULT_REPO_URL,
+    posts: list[Post] | None = None,
 ) -> str:
     """Render the full markdown page for a single case."""
     lines = _front_matter(case.title, _meta_description(case))
@@ -789,6 +858,8 @@ def _render_case_page(
         for other in related:
             lines.append(f"- [{other.title}]({other.id}.md) -- `{other.id}`")
         lines.append("")
+
+    lines.extend(_read_more([p for p in posts or [] if case.id in p.cases]))
 
     lines.extend(_json_ld(case, site_url))
     return "\n".join(lines).rstrip() + "\n"
@@ -998,6 +1069,7 @@ def _render_hub_page(
     intro: str,
     cases: list[Any],
     link_prefix: str,
+    posts: list[Post] | None = None,
 ) -> str:
     """Render a hub page listing every case under one facet value."""
     lines = _front_matter(title, description)
@@ -1025,6 +1097,7 @@ def _render_hub_page(
             f"| {_value(case.category)} | {_value(case.format)} | {geometry} |"
         )
     lines.append("")
+    lines.extend(_read_more(posts or []))
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -1163,9 +1236,13 @@ def _render_index(
 
 
 def build_pages(
-    cases: list[Any], site_url: str, repo_url: str = DEFAULT_REPO_URL
+    cases: list[Any],
+    site_url: str,
+    repo_url: str = DEFAULT_REPO_URL,
+    posts_dir: Path = POSTS_DIR,
 ) -> dict[str, str]:
     """Build every catalog page as a mapping of relative path to content."""
+    posts = _load_posts(posts_dir)
     by_risk: dict[str, list[Any]] = defaultdict(list)
     by_format: dict[str, list[Any]] = defaultdict(list)
     for case in cases:
@@ -1185,7 +1262,7 @@ def build_pages(
     case_dirs = case_roots_by_id()
     for case in cases:
         pages[f"cases/{case.id}.md"] = _render_case_page(
-            case, cases, site_url, hub_risks, case_dirs.get(case.id), repo_url
+            case, cases, site_url, hub_risks, case_dirs.get(case.id), repo_url, posts
         )
 
     for risk in sorted(hub_risks):
@@ -1202,6 +1279,7 @@ def build_pages(
             ),
             cases=entries,
             link_prefix="../cases/",
+            posts=[p for p in posts if risk in p.risk_types],
         )
 
     for fmt, entries in by_format.items():

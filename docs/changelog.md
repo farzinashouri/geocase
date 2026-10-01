@@ -28,6 +28,15 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Added — blog publishing surface (Plan 47 Phases 1–3, #25)
+
+No case, CRS, dtype, nodata, id or `risk_types` changed. Docs and tooling only: the
+Material `blog` plugin and an **Articles** nav entry (`docs/posts/`), a daily
+`pages.yml` rebuild so future-dated posts go live, `description:` front matter on every
+published page, "Read more" back-links from case and risk-hub pages to posts that
+declare them (`risk_types:` / `cases:`), and `scripts/scaffold_post.py`. No post is
+published.
+
 ### Added — benchmark edge batteries, raster and predicate tasks (Plan 46 Phase 3.3, #31)
 
 Benchmark only; no catalog case changed and no `prompt.md` changed. Append-only.

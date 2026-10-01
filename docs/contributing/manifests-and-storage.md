@@ -1,3 +1,7 @@
+---
+description: How GeoCase layers external and remote case manifests over the bundled catalog, and why storage transport is deferred to v1.1.
+---
+
 # Manifests and Storage Support
 
 > **Status (August 2026):** Manifest support is **implemented**. Storage transport is

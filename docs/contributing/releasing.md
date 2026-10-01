@@ -1,3 +1,7 @@
+---
+description: How a GeoCase version reaches PyPI and conda-forge, and the reasoning behind each release step.
+---
+
 # Releasing
 
 How a GeoCase version reaches PyPI and conda-forge. For the general reasoning

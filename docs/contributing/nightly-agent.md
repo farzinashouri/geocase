@@ -1,3 +1,7 @@
+---
+description: How the scheduled GeoCase development agent triages issues, keeps the queue and opens pull requests on GitHub Actions.
+---
+
 # Nightly Development Agent
 
 GeoCase runs a semi-autonomous development agent on GitHub Actions. On
