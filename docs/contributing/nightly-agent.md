@@ -389,6 +389,7 @@ Scheduled runs always use `full` mode. Manual runs default to `triage`.
 | Branch pushed, no PR, log says "Resource not accessible by personal access token" | PAT lacks Pull requests: write | Edit the PAT (Part 1, step 3) |
 | PR opened but CI did not start | Run used `GITHUB_TOKEN` | Set or renew `AGENT_GH_TOKEN` |
 | Run succeeded but did nothing | A needed tool is not in `--allowedTools` | Look for "permission denied" in the log; add the tool to `agent.yml` |
+| Run succeeded after ~30 turns, issue left `agent:in-progress`, no branch or comment | Unknown (seen on benchmark issues #70, #67) | Download the run's `agent-transcript` artifact (kept 14 days) and read the last turns |
 | Authentication error in the Claude step | OAuth token revoked or expired | `claude setup-token`, then `gh secret set CLAUDE_CODE_OAUTH_TOKEN` |
 | Queue issue not updated | Its title changed, or it is not pinned | Restore the exact title "📋 Development queue" |
 | Run started hours after 01:17 UTC | GitHub delays scheduled runs under load | Expected; no fix |

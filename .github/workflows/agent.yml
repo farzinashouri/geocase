@@ -60,6 +60,7 @@ jobs:
           python -m pip install -e ".[dev]" "ruff==0.15.7" mypy
           echo "$CONDA_PREFIX/bin" >> "$GITHUB_PATH"
       - uses: anthropics/claude-code-action@v1
+        id: claude
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.AGENT_GH_TOKEN || github.token }}
@@ -74,6 +75,15 @@ jobs:
             --disallowedTools "Bash(gh pr merge:*)" "Bash(git tag:*)" "Bash(gh release:*)"
             "Bash(git push origin main:*)" "Bash(git push -f:*)" "Bash(git push --force:*)"
             "Bash(git revert:*)" "Bash(rm -rf:*)" "Bash(gh workflow run:*)"
+      # The log holds no transcript; keep it so a run that ends without doing
+      # its work (#70, #67) can be diagnosed.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent-transcript
+          path: ${{ steps.claude.outputs.execution_file }}
+          retention-days: 14
+          if-no-files-found: warn
       # The model may not merge (deny list above). This fixed step turns on
       # GitHub auto-merge for open agent/* PRs: each merges once the checks
       # required by the main_protected ruleset pass, and never bypasses them.
