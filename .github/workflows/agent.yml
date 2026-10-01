@@ -72,6 +72,7 @@ jobs:
             --allowedTools "Read" "Edit" "Write" "Glob" "Grep"
             "Bash(gh:*)" "Bash(git:*)" "Bash(python:*)" "Bash(pytest:*)"
             "Bash(ruff:*)" "Bash(mypy:*)" "Bash(mkdocs:*)"
+            "Bash(python3:*)" "Bash(ls:*)" "Bash(grep:*)" "Bash(head:*)" "Bash(sed:*)"
             --disallowedTools "Bash(gh pr merge:*)" "Bash(git tag:*)" "Bash(gh release:*)"
             "Bash(git push origin main:*)" "Bash(git push -f:*)" "Bash(git push --force:*)"
             "Bash(git revert:*)" "Bash(rm -rf:*)" "Bash(gh workflow run:*)"

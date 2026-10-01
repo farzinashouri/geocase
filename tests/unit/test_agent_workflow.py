@@ -111,6 +111,16 @@ def test_work_tools_are_allowed(wf: dict[str, Any], allowed: str) -> None:
     assert allowed in _claude_step(wf)["with"]["claude_args"]
 
 
+@pytest.mark.parametrize(
+    "allowed",
+    ["Bash(python3:*)", "Bash(ls:*)", "Bash(grep:*)", "Bash(head:*)", "Bash(sed:*)"],
+)
+def test_shell_helpers_are_allowed(wf: dict[str, Any], allowed: str) -> None:
+    # The 2026-10-01 #25 run hit 18 denials on pipes through these and spent
+    # its retries past the turn cap (144 of 120).
+    assert allowed in _claude_step(wf)["with"]["claude_args"]
+
+
 def test_transcript_is_uploaded_even_on_failure(wf: dict[str, Any]) -> None:
     # Runs on #70 and #67 ended "success" after ~30 turns with no branch or
     # comment, and the log held no transcript to say why. Keep it as an artifact.

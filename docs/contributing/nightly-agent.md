@@ -190,7 +190,10 @@ What each part does:
 `--allowedTools` is denied. (The first dry run did nothing for this reason.)
 
 - Allowed: `Read`, `Edit`, `Write`, `Glob`, `Grep`, and Bash for `gh`, `git`,
-  `python`, `pytest`, `ruff`, `mypy`, `mkdocs`.
+  `python`, `pytest`, `ruff`, `mypy`, `mkdocs`, and the shell helpers
+  `python3`, `ls`, `grep`, `head`, `sed`. The helpers were added after the
+  2026-10-01 run on #25 had 18 commands denied, mostly pipes through them,
+  and its retries pushed it past the old 120-turn cap.
 - Denied even though they match the allowed patterns: `gh pr merge`,
   `git tag`, `gh release`, `git push origin main`, `git push -f`,
   `git push --force`, `git revert`, `rm -rf`, `gh workflow run`.
