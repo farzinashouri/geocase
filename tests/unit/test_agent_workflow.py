@@ -113,12 +113,27 @@ def test_work_tools_are_allowed(wf: dict[str, Any], allowed: str) -> None:
 
 @pytest.mark.parametrize(
     "allowed",
-    ["Bash(python3:*)", "Bash(ls:*)", "Bash(grep:*)", "Bash(head:*)", "Bash(sed:*)"],
+    [
+        "Bash(python3:*)",
+        "Bash(ls:*)",
+        "Bash(grep:*)",
+        "Bash(head:*)",
+        "Bash(sed:*)",
+        "Bash(cat:*)",
+        "Bash(tail:*)",
+    ],
 )
 def test_shell_helpers_are_allowed(wf: dict[str, Any], allowed: str) -> None:
     # The 2026-10-01 #25 run hit 18 denials on pipes through these and spent
-    # its retries past the turn cap (144 of 120).
+    # its retries past the turn cap (144 of 120). The 2026-10-02 #67 run was
+    # denied `benchmark run ... > /tmp/x.log; tail ...` on `tail` and /tmp.
     assert allowed in _claude_step(wf)["with"]["claude_args"]
+
+
+def test_tmp_is_reachable(wf: dict[str, Any]) -> None:
+    # The OpenRouter preflight writes /tmp/openrouter/status.txt and benchmark
+    # runs log to /tmp; outside --add-dir both are denied (#67, 2026-10-02).
+    assert "--add-dir /tmp" in _claude_step(wf)["with"]["claude_args"]
 
 
 def test_transcript_is_uploaded_even_on_failure(wf: dict[str, Any]) -> None:

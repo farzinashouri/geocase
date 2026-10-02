@@ -191,9 +191,14 @@ What each part does:
 
 - Allowed: `Read`, `Edit`, `Write`, `Glob`, `Grep`, and Bash for `gh`, `git`,
   `python`, `pytest`, `ruff`, `mypy`, `mkdocs`, and the shell helpers
-  `python3`, `ls`, `grep`, `head`, `sed`. The helpers were added after the
-  2026-10-01 run on #25 had 18 commands denied, mostly pipes through them,
-  and its retries pushed it past the old 120-turn cap.
+  `python3`, `ls`, `grep`, `head`, `sed`, `cat`, `tail`. The helpers were
+  added after the 2026-10-01 run on #25 had 18 commands denied, mostly pipes
+  through them, and its retries pushed it past the old 120-turn cap. Every
+  command in a pipe or `;` chain must be allowed.
+- `--add-dir /tmp`: file access outside the checkout is otherwise denied.
+  The OpenRouter preflight writes `/tmp/openrouter/status.txt`, and benchmark
+  runs log to `/tmp`; the 2026-10-02 run on #67 could not start its benchmark
+  run without it.
 - Denied even though they match the allowed patterns: `gh pr merge`,
   `git tag`, `gh release`, `git push origin main`, `git push -f`,
   `git push --force`, `git revert`, `rm -rf`, `gh workflow run`.
