@@ -154,3 +154,16 @@ def test_auto_merge_only_touches_agent_branches(wf: dict[str, Any]) -> None:
     assert 'startswith("agent/")' in run
     assert "gh pr merge" in run and "--auto" in run
     assert "--admin" not in run  # never bypass the required checks
+
+
+def test_openrouter_preflight_runs_before_claude(wf: dict[str, Any]) -> None:
+    # #67: the sandbox refused curl/WebFetch to openrouter.ai and reading the
+    # environment, so the agent could not check free models or the key. A fixed
+    # step does both; the model never gets curl next to the secret.
+    names = [s.get("name", "") for s in _steps(wf)]
+    pre = names.index("OpenRouter preflight")
+    assert pre < _steps(wf).index(_claude_step(wf))
+    run = _steps(wf)[pre]["run"]
+    assert "openrouter.ai/api/v1/models" in run
+    assert "/tmp/openrouter/" in run
+    assert "/tmp/openrouter/" in _claude_step(wf)["with"]["prompt"]
