@@ -1,0 +1,150 @@
+"""Summarise one nightly agent run as Markdown (Plan 52 Phase 1, issue #83).
+
+    python scripts/agent_run_report.py --execution-file out.json \
+        --outcome success --run-url URL --mode full --max-turns 250
+
+Reads the claude-code-action execution file (a JSON list of messages ending in
+a ``result`` object), prints a Markdown report to stdout and writes
+``healthy=true|false`` to ``$GITHUB_OUTPUT``. Stdlib only.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+from dataclasses import dataclass, field
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from typing import Any
+
+
+@dataclass
+class Report:
+    turns: int | None = None
+    duration_s: int | None = None
+    cost: float | None = None
+    final_text: str = ""
+    denials: list[dict[str, Any]] = field(default_factory=list)
+    reasons: list[str] = field(default_factory=list)
+
+    @property
+    def healthy(self) -> bool:
+        return not self.reasons
+
+
+def load_result(path: Path) -> dict[str, Any] | None:
+    """Return the trailing ``result`` message, or None if there is none."""
+    try:
+        data = json.loads(path.read_text())
+    except (OSError, ValueError):
+        return None
+    if not isinstance(data, list):
+        return None
+    for msg in reversed(data):
+        if isinstance(msg, dict) and msg.get("type") == "result":
+            return msg
+    return None
+
+
+def build_report(
+    result: dict[str, Any] | None, *, outcome: str, max_turns: int
+) -> Report:
+    rep = Report()
+    if outcome != "success":
+        rep.reasons.append(f"action step {outcome}")
+    if result is None:
+        rep.reasons.append("no result object in the execution file")
+        return rep
+    rep.turns = result.get("num_turns")
+    ms = result.get("duration_ms")
+    rep.duration_s = round(ms / 1000) if isinstance(ms, (int, float)) else None
+    rep.cost = result.get("total_cost_usd")
+    rep.final_text = str(result.get("result") or "")
+    rep.denials = list(result.get("permission_denials") or [])
+    if result.get("is_error"):
+        rep.reasons.append(f"is_error ({result.get('subtype', 'unknown')})")
+    if rep.denials:
+        rep.reasons.append(f"{len(rep.denials)} permission denial(s)")
+    if rep.turns is not None and rep.turns >= max_turns:
+        rep.reasons.append(f"hit the turn cap ({rep.turns}/{max_turns})")
+    return rep
+
+
+def touched(since: datetime) -> list[str]:
+    """PRs and issues the agent opened in the run window (best effort)."""
+    day = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+    lines: list[str] = []
+    for kind in ("pr", "issue"):
+        cmd = ["gh", kind, "list", "--state", "all", "--author", "@me"]
+        cmd += ["--search", f"created:>={day}", "--json", "number,title,url"]
+        try:
+            out = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            for item in json.loads(out.stdout):
+                lines.append(
+                    f"- {kind} [#{item['number']}]({item['url']}) {item['title']}"
+                )
+        except (OSError, subprocess.CalledProcessError, ValueError):
+            continue
+    return lines
+
+
+def render(
+    rep: Report, *, run_url: str, mode: str, touched_lines: list[str] | None = None
+) -> str:
+    if rep.healthy:
+        head = "✅ healthy"
+    else:
+        head = "⚠️ needs attention: " + "; ".join(rep.reasons)
+    cost = f"${rep.cost:.2f}" if rep.cost is not None else "n/a"
+    out = [
+        head,
+        "",
+        f"- Run: {run_url}",
+        f"- Mode: {mode}",
+        f"- Turns: {rep.turns if rep.turns is not None else 'n/a'}",
+        f"- Duration: {rep.duration_s if rep.duration_s is not None else 'n/a'} s",
+        f"- Cost (list price): {cost}",
+    ]
+    if rep.denials:
+        out += ["", "**Permission denials**", ""]
+        for d in rep.denials:
+            cmd = (d.get("tool_input") or {}).get("command", "")
+            out.append(f"- `{d.get('tool_name', '?')}` `{cmd}`".rstrip())
+    if touched_lines:
+        out += ["", "**Touched in this run**", "", *touched_lines]
+    if rep.final_text:
+        out += ["", "**Final message**", "", rep.final_text]
+    return "\n".join(out) + "\n"
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--execution-file", type=Path, required=True)
+    ap.add_argument("--outcome", default="success")
+    ap.add_argument("--run-url", default="")
+    ap.add_argument("--mode", default="full")
+    ap.add_argument("--max-turns", type=int, default=250)
+    args = ap.parse_args(argv)
+
+    rep = build_report(
+        load_result(args.execution_file),
+        outcome=args.outcome,
+        max_turns=args.max_turns,
+    )
+    since = datetime.now(UTC) - timedelta(seconds=(rep.duration_s or 0) + 600)
+    lines = touched(since) if os.environ.get("GH_TOKEN") else []
+    sys.stdout.write(
+        render(rep, run_url=args.run_url, mode=args.mode, touched_lines=lines)
+    )
+    gh_out = os.environ.get("GITHUB_OUTPUT")
+    if gh_out:
+        with open(gh_out, "a") as fh:
+            fh.write(f"healthy={'true' if rep.healthy else 'false'}\n")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

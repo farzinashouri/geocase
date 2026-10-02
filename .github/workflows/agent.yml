@@ -76,6 +76,8 @@ jobs:
           cat /tmp/openrouter/status.txt
       - uses: anthropics/claude-code-action@v1
         id: claude
+        # So the report step below always runs; the last step re-fails the job.
+        continue-on-error: true
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.AGENT_GH_TOKEN || github.token }}
@@ -103,6 +105,30 @@ jobs:
           path: ${{ steps.claude.outputs.execution_file }}
           retention-days: 14
           if-no-files-found: warn
+      # One comment per run on the pinned "Agent run reports" issue; subscribing
+      # to it gives an email per run (Plan 52). Created if missing.
+      - name: Agent run report
+        if: always()
+        id: report
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          MODE: ${{ github.event.inputs.mode || 'full' }}
+          OUTCOME: ${{ steps.claude.outcome }}
+          EXEC_FILE: ${{ steps.claude.outputs.execution_file }}
+        run: |
+          python3 scripts/agent_run_report.py --execution-file "${EXEC_FILE:-/nonexistent}" \
+            --outcome "$OUTCOME" --run-url "$RUN_URL" --mode "$MODE" \
+            --max-turns 250 > /tmp/agent-report.md
+          cat /tmp/agent-report.md >> "$GITHUB_STEP_SUMMARY"
+          issue=$(gh issue list --state open --search '"Agent run reports" in:title' \
+            --json number --jq '.[0].number // empty')
+          if [ -z "$issue" ]; then
+            issue=$(gh issue create --title "Agent run reports" \
+              --body "One comment per nightly agent run. Subscribe for email." \
+              | grep -o '[0-9]*$')
+          fi
+          gh issue comment "$issue" --body-file /tmp/agent-report.md \
+            || echo "::warning::could not comment on #$issue"
       # The model may not merge (deny list above). This fixed step turns on
       # GitHub auto-merge for open agent/* PRs: each merges once the checks
       # required by the main_protected ruleset pass, and never bypasses them.
@@ -113,3 +139,9 @@ jobs:
           while read -r pr; do
             gh pr merge "$pr" --auto --merge || echo "::warning::auto-merge not enabled on #$pr"
           done
+      # continue-on-error above would otherwise leave a failed run green.
+      - name: Fail if the agent step failed
+        if: steps.claude.outcome == 'failure'
+        run: |
+          echo "::error::the agent step failed; see the run report"
+          exit 1

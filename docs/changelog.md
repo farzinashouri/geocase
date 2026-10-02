@@ -28,6 +28,13 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Added — agent run report (Plan 52 Phase 1, #83)
+
+No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only:
+`scripts/agent_run_report.py` and an `agent.yml` step that comments a health verdict
+on an "Agent run reports" issue after every nightly run; a failed agent step now fails
+the job.
+
 ### Added — blog publishing surface (Plan 47 Phases 1–3, #25)
 
 No case, CRS, dtype, nodata, id or `risk_types` changed. Docs and tooling only: the
