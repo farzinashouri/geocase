@@ -284,6 +284,12 @@ Your work each morning:
 - **Waiting on you:** when the agent adds `agent:needs-human` or `operator`, it
   assigns the issue to the owner and @mentions them, and both send an email. A
   label change alone sends none.
+- **Every run:** each run comments a verdict (`✅ healthy` or `⚠️ needs
+  attention: …`, with turns, duration, permission denials and the final
+  message) on the pinned **Agent run reports** issue, which the workflow
+  creates if missing. Subscribe to that issue for one email per run. A failed
+  agent step now also fails the job
+  (`scripts/agent_run_report.py`).
 
 ### Labels
 

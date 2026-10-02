@@ -167,3 +167,29 @@ def test_openrouter_preflight_runs_before_claude(wf: dict[str, Any]) -> None:
     assert "openrouter.ai/api/v1/models" in run
     assert "/tmp/openrouter/" in run
     assert "/tmp/openrouter/" in _claude_step(wf)["with"]["prompt"]
+
+
+def _named(wf: dict[str, Any], name: str) -> dict[str, Any]:
+    (step,) = [s for s in _steps(wf) if s.get("name") == name]
+    return step
+
+
+def test_claude_step_failure_does_not_skip_the_report(wf: dict[str, Any]) -> None:
+    # Plan 52: the report must run even when the action step fails; a final
+    # step then re-fails the job so a bad run is no longer green.
+    assert _claude_step(wf)["continue-on-error"] is True
+    steps = _steps(wf)
+    report = _named(wf, "Agent run report")
+    assert report["if"] == "always()"
+    assert "scripts/agent_run_report.py" in report["run"]
+    assert steps.index(report) > steps.index(_claude_step(wf))
+    final = _named(wf, "Fail if the agent step failed")
+    assert "steps.claude.outcome" in final["if"]
+    assert steps.index(final) > steps.index(report)
+
+
+def test_report_is_posted_to_the_run_reports_issue(wf: dict[str, Any]) -> None:
+    run = _named(wf, "Agent run report")["run"]
+    assert "GITHUB_STEP_SUMMARY" in run
+    assert "Agent run reports" in run
+    assert "gh issue comment" in run
