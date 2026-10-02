@@ -1,0 +1,146 @@
+[
+  {
+    "task": "allocate_cents",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "exact_split",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got [300, 300, 300], expected [300, 300, 300]"
+      },
+      {
+        "check": "unequal_weights",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got [750, 250], expected [750, 250]"
+      },
+      {
+        "check": "indivisible_total",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got [334, 333, 333] summing to 1000, expected three ints summing to exactly 1000"
+      }
+    ]
+  },
+  {
+    "task": "dedupe_labels",
+    "outcome": "SILENT",
+    "checks": [
+      {
+        "check": "case_folding",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got ['Alpha', 'beta'], expected ['Alpha', 'beta']"
+      },
+      {
+        "check": "order_preserved",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got ['gamma', 'beta', 'alpha'], expected ['gamma', 'beta', 'alpha']"
+      },
+      {
+        "check": "composed_vs_decomposed",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "got ['\u00c5ngstr\u00f6m', 'A\u030angstro\u0308m'] (2 entries), expected 1"
+      }
+    ]
+  },
+  {
+    "task": "elapsed_hours",
+    "outcome": "SILENT",
+    "checks": [
+      {
+        "check": "same_day",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 2.5, expected 2.5"
+      },
+      {
+        "check": "plain_day",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 24.0, expected 24.0"
+      },
+      {
+        "check": "dst_fall_back",
+        "kind": "edge",
+        "status": "SILENT",
+        "detail": "got 24.0, expected 25.0"
+      }
+    ]
+  },
+  {
+    "task": "group_means",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "plain_groups",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got {'a': 2.0, 'b': 10.0}, expected {'a': 2.0, 'b': 10.0}"
+      },
+      {
+        "check": "nulls_excluded_from_denominator",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got {'a': 3.0}, expected {'a': 3.0}"
+      },
+      {
+        "check": "all_null_group",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got {'a': 1.0, 'b': None}, expected {'a': 1.0, 'b': None}"
+      }
+    ]
+  },
+  {
+    "task": "parse_delimited",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "plain_fields",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got ['a', 'b', 'c'], expected ['a', 'b', 'c']"
+      },
+      {
+        "check": "empty_fields_preserved",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got ['a', '', 'c', ''], expected ['a', '', 'c', '']"
+      },
+      {
+        "check": "quoted_delimiter",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got ['a', 'b,c', 'd'], expected ['a', 'b,c', 'd']"
+      }
+    ]
+  },
+  {
+    "task": "sample_variance",
+    "outcome": "CORRECT",
+    "checks": [
+      {
+        "check": "small_integers",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got 4.571428571428571, expected 4.571428571428571"
+      },
+      {
+        "check": "single_value_is_none",
+        "kind": "control",
+        "status": "PASS",
+        "detail": "got None, expected None"
+      },
+      {
+        "check": "large_offset",
+        "kind": "edge",
+        "status": "PASS",
+        "detail": "got 1.6666666666666667, expected 1.6666666666666667"
+      }
+    ]
+  }
+]

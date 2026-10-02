@@ -1,0 +1,35 @@
+{
+  "task": "geojson_bounds",
+  "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "trial": 3,
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "prompt_sha256": "f6e109ac4ebb88eaf8a8211e63e2edd95ce58e003fc606dc3e9d3a2520070e8e",
+  "prompt_version": 1,
+  "cost_usd": 0,
+  "usage": {
+    "prompt_tokens": 211,
+    "completion_tokens": 3614,
+    "total_tokens": 3825,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2895,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    },
+    "duration_s": 87.44567479200032
+  },
+  "extracted": true
+}

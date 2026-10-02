@@ -1,0 +1,30 @@
+# Issue #70: bare-track run of Nemotron 3 Ultra (free) at k=3. Inkling was
+# dropped: its free tier returns 403 outside agentic harnesses (2026-09-30).
+# Same limits and retry policy as models-free.yaml; budget 0 so any reported
+# cost aborts the run.
+
+defaults:
+  trials: 3
+  temperature: 0.2
+  exec_timeout_s: 60
+
+budget:
+  max_usd_total: 0.00
+
+limits:
+  rpm: 18
+  requests_per_day: 950
+  quota_file: .geocase_quota.json
+retry:
+  max_retry_after: 60
+  honor_long_retry_after: true
+  # 600, not 180: Nemotron 3 Ultra free streams one completion for over three
+  # minutes, so 180 recorded its first task as a runner failure.
+  max_total_seconds: 600
+
+models:
+  - id: nvidia/nemotron-3-ultra-550b-a55b:free
+    label: Nemotron 3 Ultra 550B A55B (free)
+    tracks: [bare]
+    supports_tools: true
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}

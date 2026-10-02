@@ -1,0 +1,13 @@
+{
+  "task": "split_antimeridian",
+  "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "trial": 3,
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "status": "api_failure",
+  "error_type": "ChatFailedError",
+  "detail": "ChatFailedError: nvidia/nemotron-3-ultra-550b-a55b:free: giving up after 2 attempt(s) in 410.9s (last: timeout)",
+  "cost_usd": null,
+  "usage": {},
+  "extracted": false
+}

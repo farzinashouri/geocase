@@ -1,0 +1,1002 @@
+{
+  "schema_version": 2,
+  "run_id": "2026-10-01_nvidia-nemotron-3-ultra-550b-a55b-free_bare_stdlib",
+  "date": "2026-10-01",
+  "domain": "stdlib",
+  "model": {
+    "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "label": "Nemotron 3 Ultra 550B A55B (free)",
+    "provider": "openrouter"
+  },
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "runner": {
+    "name": "geocase-benchmark",
+    "version": "2.0.0.dev0"
+  },
+  "config": {
+    "trials": 3,
+    "temperature": 0.2,
+    "max_turns": null,
+    "variant_seed": null,
+    "sandbox_requirements_sha256": null,
+    "prompt_sha256": {
+      "allocate_cents": "2287de55aef75a69318d528fc6925cd5757ba01ca1065576615d6f3374fd6192",
+      "dedupe_labels": "d5c51e04fc3f6519d3e2aee44168f7d9451fb1fc4b0f4d449c6d891bef985985",
+      "elapsed_hours": "8f5acf41d7d6a13a8c9d50a04722cf5931e088fc1c9808203a8f7351e5357d86",
+      "group_means": "6f9aa14b0acea8d2fb744fff2a34a2ee77eb2f226239f9eade8fafd2ba424831",
+      "parse_delimited": "154ff230ddf0809e2fa1094cad9c80c22bf3d2e7d76ed4bd7af0a46d09080613",
+      "sample_variance": "230f7b7b9f2e6c85934f07835ec5c7092556de8f6f2e97b66cb6b063939161b0"
+    }
+  },
+  "cost_usd": 0.0,
+  "integrity": {
+    "tasks_attempted": 18,
+    "api_failures": 0,
+    "publishable": true,
+    "by_trial": {
+      "trial1": {
+        "tasks_attempted": 6,
+        "api_failures": 0
+      },
+      "trial2": {
+        "tasks_attempted": 6,
+        "api_failures": 0
+      },
+      "trial3": {
+        "tasks_attempted": 6,
+        "api_failures": 0
+      }
+    }
+  },
+  "tasks": {
+    "allocate_cents": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "MISSING",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "MISSING",
+              "detail": "gen_allocate_cents.py or function absent"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 182,
+            "completion_tokens": 417,
+            "total_tokens": 599,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 417,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 14.284918041004858
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "exact_split",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got [300, 300, 300], expected [300, 300, 300]"
+            },
+            {
+              "check": "unequal_weights",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got [750, 250], expected [750, 250]"
+            },
+            {
+              "check": "indivisible_total",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [334, 333, 333] summing to 1000, expected three ints summing to exactly 1000"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 166,
+            "completion_tokens": 3052,
+            "total_tokens": 3218,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2692,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 126.1514864579949
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "exact_split",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got [300, 300, 300], expected [300, 300, 300]"
+            },
+            {
+              "check": "unequal_weights",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got [750, 250], expected [750, 250]"
+            },
+            {
+              "check": "indivisible_total",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [334, 333, 333] summing to 1000, expected three ints summing to exactly 1000"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 166,
+            "completion_tokens": 3989,
+            "total_tokens": 4155,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3538,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 116.3385821250049
+          },
+          "status": null
+        }
+      ]
+    },
+    "dedupe_labels": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "case_folding",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['Alpha', 'beta'], expected ['Alpha', 'beta']"
+            },
+            {
+              "check": "order_preserved",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['gamma', 'beta', 'alpha'], expected ['gamma', 'beta', 'alpha']"
+            },
+            {
+              "check": "composed_vs_decomposed",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got ['\u00c5ngstr\u00f6m', 'A\u030angstro\u0308m'] (2 entries), expected 1"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 138,
+            "completion_tokens": 257,
+            "total_tokens": 395,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 197,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 69.75562195800012
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "case_folding",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['Alpha', 'beta'], expected ['Alpha', 'beta']"
+            },
+            {
+              "check": "order_preserved",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['gamma', 'beta', 'alpha'], expected ['gamma', 'beta', 'alpha']"
+            },
+            {
+              "check": "composed_vs_decomposed",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got ['\u00c5ngstr\u00f6m', 'A\u030angstro\u0308m'] (2 entries), expected 1"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 138,
+            "completion_tokens": 377,
+            "total_tokens": 515,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 318,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 10.20748937499593
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "case_folding",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['Alpha', 'beta'], expected ['Alpha', 'beta']"
+            },
+            {
+              "check": "order_preserved",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['gamma', 'beta', 'alpha'], expected ['gamma', 'beta', 'alpha']"
+            },
+            {
+              "check": "composed_vs_decomposed",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got ['\u00c5ngstr\u00f6m', 'A\u030angstro\u0308m'] (2 entries), expected 1"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 138,
+            "completion_tokens": 326,
+            "total_tokens": 464,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 302,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 52.35297970799729
+          },
+          "status": null
+        }
+      ]
+    },
+    "elapsed_hours": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "same_day",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 2.5, expected 2.5"
+            },
+            {
+              "check": "plain_day",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 24.0, expected 24.0"
+            },
+            {
+              "check": "dst_fall_back",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got 24.0, expected 25.0"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 196,
+            "completion_tokens": 1785,
+            "total_tokens": 1981,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1531,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 19.55370849999599
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "same_day",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 2.5, expected 2.5"
+            },
+            {
+              "check": "plain_day",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 24.0, expected 24.0"
+            },
+            {
+              "check": "dst_fall_back",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got 24.0, expected 25.0"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 196,
+            "completion_tokens": 1730,
+            "total_tokens": 1926,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1573,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 78.67298929200479
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "same_day",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 2.5, expected 2.5"
+            },
+            {
+              "check": "plain_day",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 24.0, expected 24.0"
+            },
+            {
+              "check": "dst_fall_back",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got 24.0, expected 25.0"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 196,
+            "completion_tokens": 4295,
+            "total_tokens": 4491,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 4212,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 151.9744201249996
+          },
+          "status": null
+        }
+      ]
+    },
+    "group_means": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "plain_groups",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got {'a': 2.0, 'b': 10.0}, expected {'a': 2.0, 'b': 10.0}"
+            },
+            {
+              "check": "nulls_excluded_from_denominator",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got {'a': 3.0}, expected {'a': 3.0}"
+            },
+            {
+              "check": "all_null_group",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got {'a': 1.0, 'b': None}, expected {'a': 1.0, 'b': None}"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 197,
+            "completion_tokens": 716,
+            "total_tokens": 913,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 558,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 14.539715999999316
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "plain_groups",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got {'b': 10.0, 'a': 2.0}, expected {'a': 2.0, 'b': 10.0}"
+            },
+            {
+              "check": "nulls_excluded_from_denominator",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got {'a': 3.0}, expected {'a': 3.0}"
+            },
+            {
+              "check": "all_null_group",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got {'b': None, 'a': 1.0}, expected {'a': 1.0, 'b': None}"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 197,
+            "completion_tokens": 761,
+            "total_tokens": 958,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 587,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 17.284947375002957
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "plain_groups",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got {'a': 2.0, 'b': 10.0}, expected {'a': 2.0, 'b': 10.0}"
+            },
+            {
+              "check": "nulls_excluded_from_denominator",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got {'a': 3.0}, expected {'a': 3.0}"
+            },
+            {
+              "check": "all_null_group",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got {'a': 1.0, 'b': None}, expected {'a': 1.0, 'b': None}"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 197,
+            "completion_tokens": 895,
+            "total_tokens": 1092,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 759,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 16.29960637500335
+          },
+          "status": null
+        }
+      ]
+    },
+    "parse_delimited": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "plain_fields",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['a', 'b', 'c'], expected ['a', 'b', 'c']"
+            },
+            {
+              "check": "empty_fields_preserved",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['a', '', 'c', ''], expected ['a', '', 'c', '']"
+            },
+            {
+              "check": "quoted_delimiter",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['a', 'b,c', 'd'], expected ['a', 'b,c', 'd']"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 166,
+            "completion_tokens": 2826,
+            "total_tokens": 2992,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2659,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 113.8931892920009
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "plain_fields",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['a', 'b', 'c'], expected ['a', 'b', 'c']"
+            },
+            {
+              "check": "empty_fields_preserved",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['a', '', 'c', ''], expected ['a', '', 'c', '']"
+            },
+            {
+              "check": "quoted_delimiter",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['a', 'b,c', 'd'], expected ['a', 'b,c', 'd']"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 166,
+            "completion_tokens": 1185,
+            "total_tokens": 1351,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1210,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 31.77896166699793
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "plain_fields",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['a', 'b', 'c'], expected ['a', 'b', 'c']"
+            },
+            {
+              "check": "empty_fields_preserved",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['a', '', 'c', ''], expected ['a', '', 'c', '']"
+            },
+            {
+              "check": "quoted_delimiter",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['a', 'b,c', 'd'], expected ['a', 'b,c', 'd']"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 166,
+            "completion_tokens": 1040,
+            "total_tokens": 1206,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 627,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 59.83095529100683
+          },
+          "status": null
+        }
+      ]
+    },
+    "sample_variance": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "small_integers",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 4.571428571428571, expected 4.571428571428571"
+            },
+            {
+              "check": "single_value_is_none",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got None, expected None"
+            },
+            {
+              "check": "large_offset",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 1.6666666666666667, expected 1.6666666666666667"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 136,
+            "completion_tokens": 535,
+            "total_tokens": 671,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 442,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 32.73630575000425
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "small_integers",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 4.571428571428571, expected 4.571428571428571"
+            },
+            {
+              "check": "single_value_is_none",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got None, expected None"
+            },
+            {
+              "check": "large_offset",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 1.6666666666666667, expected 1.6666666666666667"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 136,
+            "completion_tokens": 376,
+            "total_tokens": 512,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 279,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 11.662002958000812
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "small_integers",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 4.571428571428571, expected 4.571428571428571"
+            },
+            {
+              "check": "single_value_is_none",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got None, expected None"
+            },
+            {
+              "check": "large_offset",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 1.6666666666666667, expected 1.6666666666666667"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 136,
+            "completion_tokens": 322,
+            "total_tokens": 458,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 234,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 12.171957124999608
+          },
+          "status": null
+        }
+      ]
+    }
+  }
+}

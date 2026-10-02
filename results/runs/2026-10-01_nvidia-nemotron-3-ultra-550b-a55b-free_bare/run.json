@@ -1,0 +1,3907 @@
+{
+  "schema_version": 2,
+  "run_id": "2026-10-01_nvidia-nemotron-3-ultra-550b-a55b-free_bare",
+  "date": "2026-10-01",
+  "domain": "geo",
+  "model": {
+    "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "label": "Nemotron 3 Ultra 550B A55B (free)",
+    "provider": "openrouter"
+  },
+  "track": "bare",
+  "protocol": "openrouter-chat",
+  "runner": {
+    "name": "geocase-benchmark",
+    "version": "2.0.0.dev0"
+  },
+  "config": {
+    "trials": 3,
+    "temperature": 0.2,
+    "max_turns": null,
+    "variant_seed": null,
+    "sandbox_requirements_sha256": null,
+    "prompt_sha256": {
+      "area_m2": "c42be34198b2a8788f70e3f794cd2e16f52837e78906a42dda63bd6d3199e16f",
+      "buffer_m": "00c0eb6ae1df2d3e4ab6688e81af96e5f83b1b8d2aa9de21a46807ca96b435e2",
+      "cluster_points_m": "dea94540d289d1540d190051659550fc97f0ab5c758999c96ef545d05e351b1b",
+      "dedupe_geoms": "baea32f4acbadd1088e56f950b1773277feee0e71eadb19e7dafd2f1da63c413",
+      "fix_geometry": "2fc1361ca73e9b02d62ad0881efe29cc4f49d09ea40eb473b847708c56ce58aa",
+      "geohash_neighbors": "020a02578e1e4bb5d9f27097002921c4066aa5fd5aeeb8ad48c0e7c432d9ff3c",
+      "geojson_bounds": "f6e109ac4ebb88eaf8a8211e63e2edd95ce58e003fc606dc3e9d3a2520070e8e",
+      "label_point": "ddc6a5752442069704733a59c7d959c6ebbf0e4cdfa91106a586cce643adfd4a",
+      "length_m": "fb6f18b6c939deeacdca78dcb72e21fb5a7aeda872b9140d563112c620d9a476",
+      "position_at": "beeebe594ea203353f6a2aa391f24c5abd7d7ddf487823a4363493daa732f997",
+      "project_line": "56000143a67d3be5460facb90cc688607af29ed60ca3f6fc5ef81feb4a77c47b",
+      "s2_fixture": "40163418abf460ee71a9a5420d6507a840797b8ee490e3d0867b4cd3d830e461",
+      "sample_at": "0057c74f7c52363e7317de45290b233358b880bae5ad776c390c1c0a51a66348",
+      "segment_intersection": "d8ef1d58567826671a392352615e57549c39e5b96229c1badb134feeac53506e",
+      "shapefile_attrs": "5d1bf11577f5891ddc4990d748b03e8213174c1057c91adbb8fe7bc9181d9368",
+      "split_antimeridian": "fdb9f643dc5135a8cd0938bf0e4ef26334077796f6a549f85daaa4e2f26096bd",
+      "tag_points": "cdd8a4e1b186a4dbe0c9922bce4dddc13a44142a152e05f694bbeebf7189e865",
+      "tile_bounds": "d84f032cc7f208bda62d53f2bde26cb0aee26736cb948ae8c0f93bd5a122ee4b",
+      "to_rfc7946": "d44ea2ea2f364d2613e7a259b3dc15277399b709be2bca787871bc19456b748b",
+      "utm_epsg_for": "af105d092262ff381e88d7ada72e192e6c147e6b8a43c3d357f7561640a37655",
+      "voronoi_cells": "b617bcc8d7883cd0f7e7ee1d738eed33766c4c0737aa3e741d3ff87ed36d03d9",
+      "wkt_from_latlon": "1d93471df7e7f5d7b5893b1e31fa29e6b797bc15b664c925410a07ba0c72469d",
+      "zonal_mean": "7e462cc8194b95d185d315de4cd4cf436df0087f9910a9229f9136b7338d457e"
+    }
+  },
+  "cost_usd": 0.0,
+  "integrity": {
+    "tasks_attempted": 69,
+    "api_failures": 0,
+    "publishable": true,
+    "by_trial": {
+      "trial1": {
+        "tasks_attempted": 23,
+        "api_failures": 0
+      },
+      "trial2": {
+        "tasks_attempted": 23,
+        "api_failures": 0
+      },
+      "trial3": {
+        "tasks_attempted": 23,
+        "api_failures": 0
+      }
+    }
+  },
+  "tasks": {
+    "area_m2": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_box",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 7.633e+07, expected 7.633e+07"
+            },
+            {
+              "check": "antimeridian_box",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 2.462e+10, expected 2.462e+10 (2x1 deg box)"
+            },
+            {
+              "check": "antimeridian_westward",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 9.674e+10, expected 9.674e+10"
+            },
+            {
+              "check": "pole_adjacent_crossing",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 8.097e+10, expected 8.097e+10"
+            },
+            {
+              "check": "equator_crossing",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 2.462e+10, expected 2.462e+10"
+            },
+            {
+              "check": "southern_hemisphere",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 1.28e+10, expected 1.28e+10"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 171,
+            "completion_tokens": 1276,
+            "total_tokens": 1447,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1026,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 53.74713024999801
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_box",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 7.633e+07, expected 7.633e+07"
+            },
+            {
+              "check": "antimeridian_box",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 2.462e+10, expected 2.462e+10 (2x1 deg box)"
+            },
+            {
+              "check": "antimeridian_westward",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 9.674e+10, expected 9.674e+10"
+            },
+            {
+              "check": "pole_adjacent_crossing",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 8.097e+10, expected 8.097e+10"
+            },
+            {
+              "check": "equator_crossing",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 2.462e+10, expected 2.462e+10"
+            },
+            {
+              "check": "southern_hemisphere",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 1.28e+10, expected 1.28e+10"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 171,
+            "completion_tokens": 1739,
+            "total_tokens": 1910,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1672,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 82.25586229200053
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "berlin_box",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 7.633e+07, expected 7.633e+07"
+            },
+            {
+              "check": "antimeridian_box",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got 9.079e+13, expected 2.462e+10 (2x1 deg box)"
+            },
+            {
+              "check": "antimeridian_westward",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got 7.37e+10, expected 9.674e+10"
+            },
+            {
+              "check": "pole_adjacent_crossing",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 8.099e+10, expected 8.097e+10"
+            },
+            {
+              "check": "equator_crossing",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got 2.604e+14, expected 2.462e+10"
+            },
+            {
+              "check": "southern_hemisphere",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 1.28e+10, expected 1.28e+10"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 171,
+            "completion_tokens": 1410,
+            "total_tokens": 1581,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1056,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 62.62863287499931
+          },
+          "status": null
+        }
+      ]
+    },
+    "buffer_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "1km_at_lat50",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, 900m in=True"
+            },
+            {
+              "check": "50km_across_dateline",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "valid=False, across_dateline=False, contains_far_point=True, lon_span=360.0"
+            },
+            {
+              "check": "dateline_westward",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "valid=False, missed_inside_at=[0, 90, 180, 270], leaked_outside_at=[90, 270], max_part_lon_span=360.0"
+            },
+            {
+              "check": "pole_adjacent",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "valid=True, missed_inside_at=[0, 90, 180, 270], leaked_outside_at=[90, 270], max_part_lon_span=359.1"
+            },
+            {
+              "check": "equator_crossing_line",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "valid=False, missed_inside_at=[90, 270, 0, 180], leaked_outside_at=[90, 270], max_part_lon_span=360.0"
+            },
+            {
+              "check": "southern_hemisphere",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "valid=True, missed_inside_at=[0, 90, 180, 270], leaked_outside_at=[90, 270], max_part_lon_span=359.9"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 183,
+            "completion_tokens": 1247,
+            "total_tokens": 1430,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 798,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 47.060824249998404
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "LOUD",
+              "detail": "ImportError: cannot import name 'BaseGeometry' from 'shapely.geometry' (/opt/homebrew/Caskroom/miniforge/base/envs/geocase/lib/python3.14/site-packages/shapely/geometry/__init__.py)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 183,
+            "completion_tokens": 1436,
+            "total_tokens": 1619,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 964,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 42.422917375002726
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "LOUD",
+              "detail": "ImportError: cannot import name 'BaseGeometry' from 'shapely.geometry' (/opt/homebrew/Caskroom/miniforge/base/envs/geocase/lib/python3.14/site-packages/shapely/geometry/__init__.py)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 183,
+            "completion_tokens": 1675,
+            "total_tokens": 1858,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1150,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 76.38723470900004
+          },
+          "status": null
+        }
+      ]
+    },
+    "cluster_points_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "300m_pair_plus_outlier",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "labels [0, 0, 1]"
+            },
+            {
+              "check": "east_west_at_75N",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~346 m apart)"
+            },
+            {
+              "check": "pair_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~222 m apart)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 230,
+            "completion_tokens": 4013,
+            "total_tokens": 4243,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3531,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 163.23869750000085
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "300m_pair_plus_outlier",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "labels [0, 0, 1]"
+            },
+            {
+              "check": "east_west_at_75N",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~346 m apart)"
+            },
+            {
+              "check": "pair_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "labels [0, 0] (points are ~222 m apart)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 230,
+            "completion_tokens": 5983,
+            "total_tokens": 6213,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 5418,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 317.5418763339985
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "300m_pair_plus_outlier",
+              "kind": "control",
+              "status": "LOUD",
+              "detail": "ValueError: not enough values to unpack (expected 3, got 2)"
+            },
+            {
+              "check": "east_west_at_75N",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "ValueError: not enough values to unpack (expected 3, got 2)"
+            },
+            {
+              "check": "pair_across_dateline",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "ValueError: not enough values to unpack (expected 3, got 2)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 230,
+            "completion_tokens": 8041,
+            "total_tokens": 8271,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 6976,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 341.0007702080002
+          },
+          "status": null
+        }
+      ]
+    },
+    "dedupe_geoms": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "exact_duplicates",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "kept 2 of 3 (expected 2: square, triangle, in order)"
+            },
+            {
+              "check": "rotated_reversed_ring",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "kept 1 of 2 (same ring, rotated start vertex and reversed orientation \u2014 expected 1)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 187,
+            "completion_tokens": 3386,
+            "total_tokens": 3573,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3489,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 172.7716732910012
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "exact_duplicates",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "kept 2 of 3 (expected 2: square, triangle, in order)"
+            },
+            {
+              "check": "rotated_reversed_ring",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "kept 1 of 2 (same ring, rotated start vertex and reversed orientation \u2014 expected 1)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 187,
+            "completion_tokens": 1642,
+            "total_tokens": 1829,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1624,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 117.14349695799683
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "exact_duplicates",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "kept 2 of 3 (expected 2: square, triangle, in order)"
+            },
+            {
+              "check": "rotated_reversed_ring",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "kept 1 of 2 (same ring, rotated start vertex and reversed orientation \u2014 expected 1)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 187,
+            "completion_tokens": 822,
+            "total_tokens": 1009,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 579,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 78.97243570800129
+          },
+          "status": null
+        }
+      ]
+    },
+    "fix_geometry": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_input_unchanged",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, area 64 (expected 64)"
+            },
+            {
+              "check": "bowtie_keeps_both_lobes",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 50 (expected 50), both_lobes=True (buffer(0) keeps only one)"
+            },
+            {
+              "check": "bowtie_southern_offset",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 50 (expected 50), both_lobes=True (translated bowtie)"
+            },
+            {
+              "check": "bowtie_tiny_coordinates",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 5e-05 (expected 5e-05), both_lobes=True (tiny coordinates)"
+            },
+            {
+              "check": "bowtie_unequal_lobes",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 40 (expected 40), both_lobes=True (lobes of 15 and 25)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 205,
+            "completion_tokens": 3018,
+            "total_tokens": 3223,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2913,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 169.7553380419995
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_input_unchanged",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, area 64 (expected 64)"
+            },
+            {
+              "check": "bowtie_keeps_both_lobes",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 50 (expected 50), both_lobes=True (buffer(0) keeps only one)"
+            },
+            {
+              "check": "bowtie_southern_offset",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 50 (expected 50), both_lobes=True (translated bowtie)"
+            },
+            {
+              "check": "bowtie_tiny_coordinates",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 5e-05 (expected 5e-05), both_lobes=True (tiny coordinates)"
+            },
+            {
+              "check": "bowtie_unequal_lobes",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 40 (expected 40), both_lobes=True (lobes of 15 and 25)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 205,
+            "completion_tokens": 2376,
+            "total_tokens": 2581,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2467,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 96.90317175000018
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_input_unchanged",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "valid=True, area 64 (expected 64)"
+            },
+            {
+              "check": "bowtie_keeps_both_lobes",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 50 (expected 50), both_lobes=True (buffer(0) keeps only one)"
+            },
+            {
+              "check": "bowtie_southern_offset",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 50 (expected 50), both_lobes=True (translated bowtie)"
+            },
+            {
+              "check": "bowtie_tiny_coordinates",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 5e-05 (expected 5e-05), both_lobes=True (tiny coordinates)"
+            },
+            {
+              "check": "bowtie_unequal_lobes",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "valid=True, area 40 (expected 40), both_lobes=True (lobes of 15 and 25)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 205,
+            "completion_tokens": 1958,
+            "total_tokens": 2163,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1890,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 164.49272420800116
+          },
+          "status": null
+        }
+      ]
+    },
+    "geohash_neighbors": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_cell",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g'], expected ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g']"
+            },
+            {
+              "check": "equator_meridian_corner",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003'], expected ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003']"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 187,
+            "completion_tokens": 4327,
+            "total_tokens": 4514,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2980,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 168.87523624999812
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_cell",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g'], expected ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g']"
+            },
+            {
+              "check": "equator_meridian_corner",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003'], expected ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003']"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 187,
+            "completion_tokens": 8512,
+            "total_tokens": 8699,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 6896,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 340.8108779999966
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_cell",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g'], expected ['u333', 'u336', 'u337', 'u339', 'u33c', 'u33e', 'u33f', 'u33g']"
+            },
+            {
+              "check": "equator_meridian_corner",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003'], expected ['7zzz', 'ebpb', 'ebpc', 'kpbp', 'kpbr', 's001', 's002', 's003']"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 187,
+            "completion_tokens": 6377,
+            "total_tokens": 6564,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 4896,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 290.49021650000213
+          },
+          "status": null
+        }
+      ]
+    },
+    "geojson_bounds": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin_polygon",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (13.0, 52.0, 13.099999999999994, 52.1), expected (13.0, 52.0, 13.1, 52.1)"
+            },
+            {
+              "check": "antimeridian_polygon",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.0, 0.0, -179.0, 1.0), spanning 2 deg of longitude for a polygon 2 deg wide (expected a bbox that crosses the antimeridian, not its 358 deg complement)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 211,
+            "completion_tokens": 14361,
+            "total_tokens": 14572,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 12663,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 566.3697205839999
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "berlin_polygon",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (13.0, 52.0, 13.1, 52.1), expected (13.0, 52.0, 13.1, 52.1)"
+            },
+            {
+              "check": "antimeridian_polygon",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got (-179.0, 0.0, 179.0, 1.0), spanning 358 deg of longitude for a polygon 2 deg wide (expected a bbox that crosses the antimeridian, not its 358 deg complement)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 211,
+            "completion_tokens": 3819,
+            "total_tokens": 4030,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2809,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 128.94062391700209
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "berlin_polygon",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (13.0, 52.0, 13.099999999999994, 52.1), expected (13.0, 52.0, 13.1, 52.1)"
+            },
+            {
+              "check": "antimeridian_polygon",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got (-179.0, 0.0, 179.0, 1.0), spanning 358 deg of longitude for a polygon 2 deg wide (expected a bbox that crosses the antimeridian, not its 358 deg complement)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 211,
+            "completion_tokens": 11329,
+            "total_tokens": 11540,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 10779,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 460.3134578329991
+          },
+          "status": null
+        }
+      ]
+    },
+    "label_point": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "square",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "point POINT (5 5)"
+            },
+            {
+              "check": "donut",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (1 5) (centroid lies in the hole)"
+            },
+            {
+              "check": "c_shape",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (9 5) (centroid lies in the notch)"
+            },
+            {
+              "check": "multipolygon_gap",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (1 1) (centroid lies in the gap between parts)"
+            },
+            {
+              "check": "thin_l_band",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (10 5.25) (centroid lies off the band)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 160,
+            "completion_tokens": 1107,
+            "total_tokens": 1267,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1022,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 39.88204537499769
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "square",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "point POINT (5.000000000000001 5)"
+            },
+            {
+              "check": "donut",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (1.25 1.25) (centroid lies in the hole)"
+            },
+            {
+              "check": "c_shape",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (8.75 1.25) (centroid lies in the notch)"
+            },
+            {
+              "check": "multipolygon_gap",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "ValueError: Input must be a shapely Polygon"
+            },
+            {
+              "check": "thin_l_band",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (10 5.25) (centroid lies off the band)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 160,
+            "completion_tokens": 1893,
+            "total_tokens": 2053,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1862,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 117.07672554099918
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "square",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "point POINT (5 5)"
+            },
+            {
+              "check": "donut",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (1 5) (centroid lies in the hole)"
+            },
+            {
+              "check": "c_shape",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (9 5) (centroid lies in the notch)"
+            },
+            {
+              "check": "multipolygon_gap",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "TypeError: Expected a shapely Polygon object."
+            },
+            {
+              "check": "thin_l_band",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "point POINT (10 5.25) (centroid lies off the band)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 160,
+            "completion_tokens": 452,
+            "total_tokens": 612,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 306,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 8.995848667000246
+          },
+          "status": null
+        }
+      ]
+    },
+    "length_m": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "1deg_equator",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            },
+            {
+              "check": "1deg_at_lat60",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 55799.5, expected 55799.5"
+            },
+            {
+              "check": "1deg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 162,
+            "completion_tokens": 648,
+            "total_tokens": 810,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 372,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 16.867071874999965
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "1deg_equator",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            },
+            {
+              "check": "1deg_at_lat60",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 55799.5, expected 55799.5"
+            },
+            {
+              "check": "1deg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 162,
+            "completion_tokens": 1650,
+            "total_tokens": 1812,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1276,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 103.00934766700084
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "1deg_equator",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            },
+            {
+              "check": "1deg_at_lat60",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 55799.5, expected 55799.5"
+            },
+            {
+              "check": "1deg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 111319, expected 111319"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 162,
+            "completion_tokens": 702,
+            "total_tokens": 864,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 502,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 27.12200033300178
+          },
+          "status": null
+        }
+      ]
+    },
+    "position_at": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "quarter_along_leg",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (5.0498, 50.0500), expected ~(5.05, 50.05)"
+            },
+            {
+              "check": "leg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.9998, 10.1004), expected lon near +/-180 (ship crosses the dateline)"
+            },
+            {
+              "check": "dateline_westward",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (-179.9998, 10.1004), expected ~(-179.9998, 10.1004); 0.0 km off on a 112 km leg"
+            },
+            {
+              "check": "pole_adjacent",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (174.9619, 85.0566), expected ~(174.9619, 85.0566); 0.0 km off on a 194 km leg"
+            },
+            {
+              "check": "equator_crossing",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (180.0000, -0.0000), expected ~(180.0000, -0.0000); 0.0 km off on a 80 km leg"
+            },
+            {
+              "check": "southern_hemisphere",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.7489, -59.8507), expected ~(179.7489, -59.8507); 0.0 km off on a 60 km leg"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 197,
+            "completion_tokens": 1905,
+            "total_tokens": 2102,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1318,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 99.49460391699904
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "quarter_along_leg",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (5.0498, 50.0500), expected ~(5.05, 50.05)"
+            },
+            {
+              "check": "leg_across_dateline",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.9998, 10.1004), expected lon near +/-180 (ship crosses the dateline)"
+            },
+            {
+              "check": "dateline_westward",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (-179.9998, 10.1004), expected ~(-179.9998, 10.1004); 0.0 km off on a 112 km leg"
+            },
+            {
+              "check": "pole_adjacent",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (174.9619, 85.0566), expected ~(174.9619, 85.0566); 0.0 km off on a 194 km leg"
+            },
+            {
+              "check": "equator_crossing",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (180.0000, -0.0000), expected ~(180.0000, -0.0000); 0.0 km off on a 80 km leg"
+            },
+            {
+              "check": "southern_hemisphere",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (179.7489, -59.8507), expected ~(179.7489, -59.8507); 0.0 km off on a 60 km leg"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 197,
+            "completion_tokens": 2037,
+            "total_tokens": 2234,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1493,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 95.30056004200014
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "quarter_along_leg",
+              "kind": "control",
+              "status": "LOUD",
+              "detail": "AttributeError: 'Geod' object has no attribute 'line'"
+            },
+            {
+              "check": "leg_across_dateline",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "AttributeError: 'Geod' object has no attribute 'line'"
+            },
+            {
+              "check": "dateline_westward",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "AttributeError: 'Geod' object has no attribute 'line'"
+            },
+            {
+              "check": "pole_adjacent",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "AttributeError: 'Geod' object has no attribute 'line'"
+            },
+            {
+              "check": "equator_crossing",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "AttributeError: 'Geod' object has no attribute 'line'"
+            },
+            {
+              "check": "southern_hemisphere",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "AttributeError: 'Geod' object has no attribute 'line'"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 197,
+            "completion_tokens": 1636,
+            "total_tokens": 1833,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 881,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 42.8077321669989
+          },
+          "status": null
+        }
+      ]
+    },
+    "project_line": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "short_line",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "endpoints_ok=True, max offset 0 m"
+            },
+            {
+              "check": "long_line_follows_geodesic",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "max offset from geodesic waypoints 9 km (limit 25)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 221,
+            "completion_tokens": 11769,
+            "total_tokens": 11990,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 10794,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 416.35764095800187
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "short_line",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "endpoints_ok=True, max offset 0 m"
+            },
+            {
+              "check": "long_line_follows_geodesic",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "max offset from geodesic waypoints 15 km (limit 25)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 221,
+            "completion_tokens": 10315,
+            "total_tokens": 10536,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 9258,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 358.64270899999974
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "short_line",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "endpoints_ok=True, max offset 0 m"
+            },
+            {
+              "check": "long_line_follows_geodesic",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "max offset from geodesic waypoints 0 km (limit 25)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 221,
+            "completion_tokens": 5937,
+            "total_tokens": 6158,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 5102,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 397.50495262500044
+          },
+          "status": null
+        }
+      ]
+    },
+    "s2_fixture": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "opens_as_4band_utm_10m",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "count=4, dtype=uint16, epsg=32632, res=(10.0, 10.0)"
+            },
+            {
+              "check": "baseline_0400_radiometry",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "nodata=0.0, scales=(1.0, 1.0, 1.0, 1.0), offsets=(0.0, 0.0, 0.0, 0.0), tags={}; expected nodata=0 and BOA reflectance = (DN - 1000) / 10000 recorded in band metadata or product tags (baseline 04.00)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 240,
+            "completion_tokens": 1985,
+            "total_tokens": 2225,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1049,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 96.04131958300059
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "opens_as_4band_utm_10m",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "count=4, dtype=uint16, epsg=32631, res=(10.0, 10.0)"
+            },
+            {
+              "check": "baseline_0400_radiometry",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "nodata=0.0, scales=(0.0001, 0.0001, 0.0001, 0.0001), offsets=(0.0, 0.0, 0.0, 0.0), tags={}; expected nodata=0 and BOA reflectance = (DN - 1000) / 10000 recorded in band metadata or product tags (baseline 04.00)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 240,
+            "completion_tokens": 3059,
+            "total_tokens": 3299,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1946,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 71.59265695900103
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "opens_as_4band_utm_10m",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "count=4, dtype=uint16, epsg=32630, res=(10.0, 10.0)"
+            },
+            {
+              "check": "baseline_0400_radiometry",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "nodata=None, scales=(1.0, 1.0, 1.0, 1.0), offsets=(0.0, 0.0, 0.0, 0.0), tags={}; expected nodata=0 and BOA reflectance = (DN - 1000) / 10000 recorded in band metadata or product tags (baseline 04.00)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 240,
+            "completion_tokens": 3206,
+            "total_tokens": 3446,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1979,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 128.6677047919984
+          },
+          "status": null
+        }
+      ]
+    },
+    "sample_at": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "valid_pixel_utm_raster",
+              "kind": "control",
+              "status": "LOUD",
+              "detail": "TypeError: sample() got an unexpected keyword argument 'resampling'"
+            },
+            {
+              "check": "nodata_sentinel",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "TypeError: sample() got an unexpected keyword argument 'resampling'"
+            },
+            {
+              "check": "bottom_up_sentinel",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (bottom-up raster, sentinel pixel)"
+            },
+            {
+              "check": "non_square_sentinel",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "TypeError: sample() got an unexpected keyword argument 'resampling'"
+            },
+            {
+              "check": "nan_nodata_keeps_minus_9999",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "TypeError: sample() got an unexpected keyword argument 'resampling'"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 178,
+            "completion_tokens": 539,
+            "total_tokens": 717,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 156,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 41.09385979199942
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_pixel_utm_raster",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 42.0, expected 42.0"
+            },
+            {
+              "check": "nodata_sentinel",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (pixel is the -9999 nodata sentinel)"
+            },
+            {
+              "check": "bottom_up_sentinel",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (bottom-up raster, sentinel pixel)"
+            },
+            {
+              "check": "non_square_sentinel",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (100 x 250 m pixels, sentinel pixel)"
+            },
+            {
+              "check": "nan_nodata_keeps_minus_9999",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got -9999.0, expected -9999.0 (real value when nodata is NaN)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 178,
+            "completion_tokens": 1024,
+            "total_tokens": 1202,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 659,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 47.05522595799994
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "valid_pixel_utm_raster",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 42.0, expected 42.0"
+            },
+            {
+              "check": "nodata_sentinel",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (pixel is the -9999 nodata sentinel)"
+            },
+            {
+              "check": "bottom_up_sentinel",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (bottom-up raster, sentinel pixel)"
+            },
+            {
+              "check": "non_square_sentinel",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (100 x 250 m pixels, sentinel pixel)"
+            },
+            {
+              "check": "nan_nodata_keeps_minus_9999",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got -9999.0, expected -9999.0 (real value when nodata is NaN)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 178,
+            "completion_tokens": 705,
+            "total_tokens": 883,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 204,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 43.33233050000126
+          },
+          "status": null
+        }
+      ]
+    },
+    "segment_intersection": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "crossing_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (2.0, 2.0), expected (2.0, 2.0)"
+            },
+            {
+              "check": "disjoint_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got None, expected None"
+            },
+            {
+              "check": "collinear_overlap",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ((2.0, 0.0), (5.0, 0.0)), expected the overlap segment ((2,0), (5,0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 214,
+            "completion_tokens": 3115,
+            "total_tokens": 3329,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2989,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 166.98565999999846
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "crossing_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (2.0, 2.0), expected (2.0, 2.0)"
+            },
+            {
+              "check": "disjoint_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got None, expected None"
+            },
+            {
+              "check": "collinear_overlap",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ((2.0, 0.0), (5.0, 0.0)), expected the overlap segment ((2,0), (5,0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 214,
+            "completion_tokens": 1800,
+            "total_tokens": 2014,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1603,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 56.01057474999834
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "crossing_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (2.0, 2.0), expected (2.0, 2.0)"
+            },
+            {
+              "check": "disjoint_segments",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got None, expected None"
+            },
+            {
+              "check": "collinear_overlap",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ((2.0, 0.0), (5.0, 0.0)), expected the overlap segment ((2,0), (5,0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 214,
+            "completion_tokens": 1169,
+            "total_tokens": 1383,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 897,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 44.74456295799973
+          },
+          "status": null
+        }
+      ]
+    },
+    "shapefile_attrs": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "field_count",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 4 field(s) ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected 4"
+            },
+            {
+              "check": "dbf_truncated_names",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'] (the names as the DBF header stores them)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 174,
+            "completion_tokens": 3377,
+            "total_tokens": 3551,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2739,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 127.75632283400046
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "field_count",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 4 field(s) ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected 4"
+            },
+            {
+              "check": "dbf_truncated_names",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'] (the names as the DBF header stores them)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 174,
+            "completion_tokens": 1983,
+            "total_tokens": 2157,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1324,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 56.30786412499947
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "field_count",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 4 field(s) ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected 4"
+            },
+            {
+              "check": "dbf_truncated_names",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'], expected ['temperatur', 'temperat_1', 'precipitat', 'wind_speed'] (the names as the DBF header stores them)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 174,
+            "completion_tokens": 1970,
+            "total_tokens": 2144,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1263,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 79.25422783400427
+          },
+          "status": null
+        }
+      ]
+    },
+    "split_antimeridian": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "non_crossing_passthrough",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "1 part(s), unchanged=True"
+            },
+            {
+              "check": "crossing_box_two_parts",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 359.0 deg, area 2.462e+10 (expected 2.462e+10)"
+            },
+            {
+              "check": "westward_ring",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 355.0 deg, area 5.879e+11 (expected 5.886e+11)"
+            },
+            {
+              "check": "pole_adjacent",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 356.0 deg, area 4.158e+10 (expected 4.158e+10)"
+            },
+            {
+              "check": "equator_crossing",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 358.0 deg, area 9.849e+10 (expected 9.851e+10)"
+            },
+            {
+              "check": "southern_hemisphere",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 359.0 deg, area 4.762e+10 (expected 4.762e+10)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 242,
+            "completion_tokens": 48534,
+            "total_tokens": 48776,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 45895,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 2037.1645440000066
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "non_crossing_passthrough",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "1 part(s), unchanged=True"
+            },
+            {
+              "check": "crossing_box_two_parts",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 359.0 deg, area 2.462e+10 (expected 2.462e+10)"
+            },
+            {
+              "check": "westward_ring",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 355.0 deg, area 5.878e+11 (expected 5.886e+11)"
+            },
+            {
+              "check": "pole_adjacent",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 356.0 deg, area 4.168e+10 (expected 4.158e+10)"
+            },
+            {
+              "check": "equator_crossing",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 358.0 deg, area 9.848e+10 (expected 9.851e+10)"
+            },
+            {
+              "check": "southern_hemisphere",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 359.0 deg, area 4.763e+10 (expected 4.762e+10)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 242,
+            "completion_tokens": 9051,
+            "total_tokens": 9293,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 7656,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 337.11123837500054
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "non_crossing_passthrough",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "1 part(s), unchanged=True"
+            },
+            {
+              "check": "crossing_box_two_parts",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 359.0 deg, area 2.462e+10 (expected 2.462e+10)"
+            },
+            {
+              "check": "westward_ring",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 355.0 deg, area 5.878e+11 (expected 5.886e+11)"
+            },
+            {
+              "check": "pole_adjacent",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 356.0 deg, area 4.168e+10 (expected 4.158e+10)"
+            },
+            {
+              "check": "equator_crossing",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 358.0 deg, area 9.848e+10 (expected 9.851e+10)"
+            },
+            {
+              "check": "southern_hemisphere",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "2 part(s), max lon span 359.0 deg, area 4.763e+10 (expected 4.762e+10)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 242,
+            "completion_tokens": 61531,
+            "total_tokens": 61773,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 54429,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 2491.201660708997
+          },
+          "status": null
+        }
+      ]
+    },
+    "tag_points": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_points",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got [np.int64(0), np.int64(1), None], expected [0, 1, None]"
+            },
+            {
+              "check": "point_on_shared_edge",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [np.int64(0)], expected [0] (point on the shared edge; smallest containing index wins)"
+            },
+            {
+              "check": "point_on_outer_boundary",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [np.int64(0), np.int64(1)], expected [0, 1] (points on the outer boundary)"
+            },
+            {
+              "check": "point_on_corner_vertex",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [np.int64(0), np.int64(0), np.int64(1)], expected [0, 0, 1] (shared and outer corners)"
+            },
+            {
+              "check": "point_on_hole_boundary",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [np.int64(0), None], expected [0, None] (the hole's edge belongs to the polygon; its interior does not)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 235,
+            "completion_tokens": 780,
+            "total_tokens": 1015,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 572,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 28.80006012499871
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "interior_points",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got [np.int64(0), np.int64(1), None], expected [0, 1, None]"
+            },
+            {
+              "check": "point_on_shared_edge",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [np.int64(0)], expected [0] (point on the shared edge; smallest containing index wins)"
+            },
+            {
+              "check": "point_on_outer_boundary",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [np.int64(0), np.int64(1)], expected [0, 1] (points on the outer boundary)"
+            },
+            {
+              "check": "point_on_corner_vertex",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [np.int64(0), np.int64(0), np.int64(1)], expected [0, 0, 1] (shared and outer corners)"
+            },
+            {
+              "check": "point_on_hole_boundary",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got [np.int64(0), None], expected [0, None] (the hole's edge belongs to the polygon; its interior does not)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 235,
+            "completion_tokens": 1517,
+            "total_tokens": 1752,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1379,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 46.666638916998636
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "interior_points",
+              "kind": "control",
+              "status": "SILENT",
+              "detail": "got [None, None, None], expected [0, 1, None]"
+            },
+            {
+              "check": "point_on_shared_edge",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got [None], expected [0] (point on the shared edge; smallest containing index wins)"
+            },
+            {
+              "check": "point_on_outer_boundary",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got [None, None], expected [0, 1] (points on the outer boundary)"
+            },
+            {
+              "check": "point_on_corner_vertex",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got [None, None, None], expected [0, 0, 1] (shared and outer corners)"
+            },
+            {
+              "check": "point_on_hole_boundary",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got [None, None], expected [0, None] (the hole's edge belongs to the polygon; its interior does not)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 235,
+            "completion_tokens": 1601,
+            "total_tokens": 1836,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1403,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 98.81899600000179
+          },
+          "status": null
+        }
+      ]
+    },
+    "tile_bounds": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "z0_world",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (-180.0, -85.0511287798066, 180.0, 85.0511287798066)"
+            },
+            {
+              "check": "z2_tms_row_flip",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (-90.0, -66.5133, 0.0, 0.0), expected (-90.0, -66.5133, 0.0, 0.0)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 183,
+            "completion_tokens": 3248,
+            "total_tokens": 3431,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2083,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 138.72387079200053
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "z0_world",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (-180.0, -85.0511287798066, 180.0, 85.0511287798066)"
+            },
+            {
+              "check": "z2_tms_row_flip",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (-90.0, -66.5133, 0.0, 0.0), expected (-90.0, -66.5133, 0.0, 0.0)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 183,
+            "completion_tokens": 1961,
+            "total_tokens": 2144,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1132,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 123.80232279200209
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "z0_world",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got (-180.00000000000003, -85.05112877980659, 180.00000000000003, 85.05112877980659)"
+            },
+            {
+              "check": "z2_tms_row_flip",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got (-90.0, -66.5133, 0.0, 0.0), expected (-90.0, -66.5133, 0.0, 0.0)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 183,
+            "completion_tokens": 3480,
+            "total_tokens": 3663,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2265,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 112.94313087499904
+          },
+          "status": null
+        }
+      ]
+    },
+    "to_rfc7946": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "wgs84_polygon",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "corners_match=True, exterior_ccw=True, no_crs_member=True"
+            },
+            {
+              "check": "mercator_input_reprojected",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "coords_in_lonlat_range=True, corners_match_wgs84=True (first coord (13.099999999999998, 52.0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 208,
+            "completion_tokens": 3210,
+            "total_tokens": 3418,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2506,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 134.57226504100254
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "wgs84_polygon",
+              "kind": "control",
+              "status": "LOUD",
+              "detail": "AttributeError: module 'shapely' has no attribute 'orient'"
+            },
+            {
+              "check": "mercator_input_reprojected",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "AttributeError: module 'shapely' has no attribute 'orient'"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 208,
+            "completion_tokens": 2966,
+            "total_tokens": 3174,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2297,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 134.7558086659992
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "wgs84_polygon",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "corners_match=True, exterior_ccw=True, no_crs_member=True"
+            },
+            {
+              "check": "mercator_input_reprojected",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "coords_in_lonlat_range=True, corners_match_wgs84=True (first coord (13.099999999999998, 52.0))"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 208,
+            "completion_tokens": 4432,
+            "total_tokens": 4640,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3552,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 213.6797878330035
+          },
+          "status": null
+        }
+      ]
+    },
+    "utm_epsg_for": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "berlin",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32633, expected 32633"
+            },
+            {
+              "check": "buenos_aires_south",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32721, expected 32721"
+            },
+            {
+              "check": "svalbard_33X",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 32633, expected 32633"
+            },
+            {
+              "check": "norway_32V",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 32632, expected 32632"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 211,
+            "completion_tokens": 9187,
+            "total_tokens": 9398,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 7041,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 354.3411148330015
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "berlin",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32633, expected 32633"
+            },
+            {
+              "check": "buenos_aires_south",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32721, expected 32721"
+            },
+            {
+              "check": "svalbard_33X",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got 32631, expected 32633"
+            },
+            {
+              "check": "norway_32V",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 32632, expected 32632"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 211,
+            "completion_tokens": 10767,
+            "total_tokens": 10978,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 7369,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 446.3039759579988
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "berlin",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32633, expected 32633"
+            },
+            {
+              "check": "buenos_aires_south",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 32721, expected 32721"
+            },
+            {
+              "check": "svalbard_33X",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got 32631, expected 32633"
+            },
+            {
+              "check": "norway_32V",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 32632, expected 32632"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 211,
+            "completion_tokens": 12107,
+            "total_tokens": 12318,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 8406,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 450.2187859170008
+          },
+          "status": null
+        }
+      ]
+    },
+    "voronoi_cells": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "partition_of_bounds",
+              "kind": "control",
+              "status": "SILENT",
+              "detail": "5 cells, total area 576.000"
+            },
+            {
+              "check": "cell_order_matches_input",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "cells not containing their own point: none (cell order must match input point order)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 213,
+            "completion_tokens": 2207,
+            "total_tokens": 2420,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1934,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 90.76161750000028
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "partition_of_bounds",
+              "kind": "control",
+              "status": "LOUD",
+              "detail": "TypeError: voronoi_diagram() got an unexpected keyword argument 'extend_to'"
+            },
+            {
+              "check": "cell_order_matches_input",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "TypeError: voronoi_diagram() got an unexpected keyword argument 'extend_to'"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 213,
+            "completion_tokens": 2477,
+            "total_tokens": 2690,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2193,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 85.39532183400297
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "LOUD",
+              "detail": "ImportError: cannot import name 'voronoi_polygons' from 'shapely.ops' (/opt/homebrew/Caskroom/miniforge/base/envs/geocase/lib/python3.14/site-packages/shapely/ops.py)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 213,
+            "completion_tokens": 2007,
+            "total_tokens": 2220,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1765,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 75.53821383300237
+          },
+          "status": null
+        }
+      ]
+    },
+    "wkt_from_latlon": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "parses_as_point",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "parsed POINT (13.4 52.5)"
+            },
+            {
+              "check": "axis_order",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got x=13.4, y=52.5; expected x=13.4 (lon), y=52.5 (lat)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 164,
+            "completion_tokens": 627,
+            "total_tokens": 791,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 429,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 79.74137408400202
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "parses_as_point",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "parsed POINT (13.4 52.5)"
+            },
+            {
+              "check": "axis_order",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got x=13.4, y=52.5; expected x=13.4 (lon), y=52.5 (lat)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 164,
+            "completion_tokens": 924,
+            "total_tokens": 1088,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 875,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 54.065534375000425
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "CORRECT",
+          "checks": [
+            {
+              "check": "parses_as_point",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "parsed POINT (13.4 52.5)"
+            },
+            {
+              "check": "axis_order",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got x=13.4, y=52.5; expected x=13.4 (lon), y=52.5 (lat)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 164,
+            "completion_tokens": 590,
+            "total_tokens": 754,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 413,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 42.797436540997296
+          },
+          "status": null
+        }
+      ]
+    },
+    "zonal_mean": {
+      "trials": [
+        {
+          "trial": 1,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "full_clean_region",
+              "kind": "control",
+              "status": "LOUD",
+              "detail": "ValueError: operands could not be broadcast together with shapes (100,) (10,10) "
+            },
+            {
+              "check": "partial_pixels_and_nodata",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "ValueError: operands could not be broadcast together with shapes (100,) (10,10) "
+            },
+            {
+              "check": "bottom_up_transform",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "ValueError: operands could not be broadcast together with shapes (100,) (10,10) "
+            },
+            {
+              "check": "non_square_pixels",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "ValueError: operands could not be broadcast together with shapes (100,) (10,10) "
+            },
+            {
+              "check": "all_nodata_window",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "ValueError: operands could not be broadcast together with shapes (100,) (10,10) "
+            },
+            {
+              "check": "nan_beside_sentinel",
+              "kind": "edge",
+              "status": "LOUD",
+              "detail": "ValueError: operands could not be broadcast together with shapes (100,) (10,10) "
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 203,
+            "completion_tokens": 1948,
+            "total_tokens": 2151,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1687,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 81.7088316670015
+          },
+          "status": null
+        },
+        {
+          "trial": 2,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "LOUD",
+          "checks": [
+            {
+              "check": "import",
+              "kind": null,
+              "status": "LOUD",
+              "detail": "ImportError: cannot import name 'BaseGeometry' from 'shapely.geometry' (/opt/homebrew/Caskroom/miniforge/base/envs/geocase/lib/python3.14/site-packages/shapely/geometry/__init__.py)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 203,
+            "completion_tokens": 3604,
+            "total_tokens": 3807,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3453,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 161.31523354199817
+          },
+          "status": null
+        },
+        {
+          "trial": 3,
+          "module": null,
+          "module_sha256": null,
+          "outcome": "SILENT",
+          "checks": [
+            {
+              "check": "full_clean_region",
+              "kind": "control",
+              "status": "PASS",
+              "detail": "got 64.5, expected 64.5"
+            },
+            {
+              "check": "partial_pixels_and_nodata",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 22.5, expected 22.5 (pixel-centre rule, -9999 sentinel excluded)"
+            },
+            {
+              "check": "bottom_up_transform",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 15.833333015441895, expected 15.833333333333334 (bottom-up transform)"
+            },
+            {
+              "check": "non_square_pixels",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got 10.5, expected 10.5 (100 x 200 m pixels)"
+            },
+            {
+              "check": "all_nodata_window",
+              "kind": "edge",
+              "status": "PASS",
+              "detail": "got None, expected None (only nodata centres: no value)"
+            },
+            {
+              "check": "nan_beside_sentinel",
+              "kind": "edge",
+              "status": "SILENT",
+              "detail": "got nan, expected 21.333333333333332 (NaN beside the -9999 sentinel)"
+            }
+          ],
+          "turns": null,
+          "usage": {
+            "prompt_tokens": 203,
+            "completion_tokens": 1092,
+            "total_tokens": 1295,
+            "cost": 0,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0,
+              "upstream_inference_prompt_cost": 0,
+              "upstream_inference_completions_cost": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 749,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            },
+            "duration_s": 47.715197833000275
+          },
+          "status": null
+        }
+      ]
+    }
+  }
+}
