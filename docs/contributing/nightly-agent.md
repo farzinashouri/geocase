@@ -4,8 +4,8 @@ description: How the scheduled GeoCase development agent triages issues, keeps t
 
 # Nightly Development Agent
 
-GeoCase runs a semi-autonomous development agent on GitHub Actions. On
-weekday nights it triages the open issues, rewrites the pinned
+GeoCase runs a semi-autonomous development agent on GitHub Actions. Every
+night it triages the open issues, rewrites the pinned
 **📋 Development queue** issue, implements the top `agent:ready` issue on a
 branch and opens a pull request. A fixed workflow step then turns on GitHub
 auto-merge, so the PR merges by itself once the required CI checks pass. The
@@ -174,7 +174,7 @@ What each part does:
 
 | Part | Setting | Why |
 |---|---|---|
-| Schedule | `cron: "17 1 * * 1-5"` | Weekday nights at 01:17 UTC. GitHub can start scheduled runs hours late when it is busy; the observed start is often around 07:00 UTC |
+| Schedule | `cron: "17 1 * * *"` | Every night at 01:17 UTC, weekends included. GitHub can start scheduled runs hours late when it is busy; the observed start is often around 07:00 UTC |
 | Manual start | `workflow_dispatch` with input `mode` = `triage` (default) or `full` | Test runs without writing code |
 | Concurrency | group `agent`, no cancel | Never two runs at once |
 | Permissions | contents, pull-requests, issues: write; id-token: write | Used when running on the `GITHUB_TOKEN` fallback |
@@ -292,7 +292,9 @@ Your work each morning:
 - **Every run:** each run comments a verdict (`✅ healthy` or `⚠️ needs
   attention: …`, with turns, duration, permission denials and the final
   message) on the pinned **Agent run reports** issue, which the workflow
-  creates if missing. Subscribe to that issue for one email per run. A failed
+  creates if missing. Subscribe to that issue for one email per run. The
+  comment is posted as `github-actions[bot]`, not with `AGENT_GH_TOKEN`:
+  GitHub never emails you about comments made with your own token. A failed
   agent step now also fails the job
   (`scripts/agent_run_report.py`).
 

@@ -46,9 +46,9 @@ def test_manual_trigger_has_triage_only_mode(wf: dict[str, Any]) -> None:
     assert mode["default"] == "triage"
 
 
-def test_runs_weekday_nights(wf: dict[str, Any]) -> None:
-    # Enabled by #43 after the #42 dry run was reviewed.
-    assert wf["on"]["schedule"] == [{"cron": "17 1 * * 1-5"}]
+def test_runs_every_night(wf: dict[str, Any]) -> None:
+    # Enabled by #43 after the #42 dry run was reviewed; weekends added later.
+    assert wf["on"]["schedule"] == [{"cron": "17 1 * * *"}]
 
 
 def test_scheduled_runs_use_full_mode(wf: dict[str, Any]) -> None:
@@ -201,6 +201,13 @@ def test_claude_step_failure_does_not_skip_the_report(wf: dict[str, Any]) -> Non
     final = _named(wf, "Fail if the agent step failed")
     assert "steps.claude.outcome" in final["if"]
     assert steps.index(final) > steps.index(report)
+
+
+def test_report_posts_as_the_bot(wf: dict[str, Any]) -> None:
+    # GitHub never emails a user about their own comments, so a report posted
+    # with the owner's PAT never reaches the owner's inbox.
+    report = _named(wf, "Agent run report")
+    assert report["env"]["GH_TOKEN"] == "${{ github.token }}"
 
 
 def test_report_is_posted_to_the_run_reports_issue(wf: dict[str, Any]) -> None:
