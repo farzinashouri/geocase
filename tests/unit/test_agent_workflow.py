@@ -121,12 +121,17 @@ def test_work_tools_are_allowed(wf: dict[str, Any], allowed: str) -> None:
         "Bash(sed:*)",
         "Bash(cat:*)",
         "Bash(tail:*)",
+        "Bash(cd:*)",
+        "Bash(for:*)",
+        "Bash(echo:*)",
     ],
 )
 def test_shell_helpers_are_allowed(wf: dict[str, Any], allowed: str) -> None:
     # The 2026-10-01 #25 run hit 18 denials on pipes through these and spent
     # its retries past the turn cap (144 of 120). The 2026-10-02 #67 run was
     # denied `benchmark run ... > /tmp/x.log; tail ...` on `tail` and /tmp.
+    # The 2026-10-03 triage run was denied `cd ...; for n in ...` and a
+    # `python3 - <<EOF` heredoc; python3 itself was already allowed.
     assert allowed in _claude_step(wf)["with"]["claude_args"]
 
 
@@ -215,3 +220,10 @@ def test_report_is_posted_to_the_run_reports_issue(wf: dict[str, Any]) -> None:
     assert "GITHUB_STEP_SUMMARY" in run
     assert "Agent run reports" in run
     assert "gh issue comment" in run
+
+
+def test_command_asks_for_simple_bash_calls() -> None:
+    # Loops and heredocs are the calls the sandbox denied on 2026-10-03; each
+    # denial marks an otherwise good run "needs attention".
+    text = (ROOT / ".claude" / "commands" / "work-next-issue.md").read_text()
+    assert "one simple command per Bash call" in text

@@ -22,6 +22,12 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Changed — nightly agent shell calls (Plan 52)
+
+No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: the agent
+may run `cd`, `for` and `echo`, and `work-next-issue.md` asks for one simple command
+per Bash call, after a triage run on 2026-10-03 had two harmless denials.
+
 ### Added — "Needs you" in the agent run report (Plan 52)
 
 No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: the run

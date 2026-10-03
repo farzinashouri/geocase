@@ -191,10 +191,14 @@ What each part does:
 
 - Allowed: `Read`, `Edit`, `Write`, `Glob`, `Grep`, and Bash for `gh`, `git`,
   `python`, `pytest`, `ruff`, `mypy`, `mkdocs`, and the shell helpers
-  `python3`, `ls`, `grep`, `head`, `sed`, `cat`, `tail`. The helpers were
+  `python3`, `ls`, `grep`, `head`, `sed`, `cat`, `tail`, `cd`, `for`, `echo`. The helpers were
   added after the 2026-10-01 run on #25 had 18 commands denied, mostly pipes
   through them, and its retries pushed it past the old 120-turn cap. Every
-  command in a pipe or `;` chain must be allowed.
+  command in a pipe or `;` chain must be allowed. `cd`, `for` and `echo`
+  were added after the 2026-10-03 triage run was denied a `cd ...; for n in
+  ...` loop and a `python3 - <<EOF` heredoc. `work-next-issue.md` also asks
+  for one simple command per Bash call, so a denial is rarer in the first
+  place.
 - `--add-dir /tmp`: file access outside the checkout is otherwise denied.
   The OpenRouter preflight writes `/tmp/openrouter/status.txt`, and benchmark
   runs log to `/tmp`; the 2026-10-02 run on #67 could not start its benchmark
