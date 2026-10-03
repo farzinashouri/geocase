@@ -91,13 +91,51 @@ def touched(since: datetime) -> list[str]:
     return lines
 
 
+def needs_human_lines(issues: list[dict[str, Any]]) -> list[str]:
+    """One line per waiting issue: link, title and the question's first line.
+
+    The agent asks with the owner's token, and GitHub emails nobody about
+    their own comments, so the question has to travel in this report.
+    """
+    lines = []
+    for item in issues:
+        line = f"- [#{item['number']}]({item['url']}) {item['title']}"
+        comments = item.get("comments") or []
+        if comments:
+            first = str(comments[-1].get("body") or "").strip().splitlines()
+            question = first[0].removeprefix("@farzinashouri").strip() if first else ""
+            if question:
+                line += f": {question}"
+        lines.append(line)
+    return lines
+
+
+def waiting_issues() -> list[dict[str, Any]]:
+    """Open issues labelled ``agent:needs-human`` (best effort)."""
+    cmd = ["gh", "issue", "list", "--state", "open", "--label", "agent:needs-human"]
+    cmd += ["--json", "number,title,url,comments"]
+    try:
+        out = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        data = json.loads(out.stdout)
+    except (OSError, subprocess.CalledProcessError, ValueError):
+        return []
+    return data if isinstance(data, list) else []
+
+
 def render(
-    rep: Report, *, run_url: str, mode: str, touched_lines: list[str] | None = None
+    rep: Report,
+    *,
+    run_url: str,
+    mode: str,
+    touched_lines: list[str] | None = None,
+    needs_human: list[str] | None = None,
 ) -> str:
     if rep.healthy:
         head = "✅ healthy"
     else:
         head = "⚠️ needs attention: " + "; ".join(rep.reasons)
+    if needs_human:
+        head += f" · 🙋 Needs you: {len(needs_human)} issue(s)"
     cost = f"${rep.cost:.2f}" if rep.cost is not None else "n/a"
     out = [
         head,
@@ -113,6 +151,8 @@ def render(
         for d in rep.denials:
             cmd = (d.get("tool_input") or {}).get("command", "")
             out.append(f"- `{d.get('tool_name', '?')}` `{cmd}`".rstrip())
+    if needs_human:
+        out += ["", "**Needs you**", "", *needs_human]
     if touched_lines:
         out += ["", "**Touched in this run**", "", *touched_lines]
     if rep.final_text:
@@ -135,9 +175,17 @@ def main(argv: list[str] | None = None) -> int:
         max_turns=args.max_turns,
     )
     since = datetime.now(UTC) - timedelta(seconds=(rep.duration_s or 0) + 600)
-    lines = touched(since) if os.environ.get("GH_TOKEN") else []
+    has_gh = bool(os.environ.get("GH_TOKEN"))
+    lines = touched(since) if has_gh else []
+    waiting = needs_human_lines(waiting_issues()) if has_gh else []
     sys.stdout.write(
-        render(rep, run_url=args.run_url, mode=args.mode, touched_lines=lines)
+        render(
+            rep,
+            run_url=args.run_url,
+            mode=args.mode,
+            touched_lines=lines,
+            needs_human=waiting,
+        )
     )
     gh_out = os.environ.get("GITHUB_OUTPUT")
     if gh_out:

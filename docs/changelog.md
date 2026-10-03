@@ -28,6 +28,13 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Added — "Needs you" in the agent run report (Plan 52)
+
+No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: the run
+report lists every open `agent:needs-human` issue with the first line of its last
+comment, because the agent's questions are posted with the owner's token and
+send no email.
+
 ### Added — agent run report (Plan 52 Phase 1, #83)
 
 No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only:
