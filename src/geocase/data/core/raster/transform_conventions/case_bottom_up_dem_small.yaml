@@ -1,10 +1,11 @@
 id: bottom_up_dem_small
 title: Bottom-Up DEM (Positive Y Resolution)
 description: >
-  A south-up GeoTIFF whose affine transform has a positive e term: the
-  origin is the bottom-left corner and row 0 is the southernmost row.
-  Every other raster in the catalog is north-up, so code that assumes
-  a negative e passes the whole corpus and then flips this one.
+  A raster comes out upside down because its transform is south-up, with a
+  positive e term. A south-up GeoTIFF whose affine transform has a positive e
+  term: the origin is the bottom-left corner and row 0 is the southernmost
+  row. Every other raster in the catalog is north-up, so code that assumes a
+  negative e passes the whole corpus and then flips this one.
 category: raster
 format: GeoTIFF
 test_tier: unit

@@ -1,10 +1,12 @@
 id: fractal_coastline_polygon
 title: Fractal Coastline Polygon
 description: >
-  A Koch snowflake polygon (hexagonal seed, four subdivision passes) standing
-  in for a fractally detailed coastline.  1537 vertices of self-similar
-  crenellation, none of them collinear, so a consumer that simplifies,
-  densifies, or indexes geometry has something with real structure to do.
+  Geometry code tuned on toy shapes meets coastline-like detail here: a Koch
+  snowflake with 1537 vertices. A Koch snowflake polygon (hexagonal seed, four
+  subdivision passes) standing in for a fractally detailed coastline. 1537
+  vertices of self-similar crenellation, none of them collinear, so a consumer
+  that simplifies, densifies, or indexes geometry has something with real
+  structure to do.
 category: vector
 format: GeoJSON
 test_tier: unit

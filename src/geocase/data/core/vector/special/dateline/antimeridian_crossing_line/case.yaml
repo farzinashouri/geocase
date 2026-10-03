@@ -1,8 +1,10 @@
 id: antimeridian_crossing_line
 title: Antimeridian Crossing LineString
-description: >-
-  A LineString crossing the antimeridian (180° longitude). Naive code draws it the wrong way
-  around the globe and computes a ~40,000 km length.
+description: >
+  A line crossing 180° longitude is drawn the long way round the globe, with a
+  length of about 40,000 km. The file holds a LineString crossing the
+  antimeridian (180° longitude). Naive code draws it the wrong way around the
+  globe and computes a ~40,000 km length.
 category: vector
 format: GeoJSON
 test_tier: unit

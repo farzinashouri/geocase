@@ -1,11 +1,13 @@
 id: crs_mismatch_overlay_pair
 title: CRS Mismatch Overlay Pair
 description: >
-  Two layers holding the same ground footprint, one honest and one lying about
-  its CRS.  The reference layer is WGS84 degrees and declares CRS84.  The
-  sidecar carries UTM zone 33N eastings and northings while its GeoJSON crs
-  member declares EPSG:4326.  Each file parses cleanly on its own; the defect
-  exists only in the relationship between them.
+  Two layers of the same place do not overlay because one declares EPSG:4326
+  but holds UTM zone 33N eastings and northings. Two layers holding the same
+  ground footprint, one honest and one lying about its CRS. The reference
+  layer is WGS84 degrees and declares CRS84. The sidecar carries UTM zone 33N
+  eastings and northings while its GeoJSON crs member declares EPSG:4326. Each
+  file parses cleanly on its own; the defect exists only in the relationship
+  between them.
 category: vector
 format: GeoJSON
 test_tier: unit

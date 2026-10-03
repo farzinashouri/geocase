@@ -1,9 +1,11 @@
 id: geotiff_int8_small
 title: GeoTIFF Int8 Small
 description: >
-  A small single-band GeoTIFF stored as signed 8-bit integers. Tests that
-  raster loaders and downstream code preserve narrow integer dtype semantics
-  rather than coercing values to floating point implicitly.
+  Int8 raster values overflow or get coerced to float because code does not
+  respect the narrow signed dtype. A small single-band GeoTIFF stored as
+  signed 8-bit integers. Tests that raster loaders and downstream code
+  preserve narrow integer dtype semantics rather than coercing values to
+  floating point implicitly.
 category: raster
 format: GeoTIFF
 test_tier: unit

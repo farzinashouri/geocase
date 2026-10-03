@@ -1,8 +1,10 @@
 id: ndvi_scaled_int16_small
 title: NDVI Scaled Int16 Small
-description: >-
-  An int16 NDVI raster with a 0.0001 scale factor and a NoData value. Reading the raw integers
-  without applying scale_factor yields NDVI in the thousands.
+description: >
+  NDVI comes out in the thousands because the int16 raster's scale_factor was
+  not applied. This int16 NDVI raster has a 0.0001 scale factor and a NoData
+  value. Reading the raw integers without applying scale_factor yields NDVI in
+  the thousands.
 category: raster
 format: GeoTIFF
 test_tier: integration
