@@ -1,10 +1,12 @@
 id: pixel_is_point_dem_small
 title: Pixel-Is-Point DEM
 description: >
-  Declares AREA_OR_POINT=Point, so the transform's coordinates name pixel
-  centres rather than corners. Byte-identical to pixel_is_area_dem_small
-  apart from that one tag, which moves every pixel half a pixel -- a
-  georeferencing error invisible to shape, CRS and checksum checks.
+  A raster is shifted by half a pixel because AREA_OR_POINT=Point makes the
+  transform name pixel centres, not corners. Declares AREA_OR_POINT=Point, so
+  the transform's coordinates name pixel centres rather than corners.
+  Byte-identical to pixel_is_area_dem_small apart from that one tag, which
+  moves every pixel half a pixel -- a georeferencing error invisible to shape,
+  CRS and checksum checks.
 category: raster
 format: GeoTIFF
 test_tier: unit

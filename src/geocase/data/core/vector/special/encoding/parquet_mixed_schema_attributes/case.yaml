@@ -1,11 +1,13 @@
 id: parquet_mixed_schema_attributes
 title: Parquet Mixed Schema Attributes
 description: >
-  A GeoParquet file with deliberately mixed attribute types and nullable
-  columns: nullable integers (Int64), nullable booleans, nullable strings,
-  and NaN floats. Exercises Parquet's native nullable type support and
-  exposes loaders that silently downcast nullable types, lose null
-  distinctions, or fail on mixed-type attribute schemas.
+  Nullable integers, booleans and strings in GeoParquet are silently downcast
+  or lose their nulls in a loader that mishandles the schema. A GeoParquet
+  file with deliberately mixed attribute types and nullable columns: nullable
+  integers (Int64), nullable booleans, nullable strings, and NaN floats.
+  Exercises Parquet's native nullable type support and exposes loaders that
+  silently downcast nullable types, lose null distinctions, or fail on
+  mixed-type attribute schemas.
 category: vector
 format: Parquet
 test_tier: unit

@@ -1,8 +1,9 @@
 id: dem_nan_nodata_small
 title: DEM NaN NoData Small
-description: >-
-  A float32 DEM that marks NoData with NaN rather than a sentinel value. NaN propagates through
-  means and comparisons instead of being excluded.
+description: >
+  A mean over a DEM comes back NaN because NoData is NaN rather than a
+  sentinel value. This float32 DEM marks NoData with NaN. NaN propagates
+  through means and comparisons instead of being excluded.
 category: raster
 format: GeoTIFF
 test_tier: integration

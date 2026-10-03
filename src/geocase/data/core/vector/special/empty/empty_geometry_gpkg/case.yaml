@@ -1,11 +1,12 @@
 id: empty_geometry_gpkg
 title: Empty Geometry in GeoPackage
 description: >
-  A GeoPackage containing rows with empty geometries (WKB EMPTY representation)
-  to test how loaders handle the distinction between NULL geometry and EMPTY
-  geometry. In GeoPackage/SQLite, NULL means "no geometry value" while EMPTY
-  means "a geometry that contains no coordinates". This case exposes loaders
-  that conflate NULL and EMPTY or fail to handle EMPTY geometries correctly.
+  A loader that conflates NULL geometry with EMPTY geometry misreads this
+  GeoPackage. The file contains rows with empty geometries (WKB EMPTY
+  representation). In GeoPackage/SQLite, NULL means "no geometry value" while
+  EMPTY means "a geometry that contains no coordinates". This case exposes
+  loaders that conflate NULL and EMPTY or fail to handle EMPTY geometries
+  correctly.
 category: vector
 format: GPKG
 test_tier: unit

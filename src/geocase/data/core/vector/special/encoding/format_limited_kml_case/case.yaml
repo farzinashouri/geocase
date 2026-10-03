@@ -1,11 +1,12 @@
 id: format_limited_kml_case
 title: Format-Limited KML Case
 description: >
-  A KML file demonstrating inherent format limitations: all extended-data
-  attributes are stored as strings regardless of their original type,
-  coordinates are always WGS 84, and Z coordinates are included even when
-  not meaningful. Exposes loaders or converters that assume numeric
-  attribute types survive a KML round-trip.
+  Attributes round-tripped through KML come back as strings, and Z values
+  appear where none were meant. A KML file demonstrating inherent format
+  limitations: all extended-data attributes are stored as strings regardless
+  of their original type, coordinates are always WGS 84, and Z coordinates are
+  included even when not meaningful. Exposes loaders or converters that assume
+  numeric attribute types survive a KML round-trip.
 category: vector
 format: KML
 test_tier: unit

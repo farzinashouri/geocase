@@ -1,8 +1,10 @@
 id: geotiff_nodata_small
 title: GeoTIFF NoData Small
-description: >-
-  A GeoTIFF with an explicit NoData sentinel. Statistics computed over the raw array rather
-  than the valid pixels are silently wrong — a classic raster bug.
+description: >
+  Raster mean or sum comes out wrong because NoData pixels are counted as
+  data. The GeoTIFF declares an explicit NoData sentinel. Statistics computed
+  over the raw array rather than the valid pixels are silently wrong — a
+  classic raster bug.
 category: raster
 format: GeoTIFF
 test_tier: unit

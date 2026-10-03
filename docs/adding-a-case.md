@@ -87,7 +87,7 @@ These fields describe the case at a catalog level:
 
 - `id`: unique identifier, lowercase with underscores
 - `title`: human-friendly name
-- `description`: what the case contains and why it matters
+- `description`: what the case contains and why it matters. Open with one sentence of at most 155 characters in the form symptom → cause (what a searcher would type), then say what the file contains; that first sentence becomes the page's search-result snippet
 - `category`: `vector`, `raster`, `netcdf`, or `satellite`
 - `format`: data format such as `GeoJSON`, `GeoTIFF`, or `NetCDF`
 - `test_tier`: such as `unit`, `integration`, or `remote`

@@ -22,6 +22,23 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Changed — searcher-facing case descriptions (Plan 47 Phase 4, #26)
+
+No geometry, CRS, dtype, nodata value, id or `risk_types` changed. The `description:`
+of these 25 cases now opens with the symptom a searcher would type, then the cause,
+then what the file contains; every number in the old text is kept:
+`geotiff_nodata_small`, `dem_nan_nodata_small`, `landcover_ambiguous_zero_small`,
+`dateline_crossing_polygon`, `antimeridian_crossing_line`, `optical_dateline_small`,
+`utm_zone_33n_to_32n_pair`, `crs_mismatch_overlay_pair`, `bottom_up_dem_small`,
+`rotated_two_islands`, `pixel_is_point_dem_small`, `unclosed_ring_polygon`,
+`empty_geometry_gpkg`, `fractal_coastline_polygon`, `precision_loss_geojson_roundtrip`,
+`ndvi_scaled_int16_small`, `geotiff_int8_small`, `crs_family_pair_geographic`,
+`format_limited_kml_case`, `multispectral_mixed_resolution_small`,
+`multispectral_s2_like_small`, `parquet_mixed_schema_attributes`,
+`rotated_bottom_up_small`, `sar_dualpol_small`, `sar_vv_small`.
+`scripts/generate_catalog_pages.py` now cuts a page's meta description at a sentence
+boundary instead of mid-sentence with "…" (69 case pages were cut; none are now).
+
 ### Changed — nightly agent shell calls (Plan 52)
 
 No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: the agent

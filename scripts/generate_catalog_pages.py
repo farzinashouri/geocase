@@ -146,6 +146,11 @@ def _meta_description(case: Any) -> str:
             text = _collapse(str(raw))
             if len(text) <= MAX_META_DESCRIPTION:
                 return text
+            # Prefer a whole sentence over a mid-sentence ellipsis.
+            window = text[:MAX_META_DESCRIPTION]
+            ends = [m.end() for m in re.finditer(r"[.!?](?=\s|$)", window)]
+            if ends:
+                return window[: ends[-1]]
             return text[: MAX_META_DESCRIPTION - 1].rstrip() + "…"
     return f"GeoCase test case {case.id}."
 
