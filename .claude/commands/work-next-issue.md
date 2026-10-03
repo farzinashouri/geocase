@@ -11,6 +11,11 @@ or `operator` to an issue, also run `gh issue edit N --add-assignee
 farzinashouri` and start the comment with `@farzinashouri`. GitHub sends no
 email for a label change; the assignment and the mention do.
 
+**Use one simple command per Bash call.** No `for` loops, no `cd ...;`
+prefix (you already start in the checkout), no `python3 - <<EOF` heredocs:
+write the script with the Write tool, then run it. The sandbox may deny
+compound commands, and every denial marks the run "needs attention".
+
 **Wait for long commands.** A Bash command that runs past 120 s is
 moved to the background; a benchmark run always is. Do not end the turn then: poll
 its output file (`until grep -q ... file; do sleep 30; done`) until it
