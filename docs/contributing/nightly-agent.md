@@ -287,8 +287,11 @@ Your work each morning:
   for failed workflows only. Scheduled runs notify the last person to edit the
   cron line.
 - **Waiting on you:** when the agent adds `agent:needs-human` or `operator`, it
-  assigns the issue to the owner and @mentions them, and both send an email. A
-  label change alone sends none.
+  assigns the issue to the owner and @mentions them. Both are made with
+  `AGENT_GH_TOKEN`, the owner's own token, so GitHub sends no email for them.
+  The run report carries the question instead: every open
+  `agent:needs-human` issue is listed under **Needs you** (link, title and the
+  first line of the last comment), and the header says `🙋 Needs you: N`.
 - **Every run:** each run comments a verdict (`✅ healthy` or `⚠️ needs
   attention: …`, with turns, duration, permission denials and the final
   message) on the pinned **Agent run reports** issue, which the workflow

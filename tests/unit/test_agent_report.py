@@ -131,3 +131,46 @@ def test_main_writes_github_output(
     assert code == 0
     assert "healthy=true" in out.read_text()
     assert "https://example/run/1" in capsys.readouterr().out
+
+
+def _issue(number: int, comment: str) -> dict[str, Any]:
+    return {
+        "number": number,
+        "title": f"Issue {number}",
+        "url": f"https://github.com/o/r/issues/{number}",
+        "comments": [{"body": "older"}, {"body": comment}],
+    }
+
+
+def test_needs_human_lines_quote_the_last_comment() -> None:
+    lines = report.needs_human_lines(
+        [_issue(67, "@farzinashouri Should I drop Qwen?\n\nDetails below.")]
+    )
+    assert lines == [
+        "- [#67](https://github.com/o/r/issues/67) Issue 67: Should I drop Qwen?"
+    ]
+
+
+def test_needs_human_lines_without_comments() -> None:
+    issue = _issue(5, "x")
+    issue["comments"] = []
+    assert report.needs_human_lines([issue]) == [
+        "- [#5](https://github.com/o/r/issues/5) Issue 5"
+    ]
+
+
+def test_needs_you_section_is_rendered() -> None:
+    rep = report.build_report(_result(), outcome="success", max_turns=250)
+    md = report.render(
+        rep, run_url="u", mode="triage", needs_human=["- [#67](x) Issue 67: q?"]
+    )
+    assert "**Needs you**" in md
+    assert "- [#67](x) Issue 67: q?" in md
+    assert md.index("**Needs you**") < md.index("**Final message**")
+    assert "Needs you" in md.splitlines()[0]
+
+
+def test_no_needs_you_section_when_nothing_waits() -> None:
+    rep = report.build_report(_result(), outcome="success", max_turns=250)
+    md = report.render(rep, run_url="u", mode="full", needs_human=[])
+    assert "Needs you" not in md
