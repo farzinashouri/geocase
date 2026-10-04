@@ -1,11 +1,13 @@
 # The release pipeline (Plan 50). One human step: approving the PyPI upload.
 #
-#   push to main ─► tag ─► build ─► TestPyPI ─► smoke (TestPyPI) ─► [approve] PyPI
+#   push to main ─► CI green? ─► tag ─► build ─► TestPyPI ─► smoke (TestPyPI) ─► [approve] PyPI
 #                                                  ─► smoke (PyPI) ─► GitHub release
 #
 # A push to main releases when `pyproject.toml`'s version has no tag yet and
 # CHANGELOG.md has its section -- i.e. when a release PR from
 # prepare-release.yml is merged. Every other push stops at the `tag` job.
+# A push to main first waits for the CI run on the same commit (`ci-green`);
+# if CI is red or never finishes, nothing is tagged.
 #
 # The tag is created here, not by a separate workflow: a tag pushed with
 # GITHUB_TOKEN starts no workflow, so the pipeline continues in the same run.
@@ -38,8 +40,38 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Release starts with CI on the same push, so nothing orders them. This job
+  # waits for the CI run on this commit and fails unless it succeeded; a red
+  # `main` therefore never reaches the tag. Only branch pushes are gated: a
+  # tag pushed by hand and a manual run skip it (the `tag` job still runs).
+  ci-green:
+    if: github.event_name == 'push' && github.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    permissions:
+      actions: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Wait for CI on this commit
+        run: |
+          for i in $(seq 1 90); do
+            run=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --commit "$GITHUB_SHA" --event push --json status,conclusion --jq '.[0] // empty')
+            if [ -n "$run" ] && [ "$(echo "$run" | jq -r .status)" = "completed" ]; then
+              conclusion=$(echo "$run" | jq -r .conclusion)
+              echo "CI on $GITHUB_SHA: $conclusion"
+              [ "$conclusion" = "success" ] && exit 0
+              exit 1
+            fi
+            sleep 30
+          done
+          echo "CI did not finish for $GITHUB_SHA in time"
+          exit 1
+
   # Decides whether this run releases, and which version.
   tag:
+    needs: [ci-green]
+    if: ${{ !cancelled() && needs.ci-green.result != 'failure' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write

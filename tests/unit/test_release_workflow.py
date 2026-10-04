@@ -76,6 +76,23 @@ def test_smoke_jobs_cover_core_and_array(wf: dict[str, Any], job: str) -> None:
     assert "smoke_release.py" in text
 
 
+def test_push_to_main_waits_for_green_ci(wf: dict[str, Any]) -> None:
+    # Release runs in parallel with CI on the same push; without this gate a
+    # red merge commit would still be tagged and uploaded to TestPyPI (#92).
+    jobs = wf["jobs"]
+    gate = jobs["ci-green"]
+    assert "ci-green" in _needs(jobs["tag"])
+    # Only a branch push is gated; a hand-pushed tag and manual runs are not.
+    assert "refs/heads/" in gate["if"] or "branch" in gate["if"]
+    text = yaml.safe_dump(gate["steps"])
+    assert "ci.yml" in text and "github.sha" in text.replace("GITHUB_SHA", "github.sha")
+    assert "success" in text
+    # The tag job still runs when the gate is skipped, but never when it failed.
+    cond = jobs["tag"]["if"]
+    assert "ci-green.result" in cond
+    assert "failure" not in cond.replace("!= 'failure'", "")
+
+
 # --- prepare-release.yml (issue #54) ---------------------------------------
 
 WORKFLOWS = WORKFLOW.parent

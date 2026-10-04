@@ -54,6 +54,9 @@ Merge it when CI is green.
 
 Merging starts **Release** on `main`. It:
 
+0. waits for CI on the merge commit (`ci-green`) and stops if CI is red or
+   does not finish within 45 minutes — fix `main` and re-run the workflow
+   (*Actions → Release → Run workflow*);
 1. tags `v1.2.0`;
 2. builds the wheel and sdist and runs `verify_dist.py` and `twine check`;
 3. uploads to TestPyPI;
