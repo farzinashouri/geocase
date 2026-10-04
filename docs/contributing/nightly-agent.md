@@ -281,7 +281,10 @@ Your work each morning:
 1. Open the pinned **📋 Development queue** issue. It is the single place to
    look. *Waiting on you* lists one action per item.
 2. Read what merged overnight (*Done this week*), and look at any PR under
-   *In review* that did not merge: its CI failed.
+   *In review* that did not merge: its CI failed. The agent does not come
+   back to a red PR yet (see [Planned changes](#planned-changes)), and no
+   email tells you about it. Fix it yourself, or comment and label the issue
+   `agent:ready`.
 3. Answer every `agent:needs-human` comment.
 
 ### Email notifications
@@ -422,3 +425,46 @@ Scheduled runs always use `full` mode. Manual runs default to `triage`.
 | Run started hours after 01:17 UTC | GitHub delays scheduled runs under load | Expected; no fix |
 | PR has green CI but did not merge | Auto-merge not allowed in settings, or the step warned | Check the run's "Enable auto-merge" step; tick "Allow auto-merge" |
 | Closed issue still has `agent:pr-open` | `agent-labels.yml` missing or failed | Check the "Agent labels" run for that issue |
+| Runs only triage and update the queue, report says nothing is wrong | 3 agent PRs are open, often with red CI | Fix or close the red PRs (`gh pr list --label agent:pr-open`, then `gh pr checks <n>`) |
+
+---
+
+## Planned changes
+
+These are planned and not implemented yet. The sections above describe the
+current behaviour. When a change lands, its text moves into the sections above.
+
+### The agent repairs its own red PRs (Plan 53, #94)
+
+A new **Repair** step in `work-next-issue.md`, between Queue and Limits. For
+each open `agent/*` PR:
+
+- If a check failed, the agent checks out the branch, reads
+  `gh run view <id> --log-failed`, fixes the cause (a failing test first when
+  it is a code bug), runs the gates and pushes. Each attempt is counted with a
+  PR comment `agent-repair: attempt K`.
+- After two attempts, or when the cause is outside the repository (a secret,
+  the runner, the network, an upstream outage), it hands off with
+  `agent:needs-human`.
+- If no checks have run for more than one hour, it hands off and says that
+  `AGENT_GH_TOKEN` is probably missing.
+- A repair counts as the run's one issue. In triage mode the step only
+  reports.
+
+### Red PRs in the run report (Plan 53, #95)
+
+The **Needs you** section of each run report will also list every open agent
+PR that is red or has no checks, with the name of the failing check. The
+report will also say when the limit of 3 open PRs stopped the run.
+
+### A monitoring agent (Plan 52, #84, blocked)
+
+A second workflow, `agent-monitor.yml`, starts when an Agent run ends and its
+report is not healthy. It reads the report and the run log and sorts the cause
+(a tool not on the allowlist, the turn limit, authentication, the
+environment, a model error, a code bug). It posts the diagnosis under that
+run's report comment. When the fix is in the repository, it opens a PR on
+`agent/monitor-<run_id>` labelled `agent:needs-human`. These PRs never
+auto-merge. When the fix is not in the repository, it files an `operator`
+issue. A monitor PR that edits `.github/workflows/*` needs `AGENT_GH_TOKEN`
+with Workflows: Read and write.
