@@ -198,7 +198,10 @@ What each part does:
   were added after the 2026-10-03 triage run was denied a `cd ...; for n in
   ...` loop and a `python3 - <<EOF` heredoc. `work-next-issue.md` also asks
   for one simple command per Bash call, so a denial is rarer in the first
-  place.
+  place. It also forbids shell `>` redirects (`--add-dir /tmp` covers the
+  Write tool, not a redirect; denied on 2026-10-05 and 2026-10-06) and edits
+  under `.claude/`, which Claude Code protects and a headless run cannot
+  approve: such an issue goes to `operator` with the diff in a comment.
 - `--add-dir /tmp`: file access outside the checkout is otherwise denied.
   The OpenRouter preflight writes `/tmp/openrouter/status.txt`, and benchmark
   runs log to `/tmp`; the 2026-10-02 run on #67 could not start its benchmark
