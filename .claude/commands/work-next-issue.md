@@ -15,6 +15,15 @@ email for a label change; the assignment and the mention do.
 prefix (you already start in the checkout), no `python3 - <<EOF` heredocs:
 write the script with the Write tool, then run it. The sandbox may deny
 compound commands, and every denial marks the run "needs attention".
+Also no `>` redirects, not even to `/tmp`: to edit an issue body, read it
+with `gh issue view N --json body --jq .body`, write the new text to
+`/tmp/body.md` with the Write tool, then `gh issue edit N --body-file
+/tmp/body.md`.
+
+**You never edit files under `.claude/`.** Claude Code protects that
+directory and a headless run cannot approve the prompt. If an issue needs a
+change there, comment the exact diff on the issue, relabel it `operator`,
+and pick the next one.
 
 **Wait for long commands.** A Bash command that runs past 120 s is
 moved to the background; a benchmark run always is. Do not end the turn then: poll

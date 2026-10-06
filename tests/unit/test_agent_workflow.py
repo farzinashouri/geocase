@@ -227,3 +227,18 @@ def test_command_asks_for_simple_bash_calls() -> None:
     # denial marks an otherwise good run "needs attention".
     text = (ROOT / ".claude" / "commands" / "work-next-issue.md").read_text()
     assert "one simple command per Bash call" in text
+
+
+def test_command_forbids_shell_redirects() -> None:
+    # 2026-10-05 and 2026-10-06: `gh issue view 45 ... > /tmp/q.md` was denied
+    # both nights; --add-dir /tmp covers the Write tool, not a shell `>`.
+    text = (ROOT / ".claude" / "commands" / "work-next-issue.md").read_text()
+    assert "no `>` redirects" in text
+    assert "--body-file" in text
+
+
+def test_command_hands_dot_claude_edits_to_a_human() -> None:
+    # 2026-10-05: an Edit and a `sed -i` on .claude/commands were denied;
+    # Claude Code protects .claude/ and a headless run cannot approve.
+    text = (ROOT / ".claude" / "commands" / "work-next-issue.md").read_text()
+    assert "never edit files under `.claude/`" in text
