@@ -1,0 +1,38 @@
+# Issue #67: Gemma and Qwen (free) plus one paid DeepSeek exception.
+# Prices checked against the OpenRouter model list on 2026-10-02.
+defaults:
+  trials: 3
+  temperature: 0.2
+  exec_timeout_s: 60
+
+# DeepSeek is expected to cost under $0.10; the issue says stop above $1.
+budget:
+  max_usd_total: 1.00
+
+limits:
+  rpm: 18
+  requests_per_day: 950
+  quota_file: .geocase_quota.json
+retry:
+  max_retry_after: 60
+  honor_long_retry_after: true
+  max_total_seconds: 180
+
+models:
+  - id: google/gemma-4-31b-it:free
+    label: Gemma 4 31B (free)
+    tracks: [bare]
+    supports_tools: false
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}
+
+  - id: qwen/qwen3.8-27b:free
+    label: Qwen 3.8 27B (free)
+    tracks: [bare]
+    supports_tools: false
+    pricing: {prompt_usd_per_1m: 0, completion_usd_per_1m: 0}
+
+  - id: deepseek/deepseek-v4.1-flash
+    label: DeepSeek V4.1 Flash
+    tracks: [bare]
+    supports_tools: false
+    pricing: {prompt_usd_per_1m: 0.02, completion_usd_per_1m: 0.60}

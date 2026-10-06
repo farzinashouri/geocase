@@ -149,21 +149,29 @@ Editing permissions keeps the token value, so the secret does not change.
 
 This file is the contract for each run. The workflow's prompt only says
 "Follow .claude/commands/work-next-issue.md exactly", so all behaviour lives
-here. The eight steps:
+here. The nine steps:
 
 1. **Triage**: label every open issue that has no `agent:*`, `operator` or
    `blocked` label. Unclear issue → one specific question as a comment plus
    `agent:needs-human`.
 2. **Queue**: rewrite the pinned queue issue.
-3. **Limits**: 3 or more open `agent:pr-open` PRs → stop.
-4. **Pick** the top `agent:ready` issue and label it `agent:in-progress`.
-5. **Implement** on `agent/<number>-<slug>`: failing test first, then code,
+3. **Repair** each red `agent/*` PR: read `gh run view <id> --log-failed`,
+   fix (a failing test first when it is a code bug), run the gates, push.
+   Each attempt is a PR comment `agent-repair: attempt K`. After two
+   attempts, when the cause is outside the repository (a secret, the runner,
+   the network, an upstream outage), or when no checks have run for more
+   than one hour (`AGENT_GH_TOKEN` probably missing), it hands off with
+   `agent:needs-human`. A repair counts as the run's one issue. In triage
+   mode the step only reports.
+4. **Limits**: 3 or more open `agent:pr-open` PRs → stop.
+5. **Pick** the top `agent:ready` issue and label it `agent:in-progress`.
+6. **Implement** on `agent/<number>-<slug>`: failing test first, then code,
    then docs, then gates.
-6. **Stop and hand off** when a person is needed (see
+7. **Stop and hand off** when a person is needed (see
    [Stop conditions](#stop-conditions)).
-7. **PR** with `Closes #N`, a summary and the gate results; label the issue
+8. **PR** with `Closes #N`, a summary and the gate results; label the issue
    `agent:pr-open`.
-8. Update the queue again and end. One issue per run.
+9. Update the queue again and end. One issue per run.
 
 Because it is also a Claude Code slash command, you can run the same
 procedure locally with `/work-next-issue`.
@@ -198,7 +206,10 @@ What each part does:
   were added after the 2026-10-03 triage run was denied a `cd ...; for n in
   ...` loop and a `python3 - <<EOF` heredoc. `work-next-issue.md` also asks
   for one simple command per Bash call, so a denial is rarer in the first
-  place.
+  place. It also forbids shell `>` redirects (`--add-dir /tmp` covers the
+  Write tool, not a redirect; denied on 2026-10-05 and 2026-10-06) and edits
+  under `.claude/`, which Claude Code protects and a headless run cannot
+  approve: such an issue goes to `operator` with the diff in a comment.
 - `--add-dir /tmp`: file access outside the checkout is otherwise denied.
   The OpenRouter preflight writes `/tmp/openrouter/status.txt`, and benchmark
   runs log to `/tmp`; the 2026-10-02 run on #67 could not start its benchmark
@@ -281,10 +292,10 @@ Your work each morning:
 1. Open the pinned **📋 Development queue** issue. It is the single place to
    look. *Waiting on you* lists one action per item.
 2. Read what merged overnight (*Done this week*), and look at any PR under
-   *In review* that did not merge: its CI failed. The agent does not come
-   back to a red PR yet (see [Planned changes](#planned-changes)), and no
-   email tells you about it. Fix it yourself, or comment and label the issue
-   `agent:ready`.
+   *In review* that did not merge: its CI failed. The agent's Repair step
+   tries two fixes and then hands off with `agent:needs-human`, so a red PR
+   with no such comment has not been looked at yet. No email tells you about
+   it.
 3. Answer every `agent:needs-human` comment.
 
 ### Email notifications
@@ -426,6 +437,8 @@ Scheduled runs always use `full` mode. Manual runs default to `triage`.
 | PR has green CI but did not merge | Auto-merge not allowed in settings, or the step warned | Check the run's "Enable auto-merge" step; tick "Allow auto-merge" |
 | Closed issue still has `agent:pr-open` | `agent-labels.yml` missing or failed | Check the "Agent labels" run for that issue |
 | Runs only triage and update the queue, report says nothing is wrong | 3 agent PRs are open, often with red CI | Fix or close the red PRs (`gh pr list --label agent:pr-open`, then `gh pr checks <n>`) |
+| PR has `agent-repair: attempt 2` and `agent:needs-human` | Repair step gave up | Read the handoff comment; fix the branch yourself |
+| Repair hands off saying no checks ran | Agent PRs opened with `GITHUB_TOKEN` do not trigger CI | Set or renew `AGENT_GH_TOKEN` |
 
 ---
 
@@ -433,23 +446,6 @@ Scheduled runs always use `full` mode. Manual runs default to `triage`.
 
 These are planned and not implemented yet. The sections above describe the
 current behaviour. When a change lands, its text moves into the sections above.
-
-### The agent repairs its own red PRs (Plan 53, #94)
-
-A new **Repair** step in `work-next-issue.md`, between Queue and Limits. For
-each open `agent/*` PR:
-
-- If a check failed, the agent checks out the branch, reads
-  `gh run view <id> --log-failed`, fixes the cause (a failing test first when
-  it is a code bug), runs the gates and pushes. Each attempt is counted with a
-  PR comment `agent-repair: attempt K`.
-- After two attempts, or when the cause is outside the repository (a secret,
-  the runner, the network, an upstream outage), it hands off with
-  `agent:needs-human`.
-- If no checks have run for more than one hour, it hands off and says that
-  `AGENT_GH_TOKEN` is probably missing.
-- A repair counts as the run's one issue. In triage mode the step only
-  reports.
 
 ### Red PRs in the run report (Plan 53, #95)
 
