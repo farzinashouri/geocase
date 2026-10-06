@@ -229,6 +229,50 @@ def test_command_asks_for_simple_bash_calls() -> None:
     assert "one simple command per Bash call" in text
 
 
+def _repair_step() -> str:
+    # The Repair paragraph: from its bold title up to the next numbered step.
+    text = (ROOT / ".claude" / "commands" / "work-next-issue.md").read_text()
+    start = text.index("**Repair.**")
+    end = text.index("**Limits.**")
+    return text[start:end]
+
+
+def test_repair_step_sits_between_queue_and_limits() -> None:
+    # Plan 53 (#94): a red agent PR must be looked at before the 3-PR limit
+    # can stop the run, and before a new issue is picked.
+    text = (ROOT / ".claude" / "commands" / "work-next-issue.md").read_text()
+    assert (
+        text.index("**Queue.**")
+        < text.index("**Repair.**")
+        < text.index("**Limits.**")
+        < text.index("**Pick**")
+    )
+
+
+def test_repair_step_reads_checks_and_failed_logs() -> None:
+    step = _repair_step()
+    assert "gh pr checks" in step
+    assert "gh run view" in step
+    assert "--log-failed" in step
+
+
+def test_repair_step_caps_attempts_and_hands_off() -> None:
+    step = _repair_step()
+    assert "agent-repair: attempt" in step
+    assert "two attempts" in step
+    assert "agent:needs-human" in step
+
+
+def test_repair_step_hands_off_a_pr_with_no_checks() -> None:
+    step = _repair_step()
+    assert "no checks" in step
+    assert "AGENT_GH_TOKEN" in step
+
+
+def test_repair_step_only_reports_in_triage_mode() -> None:
+    assert "triage mode" in _repair_step()
+
+
 def test_command_forbids_shell_redirects() -> None:
     # 2026-10-05 and 2026-10-06: `gh issue view 45 ... > /tmp/q.md` was denied
     # both nights; --add-dir /tmp covers the Write tool, not a shell `>`.
