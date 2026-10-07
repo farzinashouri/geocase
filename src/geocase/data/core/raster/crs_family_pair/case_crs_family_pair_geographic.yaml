@@ -1,11 +1,14 @@
 id: crs_family_pair_geographic
 title: CRS Family Pair -- Geographic (WGS 84)
 description: >
-  One half of a matched pair describing the same ground in two CRS families:
-  this is the geographic half, derived by reprojecting the projected one, in degrees. 31 of the corpus's 34 rasters were EPSG:32633,
-  which made any "same case, two CRSs" assertion untestable and left
-  reprojection sweeps leaning entirely on the *target* CRS for variation. The
-  pair makes the unit-change axis assertable from inside the corpus.
+  A reprojection test cannot see the metres-to-degrees unit change without a
+  matched pair; this is the geographic (degrees) half. One half of a matched
+  pair describing the same ground in two CRS families: this is the geographic
+  half, derived by reprojecting the projected one, in degrees. 31 of the
+  corpus's 34 rasters were EPSG:32633, which made any "same case, two CRSs"
+  assertion untestable and left reprojection sweeps leaning entirely on the
+  *target* CRS for variation. The pair makes the unit-change axis assertable
+  from inside the corpus.
 category: raster
 format: GeoTIFF
 test_tier: unit

@@ -1,11 +1,12 @@
 id: precision_loss_geojson_roundtrip
 title: GeoJSON Precision Loss Roundtrip
 description: >
-  A GeoJSON dataset containing coordinates with very high precision that may
-  lose accuracy during text serialization roundtrips. GeoJSON uses decimal
-  text representation, and different serializers use different precision
-  settings. This case exposes precision loss that can accumulate across
-  multiple read/write cycles or cause coordinate drift.
+  Coordinates lose precision after a GeoJSON text round trip because
+  serializers use different precision settings. The file holds a GeoJSON
+  dataset containing coordinates with very high precision. GeoJSON uses
+  decimal text representation, and different serializers use different
+  precision settings. This case exposes precision loss that can accumulate
+  across multiple read/write cycles or cause coordinate drift.
 category: vector
 format: GeoJSON
 test_tier: unit

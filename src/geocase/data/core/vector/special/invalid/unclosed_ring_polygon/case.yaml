@@ -1,9 +1,10 @@
 id: unclosed_ring_polygon
 title: Unclosed Ring Polygon
 description: >
-  A polygon where the exterior ring isn't properly closed (first coordinate ≠ last coordinate).
-  Per GeoJSON spec (RFC 7946), a LinearRing must have four or more positions with the first
-  and last positions being equivalent. Strict parsers will reject this entirely.
+  A strict parser rejects a polygon whose exterior ring is not closed (first
+  coordinate ≠ last coordinate). Per GeoJSON spec (RFC 7946), a LinearRing
+  must have four or more positions with the first and last positions being
+  equivalent. Strict parsers will reject this file entirely.
 category: vector
 format: GeoJSON
 test_tier: unit

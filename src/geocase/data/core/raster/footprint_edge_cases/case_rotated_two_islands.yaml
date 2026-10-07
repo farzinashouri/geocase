@@ -1,8 +1,10 @@
 id: rotated_two_islands
 title: Rotated Two Islands Raster
 description: >
-  Raster with rotated/skewed transform and disconnected valid regions,
-  designed to stress convex-hull style footprint generation.
+  A rotated raster gets the wrong footprint and valid-pixel count when code
+  assumes a north-up transform. The file has a rotated/skewed transform and
+  disconnected valid regions, designed to stress convex-hull style footprint
+  generation.
 category: raster
 format: GeoTIFF
 test_tier: unit

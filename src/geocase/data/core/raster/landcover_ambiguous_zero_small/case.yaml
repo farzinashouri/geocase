@@ -1,10 +1,11 @@
 id: landcover_ambiguous_zero_small
 title: Land Cover With Ambiguous Zero
-description: >-
-  A categorical land-cover raster that declares NoData = 0 while 0 is also a real
-  class ("unclassified / bare"). Masking on ``data == nodata`` silently deletes a
-  legitimate class; ignoring NoData treats sentinel pixels as data. Nothing in the
-  file tells the two apart.
+description: >
+  Masking on nodata deletes a real land-cover class when 0 is both NoData and
+  a class. This categorical land-cover raster declares NoData = 0 while 0 is
+  also a real class ("unclassified / bare"). Masking on ``data == nodata``
+  silently deletes a legitimate class; ignoring NoData treats sentinel pixels
+  as data. Nothing in the file tells the two apart.
 category: raster
 format: GeoTIFF
 test_tier: integration

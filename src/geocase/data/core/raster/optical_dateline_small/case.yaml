@@ -1,8 +1,10 @@
 id: optical_dateline_small
 title: Optical Dateline Small
-description: >-
-  An RGB GeoTIFF whose bounds straddle the antimeridian at +180 longitude. Exercises bounds
-  normalization and antimeridian splitting on raster inputs.
+description: >
+  A raster whose bounds straddle +180 longitude breaks bbox and extent code
+  that assumes longitudes stay within ±180. This RGB GeoTIFF has bounds that
+  straddle the antimeridian at +180 longitude. Exercises bounds normalization
+  and antimeridian splitting on raster inputs.
 category: raster
 format: GeoTIFF
 test_tier: integration
