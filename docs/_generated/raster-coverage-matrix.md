@@ -13,7 +13,7 @@ Cases declaring typed band-count expectations: **34/47**.
 |---|---:|---:|
 | Optical / RGB | ✅ 5 case(s) | ✅ required |
 | Multispectral | ✅ 3 case(s) | ✅ required |
-| Mask | ✅ 4 case(s) | ✅ required |
+| Mask | ✅ 5 case(s) | ✅ required |
 | DEM / Terrain | ✅ 9 case(s) | ✅ required |
 | Derived index (NDVI) | ✅ 2 case(s) | ✅ required |
 | SAR / Radar | ✅ 2 case(s) | ✅ required |
