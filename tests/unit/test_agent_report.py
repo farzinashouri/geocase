@@ -170,6 +170,72 @@ def test_needs_you_section_is_rendered() -> None:
     assert "Needs you" in md.splitlines()[0]
 
 
+def _pr(number: int, checks: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "number": number,
+        "headRefName": f"agent/{number}-x",
+        "statusCheckRollup": checks,
+    }
+
+
+def _check(name: str, conclusion: str, status: str = "COMPLETED") -> dict[str, Any]:
+    return {"name": name, "conclusion": conclusion, "status": status}
+
+
+def test_red_pr_lines_name_the_failing_check() -> None:
+    prs = [
+        _pr(91, [_check("lint", "SUCCESS"), _check("catalog", "FAILURE")]),
+        _pr(92, [_check("lint", "SUCCESS")]),
+    ]
+    lines = report.red_pr_lines(prs)
+    assert len(lines) == 1
+    assert "#91" in lines[0] and "catalog" in lines[0]
+
+
+def test_red_pr_lines_flag_a_pr_without_checks() -> None:
+    lines = report.red_pr_lines([_pr(93, [])])
+    assert len(lines) == 1
+    assert "#93" in lines[0] and "no checks" in lines[0]
+
+
+def test_red_pr_lines_ignore_pending_and_non_agent_prs() -> None:
+    pending = _pr(94, [_check("lint", "", status="IN_PROGRESS")])
+    other = {"number": 5, "headRefName": "feature", "statusCheckRollup": []}
+    assert report.red_pr_lines([pending, other]) == []
+
+
+def test_red_pr_lines_read_status_contexts() -> None:
+    ctx = {"context": "ci/legacy", "state": "FAILURE"}
+    lines = report.red_pr_lines([_pr(95, [ctx])])
+    assert "ci/legacy" in lines[0]
+
+
+def test_limit_line_when_three_agent_prs_are_open() -> None:
+    prs = [_pr(n, [_check("lint", "SUCCESS")]) for n in (1, 2, 3)]
+    assert "limit" in report.limit_line(prs)
+    assert report.limit_line(prs[:2]) == ""
+
+
+def test_red_prs_are_part_of_needs_you() -> None:
+    rep = report.build_report(_result(), outcome="success", max_turns=250)
+    md = report.render(rep, run_url="u", mode="full", needs_human=["- red #91"])
+    assert "- red #91" in md
+    assert "Needs you: 1" in md.splitlines()[0]
+
+
+def test_main_reads_the_prs_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.delenv("GH_TOKEN", raising=False)
+    prs = tmp_path / "prs.json"
+    prs.write_text(json.dumps([_pr(91, [_check("catalog", "FAILURE")])]))
+    report.main(
+        ["--execution-file", str(_log(tmp_path, _result())), "--prs-file", str(prs)]
+    )
+    out = capsys.readouterr().out
+    assert "#91" in out and "catalog" in out
+
+
 def test_no_needs_you_section_when_nothing_waits() -> None:
     rep = report.build_report(_result(), outcome="success", max_turns=250)
     md = report.render(rep, run_url="u", mode="full", needs_human=[])
