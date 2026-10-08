@@ -1,7 +1,8 @@
 """Summarise one nightly agent run as Markdown (Plan 52 Phase 1, issue #83).
 
     python scripts/agent_run_report.py --execution-file out.json \
-        --outcome success --run-url URL --mode full --max-turns 250
+        --outcome success --run-url URL --mode full --max-turns 250 \
+        [--prs-file prs.json]
 
 Reads the claude-code-action execution file (a JSON list of messages ending in
 a ``result`` object), prints a Markdown report to stdout and writes
@@ -110,6 +111,55 @@ def needs_human_lines(issues: list[dict[str, Any]]) -> list[str]:
     return lines
 
 
+_RED = {"FAILURE", "ERROR", "TIMED_OUT", "CANCELLED", "STARTUP_FAILURE"}
+PR_LIMIT = 3
+
+
+def _agent_prs(prs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [p for p in prs if str(p.get("headRefName", "")).startswith("agent/")]
+
+
+def red_pr_lines(prs: list[dict[str, Any]]) -> list[str]:
+    """One line per open agent PR that is red or has no checks (Plan 53).
+
+    ``prs`` is ``gh pr list --json number,headRefName,statusCheckRollup``.
+    Pending checks are not red. A check run carries ``name``/``conclusion``;
+    a legacy status carries ``context``/``state``.
+    """
+    lines = []
+    for pr in _agent_prs(prs):
+        checks = pr.get("statusCheckRollup") or []
+        failed = [
+            str(c.get("name") or c.get("context") or "?")
+            for c in checks
+            if str(c.get("conclusion") or c.get("state") or "").upper() in _RED
+        ]
+        label = f"- PR #{pr['number']} (`{pr.get('headRefName')}`)"
+        if failed:
+            lines.append(f"{label} is red: {', '.join(failed)}")
+        elif not checks:
+            lines.append(f"{label} has no checks")
+    return lines
+
+
+def limit_line(prs: list[dict[str, Any]]) -> str:
+    """A sentence when the open-PR limit stops the agent, else an empty string."""
+    n = len(_agent_prs(prs))
+    if n < PR_LIMIT:
+        return ""
+    return f"- {n} agent PRs are open: the limit of {PR_LIMIT} stops new work"
+
+
+def load_prs(path: Path | None) -> list[dict[str, Any]]:
+    if path is None:
+        return []
+    try:
+        data = json.loads(path.read_text())
+    except (OSError, ValueError):
+        return []
+    return data if isinstance(data, list) else []
+
+
 def waiting_issues() -> list[dict[str, Any]]:
     """Open issues labelled ``agent:needs-human`` (best effort)."""
     cmd = ["gh", "issue", "list", "--state", "open", "--label", "agent:needs-human"]
@@ -167,6 +217,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--run-url", default="")
     ap.add_argument("--mode", default="full")
     ap.add_argument("--max-turns", type=int, default=250)
+    ap.add_argument("--prs-file", type=Path, default=None)
     args = ap.parse_args(argv)
 
     rep = build_report(
@@ -178,6 +229,10 @@ def main(argv: list[str] | None = None) -> int:
     has_gh = bool(os.environ.get("GH_TOKEN"))
     lines = touched(since) if has_gh else []
     waiting = needs_human_lines(waiting_issues()) if has_gh else []
+    prs = load_prs(args.prs_file)
+    waiting += red_pr_lines(prs)
+    if limit := limit_line(prs):
+        waiting.append(limit)
     sys.stdout.write(
         render(
             rep,

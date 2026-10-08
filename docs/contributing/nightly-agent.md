@@ -310,6 +310,9 @@ Your work each morning:
   The run report carries the question instead: every open
   `agent:needs-human` issue is listed under **Needs you** (link, title and the
   first line of the last comment), and the header says `🙋 Needs you: N`.
+  The same section lists every open `agent/*` PR that is red or has no checks,
+  with the name of the failing check (Plan 53, #95), and a line when the limit
+  of 3 open PRs stopped the run.
 - **Every run:** each run comments a verdict (`✅ healthy` or `⚠️ needs
   attention: …`, with turns, duration, permission denials and the final
   message) on the pinned **Agent run reports** issue, which the workflow
@@ -446,12 +449,6 @@ Scheduled runs always use `full` mode. Manual runs default to `triage`.
 
 These are planned and not implemented yet. The sections above describe the
 current behaviour. When a change lands, its text moves into the sections above.
-
-### Red PRs in the run report (Plan 53, #95)
-
-The **Needs you** section of each run report will also list every open agent
-PR that is red or has no checks, with the name of the failing check. The
-report will also say when the limit of 3 open PRs stopped the run.
 
 ### A monitoring agent (Plan 52, #84, blocked)
 

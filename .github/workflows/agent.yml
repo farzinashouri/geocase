@@ -121,9 +121,11 @@ jobs:
           OUTCOME: ${{ steps.claude.outcome }}
           EXEC_FILE: ${{ steps.claude.outputs.execution_file }}
         run: |
+          gh pr list --state open --json number,headRefName,statusCheckRollup \
+            > /tmp/agent-prs.json || echo '[]' > /tmp/agent-prs.json
           python3 scripts/agent_run_report.py --execution-file "${EXEC_FILE:-/nonexistent}" \
             --outcome "$OUTCOME" --run-url "$RUN_URL" --mode "$MODE" \
-            --max-turns 250 > /tmp/agent-report.md
+            --max-turns 250 --prs-file /tmp/agent-prs.json > /tmp/agent-report.md
           cat /tmp/agent-report.md >> "$GITHUB_STEP_SUMMARY"
           issue=$(gh issue list --state open --search '"Agent run reports" in:title' \
             --json number --jq '.[0].number // empty')
