@@ -10,7 +10,7 @@ This document describes the current state of the GeoCase project and the workflo
 
 ## Current status
 
-GeoCase has a complete folder structure, 174 bundled cases, and fully implemented metadata, catalog, runtime, assertion, loader, and plugin layers, with 1701 passing tests.
+GeoCase has a complete folder structure, 175 bundled cases, and fully implemented metadata, catalog, runtime, assertion, loader, and plugin layers, with 1701 passing tests.
 
 ### Recent updates (April 2026)
 

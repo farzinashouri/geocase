@@ -3,8 +3,8 @@
 id: numeric_boundary_1e15
 title: "Numeric Boundary: 1e-15"
 description: >
-  A single-point GeoJSON whose coordinate one decade below the affected magnitude class.
-  The lower bracket, and the one that separates 'GDAL's intelliround bug' from 'the value fell off the end of 15 decimal places'. 1e-15 is at the writer's declared limit, so losing it is documented behaviour; losing 1e-14 is not.
+  A single-point GeoJSON whose coordinate is inside the affected magnitude class, at its lower edge.
+  1e-15 is 0.000000000000001, the fifteenth decimal place, so it fits in the writer's default and losing it is a defect. GDAL d6fd56f52d writes it as 0: the trim for five 0s followed by one digit removes that digit, which here is the only significant one. Until 2026-10-11 this case was the lower bracket and called the loss documented behaviour; that was wrong (OSGeo/gdal#15369).
 category: vector
 format: GeoJSON
 test_tier: unit

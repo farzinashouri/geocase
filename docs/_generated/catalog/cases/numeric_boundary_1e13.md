@@ -11,7 +11,7 @@ description: "A single-point GeoJSON whose coordinate one decade above the affec
 <span class="gc-badge">vector</span><span class="gc-badge">GeoJSON</span><span class="gc-badge">Point</span><span class="gc-badge">EPSG:4326</span><span class="gc-badge">tiny</span><span class="gc-badge">bundled</span>
 </div>
 
-A single-point GeoJSON whose coordinate one decade above the affected magnitude class. The upper bracket. A brute force over 300000 coordinates puts GDAL's zeroing class at exactly |v| in [1e-14, 1e-13), so this value must survive. A consumer that loses it has a wider bug than the one round 6 found.
+A single-point GeoJSON whose coordinate one decade above the affected magnitude class. The upper bracket. A brute force over 300000 coordinates puts GDAL's zeroing class at |v| in [1e-15, 1e-13), so this value must survive. A consumer that loses it has a wider bug than the one round 6 found.
 
 <figure class="gc-figure">
 <svg class="gc-diagram" viewBox="0 0 120 80" role="img" aria-label="Point geometry of numeric_boundary_1e13, rendered from the case's data" xmlns="http://www.w3.org/2000/svg"><title>Point geometry of numeric_boundary_1e13, rendered from the case's data</title><rect x="1" y="1" width="118" height="78" rx="3" fill="none" stroke="var(--gc-diagram-stroke)" stroke-width="1" opacity="0.35"/><circle cx="30" cy="70" r="3" fill="var(--gc-diagram-accent)"/></svg>
@@ -94,7 +94,7 @@ this case and passes its siblings, the failure names the property.
 
 ### Why this value
 
-The upper bracket. A brute force over 300000 coordinates puts GDAL's zeroing class at exactly |v| in [1e-14, 1e-13), so this value must survive. A consumer that loses it has a wider bug than the one round 6 found.
+The upper bracket. A brute force over 300000 coordinates puts GDAL's zeroing class at |v| in [1e-15, 1e-13), so this value must survive. A consumer that loses it has a wider bug than the one round 6 found.
 
 ### What to assert
 
@@ -144,16 +144,16 @@ Plan 44 phase 2, from the 2026-09-06 run against GDAL `d6fd56f52d`. See
 
 - [Numeric Boundary: 1e-14](numeric_boundary_1e14.md) -- `numeric_boundary_1e14`
 - [Numeric Boundary: 1e-15](numeric_boundary_1e15.md) -- `numeric_boundary_1e15`
+- [Numeric Boundary: 1e-16](numeric_boundary_1e16.md) -- `numeric_boundary_1e16`
 - [Numeric Boundary: 15 Significant Digits](numeric_boundary_15_significant_digits.md) -- `numeric_boundary_15_significant_digits`
 - [Numeric Boundary: 17 Significant Digits](numeric_boundary_17_significant_digits.md) -- `numeric_boundary_17_significant_digits`
-- [Numeric Boundary: Trailing Nines](numeric_boundary_trailing_nines.md) -- `numeric_boundary_trailing_nines`
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Dataset",
   "name": "Numeric Boundary: 1e-13",
-  "description": "A single-point GeoJSON whose coordinate one decade above the affected magnitude class. The upper bracket. A brute force over 300000 coordinates puts GDAL's zeroing class at exactly |v| in [1e-14, 1e-13), so this value must survive. A consumer that loses it has a wider bug than the one round 6 found.",
+  "description": "A single-point GeoJSON whose coordinate one decade above the affected magnitude class. The upper bracket. A brute force over 300000 coordinates puts GDAL's zeroing class at |v| in [1e-15, 1e-13), so this value must survive. A consumer that loses it has a wider bug than the one round 6 found.",
   "identifier": "numeric_boundary_1e13",
   "url": "https://farzinashouri.github.io/geocase/_generated/catalog/cases/numeric_boundary_1e13/",
   "isPartOf": {

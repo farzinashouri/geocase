@@ -29,7 +29,8 @@ FAMILY = {
     "numeric_boundary_trailing_nines": "five 9s at 15 decimal places",
     "numeric_boundary_1e13": "above the affected class",
     "numeric_boundary_1e14": "inside the affected class",
-    "numeric_boundary_1e15": "below the affected class",
+    "numeric_boundary_1e15": "inside the affected class, at its lower edge",
+    "numeric_boundary_1e16": "below the affected class",
 }
 
 
@@ -52,7 +53,13 @@ class TestTheFamilyExists:
 
 
 class TestTheBoundaryIsBracketed:
-    """``1e-14`` alone is a hit; ``1e-13``/``1e-14``/``1e-15`` is a bracket."""
+    """``1e-14`` alone is a hit; ``1e-13`` above and ``1e-16`` below is a bracket.
+
+    The affected class is ``[1e-15, 1e-13)``: ``intelliround`` zeroes
+    ``1e-15`` through its other trim (the ``00000x`` one), which the first
+    brute force missed because it treated everything below ``1e-14`` as
+    expected precision loss.
+    """
 
     @pytest.mark.parametrize(
         ("case_id", "magnitude"),
@@ -60,6 +67,7 @@ class TestTheBoundaryIsBracketed:
             ("numeric_boundary_1e13", 1e-13),
             ("numeric_boundary_1e14", 1e-14),
             ("numeric_boundary_1e15", 1e-15),
+            ("numeric_boundary_1e16", 1e-16),
         ],
     )
     def test_the_case_carries_its_magnitude(self, case_id: str, magnitude: float):
@@ -68,6 +76,21 @@ class TestTheBoundaryIsBracketed:
         raw = json.loads(case.primary_path.read_text())
         coords = raw["features"][0]["geometry"]["coordinates"]
         assert coords[0] == pytest.approx(magnitude, rel=1e-12)
+
+    @pytest.mark.parametrize(
+        ("case_id", "position"),
+        [
+            ("numeric_boundary_1e13", "above the affected magnitude class"),
+            ("numeric_boundary_1e14", "inside the affected magnitude class"),
+            ("numeric_boundary_1e15", "inside the affected magnitude class"),
+            ("numeric_boundary_1e16", "below the affected magnitude class"),
+        ],
+    )
+    def test_the_case_states_its_side_of_the_boundary(
+        self, case_id: str, position: str
+    ):
+        """1e-15 fits in 15 decimals, so losing it is the defect, not a limit."""
+        assert position in geocase.get_case(case_id).description
 
 
 class TestTheExpectedAnswerIsShipped:

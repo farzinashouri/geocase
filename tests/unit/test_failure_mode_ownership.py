@@ -56,6 +56,7 @@ REFERENCE_FAILURE_MODES = {
     "numeric_boundary_1e13",
     "numeric_boundary_1e14",
     "numeric_boundary_1e15",
+    "numeric_boundary_1e16",
 }
 
 

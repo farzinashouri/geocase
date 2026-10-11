@@ -4,7 +4,7 @@ id: numeric_boundary_1e14
 title: "Numeric Boundary: 1e-14"
 description: >
   A single-point GeoJSON whose coordinate inside the affected magnitude class.
-  The hit. GDAL d6fd56f52d writes this coordinate as 0 through both the WKT and the GeoJSON writers, silently, at relative error 1.0. Not a precision floor: 1e-14 is 0.00000000000001, fourteen decimal places, inside the writer's default of fifteen. This is the case precision_loss_geojson_roundtrip found by accident, isolated so that finding it again is not an accident.
+  The hit. GDAL d6fd56f52d writes this coordinate as 0 through both the WKT and the GeoJSON writers, silently, at relative error 1.0. Not a precision floor: 1e-14 is 0.00000000000001, fourteen decimal places, inside the writer's default of fifteen. The eight-character trim removes its only significant digit. This is the case precision_loss_geojson_roundtrip found by accident, isolated so that finding it again is not an accident.
 category: vector
 format: GeoJSON
 test_tier: unit

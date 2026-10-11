@@ -144,9 +144,9 @@ Plan 44 phase 2, from the 2026-09-06 run against GDAL `d6fd56f52d`. See
 
 - [Numeric Boundary: 17 Significant Digits](numeric_boundary_17_significant_digits.md) -- `numeric_boundary_17_significant_digits`
 - [Numeric Boundary: 1e-15](numeric_boundary_1e15.md) -- `numeric_boundary_1e15`
+- [Numeric Boundary: 1e-16](numeric_boundary_1e16.md) -- `numeric_boundary_1e16`
 - [Numeric Boundary: 1e-13](numeric_boundary_1e13.md) -- `numeric_boundary_1e13`
 - [Numeric Boundary: 1e-14](numeric_boundary_1e14.md) -- `numeric_boundary_1e14`
-- [Numeric Boundary: Trailing Nines](numeric_boundary_trailing_nines.md) -- `numeric_boundary_trailing_nines`
 
 <script type="application/ld+json">
 {

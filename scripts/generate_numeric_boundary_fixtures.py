@@ -1,25 +1,27 @@
 """Generate the numeric-boundary vector fixtures -- plan 44 phase 2.
 
-Round 6 found GDAL writing coordinates in ``[1e-14, 1e-13)`` as ``0`` -- both
+Round 6 found GDAL writing coordinates in ``[1e-15, 1e-13)`` as ``0`` -- both
 the WKT and the GeoJSON writers, no error, no warning, relative error 1.0. It
 found it by **luck**: ``precision_loss_geojson_roundtrip`` carries three points
-and the third happens to sit at ``1e-14``, the single magnitude where the
-significant digit lands on the one string position ``intelliround``
-(``ogr/ogrutils.cpp:161-169``) does not test.
+and the third happens to sit at ``1e-14``, where the significant digit lands on
+the one string position ``intelliround`` (``ogr/ogrutils.cpp:161-169``) does
+not test. Round 6 first put the class at ``[1e-14, 1e-13)``; on 2026-10-11 the
+GDAL fix (OSGeo/gdal#15369) showed that ``[1e-15, 1e-14)`` is zeroed too, by
+the other trim (five ``0``s then one digit, which drops that digit).
 
 A case chosen for "very small values near zero" is not the same as a case
 chosen against the *formatter*, and the difference is the whole finding. These
-seven cases are the designed version:
+eight cases are the designed version:
 
 * two on **significant digits** -- a value that round-trips in 15 and one that
   needs 17, which is what the writer's default of 15 decimal places cannot hold;
 * two on the **patterns ``intelliround`` special-cases** -- a decimal expansion
   ending in five ``0``s and one ending in five ``9``s. ``0.000000010000001``
   loses its tail through exactly this path;
-* three **bracketing the magnitude class** at ``1e-13``, ``1e-14`` and
-  ``1e-15``, so the boundary is bounded on both sides rather than hit once. A
-  consumer that fails only the middle case has reproduced the GDAL class
-  exactly; one that fails all three has a different bug.
+* four **bracketing the magnitude class**: ``1e-13`` above it, ``1e-14`` and
+  ``1e-15`` inside it (one per trim), and ``1e-16`` below it, which is past 15
+  decimal places. A consumer that fails exactly the two inside cases has
+  reproduced the GDAL class; one that also fails ``1e-13`` has a wider bug.
 
 Single-variable per plan 40's control principle: **one feature per case**, so a
 failure names the property rather than a file. Each case ships the coordinate
@@ -43,14 +45,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FAMILY_DIR = (
-    REPO_ROOT
-    / "src"
-    / "geocase"
-    / "data"
-    / "core"
-    / "vector"
-    / "special"
-    / "precision"
+    REPO_ROOT / "src" / "geocase" / "data" / "core" / "vector" / "special" / "precision"
 )
 
 
@@ -152,7 +147,7 @@ SPECS: tuple[BoundarySpec, ...] = (
         property_tested="one decade above the affected magnitude class",
         rationale=(
             "The upper bracket. A brute force over 300000 coordinates puts "
-            "GDAL's zeroing class at exactly |v| in [1e-14, 1e-13), so this "
+            "GDAL's zeroing class at |v| in [1e-15, 1e-13), so this "
             "value must survive. A consumer that loses it has a wider bug than "
             "the one round 6 found."
         ),
@@ -171,7 +166,8 @@ SPECS: tuple[BoundarySpec, ...] = (
             "The hit. GDAL d6fd56f52d writes this coordinate as 0 through both "
             "the WKT and the GeoJSON writers, silently, at relative error 1.0. "
             "Not a precision floor: 1e-14 is 0.00000000000001, fourteen "
-            "decimal places, inside the writer's default of fifteen. This is "
+            "decimal places, inside the writer's default of fifteen. The "
+            "eight-character trim removes its only significant digit. This is "
             "the case precision_loss_geojson_roundtrip found by accident, "
             "isolated so that finding it again is not an accident."
         ),
@@ -186,12 +182,33 @@ SPECS: tuple[BoundarySpec, ...] = (
         case_id="numeric_boundary_1e15",
         title="Numeric Boundary: 1e-15",
         coordinate=(1e-15, 1e-15),
-        property_tested="one decade below the affected magnitude class",
+        property_tested="is inside the affected magnitude class, at its lower edge",
+        rationale=(
+            "1e-15 is 0.000000000000001, the fifteenth decimal place, so it "
+            "fits in the writer's default and losing it is a defect. GDAL "
+            "d6fd56f52d writes it as 0: the trim for five 0s followed by one "
+            "digit removes that digit, which here is the only significant one. "
+            "Until 2026-10-11 this case was the lower bracket and called the "
+            "loss documented behaviour; that was wrong (OSGeo/gdal#15369)."
+        ),
+        risk_types=(
+            "precision/denormal_magnitude",
+            "precision/significant_digits",
+            "precision/formatter_boundary",
+            "failure_mode/reference_implementation",
+        ),
+    ),
+    BoundarySpec(
+        case_id="numeric_boundary_1e16",
+        title="Numeric Boundary: 1e-16",
+        coordinate=(1e-16, 1e-16),
+        property_tested="is below the affected magnitude class",
         rationale=(
             "The lower bracket, and the one that separates 'GDAL's "
             "intelliround bug' from 'the value fell off the end of 15 decimal "
-            "places'. 1e-15 is at the writer's declared limit, so losing it is "
-            "documented behaviour; losing 1e-14 is not."
+            "places'. 1e-16 needs sixteen decimal places, one more than the "
+            "writer's default, so writing it as 0 is documented behaviour; "
+            "losing 1e-15 or 1e-14 is not."
         ),
         risk_types=(
             "precision/denormal_magnitude",

@@ -249,12 +249,10 @@ class TestRoundSixGdalAsATarget:
         """The finding is a magnitude class, not one unlucky coordinate."""
         case = geocase.get_case("precision_loss_geojson_roundtrip")
         matches = [
-            d
-            for d in case.known_divergences
-            if "1e-14" in d.description and "1e-13" in d.description
+            d for d in case.known_divergences if "[1e-15, 1e-13)" in d.description
         ]
         assert matches, (
-            "the record must state the affected class |v| in [1e-14, 1e-13), "
+            "the record must state the affected class |v| in [1e-15, 1e-13), "
             "not just 'small coordinates are lost'"
         )
 

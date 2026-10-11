@@ -199,7 +199,7 @@ RISK_TYPE_DESCRIPTIONS: dict[str, str] = {
         "A write-then-read cycle does not return the input unchanged."
     ),
     # Plan 44 phase 2.3. Round 6 found GDAL writing coordinates in
-    # [1e-14, 1e-13) as ``0`` -- and found it by luck, because the corpus's one
+    # [1e-15, 1e-13) as ``0`` -- and found it by luck, because the corpus's one
     # precision case happened to carry a point at that magnitude. The axis is
     # *numbers at a representational boundary*, not geometry, and until now the
     # corpus had a single term for it and no way to say which boundary.
