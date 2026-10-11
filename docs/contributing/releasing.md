@@ -72,7 +72,7 @@ twine check dist/*
 
 `verify_dist.py` fails loudly if:
 
-- any of the 174 cases in `case-index.yaml` is missing from the wheel, or ships
+- any of the 175 cases in `case-index.yaml` is missing from the wheel, or ships
   metadata with no data payload (`verify_dist.py` reads the count from the index;
   this figure is gated against the registry by `scripts/validate_catalog.py`);
 - the sdist is missing `src/geocase/data`, `src/geocase/metadata`, or `tests`;
@@ -113,7 +113,7 @@ To check a published version by hand, the same things the smoke test checks:
 python -m venv /tmp/gc && . /tmp/gc/bin/activate
 pip install geocase==1.1.0
 python -c "import geocase; print(geocase.__version__, len(geocase.__all__))"   # 1.1.0 29
-python -c "import geocase; print(len(geocase.list_cases()))"   # 174
+python -c "import geocase; print(len(geocase.list_cases()))"   # 175
 ```
 
 ## conda-forge

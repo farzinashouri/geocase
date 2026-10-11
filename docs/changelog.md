@@ -28,6 +28,30 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Fixed — GDAL zeroing class is `[1e-15, 1e-13)`, not `[1e-14, 1e-13)`
+
+The fix proposed upstream (OSGeo/gdal#15369) showed that GDAL's `intelliround` also
+writes `|v|` in `[1e-15, 1e-14)` as `0`, through its other trim (five `0`s followed by
+one digit, which it drops). The first brute force missed this because it counted
+values below `1e-14` as expected precision loss. `1e-15` is the fifteenth decimal
+place, so it fits in the writer's default and losing it is a defect.
+
+- **`numeric_boundary_1e15`** — changed meaning: it is now *inside* the affected
+  class, at its lower edge, not the lower bracket. Its `description`, `notes.md` and
+  the `description` property of its one feature changed. The coordinate, CRS,
+  `risk_types` and `expected_roundtrip_coordinates` (`[1e-15, 1e-15]`) did not.
+- **`numeric_boundary_1e16`** — new case, the lower bracket: a single point at
+  `[1e-16, 1e-16]`, sixteen decimal places, one more than the writer's default, so
+  writing it as `0` is documented behaviour. `risk_types`:
+  `failure_mode/reference_implementation`, `precision/denormal_magnitude`,
+  `precision/formatter_boundary`, `precision/significant_digits`.
+- **`precision_loss_geojson_roundtrip`** — the `gdal` entry in `known_divergences`
+  now states the class as `[1e-15, 1e-13)` and names both trims.
+- **`numeric_boundary_1e13`**, **`numeric_boundary_1e14`** — `description` and
+  `notes.md` text only; no data changed.
+
+The catalog now holds 175 cases.
+
 ### Changed — searcher-facing case descriptions (Plan 47 Phase 4, #26)
 
 No geometry, CRS, dtype, nodata value, id or `risk_types` changed. The `description:`

@@ -16,7 +16,7 @@ this case and passes its siblings, the failure names the property.
 
 ## Why this value
 
-The upper bracket. A brute force over 300000 coordinates puts GDAL's zeroing class at exactly |v| in [1e-14, 1e-13), so this value must survive. A consumer that loses it has a wider bug than the one round 6 found.
+The upper bracket. A brute force over 300000 coordinates puts GDAL's zeroing class at |v| in [1e-15, 1e-13), so this value must survive. A consumer that loses it has a wider bug than the one round 6 found.
 
 ## What to assert
 

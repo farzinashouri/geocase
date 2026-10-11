@@ -4,7 +4,7 @@
 
 ## The property
 
-The single point in this file one decade below the affected magnitude class:
+The single point in this file is inside the affected magnitude class, at its lower edge:
 
 | | value | shortest round-trip repr |
 |---|---|---|
@@ -16,7 +16,7 @@ this case and passes its siblings, the failure names the property.
 
 ## Why this value
 
-The lower bracket, and the one that separates 'GDAL's intelliround bug' from 'the value fell off the end of 15 decimal places'. 1e-15 is at the writer's declared limit, so losing it is documented behaviour; losing 1e-14 is not.
+1e-15 is 0.000000000000001, the fifteenth decimal place, so it fits in the writer's default and losing it is a defect. GDAL d6fd56f52d writes it as 0: the trim for five 0s followed by one digit removes that digit, which here is the only significant one. Until 2026-10-11 this case was the lower bracket and called the loss documented behaviour; that was wrong (OSGeo/gdal#15369).
 
 ## What to assert
 

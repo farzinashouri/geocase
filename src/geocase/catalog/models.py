@@ -333,7 +333,7 @@ class AssertionHints(BaseModel):
     # The coordinates a write-then-read cycle must return unchanged, as
     # ``[x, y]`` pairs in the case's own CRS (plan 44 phase 2.2).
     #
-    # Round 6's first defect -- GDAL writing coordinates in [1e-14, 1e-13) as
+    # Round 6's first defect -- GDAL writing coordinates in [1e-15, 1e-13) as
     # ``0`` -- is invisible without this: the file is well-formed either way,
     # and "did the value survive?" is a question only the *declared* answer can
     # settle. Typed rather than dropped in ``params`` because ``params`` is

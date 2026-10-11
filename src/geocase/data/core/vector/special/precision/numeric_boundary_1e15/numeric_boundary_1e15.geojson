@@ -5,7 +5,7 @@
       "type": "Feature",
       "properties": {
         "id": 1,
-        "description": "one decade below the affected magnitude class"
+        "description": "is inside the affected magnitude class, at its lower edge"
       },
       "geometry": {
         "type": "Point",

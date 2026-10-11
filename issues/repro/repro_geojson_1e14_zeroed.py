@@ -1,4 +1,4 @@
-"""GDAL silently writes coordinates in [1e-14, 1e-13) as 0.
+"""GDAL silently writes coordinates in [1e-15, 1e-13) as 0.
 
 Builds its own file. Does not import geocase.
 Expected: the coordinate survives a GeoJSON round-trip, since 1e-14 is

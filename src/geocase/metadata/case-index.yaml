@@ -168,6 +168,7 @@ cases:
 - path: data/core/vector/special/precision/numeric_boundary_1e13/case.yaml
 - path: data/core/vector/special/precision/numeric_boundary_1e14/case.yaml
 - path: data/core/vector/special/precision/numeric_boundary_1e15/case.yaml
+- path: data/core/vector/special/precision/numeric_boundary_1e16/case.yaml
 - path: data/core/vector/special/precision/numeric_boundary_trailing_nines/case.yaml
 - path: data/core/vector/special/precision/numeric_boundary_trailing_zeros/case.yaml
 - path: data/core/vector/special/precision/precision_loss_geojson_roundtrip/case.yaml
