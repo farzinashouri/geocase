@@ -1,0 +1,57 @@
+name: Bug report
+description: A case is wrong, a fixture misbehaves, or the library fails
+labels: ["bug"]
+body:
+  - type: input
+    id: geocase_version
+    attributes:
+      label: GeoCase version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: python_version
+    attributes:
+      label: Python version
+      placeholder: "3.11.9"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "Ubuntu 24.04"
+    validations:
+      required: true
+  - type: input
+    id: gdal_version
+    attributes:
+      label: GDAL version
+      description: "`gdal-config --version` or `osgeo.gdal.__version__`; write `none` if GDAL is not installed"
+    validations:
+      required: true
+  - type: input
+    id: case_id
+    attributes:
+      label: Case id
+      description: "For example `geotiff_nodata_small`. Leave blank if no case is involved."
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual
+      description: Paste the full output or traceback.
+    validations:
+      required: true
