@@ -1200,6 +1200,78 @@ def crs_equal(left: Any, right: Any, *, ignore_axis_order: bool = True) -> bool:
     return _normalize_crs(left) == _normalize_crs(right)
 
 
+#: CRS-facts fields compared for exact equality by :func:`compare_crs_facts`.
+_CRS_FACT_SCALARS = (
+    "authority",
+    "axis_order",
+    "units",
+    "is_geographic",
+    "is_projected",
+)
+
+#: Point-list fields compared with a tolerance. ``to_4326`` is always degrees;
+#: ``roundtrip`` is back in the CRS's own units.
+_CRS_FACT_POINTS = ("to_4326", "roundtrip")
+
+
+def _points_differ(left: Any, right: Any, tolerance: float) -> str | None:
+    if len(left) != len(right):
+        return f"{len(left)} points vs {len(right)}"
+    for index, (a, b) in enumerate(zip(left, right, strict=True)):
+        for axis, (x, y) in enumerate(zip(a, b, strict=True)):
+            if _is_nan(x) and _is_nan(y):
+                continue
+            if _is_nan(x) or _is_nan(y) or abs(x - y) > tolerance:
+                return f"point {index} axis {axis}: {x!r} vs {y!r}"
+    return None
+
+
+def compare_crs_facts(
+    left: dict[str, Any] | None,
+    right: dict[str, Any] | None,
+    *,
+    degree_tolerance: float = 1e-9,
+    metre_tolerance: float = 1e-6,
+) -> str | None:
+    """Compare two readers' CRS facts for the same case.
+
+    Each side is a plain dict, so the readers (pyproj, ``osgeo.osr``) stay out
+    of the comparison. Keys: ``authority``, ``axis_order``, ``units``,
+    ``is_geographic``, ``is_projected`` (compared exactly), and ``to_4326`` /
+    ``roundtrip`` (lists of ``[x, y]``, compared within tolerance).
+
+    ``to_4326`` is always degrees. ``roundtrip`` is in the CRS's own units, so
+    it uses ``degree_tolerance`` for a geographic CRS and ``metre_tolerance``
+    otherwise (taken from the left side's ``is_geographic``; a disagreement
+    there is reported on its own line anyway).
+
+    Returns:
+        Every difference, joined with ``"; "``, or ``None`` when they agree.
+        A side that is ``None`` has no CRS: two of them agree, one is a
+        difference.
+    """
+    if left is None or right is None:
+        if left is None and right is None:
+            return None
+        return f"no CRS on the {'left' if left is None else 'right'} side only"
+
+    problems: list[str] = []
+    for key in _CRS_FACT_SCALARS:
+        if left.get(key) != right.get(key):
+            problems.append(f"{key} differs: {left.get(key)!r} vs {right.get(key)!r}")
+
+    geographic = bool(left.get("is_geographic"))
+    for key in _CRS_FACT_POINTS:
+        tolerance = (
+            degree_tolerance if key == "to_4326" or geographic else metre_tolerance
+        )
+        difference = _points_differ(left.get(key, []), right.get(key, []), tolerance)
+        if difference is not None:
+            problems.append(f"{key} differs: {difference}")
+
+    return "; ".join(problems) or None
+
+
 #: The three states a "missing" geometry can be in, which are not one state.
 #:
 #: Round 2 produced three separate defects living exactly in the gaps between

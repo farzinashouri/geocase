@@ -52,6 +52,13 @@ place, so it fits in the writer's default and losing it is a defect.
 
 The catalog now holds 175 cases.
 
+### Added — PROJ differential round (pyproj vs `osr`, #47)
+
+`examples/test_differential_proj.py` and `geocase.differential.compare_crs_facts`
+(a submodule function, not in `__all__`). The first round was clean, so no case,
+CRS, dtype, nodata value, id or `risk_types` changed and no `known_divergences`
+were added. Report: `docs/evidence/2026-10-13-proj-differential.md`.
+
 ### Changed — searcher-facing case descriptions (Plan 47 Phase 4, #26)
 
 No geometry, CRS, dtype, nodata value, id or `risk_types` changed. The `description:`

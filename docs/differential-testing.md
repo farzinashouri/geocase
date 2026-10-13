@@ -323,6 +323,20 @@ looked like divergences; they were a harness artifact -- OGR's CSV driver
 leaves the WKT text column as an attribute, so pyogrio returns a plain
 `DataFrame`, not a geometry.)
 
+### PROJ: pyproj against `osr`
+
+`examples/test_differential_proj.py` compares the CRS facts of every case through
+pyproj and through GDAL's `osgeo.osr` with `compare_crs_facts`: authority code,
+axis directions, units, and the case's extent corners transformed to EPSG:4326 and
+back, in two passes (traditional GIS axis order, authority axis order) and for both
+the declared `crs` and the file's own WKT. Both libraries wrap PROJ, so a
+disagreement is in a binding or its defaults, not in PROJ.
+
+The first round was clean: 164 declared and 138 file-carried CRSs agreed in every
+pass ([report](https://github.com/farzinashouri/geocase/blob/main/docs/evidence/2026-10-13-proj-differential.md)).
+One trap worth knowing: if `osr` cannot open `proj.db` while pyproj can, every case
+reports `errored`; the example points both at pyproj's data directory.
+
 ## Explain a divergence class once
 
 The pyproj sweep fired four probes and all four were expected behaviour:
