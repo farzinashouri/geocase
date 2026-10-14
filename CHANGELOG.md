@@ -53,6 +53,14 @@ The catalog now holds 175 cases.
 CRS, dtype, nodata value, id or `risk_types` changed and no `known_divergences`
 were added. Report: `docs/evidence/2026-10-13-proj-differential.md`.
 
+### Added — GEOS differential round (shapely vs `osgeo.ogr`, #48)
+
+`examples/test_differential_geos.py` and `geocase.differential.compare_geometry_ops`
+(a submodule function, not in `__all__`). The first round was clean (84 vector cases
+agreed, both sides on GEOS 3.14.1), so no case, CRS, dtype, nodata value, id or
+`risk_types` changed and no `known_divergences` were added. Report:
+`docs/evidence/2026-10-14-geos-differential.md`.
+
 ### Changed — searcher-facing case descriptions (Plan 47 Phase 4, #26)
 
 No geometry, CRS, dtype, nodata value, id or `risk_types` changed. The `description:`
