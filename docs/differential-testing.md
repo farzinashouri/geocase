@@ -337,6 +337,19 @@ pass ([report](https://github.com/farzinashouri/geocase/blob/main/docs/evidence/
 One trap worth knowing: if `osr` cannot open `proj.db` while pyproj can, every case
 reports `errored`; the example points both at pyproj's data directory.
 
+### GEOS: shapely against `osgeo.ogr`
+
+`examples/test_differential_geos.py` compares geometry *operations* rather than
+reading: both sides get the same ISO WKB, then run `is_valid`, `make_valid`, `area`,
+`length`, `buffer(0)`, `centroid`, the envelope, `simplify` (fixed tolerance) and a
+union of all features through shapely's GEOS and GDAL's GEOS, compared with
+`compare_geometry_ops` (relative 1e-9). The report records both GEOS versions, so a
+disagreement can be read as a pinning finding when they differ.
+
+The first round was clean: 84 vector cases agreed on GEOS 3.14.1 on both sides
+([report](https://github.com/farzinashouri/geocase/blob/main/docs/evidence/2026-10-14-geos-differential.md)).
+Because both sides shared one GEOS build, that result says little about GEOS itself.
+
 ## Explain a divergence class once
 
 The pyproj sweep fired four probes and all four were expected behaviour:

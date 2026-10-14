@@ -1272,6 +1272,56 @@ def compare_crs_facts(
     return "; ".join(problems) or None
 
 
+def _numbers_differ(left: Any, right: Any, tolerance: float) -> bool:
+    """True if two floats differ by more than ``tolerance``, relative to the
+    larger magnitude (absolute below 1). Two NaNs agree."""
+    if _is_nan(left) and _is_nan(right):
+        return False
+    if _is_nan(left) or _is_nan(right):
+        return True
+    return bool(abs(left - right) > tolerance * max(1.0, abs(left), abs(right)))
+
+
+def compare_geometry_ops(
+    left: dict[str, Any] | None,
+    right: dict[str, Any] | None,
+    *,
+    relative_tolerance: float = 1e-9,
+) -> str | None:
+    """Compare the results of the same geometry operations from two GEOS front ends.
+
+    Each side is a plain dict of operation name to result (``is_valid``,
+    ``area``, ``centroid``, ...), so shapely and ``osgeo.ogr`` stay out of the
+    comparison. Floats (and lists of floats) agree within ``relative_tolerance``;
+    everything else must be equal. An operation that is ``None`` on one side
+    only is a difference: one front end could not do what the other did.
+
+    Returns:
+        Every difference, joined with ``"; "``, or ``None`` when they agree.
+        A side that is ``None`` has no geometry: two of them agree.
+    """
+    if left is None or right is None:
+        if left is None and right is None:
+            return None
+        return f"no geometry on the {'left' if left is None else 'right'} side only"
+
+    problems: list[str] = []
+    for key in sorted(set(left) | set(right)):
+        a, b = left.get(key), right.get(key)
+        if isinstance(a, (list, tuple)) and isinstance(b, (list, tuple)):
+            differs = len(a) != len(b) or any(
+                _numbers_differ(x, y, relative_tolerance)
+                for x, y in zip(a, b, strict=True)
+            )
+        elif isinstance(a, float) and isinstance(b, float):
+            differs = _numbers_differ(a, b, relative_tolerance)
+        else:
+            differs = a != b
+        if differs:
+            problems.append(f"{key} differs: {a!r} vs {b!r}")
+    return "; ".join(problems) or None
+
+
 #: The three states a "missing" geometry can be in, which are not one state.
 #:
 #: Round 2 produced three separate defects living exactly in the gaps between
