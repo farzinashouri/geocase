@@ -149,6 +149,10 @@ Plan 44 phase 2, from the 2026-09-06 run against GDAL `d6fd56f52d`. See
 - [Numeric Boundary: Trailing Nines](numeric_boundary_trailing_nines.md) -- `numeric_boundary_trailing_nines`
 - [Numeric Boundary: Trailing Zeros](numeric_boundary_trailing_zeros.md) -- `numeric_boundary_trailing_zeros`
 
+## Read more
+
+- [GDAL writes 1e-14 as 0, and says nothing](../../../posts/2026-10-15-gdal-writes-1e-14-as-0.md)
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

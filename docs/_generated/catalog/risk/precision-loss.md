@@ -66,3 +66,7 @@ pip install "geocase[all]"
 | [Numeric Boundary: Trailing Zeros](../cases/numeric_boundary_trailing_zeros.md) | vector | GeoJSON | Point |
 | [Polygon Z (GeoPackage)](../cases/polygon_z_gpkg.md) | vector | GPKG | Polygon |
 | [GeoJSON Precision Loss Roundtrip](../cases/precision_loss_geojson_roundtrip.md) | vector | GeoJSON | Point |
+
+## Read more
+
+- [GDAL writes 1e-14 as 0, and says nothing](../../../posts/2026-10-15-gdal-writes-1e-14-as-0.md)
