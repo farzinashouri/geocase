@@ -148,6 +148,10 @@ Plan 44 phase 2, from the 2026-09-06 run against GDAL `d6fd56f52d`. See
 - [Numeric Boundary: 15 Significant Digits](numeric_boundary_15_significant_digits.md) -- `numeric_boundary_15_significant_digits`
 - [Numeric Boundary: 17 Significant Digits](numeric_boundary_17_significant_digits.md) -- `numeric_boundary_17_significant_digits`
 
+## Read more
+
+- [GDAL writes 1e-14 as 0, and says nothing](../../../posts/2026-10-15-gdal-writes-1e-14-as-0.md)
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

@@ -72,3 +72,7 @@ pip install "geocase[all]"
 | [Numeric Boundary: 1e-16](../cases/numeric_boundary_1e16.md) | vector | GeoJSON | Point |
 | [Numeric Boundary: Trailing Nines](../cases/numeric_boundary_trailing_nines.md) | vector | GeoJSON | Point |
 | [Numeric Boundary: Trailing Zeros](../cases/numeric_boundary_trailing_zeros.md) | vector | GeoJSON | Point |
+
+## Read more
+
+- [GDAL writes 1e-14 as 0, and says nothing](../../../posts/2026-10-15-gdal-writes-1e-14-as-0.md)

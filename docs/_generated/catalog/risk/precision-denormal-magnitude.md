@@ -48,3 +48,7 @@ pip install "geocase[all]"
 | [Numeric Boundary: 1e-14](../cases/numeric_boundary_1e14.md) | vector | GeoJSON | Point |
 | [Numeric Boundary: 1e-15](../cases/numeric_boundary_1e15.md) | vector | GeoJSON | Point |
 | [Numeric Boundary: 1e-16](../cases/numeric_boundary_1e16.md) | vector | GeoJSON | Point |
+
+## Read more
+
+- [GDAL writes 1e-14 as 0, and says nothing](../../../posts/2026-10-15-gdal-writes-1e-14-as-0.md)
