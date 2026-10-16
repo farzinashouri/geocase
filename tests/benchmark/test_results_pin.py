@@ -59,6 +59,9 @@ def _skip_if_graded_elsewhere(trial_dir: Path) -> None:
     if not record_path.is_file():
         return
     recorded = json.loads(record_path.read_text()).get("grading_env")
+    sidecar = record_path.parent / "grading_env.json"
+    if recorded is None and sidecar.is_file():
+        recorded = json.loads(sidecar.read_text())["grading_env"]
     if recorded is None:
         return
     current = grading_env()

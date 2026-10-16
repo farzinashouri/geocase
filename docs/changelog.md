@@ -28,6 +28,15 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Added — `grading_env.json` sidecar for the 29 benchmark runs that lacked it
+
+Benchmark only; no catalog case changed. Every run under `results/runs` without
+`grading_env` in `run.json` now has a `grading_env.json` beside it (conda env,
+Python 3.14, rasterio 1.5.0). All 29 were re-graded without model calls and every
+outcome matched the recorded one, so `regrade_differs` is empty in each. Record files
+are byte-identical. `test_results_pin.py` reads the sidecar, so those runs skip on
+the 3.11 floor instead of asserting. Script: `scripts/backfill_grading_env.py`.
+
 ### Fixed — GDAL zeroing class is `[1e-15, 1e-13)`, not `[1e-14, 1e-13)`
 
 The fix proposed upstream (OSGeo/gdal#15369) showed that GDAL's `intelliround` also
