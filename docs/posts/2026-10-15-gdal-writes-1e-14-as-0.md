@@ -1,6 +1,6 @@
 ---
 title: "GDAL writes 1e-14 as 0, and says nothing"
-description: "A coordinate between 1e-14 and 1e-13 is written as 0 by GDAL's WKT and GeoJSON writers, with no error or warning. Reproduced on GDAL 3.12.2; reported as gdal#15317."
+description: "A coordinate between 1e-15 and 1e-13 is written as 0 by GDAL's WKT and GeoJSON writers, with no error or warning. Reproduced on GDAL 3.12.2; reported as gdal#15317, fixed by gdal#15369."
 date: 2026-10-15
 risk_types: [precision/formatter_boundary, precision/denormal_magnitude, precision/loss]
 cases: [numeric_boundary_1e14, numeric_boundary_1e13]
@@ -52,10 +52,12 @@ cleanup in `intelliround()` in `ogr/ogrutils.cpp`. At that point the string for
 `1e-14` is `0.000000000000010`. The branch inspects a run of trailing
 characters for zeros, then removes eight characters. It checks seven of them.
 The one it does not check is the `1`, the only significant digit, and it is
-removed with the rest. This is the reporter's reading of the code, not a
-maintainer's confirmation. Other magnitudes the reporter tried, from `1e-20`
-to `1e-6`, did not show this loss; only the range from 1e-14 up to but not
-including 1e-13 became zero.
+removed with the rest. A second trim, for five zeros followed by one digit, drops
+the digit in the same way, so `1e-15` is lost too. The affected range is from
+1e-15 up to but not including 1e-13. The first sweep put the lower edge at
+1e-14, because it counted smaller values as expected precision loss; writing
+the fix showed the error. Values below 1e-15 need more than 15 decimal places,
+so losing them is documented behaviour, not this defect.
 
 ## What it means for your pipeline
 
@@ -75,10 +77,13 @@ have to know about in advance is not a safeguard.
 
 ## Status
 
-The issue is [gdal#15317](https://github.com/OSGeo/gdal/issues/15317). It is
-open. One commenter, a GDAL user, said the behaviour "does feel a bit strange"
-and that the developers should weigh in; no fix has been merged, and no
-maintainer has yet confirmed the diagnosis. We are not claiming more than that.
+The issue is [gdal#15317](https://github.com/OSGeo/gdal/issues/15317). The fix,
+[gdal#15369](https://github.com/OSGeo/gdal/pull/15369), changes the two trims in
+`intelliround()` so they no longer remove the only significant digit. Dan Baston
+approved and merged it on 2026-10-15, and the issue is closed. Even Rouault
+commented on the PR that the change is "technically" correct and doubted that a
+real use case would hit it. The fix is in GDAL's main branch and will reach users
+with the next GDAL release; versions up to 3.12.2 still write these values as 0.
 
 ## Try it
 
