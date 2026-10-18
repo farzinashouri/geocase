@@ -80,7 +80,7 @@ have to know about in advance is not a safeguard.
 The issue is [gdal#15317](https://github.com/OSGeo/gdal/issues/15317). The fix,
 [gdal#15369](https://github.com/OSGeo/gdal/pull/15369), changes the two trims in
 `intelliround()` so they no longer remove the only significant digit. Dan Baston
-approved and merged it on 2026-10-15, and the issue is closed. Even Rouault
+approved and merged it on 2026-10-15, and the issue is closed. The account `rouault-on-strike`
 commented on the PR that the change is "technically" correct and doubted that a
 real use case would hit it. The fix is in GDAL's main branch and will reach users
 with the next GDAL release; versions up to 3.12.2 still write these values as 0.
