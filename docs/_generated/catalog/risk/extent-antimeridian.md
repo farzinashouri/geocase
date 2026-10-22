@@ -48,3 +48,7 @@ pip install "geocase[all]"
 | [Optical Dateline Small](../cases/optical_dateline_small.md) | raster | GeoTIFF | -- |
 | [Optical Dateline West Small](../cases/optical_dateline_west_small.md) | raster | GeoTIFF | -- |
 | [Wrapped Longitude Point](../cases/wrapped_longitude_point.md) | vector | GeoJSON | Point |
+
+## Read more
+
+- [The antimeridian warp that came back with zero rows](../../../posts/2026-10-22-antimeridian-warp-zero-rows.md)
