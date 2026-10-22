@@ -136,6 +136,10 @@ Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/44-gdal
 - [Optical RGB Small](optical_rgb_small.md) -- `optical_rgb_small`
 - [DEM Small](dem_small.md) -- `dem_small`
 
+## Read more
+
+- [The antimeridian warp that came back with zero rows](../../../posts/2026-10-22-antimeridian-warp-zero-rows.md)
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

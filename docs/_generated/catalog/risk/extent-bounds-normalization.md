@@ -36,3 +36,7 @@ pip install "geocase[all]"
 |---|---|---|---|
 | [Optical Dateline Small](../cases/optical_dateline_small.md) | raster | GeoTIFF | -- |
 | [Optical Dateline West Small](../cases/optical_dateline_west_small.md) | raster | GeoTIFF | -- |
+
+## Read more
+
+- [The antimeridian warp that came back with zero rows](../../../posts/2026-10-22-antimeridian-warp-zero-rows.md)
