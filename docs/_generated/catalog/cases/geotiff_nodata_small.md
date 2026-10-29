@@ -140,6 +140,10 @@ statistics validation.
 - [Bottom-Up DEM (Positive Y Resolution)](bottom_up_dem_small.md) -- `bottom_up_dem_small`
 - [COG Multispectral Small](cog_multispectral_small.md) -- `cog_multispectral_small`
 
+## Read more
+
+- [Why your raster mean is negative](../../../posts/2026-10-29-why-your-raster-mean-is-negative.md)
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

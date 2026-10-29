@@ -152,3 +152,7 @@ pip install "geocase[all]"
 | [Pixel-Is-Area DEM](../cases/pixel_is_area_dem_small.md) | raster | GeoTIFF | -- |
 | [Pixel-Is-Point DEM](../cases/pixel_is_point_dem_small.md) | raster | GeoTIFF | -- |
 | [Water Mask Small](../cases/water_mask_small.md) | raster | GeoTIFF | -- |
+
+## Read more
+
+- [Why your raster mean is negative](../../../posts/2026-10-29-why-your-raster-mean-is-negative.md)
