@@ -194,7 +194,7 @@ python scripts/build_case_index.py --check
 python scripts/validate_catalog.py
 
 python -m pytest tests -q
-ruff format --check src tests && ruff check src tests
+ruff format --check src tests plugins && ruff check src tests plugins
 ```
 
 ## Core Concepts

@@ -290,7 +290,7 @@ request and defines six jobs:
   declared minimum (`ci/floor-constraints.txt`) and no extras; tests that need
   an extra carry `@pytest.mark.requires(...)` and skip, `tests/benchmark` is
   left out
-- `lint` — `ruff format --check` and `ruff check` over `src` and `tests`
+- `lint` — `ruff format --check` and `ruff check` over `src`, `tests` and `plugins`
 - `typecheck` — `mypy src`
 - `docs` — `mkdocs build --strict`
 - `catalog` — catalog integrity: `scripts/build_case_index.py --check`,
