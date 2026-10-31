@@ -22,6 +22,15 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Added — catalog helper for the `geocase` Claude Code plugin (Plan 55, #113)
+
+Tooling only; no catalog case, public API or pytest-plugin surface changed.
+`plugins/geocase/scripts/catalog.py` prints the catalog as JSON for the
+plugin's skills: `cases` (filtered by category, geometry type, format, risk
+type or tag), `case <id>` (metadata plus `notes.md`) and `risks`. It reads only
+`geocase.__all__`. Its tests run in the CI `tests` job, and the lint job now
+covers `plugins/`.
+
 ### Added — `geocase` Claude Code plugin scaffold and an issue form for the nightly agent
 
 Tooling only; no catalog case, public API or pytest-plugin surface changed.

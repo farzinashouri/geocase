@@ -24,9 +24,10 @@ pytest tests -q                      # the suite (testpaths = tests, so examples
 pytest tests/unit/test_x.py::test_y  # single test
 pytest examples -q                   # demo corpus; needs the conda env
 pip install -c ci/floor-constraints.txt -e . pytest && pytest tests --ignore=tests/benchmark   # `floor` CI job: 3.11, core deps at their minimums, no extras
-ruff format --check src tests && ruff check src tests   # lint gate (ruff pinned 0.15.7)
+ruff format --check src tests plugins && ruff check src tests plugins   # lint gate (ruff pinned 0.15.7)
 mypy src                             # typecheck gate (src only)
 mkdocs build --strict                # docs gate; broken internal links fail
+pytest plugins/geocase/tests -q      # the Claude Code plugin's catalog helper (runs in the CI tests job)
 ```
 
 Catalog gates (the `catalog` CI job; needs `osgeo`, so run under conda). All are `--check` variants of generators — run without `--check` to regenerate, then commit:
