@@ -1,0 +1,11 @@
+{
+  "name": "geocase",
+  "displayName": "GeoCase",
+  "version": "0.1.0",
+  "description": "Test your geospatial code against the GeoCase catalog of edge cases (CRS, dateline, topology, NoData) from Claude Code.",
+  "author": {"name": "Farzin Ashouri", "url": "https://github.com/farzinashouri"},
+  "homepage": "https://github.com/farzinashouri/geocase",
+  "repository": "https://github.com/farzinashouri/geocase",
+  "license": "MIT",
+  "keywords": ["geocase", "geospatial", "testing", "pytest"]
+}

@@ -370,6 +370,32 @@ If a decision is still open, label it `operator` or `decision` first and add
 `agent:ready` after you decide. Write the decision as a comment on the issue,
 so the agent can read it.
 
+The **Agent task** issue form (`.github/ISSUE_TEMPLATE/agent_task.yml`) asks
+for exactly these parts: *Goal*, *Files to touch*, *Done when* (starting
+with the failing test) and *Out of scope*, plus *Depends on*. It labels the
+issue `agent:ready` and `priority:2`.
+
+### Keeping the queue fed
+
+One issue a night means the agent is only as useful as the queue in front
+of it. Three numbers keep it running:
+
+| Measure | Target | If it misses |
+|---|---|---|
+| `agent:ready` issues open | 3–5 | Fewer: the agent idles. More: issues go stale. File or prune on Monday |
+| `agent:needs-human` older than 2 days | 0 | Each one is a night the issue can't move. Answer it first |
+| Open agent PRs | under 3 | At 3, the agent only triages. Review and merge on Wednesday |
+
+The weekly routine:
+
+- **Monday, 30 min:** read the run reports, answer every
+  `agent:needs-human` issue with a concrete decision in a comment (the next
+  run re-triages it, so no relabelling is needed), then file the week's agent
+  tasks.
+- **Wednesday:** review the agent PRs that didn't merge themselves.
+- **Friday:** count the nights with a PR out of 7 (target 4 or more) and
+  check the three measures above.
+
 ### Stop conditions
 
 The agent stops, comments, labels `agent:needs-human` and pushes any partial
