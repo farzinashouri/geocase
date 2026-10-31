@@ -28,6 +28,19 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Added — `geocase` Claude Code plugin scaffold and an issue form for the nightly agent
+
+Tooling only; no catalog case, public API or pytest-plugin surface changed.
+`plugins/geocase/` is an empty Claude Code plugin (marketplace in
+`.claude-plugin/marketplace.json`) for testing geospatial code against the
+catalog; its skills come in later changes. Not shipped in the wheel or the
+sdist. A new **Agent task** issue form (`.github/ISSUE_TEMPLATE/agent_task.yml`)
+keeps `agent:ready` issues self-contained for the nightly agent, and
+`docs/contributing/nightly-agent.md` now sets queue targets (3–5 ready issues,
+no `agent:needs-human` older than 2 days, fewer than 3 open agent PRs). Also:
+`.geocase_quota_claude_smoke.json` (local operator state) is no longer tracked
+and is now gitignored.
+
 ### Added — `grading_env.json` sidecar for the 29 benchmark runs that lacked it
 
 Benchmark only; no catalog case changed. Every run under `results/runs` without

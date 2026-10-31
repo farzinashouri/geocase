@@ -1,0 +1,64 @@
+name: Agent task
+description: One PR's worth of work for the nightly agent. Everything it needs must be on this page.
+title: "[agent] "
+labels: ["agent:ready", "priority:2"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The nightly agent (`.claude/commands/work-next-issue.md`) reads **only this issue**.
+        `docs/plans/` is not in its checkout, so copy what it needs here instead of linking to a plan.
+        If the body leaves a choice open, the agent relabels it `operator` and moves on.
+        Keep it to one PR: one area, roughly under 300 changed lines. Don't use this form for
+        anything touching `.claude/`, the v1.0 public surface, releases, money, logins, or posts to
+        other sites. Those are `operator` issues.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: One or two sentences on what should be true after the PR, in plain words.
+      placeholder: "CI fails when a tracked file contains a git conflict marker."
+    validations:
+      required: true
+  - type: textarea
+    id: files
+    attributes:
+      label: Files to touch
+      description: Where the change goes, plus any file to read first for the pattern to copy.
+      placeholder: |
+        - .github/workflows/ci.yml (new step in the lint job)
+        - tests/unit/test_no_conflict_markers.py (new)
+        - pattern to copy: tests/unit/test_floor_constraints.py
+    validations:
+      required: true
+  - type: textarea
+    id: done_when
+    attributes:
+      label: Done when
+      description: Checks a machine can verify. Start with the failing test the agent writes first.
+      placeholder: |
+        - [ ] A new test fails on a file containing `<<<<<<<` and passes on the current tree
+        - [ ] ruff, mypy src and pytest tests are green
+        - [ ] docs/contributing/workflow.md mentions the check
+    validations:
+      required: true
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
+      description: What the agent must not change. Name the decisions already made so it doesn't reopen them.
+      placeholder: |
+        - Don't touch the benchmark artifacts (results/runs) or docs/_generated
+        - The check stays in the lint job; no new workflow file
+    validations:
+      required: true
+  - type: input
+    id: depends_on
+    attributes:
+      label: Depends on
+      description: "Issue numbers that must close first, e.g. #112. Leave blank if none."
+  - type: input
+    id: plan
+    attributes:
+      label: Plan and week
+      description: "For your own tracking, e.g. Plan 50, Phase 2. The agent doesn't follow this link."

@@ -1,0 +1,12 @@
+{
+  "name": "geocase",
+  "owner": {"name": "Farzin Ashouri", "url": "https://github.com/farzinashouri"},
+  "description": "Claude Code plugins that ship with the GeoCase repository.",
+  "plugins": [
+    {
+      "name": "geocase",
+      "source": "./plugins/geocase",
+      "description": "Test your geospatial code against the GeoCase catalog from Claude Code."
+    }
+  ]
+}
