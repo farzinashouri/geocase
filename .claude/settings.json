@@ -4,7 +4,10 @@
       "Bash",
       "Read",
       "Edit",
-      "Write"
+      "Write",
+      "Bash(gh issue comment *)",
+      "Bash(gh issue edit *)",
+      "Bash(gh issue create *)"
     ],
     "ask": [
       "Bash(rm *)",
