@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/logo/geocase-lockup-ground.png" alt="GeoCase" width="480">
+  <img src="https://raw.githubusercontent.com/farzinashouri/geocase/main/docs/assets/logo/geocase-lockup-ground.png" alt="GeoCase" width="480">
 </p>
 
 # GeoCase
@@ -13,7 +13,8 @@ def mean_elevation(array):
     return float(array.mean())
 ```
 
-Point it at a GeoCase case that ships with the package:
+Point it at a GeoCase case that ships with the package. `case.read()` uses rasterio, so install
+the `raster` extra: `pip install "geocase[raster]" pytest`.
 
 ```python
 import pytest
@@ -90,7 +91,7 @@ ship as a versioned dependency instead of a folder nobody remembers the provenan
 give a coding assistant something to reach for instead of inventing a fixture that agrees with
 the bug.)
 
-> Status: **1.2.0 is available on [PyPI](https://pypi.org/project/geocase/)** — `pip install geocase`. The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 175 bundled cases, 5.1 MB. Remote dataset transport is deferred to v1.1; see the [changelog](CHANGELOG.md).
+> Status: **1.2.0 is available on [PyPI](https://pypi.org/project/geocase/)** — `pip install geocase`. The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 175 bundled cases, 5.1 MB. Remote dataset transport is deferred to v1.1; see the [changelog](https://github.com/farzinashouri/geocase/blob/main/CHANGELOG.md).
 
 ## Quick Start
 
@@ -139,6 +140,11 @@ against. Everything else is optional and gated behind extras.
 
 ### 2) Write a test with GeoCase markers
 
+This example uses the convenience loaders: `case.load()` needs geopandas and `case.read()`
+needs rasterio. With plain `geocase` and no geo stack, it stops with
+`ModuleNotFoundError: No module named 'rasterio'`. Install `geocase[all]`, or read
+`case.primary_path` with the readers you already have.
+
 ```python
 import pytest
 
@@ -185,7 +191,7 @@ This repository uses GitHub Actions, defined in `.github/workflows/`.
 - `docs` — `mkdocs build --strict`
 
 `release.yml` runs only on `vX.Y.Z` tags; see
-[Releasing](docs/contributing/releasing.md).
+[Releasing](https://github.com/farzinashouri/geocase/blob/main/docs/contributing/releasing.md).
 
 Local equivalents:
 
@@ -210,13 +216,12 @@ If a GeoCase marker is missing, resolves no cases, refers to an unknown suite, o
 
 ## Learn More
 
-- [`docs/getting-started.md`](docs/getting-started.md)
-- [`docs/testing-your-function-with-geocase.md`](docs/testing-your-function-with-geocase.md)
-- [`docs/case-discovery.md`](docs/case-discovery.md)
-- [`docs/assertions-reference.md`](docs/assertions-reference.md)
-- [`docs/examples-index.md`](docs/examples-index.md)
-- [`docs/benchmark/quickstart.md`](docs/benchmark/quickstart.md) — the LLM benchmark built on the catalog. **Experimental:** not part of the v1.0 compatibility promise and not published to the docs site.
-- [`src/geocase/raster/`](src/geocase/raster/) — `geocase.raster`, a raster primitive needing only numpy (the `array` extra) plus Sentinel-1/2 presets
-- [`docs/plans/development-plan.md`](docs/plans/development-plan.md)
-- [`docs/contributing/workflow.md`](docs/contributing/workflow.md)
-- [`docs/design/case-recommendation-service.md`](docs/design/case-recommendation-service.md)
+- [`docs/getting-started.md`](https://github.com/farzinashouri/geocase/blob/main/docs/getting-started.md)
+- [`docs/testing-your-function-with-geocase.md`](https://github.com/farzinashouri/geocase/blob/main/docs/testing-your-function-with-geocase.md)
+- [`docs/case-discovery.md`](https://github.com/farzinashouri/geocase/blob/main/docs/case-discovery.md)
+- [`docs/assertions-reference.md`](https://github.com/farzinashouri/geocase/blob/main/docs/assertions-reference.md)
+- [`docs/examples-index.md`](https://github.com/farzinashouri/geocase/blob/main/docs/examples-index.md)
+- [`docs/benchmark/quickstart.md`](https://github.com/farzinashouri/geocase/blob/main/docs/benchmark/quickstart.md) — the LLM benchmark built on the catalog. **Experimental:** not part of the v1.0 compatibility promise and not published to the docs site.
+- [`src/geocase/raster/`](https://github.com/farzinashouri/geocase/tree/main/src/geocase/raster/) — `geocase.raster`, a raster primitive needing only numpy (the `array` extra) plus Sentinel-1/2 presets
+- [`docs/contributing/workflow.md`](https://github.com/farzinashouri/geocase/blob/main/docs/contributing/workflow.md)
+- [`docs/design/case-recommendation-service.md`](https://github.com/farzinashouri/geocase/blob/main/docs/design/case-recommendation-service.md)

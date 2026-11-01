@@ -20,6 +20,28 @@ the case and the geometry costs them five seconds.
 A user hitting a break searches for the case id or the error text, so both belong in
 the entry verbatim.
 
+## [Unreleased]
+
+### Fixed — README and Getting Started say which extra the examples need (#104)
+
+Docs only; no catalog case, public API or pytest-plugin surface changed. A clean
+`pip install geocase pytest` ran the README examples into
+`ModuleNotFoundError: No module named 'rasterio'`, because `case.read()` and
+`case.load()` need the `raster` and `vector` extras. The README hero example now
+names `pip install "geocase[raster]" pytest`, and the Quick Start in the README and
+`docs/getting-started.md` names the extras. Checked against geocase 1.2.0 from PyPI
+on Python 3.14: with `[raster]` the hero test fails with the documented
+`-152.86 == 48.08` assertion, and with `[all]` the Quick Start test passes 48 of 48.
+
+### Fixed — README logo and links resolve on PyPI (#104)
+
+PyPI renders `README.md` as the project page and resolves relative paths against
+pypi.org, so the logo showed as a broken image and every link was dead there. The
+logo now uses a `raw.githubusercontent.com` URL and the links use
+`github.com/farzinashouri/geocase` URLs. The link to `docs/plans/development-plan.md`
+is removed: `docs/plans/` is not in the repository, so it was dead on GitHub too.
+PyPI shows the fix from the next release.
+
 ## [1.2.0] — 2026-11-01
 
 ### Added — `/geocase:cases` skill for the `geocase` Claude Code plugin (Plan 55, #114)
