@@ -6,7 +6,7 @@ description: "GeoCase is a pytest plugin and case catalog: 175 curated geospatia
 
 GeoCase is an open geospatial testing toolkit and case catalog for realistic, reproducible, parameterized tests.
 
-> Status: **1.0.0 is available on [PyPI](https://pypi.org/project/geocase/)** — `pip install geocase`. The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 175 bundled cases, 5.1 MB. Remote dataset transport is deferred to v1.1; see the [changelog](changelog.md).
+> Status: **1.2.0 is available on [PyPI](https://pypi.org/project/geocase/)** — `pip install geocase`. The compatibility promise covers two surfaces — the `pytest` workflow (fixtures and markers) and the `import geocase` public API. 175 bundled cases, 5.1 MB. Remote dataset transport is deferred to v1.1; see the [changelog](changelog.md).
 
 Most spatial tests use overly simple geometries or ad hoc local files. GeoCase provides a curated catalog of compact but behaviorally meaningful cases that can be selected into pytest suites by metadata such as category, risk type, test tier, format, and storage class.
 
