@@ -28,6 +28,14 @@ the entry verbatim.
 
 ## [1.2.0] — 2026-11-01
 
+### Added — `/geocase:cases` skill for the `geocase` Claude Code plugin (Plan 55, #114)
+
+Tooling only; no catalog case, public API or pytest-plugin surface changed.
+`plugins/geocase/skills/cases/SKILL.md` picks catalog cases for a function or file:
+it reads the code, lists the matching risk terms and filters the catalog with the
+catalog helper. Its tests are in `plugins/geocase/tests/test_skills.py`. Not shipped
+in the wheel or the sdist.
+
 ### Added — catalog helper for the `geocase` Claude Code plugin (Plan 55, #113)
 
 Tooling only; no catalog case, public API or pytest-plugin surface changed.
