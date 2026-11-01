@@ -1,7 +1,11 @@
 # The `geocase` Claude Code plugin
 
 A Claude Code plugin for people who test their geospatial code with GeoCase.
-It has no skills yet (Plan 55 adds them).
+Skills (Plan 55):
+
+- `cases`: given a function or file, picks fitting catalog cases and ends with
+  the `geocase_select(...)` marker that selects them. Claude may load it on its
+  own when a request fits.
 
 ## Catalog helper
 
