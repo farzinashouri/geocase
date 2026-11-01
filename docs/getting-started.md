@@ -89,6 +89,11 @@ pip install "geocase[array]"
 
 ## Your first GeoCase test
 
+The examples below use the convenience loaders: `case.load()` needs geopandas (the `vector`
+extra) and `case.read()` needs rasterio (the `raster` extra). With plain `geocase` and no geo
+stack, they stop with `ModuleNotFoundError: No module named 'rasterio'`. Install
+`geocase[all]`, or read `case.primary_path` with the readers you already have.
+
 ### Explicit case IDs
 
 Use explicit IDs when you know exactly which edge cases you want.
