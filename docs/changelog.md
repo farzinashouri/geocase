@@ -26,7 +26,7 @@ the case and the geometry costs them five seconds.
 A user hitting a break searches for the case id or the error text, so both belong in
 the entry verbatim.
 
-## [Unreleased]
+## [1.2.0] — 2026-11-01
 
 ### Added — catalog helper for the `geocase` Claude Code plugin (Plan 55, #113)
 
