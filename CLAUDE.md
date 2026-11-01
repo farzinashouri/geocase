@@ -94,5 +94,14 @@ Core data flow — keep this mental model:
 - **Every written plan becomes a doc in [docs/plans/](docs/plans/).** Never leave a plan in the chat only. Use the existing convention: `NN-kebab-title.md` with the next free number, a `> **Status: proposed YYYY-MM-DD.**` blockquote under the H1, `## Phase N` / `### N.M` structure, and a new row in [docs/plans/index.md](docs/plans/index.md). One scoped deliverable per file — `development-plan.md` stays the only document that says "what's next".
 - **Every new plan gets GitHub issues, same change.** After writing the plan doc, file one issue per phase (or per independently shippable step) with `gh issue create`: title `Plan NN: <phase title>`, body naming the plan file and copying the section's content (`docs/plans/` is gitignored, so a link would not resolve), a checklist, and `Depends on #M` where it does. Label every issue at filing time: exactly one state (`agent:ready`, `operator`, or `blocked`), one `priority:1..3`, plus a topic label where one fits (`decision`, `benchmark`, `release`, …). Record the issue numbers in the plan doc next to each phase.
 - **Mark progress in the plan doc as you implement it.** Completing a phase or step means updating that plan file in the same change: flip the `Status:` header (`proposed` → `implemented YYYY-MM-DD`, or note the partial — "Phases 1–3 implemented; Phase 4 blocked on ..."), mark the finished `### N.M` sections done, and record anything that turned out differently from the plan. Update the plan's row in `index.md` too. A plan doc that still reads "proposed" after the code landed is a bug.
+- **Housekeeping after every merged PR, before the next task.** A merge is not done until:
+  1. the local checkout is on an up-to-date `main` (`git checkout main && git pull --ff-only && git fetch --prune`);
+  2. the merged branch is gone — merge with `gh pr merge --delete-branch` for the remote, then ask before `git branch -d <branch>` locally (deletion always asks);
+  3. the issue's checklist is ticked and the issue is closed (or says what is left);
+  4. every issue that said `Depends on #N` for this one is re-labelled: `blocked` → `agent:ready` or `operator`, with a comment naming the merged PR;
+  5. the plan doc and its `index.md` row show the step as done (rule above);
+  6. the 📋 Development queue issue (#45) no longer lists the PR under "In review" and shows what is next.
+
+  Report anything you could not do. Branches whose remote is `gone` (`git branch -vv`) and PRs or branches untouched for over 30 days go into one housekeeping issue, never deleted silently.
 - **Docs follow code, same change.** Any code change updates the affected docs in the same pass — `docs/`, docstrings, `CLAUDE.md`, and the generated artifacts (regenerate, don't hand-edit `docs/_generated/*`).
 - **Be concise.** Answers roughly half your usual length: state the result and what it means, skip the recap and the option survey.
