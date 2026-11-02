@@ -30,7 +30,7 @@ ones also reproduce on the 3.13.3 release (their fixes are on master only).
 |---|---|---|
 | `gdal/repro_small_coordinates_zeroed.py` | WKT and GeoJSON writers write `\|v\|` in `[1e-15, 1e-13)` as `0`, with no warning | [#15317](https://github.com/OSGeo/gdal/issues/15317), fixed on master by [#15369](https://github.com/OSGeo/gdal/pull/15369) |
 | `gdal/repro_warp_zero_height.py` | `AutoCreateWarpedVRT` returns a `23x0` dataset for an antimeridian-crossing source, and reports success | [#15266](https://github.com/OSGeo/gdal/issues/15266), fixed on master by [#15274](https://github.com/OSGeo/gdal/pull/15274) |
-| `gdal/repro_gpkg_arrow_spatial_filter_null_geometry.py` | GPKG: under a spatial filter, `OGR_L_GetArrowStream` returns the NULL-geometry row that the feature iterator excludes (3 rows vs 2) | [#15465](https://github.com/OSGeo/gdal/issues/15465), open; found through pyogrio (Plan 43 queue #10) |
+| `gdal/repro_gpkg_arrow_spatial_filter_null_geometry.py` | GPKG: under a spatial filter, `OGR_L_GetArrowStream` returns the NULL-geometry row that the feature iterator excludes (3 rows vs 2); an EMPTY-geometry row is excluded on both paths | [#15465](https://github.com/OSGeo/gdal/issues/15465), open; found through pyogrio (Plan 43 queue #10) |
 
 ## Sources
 
