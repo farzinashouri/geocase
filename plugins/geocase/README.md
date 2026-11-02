@@ -6,6 +6,10 @@ Skills (Plan 55):
 - `cases`: given a function or file, picks fitting catalog cases and ends with
   the `geocase_select(...)` marker that selects them. Claude may load it on its
   own when a request fits.
+- `test`: given a function, picks cases the same way, writes one pytest file
+  (a `geocase_select` marker, the `geocase` fixture, the call, and
+  `geocase.assertions` checks where one fits), runs it and reports which cases
+  pass and fail. It never edits the function under test.
 
 ## Catalog helper
 
