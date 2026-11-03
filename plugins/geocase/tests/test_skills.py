@@ -16,7 +16,7 @@ import geocase
 
 PLUGIN = Path(__file__).resolve().parents[1]
 HELPER = (PLUGIN / "scripts" / "catalog.py").read_text(encoding="utf-8")
-SKILLS = ["cases", "test"]
+SKILLS = ["cases", "test", "explain"]
 
 
 def read_skill(name: str) -> tuple[dict[str, str], str]:
@@ -104,6 +104,39 @@ def test_test_skill_uses_the_cases_skill_helper() -> None:
 def test_test_skill_never_edits_function_under_test() -> None:
     _, body = read_skill("test")
     assert "never edit" in body.lower()
+
+
+def test_explain_skill_frontmatter() -> None:
+    front, _ = read_skill("explain")
+    assert front["name"] == "explain"
+    assert front["description"]
+
+
+def test_explain_skill_reads_notes_through_the_helper() -> None:
+    _, body = read_skill("explain")
+    assert "catalog.py case" in body
+    assert "site-packages" not in body
+
+
+def test_explain_skill_reports_known_divergences_as_known() -> None:
+    _, body = read_skill("explain")
+    assert "known_divergences" in body
+    assert "known" in body.lower()
+
+
+def test_explain_skill_finds_case_id_in_test_id() -> None:
+    _, body = read_skill("explain")
+    assert "test_x[<case_id>]" in body
+
+
+def test_explain_skill_applies_fix_only_if_asked() -> None:
+    _, body = read_skill("explain")
+    assert "only if" in body.lower()
+
+
+def test_helper_case_output_carries_known_divergences() -> None:
+    meta = geocase.get_case(geocase.list_cases()[0].id)
+    assert "known_divergences" in meta.model_dump(mode="json")
 
 
 def test_test_skill_template_collects(tmp_path: Path) -> None:
