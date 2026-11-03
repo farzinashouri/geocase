@@ -10,6 +10,11 @@ Skills (Plan 55):
   (a `geocase_select` marker, the `geocase` fixture, the call, and
   `geocase.assertions` checks where one fits), runs it and reports which cases
   pass and fail. It never edits the function under test.
+- `explain`: given failing test output, takes the case id from the test id
+  (`test_x[<case_id>]`), reads the case with `catalog.py case <id>`, and
+  explains the data, correct handling and the likely bug. A catalogued
+  `known_divergences` entry is reported as known. It proposes a fix and
+  applies it only if asked.
 
 ## Catalog helper
 
