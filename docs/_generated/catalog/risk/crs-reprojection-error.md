@@ -66,3 +66,7 @@ pip install "geocase[all]"
 | [GeoTIFF UTM Boundary](../cases/geotiff_utm_boundary.md) | raster | GeoTIFF | -- |
 | [Rasterize Match WGS84 Polygon](../cases/rasterize_match_wgs84_polygon.md) | vector | GeoJSON | Polygon |
 | [Web Mercator Baseline Point](../cases/web_mercator_baseline.md) | vector | GeoJSON | Point |
+
+## Read more
+
+- [odc-stac: crs= without resolution= gives a 1 x 1 raster](../../../posts/2026-11-05-odc-stac-crs-without-resolution.md)

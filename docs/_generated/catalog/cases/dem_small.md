@@ -149,6 +149,10 @@ NaN NoData semantics.
 - [NDVI Scaled Int16 Small](ndvi_scaled_int16_small.md) -- `ndvi_scaled_int16_small`
 - [NDVI Small](ndvi_small.md) -- `ndvi_small`
 
+## Read more
+
+- [odc-stac: crs= without resolution= gives a 1 x 1 raster](../../../posts/2026-11-05-odc-stac-crs-without-resolution.md)
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
