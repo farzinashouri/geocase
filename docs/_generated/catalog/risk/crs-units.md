@@ -36,3 +36,7 @@ pip install "geocase[all]"
 |---|---|---|---|
 | [CRS Family Pair -- Geographic (WGS 84)](../cases/crs_family_pair_geographic.md) | raster | GeoTIFF | -- |
 | [CRS Family Pair -- Projected (UTM 33N)](../cases/crs_family_pair_projected.md) | raster | GeoTIFF | -- |
+
+## Read more
+
+- [odc-stac: crs= without resolution= gives a 1 x 1 raster](../../../posts/2026-11-05-odc-stac-crs-without-resolution.md)
