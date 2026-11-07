@@ -16,6 +16,15 @@ Skills (Plan 55):
   `known_divergences` entry is reported as known. It proposes a fix and
   applies it only if asked.
 
+## Environment detector
+
+`scripts/env.py detect [--version V] [--project DIR]` prints, as JSON, which
+manager owns the project's environment (checked in order: pixi, uv, poetry,
+conda, venv) and the install command pinned to `V`. For pixi, uv and poetry the
+command edits the project's manifest (`edits_manifest: true`). Conda `base` and
+`EXTERNALLY-MANAGED` Pythons come back with `installable: false` and a reason.
+It only reads env vars and files and never installs.
+
 ## Catalog helper
 
 `scripts/catalog.py` prints the catalog as JSON, read through the installed

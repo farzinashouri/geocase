@@ -67,6 +67,14 @@ type or tag), `case <id>` (metadata plus `notes.md`) and `risks`. It reads only
 `geocase.__all__`. Its tests run in the CI `tests` job, and the lint job now
 covers `plugins/`.
 
+### Added — environment detector for the `geocase` Claude Code plugin (Plan 56, #136)
+
+Tooling only; no catalog case, public API or pytest-plugin surface changed.
+`plugins/geocase/scripts/env.py detect [--version V] [--project DIR]` prints the
+project's environment manager (pixi, uv, poetry, conda, venv) as JSON, with the
+install command pinned to `V`, and refuses conda `base` and `EXTERNALLY-MANAGED`
+Pythons. It installs nothing. Tests: `plugins/geocase/tests/test_env_helper.py`.
+
 ### Added — `geocase` Claude Code plugin scaffold and an issue form for the nightly agent
 
 Tooling only; no catalog case, public API or pytest-plugin surface changed.
