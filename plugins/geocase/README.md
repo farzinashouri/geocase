@@ -25,6 +25,15 @@ command edits the project's manifest (`edits_manifest: true`). Conda `base` and
 `EXTERNALLY-MANAGED` Pythons come back with `installable: false` and a reason.
 It only reads env vars and files and never installs.
 
+## Sandbox builder
+
+`scripts/sandbox.py status` and `sandbox.py create [--upgrade]` print, as JSON,
+`exists`, `python` and `geocase_version` of a private venv at
+`$CLAUDE_PLUGIN_DATA/sandbox` (fallback `~/.cache/geocase-claude-plugin/sandbox`).
+`create` runs `python -m venv`, then `pip install geocase` from PyPI; a second run
+does nothing. The sandbox is for reading (`cases`, `explain`), not for `test`.
+`status` creates nothing.
+
 ## Catalog helper
 
 `scripts/catalog.py` prints the catalog as JSON, read through the installed
