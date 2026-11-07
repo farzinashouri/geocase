@@ -67,6 +67,13 @@ type or tag), `case <id>` (metadata plus `notes.md`) and `risks`. It reads only
 `geocase.__all__`. Its tests run in the CI `tests` job, and the lint job now
 covers `plugins/`.
 
+### Added — sandbox builder for the `geocase` Claude Code plugin (Plan 56, #137)
+
+Tooling only; no catalog case, public API or pytest-plugin surface changed.
+`plugins/geocase/scripts/sandbox.py {status,create} [--upgrade]` builds a private
+venv holding `geocase` so the plugin can show cases without touching the user's
+project. Tests: `plugins/geocase/tests/test_sandbox_helper.py`.
+
 ### Added — environment detector for the `geocase` Claude Code plugin (Plan 56, #136)
 
 Tooling only; no catalog case, public API or pytest-plugin surface changed.
