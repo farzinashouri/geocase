@@ -21,7 +21,14 @@ case and the likely bug. You propose a fix but apply it only if asked.
 
    The JSON holds the metadata, `risk_types`, `known_divergences` and the
    `notes` text. If the helper exits 2, the id is unknown: say so. If it exits
-   3, `geocase` is not installed there: give `pip install geocase`.
+   3, `geocase` is not installed there. Offer a sandbox: a private copy of
+   `geocase` in the plugin's data folder that does not touch the project. Do this
+   only after a yes: `python ${CLAUDE_PLUGIN_ROOT}/scripts/sandbox.py create`,
+   then rerun `catalog.py case <case_id>` with the sandbox Python it reports.
+   If the user says no, give `pip install geocase`. Only for the user's own
+   tests would an install be needed; to offer one, run
+   `env.py detect --version <sandbox version>` and, if `installable` is false,
+   give the `reason` and install nothing.
 3. **Check `known_divergences` first.** If it lists the library or behaviour
    the failure points at, say this is a **known** divergence catalogued by
    GeoCase, quote its entry, and say it is not necessarily the user's bug.

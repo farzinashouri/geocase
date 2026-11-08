@@ -67,6 +67,16 @@ type or tag), `case <id>` (metadata plus `notes.md`) and `risks`. It reads only
 `geocase.__all__`. Its tests run in the CI `tests` job, and the lint job now
 covers `plugins/`.
 
+### Added — skills explore in the sandbox, then offer the install (Plan 56, #138)
+
+Tooling only; no catalog case, public API or pytest-plugin surface changed.
+When `catalog.py` exits 3, `/geocase:cases` and `/geocase:explain` offer the
+sandbox (`sandbox.py create`, only after a yes) and rerun in it; `cases` then
+offers `env.py detect --version <sandbox version>` and runs the install only
+after a yes. `/geocase:test` goes straight to the install offer. A non-installable
+environment gets the reason and no install. Plugin version 0.1.0 → 0.2.0.
+Tests: `plugins/geocase/tests/test_skills.py`.
+
 ### Added — sandbox builder for the `geocase` Claude Code plugin (Plan 56, #137)
 
 Tooling only; no catalog case, public API or pytest-plugin surface changed.

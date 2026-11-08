@@ -139,6 +139,53 @@ def test_helper_case_output_carries_known_divergences() -> None:
     assert "known_divergences" in meta.model_dump(mode="json")
 
 
+# --- sandbox and install offer (Plan 56 Phase 3) ----------------------------
+
+ENV_HELPER = (PLUGIN / "scripts" / "env.py").read_text(encoding="utf-8")
+SANDBOX_HELPER = (PLUGIN / "scripts" / "sandbox.py").read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize("name", ["cases", "explain"])
+def test_read_only_skills_offer_the_sandbox_on_exit_3(name: str) -> None:
+    _, body = read_skill(name)
+    low = body.lower()
+    assert "sandbox.py create" in body
+    assert "exit" in low and "3" in body
+    assert "does not touch" in low
+    assert "only after" in low
+    assert "sandbox python" in low
+    for sub in re.findall(r"sandbox\.py (\w+)", body):
+        assert f'add_parser("{sub}"' in SANDBOX_HELPER
+
+
+def test_cases_skill_offers_the_install_after_a_sandbox_answer() -> None:
+    _, body = read_skill("cases")
+    low = body.lower()
+    assert "env.py detect --version" in body
+    assert "manifest" in low
+    assert "only after" in low
+    assert "sandbox version" in low
+
+
+def test_test_skill_skips_the_sandbox() -> None:
+    _, body = read_skill("test")
+    assert "sandbox.py create" not in body
+    assert "env.py detect --version" in body
+    low = body.lower()
+    assert "user's environment" in low
+    assert "manifest" in low
+
+
+@pytest.mark.parametrize("name", SKILLS)
+def test_skills_refuse_when_not_installable(name: str) -> None:
+    _, body = read_skill(name)
+    low = body.lower()
+    assert "installable" in low
+    assert "reason" in low
+    assert "install nothing" in low
+    assert '"detect"' in ENV_HELPER or "detect" in ENV_HELPER
+
+
 def test_test_skill_template_collects(tmp_path: Path) -> None:
     """Fill the template for docs Example A and collect it with pytest."""
     import subprocess
