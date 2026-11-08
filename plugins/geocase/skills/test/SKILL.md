@@ -17,8 +17,20 @@ if a case fails, say so and stop; fixing it is a separate request.
    python ${CLAUDE_PLUGIN_ROOT}/scripts/catalog.py cases --category vector --risk crs/axis_order
    ```
 
-   If the helper exits 3, `geocase` is not installed there: say so and give
-   `pip install geocase`. Do not read `case.yaml` files yourself.
+   If the helper exits 3, `geocase` is not installed there. Do not read
+   `case.yaml` files yourself. Skip the sandbox: the tests import the user's
+   code and its dependencies, so `geocase` must be in the user's environment.
+   Go straight to the install offer:
+
+   ```text
+   python ${CLAUDE_PLUGIN_ROOT}/scripts/env.py detect --version <version>
+   ```
+
+   (use the version the user already explored; omit `--version` if none). The JSON
+   has `installable`, `command`, `reason` and `edits_manifest`. Show the
+   `command`, say whether it edits the project's manifest, and run it only
+   after a yes. If `installable` is false, give the `reason`, install nothing
+   and stop.
 2. **Write one file** in the user's test folder (`tests/test_<function>_geocase.py`),
    from this template. The selector uses only the filters you passed to the
    helper (`category`, `geometry_type`, `format`, `tags_any`, `risk_types_any`):

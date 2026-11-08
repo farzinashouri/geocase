@@ -16,8 +16,17 @@ actually does.
    python ${CLAUDE_PLUGIN_ROOT}/scripts/catalog.py risks
    ```
 
-   If it exits 3, `geocase` is not installed there: say so and give
-   `pip install geocase`. Do not read `case.yaml` files yourself.
+   If it exits 3, `geocase` is not installed there. Do not read `case.yaml`
+   files yourself. Offer a sandbox: a private copy of `geocase` kept in the
+   plugin's data folder that does not touch the project. Only after a yes, run:
+
+   ```text
+   python ${CLAUDE_PLUGIN_ROOT}/scripts/sandbox.py create
+   ```
+
+   It prints JSON with `python` (the sandbox Python) and `geocase_version`.
+   Rerun the `catalog.py` commands below with the sandbox Python instead of the
+   user's. If the user says no, give `pip install geocase` and stop.
 3. **Filter.** Pick the terms or families that match step 1, then:
 
    ```text
@@ -39,3 +48,14 @@ actually does.
 
    Use only the filters you passed to the helper (`category`, `geometry_type`,
    `format`, `tags_any`, `risk_types_any`), so the markers and the table agree.
+6. **If you answered from the sandbox and found fitting cases, offer the
+   install**, because the user's tests need `geocase` in their own environment:
+
+   ```text
+   python ${CLAUDE_PLUGIN_ROOT}/scripts/env.py detect --version <sandbox version>
+   ```
+
+   The JSON has `installable`, `command`, `reason` and `edits_manifest`. Show
+   the `command`, say whether it edits the project's manifest
+   (`edits_manifest`), and run it only after a yes. One yes covers one action.
+   If `installable` is false, give the `reason` and install nothing.

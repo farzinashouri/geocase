@@ -34,6 +34,22 @@ It only reads env vars and files and never installs.
 does nothing. The sandbox is for reading (`cases`, `explain`), not for `test`.
 `status` creates nothing.
 
+## Without geocase installed
+
+When `catalog.py` exits 3, the skills do not stop at "install geocase":
+
+- `cases` and `explain` offer the sandbox (it does not touch your project), run
+  `sandbox.py create` only after a yes, and rerun `catalog.py` with the sandbox
+  Python.
+- `cases` then offers the install: `env.py detect --version <sandbox version>`,
+  the command it would run, and whether it edits your manifest (pixi, uv and
+  poetry projects get a dev dependency through the manager). It runs only after
+  a yes.
+- `test` skips the sandbox, because your tests import your code and its
+  dependencies, and goes straight to the install offer.
+- When `detect` says `installable: false` (conda `base`, an
+  `EXTERNALLY-MANAGED` Python), the skill gives the reason and installs nothing.
+
 ## Catalog helper
 
 `scripts/catalog.py` prints the catalog as JSON, read through the installed
