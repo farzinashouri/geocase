@@ -26,6 +26,17 @@ the case and the geometry costs them five seconds.
 A user hitting a break searches for the case id or the error text, so both belong in
 the entry verbatim.
 
+## [Unreleased]
+
+### Added — Claude Code plugin docs page and plugin 0.2.0 (#117)
+
+Docs and plugin only; no catalog case, public API or pytest-plugin surface changed.
+New published page `docs/claude-code-plugin.md` (install order: `pip install geocase`,
+`/plugin marketplace add farzinashouri/geocase`, `/plugin install geocase@geocase`;
+the sandbox and install offer; the three skills; one worked example), linked from
+Getting Started and the README. `plugins/geocase/README.md` lists the skills and the
+plugin version is `0.2.0`.
+
 ## [1.2.1] — 2026-11-01
 
 ### Fixed — README and Getting Started say which extra the examples need (#104)

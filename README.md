@@ -221,6 +221,7 @@ If a GeoCase marker is missing, resolves no cases, refers to an unknown suite, o
 - [`docs/case-discovery.md`](https://github.com/farzinashouri/geocase/blob/main/docs/case-discovery.md)
 - [`docs/assertions-reference.md`](https://github.com/farzinashouri/geocase/blob/main/docs/assertions-reference.md)
 - [`docs/examples-index.md`](https://github.com/farzinashouri/geocase/blob/main/docs/examples-index.md)
+- [`docs/claude-code-plugin.md`](https://github.com/farzinashouri/geocase/blob/main/docs/claude-code-plugin.md) — the Claude Code plugin: skills that pick cases, write the test and explain a failure
 - [`docs/benchmark/quickstart.md`](https://github.com/farzinashouri/geocase/blob/main/docs/benchmark/quickstart.md) — the LLM benchmark built on the catalog. **Experimental:** not part of the v1.0 compatibility promise and not published to the docs site.
 - [`src/geocase/raster/`](https://github.com/farzinashouri/geocase/tree/main/src/geocase/raster/) — `geocase.raster`, a raster primitive needing only numpy (the `array` extra) plus Sentinel-1/2 presets
 - [`docs/contributing/workflow.md`](https://github.com/farzinashouri/geocase/blob/main/docs/contributing/workflow.md)

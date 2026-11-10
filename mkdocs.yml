@@ -84,6 +84,7 @@ nav:
       - STAC Items: stac-items.md
       - Parameterized Tests: using-parameterized-tests.md
       - Adding a Case: adding-a-case.md
+      - Claude Code Plugin: claude-code-plugin.md
       - Remote Datasets: remote-datasets.md
       - Dataset Catalog: dataset-catalog.md
   - Changelog: changelog.md
