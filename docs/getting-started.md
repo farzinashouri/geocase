@@ -254,6 +254,7 @@ Start simple with explicit case IDs. Move to selectors when your test intent is 
 - [`docs/assertions-reference.md`](assertions-reference.md)
 - [`docs/examples-index.md`](examples-index.md)
 - [`docs/adding-a-case.md`](adding-a-case.md)
+- [Claude Code plugin](claude-code-plugin.md): skills that pick cases, write the test and explain a failure
 - [`docs/contributing/workflow.md`](contributing/workflow.md)
 
 ---

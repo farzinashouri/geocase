@@ -215,3 +215,56 @@ def test_test_skill_template_collects(tmp_path: Path) -> None:
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "error" not in result.stdout.lower()
+
+
+# --- the published docs page (Plan 55 Phase 5) -------------------------------
+
+REPO = PLUGIN.parents[1]
+DOCS_PAGE = REPO / "docs" / "claude-code-plugin.md"
+
+
+def test_docs_page_is_in_nav() -> None:
+    assert "claude-code-plugin.md" in (REPO / "mkdocs.yml").read_text(encoding="utf-8")
+
+
+def test_docs_page_lists_install_steps_in_order() -> None:
+    text = DOCS_PAGE.read_text(encoding="utf-8")
+    steps = [
+        "pip install geocase",
+        "/plugin marketplace add farzinashouri/geocase",
+        "/plugin install geocase@geocase",
+    ]
+    positions = [text.index(s) for s in steps]
+    assert positions == sorted(positions)
+    assert "both" in text.lower()
+
+
+def test_docs_page_describes_sandbox_before_install_steps() -> None:
+    text = DOCS_PAGE.read_text(encoding="utf-8")
+    low = text.lower()
+    assert "sandbox" in low
+    assert low.index("sandbox") < text.index("pip install geocase")
+    assert "install" in low and "manifest" in low
+
+
+def test_docs_page_names_every_skill() -> None:
+    text = DOCS_PAGE.read_text(encoding="utf-8")
+    for name in SKILLS:
+        assert f"/geocase:{name}" in text
+
+
+def test_docs_page_is_linked_from_getting_started_and_readme() -> None:
+    assert "claude-code-plugin.md" in (REPO / "docs" / "getting-started.md").read_text(
+        encoding="utf-8"
+    )
+    assert "claude-code-plugin.md" in (REPO / "README.md").read_text(encoding="utf-8")
+
+
+def test_readme_lists_the_skills_and_plugin_version_is_0_2_0() -> None:
+    import json
+
+    manifest = json.loads((PLUGIN / ".claude-plugin" / "plugin.json").read_text())
+    assert manifest["version"] == "0.2.0"
+    readme = (PLUGIN / "README.md").read_text(encoding="utf-8")
+    for name in SKILLS:
+        assert f"`{name}`" in readme
