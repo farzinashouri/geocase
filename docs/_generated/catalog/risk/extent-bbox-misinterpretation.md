@@ -36,3 +36,7 @@ pip install "geocase[all]"
 |---|---|---|---|
 | [Classic Antimeridian Polygon](../cases/classic_antimeridian_polygon.md) | vector | GeoJSON | Polygon |
 | [Dateline crossing polygon](../cases/dateline_crossing_polygon.md) | vector | GeoJSON | Polygon |
+
+## Read more
+
+- [A polygon that crosses the dateline is not a bug: your bbox is](../../../posts/2026-11-12-dateline-polygon-bbox.md)

@@ -54,3 +54,7 @@ pip install "geocase[all]"
 | [Dateline crossing polygon](../cases/dateline_crossing_polygon.md) | vector | GeoJSON | Polygon |
 | [Dateline Points Pair](../cases/dateline_points_pair.md) | vector | GeoJSON | Point |
 | [Optical Dateline West Small](../cases/optical_dateline_west_small.md) | raster | GeoTIFF | -- |
+
+## Read more
+
+- [A polygon that crosses the dateline is not a bug: your bbox is](../../../posts/2026-11-12-dateline-polygon-bbox.md)

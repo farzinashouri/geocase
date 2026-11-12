@@ -129,6 +129,10 @@ Antimeridian stress case for longitude wrapping and bounds logic.
 - [Rasterize Match WGS84 Polygon](rasterize_match_wgs84_polygon.md) -- `rasterize_match_wgs84_polygon`
 - [Dateline Chain Cluster](dateline_chain_cluster.md) -- `dateline_chain_cluster`
 
+## Read more
+
+- [A polygon that crosses the dateline is not a bug: your bbox is](../../../posts/2026-11-12-dateline-polygon-bbox.md)
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
