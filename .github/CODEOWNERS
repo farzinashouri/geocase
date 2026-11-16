@@ -1,0 +1,24 @@
+# Code owners for GeoCase (issue #144).
+#
+# A pull request that changes one of these paths needs the owner's review
+# before it can merge to main. These paths hold what decides whether a test
+# is right: the case data and its expected values, and the workflows and
+# agent settings that decide what runs. Everything else merges on green CI.
+#
+# The last matching line wins, so keep specific paths below general ones.
+
+# Case data: every case.yaml, payload, checksums and the ground truth
+# that scripts/catalog_truth.py writes into case.yaml.
+/src/geocase/data/                     @farzinashouri
+
+# Generated case and suite indices.
+/src/geocase/metadata/                 @farzinashouri
+
+# Pinned expected values for the fixture generators.
+/tests/fixtures/expected_hashes.yaml   @farzinashouri
+
+# Workflows, issue templates, and this file.
+/.github/                              @farzinashouri
+
+# Agent configuration and permissions.
+/.claude/                              @farzinashouri

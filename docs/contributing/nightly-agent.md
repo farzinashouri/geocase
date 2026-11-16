@@ -419,6 +419,13 @@ makes it ready, you can also set `agent:ready` yourself.
 - CI runs on it automatically (with `AGENT_GH_TOKEN` set).
 - It merges by itself when the required checks pass. `Closes #N` closes the
   issue, and `agent-labels.yml` clears the labels.
+- A PR that changes a path listed in `.github/CODEOWNERS` (case data, the
+  case indices, `tests/fixtures/expected_hashes.yaml`, `.github/`, `.claude/`)
+  does not merge by itself: the `main` ruleset requires Code Owner review.
+  Agent PRs are opened with `AGENT_GH_TOKEN`, so their author is the owner's
+  own account, and GitHub does not let an author approve their own PR. Review
+  the diff, then merge it by hand with the admin bypass:
+  `gh pr merge <n> --merge --admin`.
 - To stop one PR from merging, cancel it before CI finishes:
   `gh pr merge <n> --disable-auto`.
 - To stop auto-merge for all PRs, untick "Allow auto-merge" in the repository
@@ -448,7 +455,8 @@ Scheduled runs always use `full` mode. Manual runs default to `triage`.
 - GitHub Actions minutes: one run is about 7–10 minutes, most of it building
   the conda environment.
 - Hard caps: 180 minutes, 250 turns, 1 PR per run, 3 open agent PRs.
-- With auto-merge, CI is the only check before code reaches `main`. A PR whose
+- With auto-merge, CI is the only check before code reaches `main`, except
+  for the paths in `.github/CODEOWNERS`, which wait for the owner. A PR whose
   tests pass but whose change is wrong is merged; review merged PRs
   afterwards and fix with a new issue.
 
