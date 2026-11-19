@@ -31,3 +31,7 @@ pip install "geocase[all]"
 |---|---|---|---|
 | [Packed int16 NDVI (NetCDF)](../cases/ndvi_packed_netcdf.md) | netcdf | NetCDF | -- |
 | [NDVI Scaled Int16 Small](../cases/ndvi_scaled_int16_small.md) | raster | GeoTIFF | -- |
+
+## Read more
+
+- [Before you file a bug, check whether anyone will read it](../../../posts/2026-11-19-before-you-file-a-bug.md)
