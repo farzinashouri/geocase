@@ -99,7 +99,7 @@ def test_time_boxed_and_serialised(wf: dict[str, Any]) -> None:
 
 def test_turn_cap_fits_a_full_issue(wf: dict[str, Any]) -> None:
     # #25 took 144 turns; at 120 the action marked a finished run as failed
-    # and skipped the auto-merge step.
+    # and skipped the steps after it.
     assert "--max-turns 250" in _claude_step(wf)["with"]["claude_args"]
 
 
@@ -189,25 +189,19 @@ def test_transcript_is_uploaded_even_on_failure(wf: dict[str, Any]) -> None:
     assert _steps(wf).index(upload) > _steps(wf).index(claude)
 
 
-def _auto_merge_step(wf: dict[str, Any]) -> dict[str, Any]:
-    (step,) = [
-        s for s in _steps(wf) if s.get("name") == "Enable auto-merge on agent PRs"
-    ]
-    return step
+def test_no_step_merges_agent_prs(wf: dict[str, Any]) -> None:
+    # #194: the owner merges every agent PR by hand (`/merge-issue N`). No
+    # workflow step may merge or turn on auto-merge, and the model stays
+    # denied `gh pr merge`.
+    for step in _steps(wf):
+        assert "gh pr merge" not in step.get("run", ""), step.get("name")
+    assert "Bash(gh pr merge:*)" in _claude_step(wf)["with"]["claude_args"]
 
 
-def test_auto_merge_runs_after_claude(wf: dict[str, Any]) -> None:
-    # The model stays denied `gh pr merge`; a fixed step turns on GitHub
-    # auto-merge instead, so a PR merges only once the required checks pass.
-    steps = _steps(wf)
-    assert steps.index(_auto_merge_step(wf)) > steps.index(_claude_step(wf))
-
-
-def test_auto_merge_only_touches_agent_branches(wf: dict[str, Any]) -> None:
-    run = _auto_merge_step(wf)["run"]
-    assert 'startswith("agent/")' in run
-    assert "gh pr merge" in run and "--auto" in run
-    assert "--admin" not in run  # never bypass the required checks
+def test_prompt_says_the_owner_merges() -> None:
+    text = (ROOT / ".claude" / "commands" / "work-next-issue.md").read_text()
+    assert "auto-merge" not in text
+    assert "/merge-issue" in text
 
 
 def test_openrouter_preflight_runs_before_claude(wf: dict[str, Any]) -> None:

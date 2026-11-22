@@ -8,9 +8,10 @@ GeoCase runs a semi-autonomous development agent on GitHub Actions. It runs
 only when the maintainer starts it (the nightly schedule was removed on
 2026-11-22). Each run triages the open issues, rewrites the pinned
 **📋 Development queue** issue, implements one `agent:ready` issue (the one
-you name, or the top of the queue) on a branch and opens a pull request. A fixed workflow step then turns on GitHub
-auto-merge, so the PR merges by itself once the required CI checks pass. The
-model itself never merges, tags, releases or pushes to `main`.
+you name, or the top of the queue) on a branch and opens a pull request.
+The PR waits for you: you review it and merge it with `/merge-issue N`
+(#194). Nothing merges by itself, and the agent never merges, tags, releases
+or pushes to `main`.
 
 This page has two parts:
 
@@ -26,6 +27,7 @@ The files that make up the system:
 | `.github/workflows/agent.yml` | The job: environment, credentials, tool limits |
 | `.claude/commands/work-next-issue.md` | The run prompt: what the agent does, in which order, and when it stops |
 | `.claude/commands/run-issue.md` | `/run-issue N`: checks issue N and starts a run on it |
+| `.claude/commands/merge-issue.md` | `/merge-issue N`: commits and pushes issue N's branch if needed, opens the PR, waits for CI, merges, then the housekeeping |
 | `.github/workflows/agent-labels.yml` | Removes the `agent:*` labels when an issue closes |
 | `CLAUDE.md` | Project rules the agent follows (TDD, docs follow code, CHANGELOG, gates) |
 | `tests/unit/test_agent_workflow.py`, `tests/unit/test_agent_labels_workflow.py` | Pin the structure of both workflows, so a careless edit fails CI |
@@ -121,11 +123,8 @@ Editing permissions keeps the token value, so the secret does not change.
    typecheck, catalog, floor, docs) before merging. The admin role can bypass
    it, so the maintainer can still push small changes directly. The agent's
    token does not need to bypass it, because the agent never pushes to `main`.
-   These required checks are the only gate before an agent PR merges.
-3. **Allow auto-merge:** Settings → General → Pull Requests → tick
-   **"Allow auto-merge"**, or run
-   `gh api -X PATCH repos/<owner>/<repo> -F allow_auto_merge=true`.
-4. **Create the labels.** The system uses them as a state machine (see
+   An agent PR merges only when you merge it and these checks pass.
+3. **Create the labels.** The system uses them as a state machine (see
    [Labels](#labels)):
 
     ```bash
@@ -140,7 +139,7 @@ Editing permissions keeps the token value, so the secret does not change.
     gh label create priority:3 --description "Rank 3"
     ```
 
-5. **Create and pin the queue issue.** The prompt finds it by its exact title:
+4. **Create and pin the queue issue.** The prompt finds it by its exact title:
 
     ```bash
     gh issue create --title "📋 Development queue" --body "The agent rewrites this body on every run."
@@ -197,7 +196,7 @@ What each part does:
 | PATH step | appends `$CONDA_PREFIX/bin` to `$GITHUB_PATH` | Claude's Bash tool does not use a login shell and would otherwise not find the env |
 | Action | `anthropics/claude-code-action@v1` | Runs Claude Code with the prompt |
 | Turn limit | `--max-turns 250` | A typical full run uses 50–60; #25 used 144 |
-| Auto-merge step | after Claude: `gh pr merge <n> --auto --merge` for every open `agent/*` PR | The PR merges when the required checks pass. It never uses `--admin`, so it cannot bypass them |
+| No merge step | nothing in the workflow merges or turns on auto-merge (#194) | You merge each PR with `/merge-issue N` |
 
 **Tool limits.** The action is non-interactive, so any tool not on
 `--allowedTools` is denied. (The first dry run did nothing for this reason.)
@@ -223,8 +222,8 @@ What each part does:
   `git tag`, `gh release`, `git push origin main`, `git push -f`,
   `git push --force`, `git revert`, `rm -rf`, `gh workflow run`.
 
-`gh pr merge` stays denied to the model on purpose: merging is done by the
-fixed auto-merge step, which cannot skip the checks. The deny list is the hard guarantee. The prompt repeats the same rules, but
+`gh pr merge` stays denied to the model on purpose: only you merge, with
+`/merge-issue N`. The deny list is the hard guarantee. The prompt repeats the same rules, but
 the deny list is what enforces them.
 
 ### 7. The label cleanup: `.github/workflows/agent-labels.yml`
@@ -253,8 +252,7 @@ needed.
     ```
 
     Check that a branch `agent/<n>-<slug>` was pushed, a PR was opened by the
-    token owner, **CI started on the PR by itself**, and the PR shows
-    "Auto-merge enabled". If CI did not start,
+    token owner, and **CI started on the PR by itself**. If CI did not start,
     the run fell back to `GITHUB_TOKEN`: check that `AGENT_GH_TOKEN` exists.
 
 3. There is no schedule: nothing runs until you start it. A disabled
@@ -267,7 +265,7 @@ needed.
 - [ ] `AGENT_GH_TOKEN` fine-grained PAT with Contents, Pull requests, Issues: read and write
 - [ ] Reminder set before the PAT expires
 - [ ] Optional: `OPENROUTER_API_KEY` secret for bare-track benchmark issues (`gh secret set OPENROUTER_API_KEY --body "$OPENROUTER_API_KEY"`); give the key a credit limit on OpenRouter, since the agent spends it unattended
-- [ ] Actions may create PRs; `main` protected by required checks; auto-merge allowed
+- [ ] Actions may create PRs; `main` protected by required checks
 - [ ] Labels created; queue issue created and pinned
 - [ ] `work-next-issue.md`, `agent.yml`, `agent-labels.yml` on the default branch
 - [ ] Triage run and full run both checked; CI starts on the agent's PR
@@ -286,8 +284,8 @@ you: file/label issues ──► you start a run: agent triages, rewrites queue,
                    ▼                                             ▼
           PR opened (agent:pr-open)                  stopped (agent:needs-human)
                    │                                             │
-      CI green → merges itself;                     you: answer the comment
-      CI red → stays open for you
+      CI green → you review, /merge-issue N         you: answer the comment
+      CI red → repair, or you fix it
                    │                                             │
    issue closes, labels cleared automatically      next run re-triages the issue
 ```
@@ -345,7 +343,7 @@ Each open issue has exactly one state label and one priority label.
 |---|---|---|
 | `agent:ready` | Scoped, testable, no decision pending. The agent may take it | you, or triage |
 | `agent:in-progress` | A run has claimed it | agent |
-| `agent:pr-open` | A PR exists; it merges itself when CI passes | agent |
+| `agent:pr-open` | A PR exists; it waits for your `/merge-issue N` | agent |
 | `agent:needs-human` | The agent stopped; its last comment says what it needs | agent |
 | `operator` | Only you can do it: money, accounts, identity, public posts, decisions | you, or triage |
 | `blocked` | Waits on another issue, a date or funding (`Blocked by #N`, `Not before YYYY-MM-DD`) | you, or triage |
@@ -429,23 +427,32 @@ branch when:
 comment, removes `agent:needs-human` and re-triages the issue. If the answer
 makes it ready, you can also set `agent:ready` yourself.
 
-### Agent PRs and auto-merge
+### Merging agent PRs
 
 - The PR body lists what was done, what was not done, and the gate results.
 - CI runs on it automatically (with `AGENT_GH_TOKEN` set).
-- It merges by itself when the required checks pass. `Closes #N` closes the
-  issue, and `agent-labels.yml` clears the labels.
+- Nothing merges by itself (#194). Review the diff, then in Claude Code:
+
+    ```text
+    /merge-issue 182
+    ```
+
+    It finds the open PR that closes issue 182 (or, for your own work, the
+    local branch `*/182-*`). If the branch has uncommitted changes or no PR,
+    it lists the files, runs the lint gate, commits, pushes and opens the PR
+    with `Closes #182`. It waits for CI, stops if a check failed, shows the
+    changed files and checks, and merges. Then it deletes the remote branch,
+    updates your local `main`, checks that the issue closed, and unblocks
+    issues that said `Depends on #182`. Running it is your approval for that
+    commit, push and merge.
+    `Closes #N` closes the issue, and `agent-labels.yml` clears the labels.
 - A PR that changes a path listed in `.github/CODEOWNERS` (case data, the
   case indices, `tests/fixtures/expected_hashes.yaml`, `.github/`, `.claude/`)
-  does not merge by itself: the `main` ruleset requires Code Owner review.
-  Agent PRs are opened with `AGENT_GH_TOKEN`, so their author is the owner's
-  own account, and GitHub does not let an author approve their own PR. Review
-  the diff, then merge it by hand with the admin bypass:
-  `gh pr merge <n> --merge --admin`.
-- To stop one PR from merging, cancel it before CI finishes:
-  `gh pr merge <n> --disable-auto`.
-- To stop auto-merge for all PRs, untick "Allow auto-merge" in the repository
-  settings. The step then only prints a warning, and PRs wait for you.
+  needs a Code Owner review. Agent PRs are opened with `AGENT_GH_TOKEN`, so
+  their author is your own account, and GitHub does not let an author
+  approve their own PR. `/merge-issue` then merges with the admin bypass
+  (`--admin`): running it is your review. It never uses `--admin` to skip a
+  failed or pending check.
 - To ask for changes, comment on the PR and label the issue
   `agent:needs-human` or `agent:ready`. Or push fixes to the branch yourself.
 - An agent PR that says `Refs #N` instead of `Closes #N` finished only part of
@@ -472,10 +479,9 @@ A run with `issue` set always uses `full` mode. Without it, runs default to
 - GitHub Actions minutes: one run is about 7–10 minutes, most of it building
   the conda environment.
 - Hard caps: 180 minutes, 250 turns, 1 PR per run, 3 open agent PRs.
-- With auto-merge, CI is the only check before code reaches `main`, except
-  for the paths in `.github/CODEOWNERS`, which wait for the owner. A PR whose
-  tests pass but whose change is wrong is merged; review merged PRs
-  afterwards and fix with a new issue.
+- Every agent PR waits for your merge, so nothing reaches `main` without
+  you. Open PRs count against the limit of 3: merge or close them, or the
+  agent only triages.
 
 ### Troubleshooting
 
@@ -487,7 +493,7 @@ A run with `issue` set always uses `full` mode. Without it, runs default to
 | Run succeeded after ~30 turns, issue left `agent:in-progress`, no branch or comment | Unknown (seen on benchmark issues #70, #67) | Download the run's `agent-transcript` artifact (kept 14 days) and read the last turns |
 | Authentication error in the Claude step | OAuth token revoked or expired | `claude setup-token`, then `gh secret set CLAUDE_CODE_OAUTH_TOKEN` |
 | Queue issue not updated | Its title changed, or it is not pinned | Restore the exact title "📋 Development queue" |
-| PR has green CI but did not merge | Auto-merge not allowed in settings, or the step warned | Check the run's "Enable auto-merge" step; tick "Allow auto-merge" |
+| PR has green CI but did not merge | Expected: agent PRs wait for you (#194) | Review it, then `/merge-issue N` |
 | Closed issue still has `agent:pr-open` | `agent-labels.yml` missing or failed | Check the "Agent labels" run for that issue |
 | Runs only triage and update the queue, report says nothing is wrong | 3 agent PRs are open, often with red CI | Fix or close the red PRs (`gh pr list --label agent:pr-open`, then `gh pr checks <n>`) |
 | PR has `agent-repair: attempt 2` and `agent:needs-human` | Repair step gave up | Read the handoff comment; fix the branch yourself |

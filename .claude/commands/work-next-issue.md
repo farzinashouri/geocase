@@ -85,6 +85,7 @@ comment on it.
    would change; deletion/revert/tag/release is needed; gates are red after two
    fix attempts; "done" is ambiguous.
 8. **PR.** `gh pr create` with `Closes #N`, a summary, and gate results. Label
-   the issue `agent:pr-open`. Never merge, tag, release, or push to `main`: a later
-   workflow step turns on auto-merge, and the PR merges when CI passes.
+   the issue `agent:pr-open`. Never merge, tag, release, or push to `main`:
+   the PR waits for the owner, who reviews it and merges it with
+   `/merge-issue N` (#194).
 9. Update the queue issue once more, then end. One issue per run.

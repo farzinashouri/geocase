@@ -1,7 +1,8 @@
 # Development agent (Plan 49). Triages issues, rewrites the pinned
 # "Development queue" issue, implements one `agent:ready` issue as a PR (the
 # named one, or the top of the queue), and stops with `agent:needs-human`
-# when a person is required.
+# when a person is required. The PR waits for the owner, who merges it with
+# /merge-issue N (#194); no step here merges or turns on auto-merge.
 # It never merges, tags, releases or pushes to main -- the prompt file says so
 # and the --disallowedTools list below enforces it. Structure is pinned by
 # tests/unit/test_agent_workflow.py.
@@ -143,16 +144,6 @@ jobs:
           fi
           gh issue comment "$issue" --body-file /tmp/agent-report.md \
             || echo "::warning::could not comment on #$issue"
-      # The model may not merge (deny list above). This fixed step turns on
-      # GitHub auto-merge for open agent/* PRs: each merges once the checks
-      # required by the main_protected ruleset pass, and never bypasses them.
-      - name: Enable auto-merge on agent PRs
-        run: |
-          gh pr list --state open --json number,headRefName \
-            --jq '.[] | select(.headRefName | startswith("agent/")) | .number' |
-          while read -r pr; do
-            gh pr merge "$pr" --auto --merge || echo "::warning::auto-merge not enabled on #$pr"
-          done
       # continue-on-error above would otherwise leave a failed run green.
       - name: Fail if the agent step failed
         if: steps.claude.outcome == 'failure'
