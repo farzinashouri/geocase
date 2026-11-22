@@ -1,16 +1,17 @@
-# Scheduled development agent (Plan 49). Triages issues, rewrites the pinned
-# "Development queue" issue, implements the top `agent:ready` issue as a PR,
-# and stops with `agent:needs-human` when a person is required.
+# Development agent (Plan 49). Triages issues, rewrites the pinned
+# "Development queue" issue, implements one `agent:ready` issue as a PR (the
+# named one, or the top of the queue), and stops with `agent:needs-human`
+# when a person is required.
 # It never merges, tags, releases or pushes to main -- the prompt file says so
 # and the --disallowedTools list below enforces it. Structure is pinned by
 # tests/unit/test_agent_workflow.py.
 name: Agent
 
 on:
-  # Enabled by #43 after the triage-only dry run (#42) was reviewed.
-  # One issue per run: the prompt implements only the top agent:ready issue.
-  schedule:
-    - cron: "17 1 * * *"   # every night, 01:17 UTC
+  # Manual only. The nightly schedule (#43) was removed on 2026-11-22: the
+  # owner starts each run, usually naming the issue:
+  #   gh workflow run agent.yml -f issue=182
+  # One issue per run.
   workflow_dispatch:
     inputs:
       mode:
@@ -18,6 +19,11 @@ on:
         default: triage
         type: choice
         options: [triage, full]
+      issue:
+        description: "Issue number to implement (must be agent:ready); empty = top of the queue. Forces full mode."
+        required: false
+        default: ""
+        type: string
 
 concurrency:
   group: agent
@@ -82,7 +88,8 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.AGENT_GH_TOKEN || github.token }}
           prompt: |
-            Mode: ${{ github.event.inputs.mode || 'full' }}. In triage mode do steps 1-2 only.
+            Mode: ${{ github.event.inputs.issue != '' && 'full' || github.event.inputs.mode || 'full' }}. In triage mode do steps 1-2 only.
+            Issue: ${{ github.event.inputs.issue }} (empty = none named; pick the top of the queue).
             Follow .claude/commands/work-next-issue.md exactly.
             For OpenRouter work, read /tmp/openrouter/status.txt (key set or missing)
             and /tmp/openrouter/models.json (current model list, with pricing) instead
@@ -117,7 +124,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          MODE: ${{ github.event.inputs.mode || 'full' }}
+          MODE: ${{ github.event.inputs.issue != '' && 'full' || github.event.inputs.mode || 'full' }}
           OUTCOME: ${{ steps.claude.outcome }}
           EXEC_FILE: ${{ steps.claude.outputs.execution_file }}
         run: |

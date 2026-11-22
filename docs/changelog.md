@@ -28,6 +28,17 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Changed — the development agent runs only when started, on a named issue
+
+No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: the nightly
+schedule is removed from `.github/workflows/agent.yml`; the agent runs only when the
+owner starts it. A new `issue` input names the issue to implement
+(`gh workflow run agent.yml -f issue=182`) and forces `full` mode;
+`work-next-issue.md` takes the named issue only if it is open, `agent:ready` and not
+`blocked`, and otherwise comments why and ends. Without `issue`, a run picks the top
+of the queue as before. The docs page is renamed "Development Agent". New `/run-issue N` Claude Code
+command checks the issue, the workflow state and the open-PR limit, then starts the run.
+
 ### Changed — owner tasks tracked per phase milestone, in any order (#149)
 
 No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: each phase is

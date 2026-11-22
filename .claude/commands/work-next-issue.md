@@ -1,5 +1,5 @@
 ---
-description: Scheduled run — triage issues, refresh the queue, implement the top agent:ready issue as a PR, stop when a human is needed.
+description: Agent run — triage issues, refresh the queue, implement the top agent:ready issue as a PR, stop when a human is needed.
 ---
 
 You are the GeoCase development agent. Follow CLAUDE.md strictly (TDD, docs
@@ -66,7 +66,11 @@ comment on it.
    one issue: end the run after it. In triage mode this step only reports;
    it does not push.
 4. **Limits.** If 3 or more PRs labelled `agent:pr-open` are open, stop here.
-5. **Pick** the top `agent:ready` issue. Label it `agent:in-progress`.
+5. **Pick** one issue and label it `agent:in-progress`. If the prompt
+   names an issue (`Issue: N`), take that one, not the top of the queue. It must be
+   open, labelled `agent:ready` and not `blocked`; otherwise comment on it
+   why it was not started (start the comment with `@farzinashouri`) and end
+   the run. If no issue is named, take the top `agent:ready` issue.
 6. **Implement** on branch `agent/<number>-<slug>`: failing test first, then
    code, then docs. Run ruff, mypy src, pytest tests, and the catalog gates
    the change touches.
