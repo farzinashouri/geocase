@@ -131,6 +131,10 @@ Upstream: <https://github.com/farzinashouri/geocase/blob/main/docs/plans/38-six-
 - [NDVI Small](ndvi_small.md) -- `ndvi_small`
 - [DEM NaN NoData Small](dem_nan_nodata_small.md) -- `dem_nan_nodata_small`
 
+## Read more
+
+- [Before you file a bug, check whether anyone will read it](../../../posts/2026-11-19-before-you-file-a-bug.md)
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
