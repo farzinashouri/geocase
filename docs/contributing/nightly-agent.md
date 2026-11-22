@@ -290,7 +290,16 @@ you: file/label issues ──► night: agent triages, rewrites queue,
 Your work each morning:
 
 1. Open the pinned **📋 Development queue** issue. It is the single place to
-   look. *Waiting on you* lists one action per item.
+   look. *Waiting on you* lists one action per item, grouped by phase
+   milestone and **not ranked**: pick any task, in any order. Each phase is a
+   GitHub milestone with one issue per task and a `size:` label (`size:5m`,
+   `size:30m`, `size:1h`, `size:2h`); a closed issue is a done task. In Claude
+   Code, `/next 30m` lists the open, unblocked issues that fit 30 minutes,
+   ordered by `mvp`, then priority, then size, with all their labels, and
+   recommends one to solve next; and
+   the project status line (`.claude/statusline.sh`) shows done/total per
+   phase, e.g. `P0 5/19 · P1 2/25 · P2 0/11`. An issue is `blocked` only
+   when its body names the issue or event it waits for.
 2. Read what merged overnight (*Done this week*), and look at any PR under
    *In review* that did not merge: its CI failed. The agent's Repair step
    tries two fixes and then hands off with `agent:needs-human`, so a red PR

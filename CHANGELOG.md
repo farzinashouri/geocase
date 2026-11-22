@@ -22,6 +22,18 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Changed — owner tasks tracked per phase milestone, in any order (#149)
+
+No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: each phase is
+a GitHub milestone with one issue per task and a `size:` label; there are no weekly
+tracking issues and no fixed order. `work-next-issue.md` groups *Waiting on you* in
+the queue issue (#45) by milestone without ranking it, and removes `blocked` from an
+issue that does not name what it waits for. New `/next [time]` command lists the open
+issues of each phase milestone that are not `blocked` (`agent:ready`, `operator`,
+`agent:needs-human`), ordered by `mvp`, then priority, then size, at most 7 per phase,
+with all their labels, and recommends one issue to solve next. The project status
+line (`.claude/statusline.sh`) shows done/total per phase milestone.
+
 ### Added — `geocase.ci`: JUnit report to GeoCase Markdown summary (#174)
 
 New submodule `python -m geocase.ci report <junit.xml> [--out summary.md]` (not in

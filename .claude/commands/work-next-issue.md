@@ -44,8 +44,17 @@ comment on it.
    missing section or the open choice. Never pick such an issue in step 5.
 2. **Queue.** Rewrite the body of the pinned issue titled
    "📋 Development queue": Next up (agent) / Waiting on you (one action each) /
-   In review / Blocked / Done this week. Rank: unblocks the release →
-   unblocks other issues → `priority:N` → age.
+   In review / Blocked / Done this week. Rank *Next up (agent)*: unblocks the
+   release → unblocks other issues → `priority:N` → age. *Waiting on you* is
+   **not ranked**: the owner picks any open task, in any order (#149). Group
+   it by milestone ("Phase 0", "Phase 1", …, then "No phase"), each item with
+   its `size:` label, and start each group with the milestone link and its
+   done/total count.
+   **Blocking only when it is real.** Keep `blocked` only on an issue that
+   cannot start until another issue is done or an outside event happens, and
+   its body names that issue or event (`Depends on #N`). If the reason is gone
+   or was never named, remove `blocked`, add `agent:ready` or `operator`, and
+   comment why.
 3. **Repair.** For each open PR on an `agent/*` branch: `gh pr checks N`.
    If a check failed, check out the branch, read `gh run view <id>
    --log-failed`, write a failing test if the cause is a code bug, fix, run
