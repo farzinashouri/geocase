@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites><testsuite name="pytest" tests="2" failures="0">
+<testcase classname="tests.test_stats" name="test_zonal[all_valid_rectangular]" time="0.1"/>
+<testcase classname="tests.test_stats" name="test_zonal[ambiguous_engine_dependent_polygon]" time="0.1"/>
+</testsuite></testsuites>
