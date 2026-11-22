@@ -22,6 +22,15 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Changed — agent PRs wait for the owner's merge; new `/merge-issue N` (#194)
+
+No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: the "Enable
+auto-merge on agent PRs" step is removed from `.github/workflows/agent.yml`, so no agent
+PR merges by itself. The new `/merge-issue N` Claude Code command finds the open PR that
+closes issue N, refuses while a check is failing or pending, merges (with `--admin` only
+when a Code Owner review is the sole block), deletes the remote branch, updates `main`,
+and unblocks issues that said `Depends on #N`.
+
 ### Changed — the development queue leaves out the "Later" milestone
 
 No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: issues that no
