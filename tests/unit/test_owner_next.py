@@ -3,7 +3,8 @@
 There is no fixed order and no calendar slot. Each phase is a GitHub milestone
 with one issue per task; done means the issue is closed.
 `.claude/statusline.sh` shows done/total per phase milestone, and `/next`
-lists the open, unblocked tasks that fit the time the owner has. These tests
+lists the open, unblocked issues of each phase (mvp first, all labels) that fit the time
+the owner has, and recommends one. These tests
 pin that contract.
 """
 
@@ -128,3 +129,33 @@ def test_next_command_lists_tasks_by_milestone_and_size() -> None:
     assert "$ARGUMENTS" in text
     assert "--milestone" in text
     assert "size:" in text
+
+
+def test_next_command_hides_blocked_and_shows_all_labels() -> None:
+    # /next shows agent:ready and owner issues alike, with every label, and
+    # hides blocked issues (it only says how many it hid).
+    text = NEXT.read_text()
+    assert "Drop issues labelled `blocked`" in text
+    assert "blocked issues hidden" in text
+    for state in ("agent:ready", "operator", "agent:needs-human"):
+        assert state in text
+    assert "all its labels" in text
+
+
+def test_next_command_puts_mvp_first_and_caps_at_seven() -> None:
+    text = NEXT.read_text()
+    assert "`mvp` issues first" in text
+    assert "at most 7" in text
+    assert "at most 5" not in text
+
+
+def test_next_command_recommends_one_issue() -> None:
+    text = NEXT.read_text()
+    assert "do not rank or recommend" not in text
+    assert "**Recommended:**" in text
+
+
+def test_next_command_orders_by_mvp_then_priority_then_size() -> None:
+    text = NEXT.read_text()
+    assert "Sort order: `mvp` → priority → size" in text
+    assert "inside each group, smallest size first" not in text

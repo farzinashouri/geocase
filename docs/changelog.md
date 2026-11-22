@@ -34,8 +34,11 @@ No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: each phas
 a GitHub milestone with one issue per task and a `size:` label; there are no weekly
 tracking issues and no fixed order. `work-next-issue.md` groups *Waiting on you* in
 the queue issue (#45) by milestone without ranking it, and removes `blocked` from an
-issue that does not name what it waits for. New `/next [time]` command lists the open,
-unblocked tasks that fit the time the owner has. The project status line
+issue that does not name what it waits for. New `/next [time]` command lists the open
+issues of each phase milestone that are not `blocked` (`agent:ready`, `operator`,
+`agent:needs-human`), ordered by `mvp`, then priority, then size, at most 7 per phase,
+with all their labels, and
+recommends one issue to solve next. The project status line
 (`.claude/statusline.sh`) shows done/total per phase milestone.
 
 ### Added — Claude Code plugin docs page and plugin 0.2.0 (#117)
