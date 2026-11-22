@@ -123,6 +123,21 @@ def test_queue_has_no_fixed_order_for_the_owner() -> None:
     assert "Your next 3" not in NEXT.read_text()
 
 
+def _queue_step() -> str:
+    text = PROMPT.read_text()
+    return text[text.index("**Queue.**") : text.index("**Repair.**")]
+
+
+def test_queue_leaves_later_issues_out_of_waiting_on_you() -> None:
+    # 2026-11-22: 19 issues no exit check needs moved to the "Later"
+    # milestone so the owner sees only current work. The queue must not list
+    # them again under Waiting on you; it shows a count and a link instead.
+    step = _queue_step()
+    assert '"Later"' in step
+    assert "not listed" in step
+    assert "count" in step and "link" in step
+
+
 def test_next_command_lists_tasks_by_milestone_and_size() -> None:
     text = NEXT.read_text()
     assert text.startswith("---\n")

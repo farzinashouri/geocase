@@ -50,6 +50,11 @@ comment on it.
    it by milestone ("Phase 0", "Phase 1", …, then "No phase"), each item with
    its `size:` label, and start each group with the milestone link and its
    done/total count.
+   **The "Later" milestone is not listed.** It holds work no current phase
+   needs (moved there on 2026-11-22). Its issues are not listed in any
+   section of the queue; end the body with one line: the count of open
+   "Later" issues and a link to that milestone. Do not pick them in step 5
+   unless the run names one, and do not change their labels.
    **Blocking only when it is real.** Keep `blocked` only on an issue that
    cannot start until another issue is done or an outside event happens, and
    its body names that issue or event (`Depends on #N`). If the reason is gone
