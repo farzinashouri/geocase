@@ -22,6 +22,16 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Changed — owner tasks tracked per phase milestone, in any order (#149)
+
+No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: each phase is
+a GitHub milestone with one issue per task and a `size:` label; there are no weekly
+tracking issues and no fixed order. `work-next-issue.md` groups *Waiting on you* in
+the queue issue (#45) by milestone without ranking it, and removes `blocked` from an
+issue that does not name what it waits for. New `/next [time]` command lists the open,
+unblocked tasks that fit the time the owner has. The project status line
+(`.claude/statusline.sh`) shows done/total per phase milestone.
+
 ### Added — Claude Code plugin docs page and plugin 0.2.0 (#117)
 
 Docs and plugin only; no catalog case, public API or pytest-plugin surface changed.
