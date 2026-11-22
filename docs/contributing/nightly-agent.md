@@ -1,13 +1,14 @@
 ---
-description: How the scheduled GeoCase development agent triages issues, keeps the queue and opens pull requests on GitHub Actions.
+description: How the GeoCase development agent triages issues, keeps the queue and opens pull requests on GitHub Actions.
 ---
 
-# Nightly Development Agent
+# Development Agent
 
-GeoCase runs a semi-autonomous development agent on GitHub Actions. Every
-night it triages the open issues, rewrites the pinned
-**📋 Development queue** issue, implements the top `agent:ready` issue on a
-branch and opens a pull request. A fixed workflow step then turns on GitHub
+GeoCase runs a semi-autonomous development agent on GitHub Actions. It runs
+only when the maintainer starts it (the nightly schedule was removed on
+2026-11-22). Each run triages the open issues, rewrites the pinned
+**📋 Development queue** issue, implements one `agent:ready` issue (the one
+you name, or the top of the queue) on a branch and opens a pull request. A fixed workflow step then turns on GitHub
 auto-merge, so the PR merges by itself once the required CI checks pass. The
 model itself never merges, tags, releases or pushes to `main`.
 
@@ -22,8 +23,9 @@ The files that make up the system:
 
 | File | Role |
 |---|---|
-| `.github/workflows/agent.yml` | The scheduled job: environment, credentials, tool limits |
+| `.github/workflows/agent.yml` | The job: environment, credentials, tool limits |
 | `.claude/commands/work-next-issue.md` | The run prompt: what the agent does, in which order, and when it stops |
+| `.claude/commands/run-issue.md` | `/run-issue N`: checks issue N and starts a run on it |
 | `.github/workflows/agent-labels.yml` | Removes the `agent:*` labels when an issue closes |
 | `CLAUDE.md` | Project rules the agent follows (TDD, docs follow code, CHANGELOG, gates) |
 | `tests/unit/test_agent_workflow.py`, `tests/unit/test_agent_labels_workflow.py` | Pin the structure of both workflows, so a careless edit fails CI |
@@ -164,7 +166,9 @@ here. The nine steps:
    `agent:needs-human`. A repair counts as the run's one issue. In triage
    mode the step only reports.
 4. **Limits**: 3 or more open `agent:pr-open` PRs → stop.
-5. **Pick** the top `agent:ready` issue and label it `agent:in-progress`.
+5. **Pick** the named issue (it must be open, `agent:ready` and not
+   `blocked`, or the run comments why and ends), or else the top
+   `agent:ready` issue, and label it `agent:in-progress`.
 6. **Implement** on `agent/<number>-<slug>`: failing test first, then code,
    then docs, then gates.
 7. **Stop and hand off** when a person is needed (see
@@ -182,8 +186,9 @@ What each part does:
 
 | Part | Setting | Why |
 |---|---|---|
-| Schedule | `cron: "17 1 * * *"` | Every night at 01:17 UTC, weekends included. GitHub can start scheduled runs hours late when it is busy; the observed start is often around 07:00 UTC |
-| Manual start | `workflow_dispatch` with input `mode` = `triage` (default) or `full` | Test runs without writing code |
+| Trigger | `workflow_dispatch` only; no schedule | The owner starts each run (nightly runs ended 2026-11-22) |
+| Input `mode` | `triage` (default) or `full` | Test runs without writing code |
+| Input `issue` | an issue number, or empty | Implement that issue instead of the top of the queue; forces `full` mode |
 | Concurrency | group `agent`, no cancel | Never two runs at once |
 | Permissions | contents, pull-requests, issues: write; id-token: write | Used when running on the `GITHUB_TOKEN` fallback |
 | Timeout | 180 minutes | Cost and runaway cap; bare-track benchmark runs against rate-limited free models need more than an hour |
@@ -252,9 +257,9 @@ needed.
     "Auto-merge enabled". If CI did not start,
     the run fell back to `GITHUB_TOKEN`: check that `AGENT_GH_TOKEN` exists.
 
-3. The schedule is active as soon as `agent.yml` is on the default branch.
-   To pause it, disable the workflow: `gh workflow disable agent.yml`
-   (`gh workflow enable agent.yml` to resume).
+3. There is no schedule: nothing runs until you start it. A disabled
+   workflow cannot be started, so keep it enabled
+   (`gh workflow enable agent.yml`).
 
 ### Setup checklist
 
@@ -274,7 +279,7 @@ needed.
 ### The daily loop
 
 ```text
-you: file/label issues ──► night: agent triages, rewrites queue,
+you: file/label issues ──► you start a run: agent triages, rewrites queue,
                                    implements one agent:ready issue
                                           │
                    ┌──────────────────────┴──────────────────────┐
@@ -287,7 +292,7 @@ you: file/label issues ──► night: agent triages, rewrites queue,
    issue closes, labels cleared automatically      next run re-triages the issue
 ```
 
-Your work each morning:
+Your work after each run:
 
 1. Open the pinned **📋 Development queue** issue. It is the single place to
    look. *Waiting on you* lists one action per item, grouped by phase
@@ -300,7 +305,7 @@ Your work each morning:
    the project status line (`.claude/statusline.sh`) shows done/total per
    phase, e.g. `P0 5/19 · P1 2/25 · P2 0/11`. An issue is `blocked` only
    when its body names the issue or event it waits for.
-2. Read what merged overnight (*Done this week*), and look at any PR under
+2. Read what merged since your last run (*Done this week*), and look at any PR under
    *In review* that did not merge: its CI failed. The agent's Repair step
    tries two fixes and then hands off with `agent:needs-human`, so a red PR
    with no such comment has not been looked at yet. No email tells you about
@@ -311,8 +316,7 @@ Your work each morning:
 
 - **Merges and new PRs:** watch the repo with *All Activity*.
 - **Failed runs:** in GitHub settings → Notifications → Actions, enable email
-  for failed workflows only. Scheduled runs notify the last person to edit the
-  cron line.
+  for failed workflows only. A manual run notifies the person who started it.
 - **Waiting on you:** when the agent adds `agent:needs-human` or `operator`, it
   assigns the issue to the owner and @mentions them. Both are made with
   `AGENT_GH_TOKEN`, the owner's own token, so GitHub sends no email for them.
@@ -384,26 +388,27 @@ for exactly these parts: *Goal*, *Files to touch*, *Done when* (starting
 with the failing test) and *Out of scope*, plus *Depends on*. It labels the
 issue `agent:ready` and `priority:2`.
 
-### Keeping the queue fed
+### Choosing what it works on
 
-One issue a night means the agent is only as useful as the queue in front
-of it. Three numbers keep it running:
+The agent works only when you start it, one issue per run. Pick an
+`agent:ready` issue and name it. In Claude Code:
 
-| Measure | Target | If it misses |
-|---|---|---|
-| `agent:ready` issues open | 3–5 | Fewer: the agent idles. More: issues go stale. File or prune on Monday |
-| `agent:needs-human` older than 2 days | 0 | Each one is a night the issue can't move. Answer it first |
-| Open agent PRs | under 3 | At 3, the agent only triages. Review and merge on Wednesday |
+```text
+/run-issue 182
+```
 
-The weekly routine:
+`/run-issue` checks that the issue is open, `agent:ready` and not `blocked`,
+that the workflow is enabled, and that fewer than 3 agent PRs are open. Then
+it starts the run and gives you the run URL. Without Claude Code, start the
+run directly:
 
-- **Monday, 30 min:** read the run reports, answer every
-  `agent:needs-human` issue with a concrete decision in a comment (the next
-  run re-triages it, so no relabelling is needed), then file the week's agent
-  tasks.
-- **Wednesday:** review the agent PRs that didn't merge themselves.
-- **Friday:** count the nights with a PR out of 7 (target 4 or more) and
-  check the three measures above.
+```bash
+gh workflow run agent.yml -f issue=182
+```
+
+Before the next run, check two things: no `agent:needs-human` issue is
+waiting for your answer, and fewer than 3 agent PRs are open. At 3 open PRs
+the agent only triages and does not implement the issue.
 
 ### Stop conditions
 
@@ -447,14 +452,15 @@ makes it ready, you can also set `agent:ready` yourself.
 ### Running it by hand
 
 ```bash
+gh workflow run agent.yml -f issue=182   # implement issue #182 (must be agent:ready)
 gh workflow run agent.yml                 # triage + queue only
 gh workflow run agent.yml -f mode=full    # also implement the top issue
 gh run list -w Agent -L 5                 # recent runs
 gh run view <id> --log                    # full log, including the agent's turns and cost
-gh workflow disable agent.yml             # pause the nightly schedule
 ```
 
-Scheduled runs always use `full` mode. Manual runs default to `triage`.
+A run with `issue` set always uses `full` mode. Without it, runs default to
+`triage`.
 
 ### Cost and limits
 
@@ -479,7 +485,6 @@ Scheduled runs always use `full` mode. Manual runs default to `triage`.
 | Run succeeded after ~30 turns, issue left `agent:in-progress`, no branch or comment | Unknown (seen on benchmark issues #70, #67) | Download the run's `agent-transcript` artifact (kept 14 days) and read the last turns |
 | Authentication error in the Claude step | OAuth token revoked or expired | `claude setup-token`, then `gh secret set CLAUDE_CODE_OAUTH_TOKEN` |
 | Queue issue not updated | Its title changed, or it is not pinned | Restore the exact title "📋 Development queue" |
-| Run started hours after 01:17 UTC | GitHub delays scheduled runs under load | Expected; no fix |
 | PR has green CI but did not merge | Auto-merge not allowed in settings, or the step warned | Check the run's "Enable auto-merge" step; tick "Allow auto-merge" |
 | Closed issue still has `agent:pr-open` | `agent-labels.yml` missing or failed | Check the "Agent labels" run for that issue |
 | Runs only triage and update the queue, report says nothing is wrong | 3 agent PRs are open, often with red CI | Fix or close the red PRs (`gh pr list --label agent:pr-open`, then `gh pr checks <n>`) |

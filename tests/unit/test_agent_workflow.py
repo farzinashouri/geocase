@@ -1,8 +1,9 @@
 """Structure of `.github/workflows/agent.yml` (Plan 49, issue #41).
 
 The agent runs unattended, so its rails are pinned here rather than trusted to
-the prompt alone: manual trigger with a triage-only mode, a weekday-night
-schedule (enabled by #43 after the #42 dry run), a time box, the GDAL environment the
+the prompt alone: manual trigger only (the nightly schedule was removed on
+2026-11-22) with a triage-only mode and an optional issue number, a time box,
+the GDAL environment the
 catalog gates need, and a tool deny list that blocks merge, tag, release and
 pushes to main even if the model ignores the prompt.
 """
@@ -46,14 +47,47 @@ def test_manual_trigger_has_triage_only_mode(wf: dict[str, Any]) -> None:
     assert mode["default"] == "triage"
 
 
-def test_runs_every_night(wf: dict[str, Any]) -> None:
-    # Enabled by #43 after the #42 dry run was reviewed; weekends added later.
-    assert wf["on"]["schedule"] == [{"cron": "17 1 * * *"}]
+def test_has_no_schedule(wf: dict[str, Any]) -> None:
+    # 2026-11-22: the owner stopped the nightly runs to keep control of what
+    # lands; the agent runs only when started by hand. The schedule is gone
+    # from the file, so enabling the workflow does not bring it back.
+    assert "schedule" not in wf["on"]
 
 
-def test_scheduled_runs_use_full_mode(wf: dict[str, Any]) -> None:
-    # A cron run has no inputs, so the prompt must fall back to full mode.
-    assert "github.event.inputs.mode || 'full'" in _claude_step(wf)["with"]["prompt"]
+def test_manual_trigger_takes_an_issue_number(wf: dict[str, Any]) -> None:
+    issue = wf["on"]["workflow_dispatch"]["inputs"]["issue"]
+    assert issue["type"] == "string"
+    assert issue["required"] is False
+    assert issue["default"] == ""
+
+
+# A named issue means "implement it", so it forces full mode; without one the
+# mode input decides, and a run with no inputs at all falls back to full.
+MODE_EXPR = (
+    "${{ github.event.inputs.issue != '' && 'full' "
+    "|| github.event.inputs.mode || 'full' }}"
+)
+
+
+def test_named_issue_runs_in_full_mode(wf: dict[str, Any]) -> None:
+    assert MODE_EXPR in _claude_step(wf)["with"]["prompt"]
+    assert _named(wf, "Agent run report")["env"]["MODE"] == MODE_EXPR
+
+
+def test_prompt_passes_the_named_issue(wf: dict[str, Any]) -> None:
+    assert (
+        "Issue: ${{ github.event.inputs.issue }}" in _claude_step(wf)["with"]["prompt"]
+    )
+
+
+def test_command_implements_a_named_issue() -> None:
+    # The Pick step takes the issue the prompt names instead of the top one,
+    # and refuses it unless it is open, agent:ready and not blocked.
+    text = (ROOT / ".claude" / "commands" / "work-next-issue.md").read_text()
+    pick = text[text.index("**Pick**") : text.index("**Implement**")]
+    assert "names an issue" in pick
+    assert "agent:ready" in pick
+    assert "blocked" in pick
 
 
 def test_time_boxed_and_serialised(wf: dict[str, Any]) -> None:
