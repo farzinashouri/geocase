@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites><testsuite name="pytest" tests="4" failures="2">
+<testcase classname="tests.test_stats" name="test_zonal[all_valid_rectangular]" time="0.1"/>
+<testcase classname="tests.test_stats" name="test_zonal[ambiguous_engine_dependent_polygon]" time="0.1"><failure message="AssertionError: mean is nan&#10;second line">Traceback
+AssertionError: mean is nan</failure></testcase>
+<testcase classname="tests.test_stats" name="test_other[ambiguous_engine_dependent_polygon]" time="0.1"><error message="RuntimeError: boom">trace</error></testcase>
+<testcase classname="tests.test_plain" name="test_math" time="0.1"><failure message="x">x</failure></testcase>
+</testsuite></testsuites>

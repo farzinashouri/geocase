@@ -28,6 +28,13 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Added — `geocase.ci`: JUnit report to GeoCase Markdown summary (#174)
+
+New submodule `python -m geocase.ci report <junit.xml> [--out summary.md]` (not in
+`__all__`; no catalog case, public API or pytest-plugin surface changed). Reads a pytest
+JUnit XML file and writes a verdict plus a table of failing GeoCase cases (case id, title,
+`risk_types`, test, first failure line). Docs: `docs/geocase-ci.md`.
+
 ### Added — Claude Code plugin docs page and plugin 0.2.0 (#117)
 
 Docs and plugin only; no catalog case, public API or pytest-plugin surface changed.

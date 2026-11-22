@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites><testsuite name="pytest" tests="2" failures="1">
+<testcase classname="tests.test_plain" name="test_math" time="0.1"/>
+<testcase classname="tests.test_plain" name="test_param[1]" time="0.1"><failure message="x">x</failure></testcase>
+</testsuite></testsuites>
