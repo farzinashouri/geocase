@@ -28,6 +28,14 @@ the entry verbatim.
 
 ## [Unreleased]
 
+### Changed — the development queue leaves out the "Later" milestone
+
+No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: issues that no
+current phase needs are in the "Later" milestone (19 moved on 2026-11-22).
+`work-next-issue.md` lists none of them in the queue issue (#45), ends the queue with
+their count and a link, does not pick them unless a run names one, and does not change
+their labels.
+
 ### Changed — the development agent runs only when started, on a named issue
 
 No case, CRS, dtype, nodata, id or `risk_types` changed. Tooling only: the nightly

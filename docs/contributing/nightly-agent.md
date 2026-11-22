@@ -298,7 +298,9 @@ Your work after each run:
    look. *Waiting on you* lists one action per item, grouped by phase
    milestone and **not ranked**: pick any task, in any order. Each phase is a
    GitHub milestone with one issue per task and a `size:` label (`size:5m`,
-   `size:30m`, `size:1h`, `size:2h`); a closed issue is a done task. In Claude
+   `size:30m`, `size:1h`, `size:2h`); a closed issue is a done task. Work that
+   no current phase needs sits in the **Later** milestone: the queue does not
+   list it, only its count and a link at the end. In Claude
    Code, `/next 30m` lists the open, unblocked issues that fit 30 minutes,
    ordered by `mvp`, then priority, then size, with all their labels, and
    recommends one to solve next; and
