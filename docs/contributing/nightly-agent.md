@@ -27,7 +27,7 @@ The files that make up the system:
 | `.github/workflows/agent.yml` | The job: environment, credentials, tool limits |
 | `.claude/commands/work-next-issue.md` | The run prompt: what the agent does, in which order, and when it stops |
 | `.claude/commands/run-issue.md` | `/run-issue N`: checks issue N and starts a run on it |
-| `.claude/commands/merge-issue.md` | `/merge-issue N`: merges the PR for issue N when CI is green, then the housekeeping |
+| `.claude/commands/merge-issue.md` | `/merge-issue N`: commits and pushes issue N's branch if needed, opens the PR, waits for CI, merges, then the housekeeping |
 | `.github/workflows/agent-labels.yml` | Removes the `agent:*` labels when an issue closes |
 | `CLAUDE.md` | Project rules the agent follows (TDD, docs follow code, CHANGELOG, gates) |
 | `tests/unit/test_agent_workflow.py`, `tests/unit/test_agent_labels_workflow.py` | Pin the structure of both workflows, so a careless edit fails CI |
@@ -437,10 +437,14 @@ makes it ready, you can also set `agent:ready` yourself.
     /merge-issue 182
     ```
 
-    It finds the open PR that closes issue 182, stops if a check is failing
-    or still running, shows the changed files and checks, and merges. Then it
-    deletes the remote branch, updates your local `main`, checks that the
-    issue closed, and unblocks issues that said `Depends on #182`.
+    It finds the open PR that closes issue 182 (or, for your own work, the
+    local branch `*/182-*`). If the branch has uncommitted changes or no PR,
+    it lists the files, runs the lint gate, commits, pushes and opens the PR
+    with `Closes #182`. It waits for CI, stops if a check failed, shows the
+    changed files and checks, and merges. Then it deletes the remote branch,
+    updates your local `main`, checks that the issue closed, and unblocks
+    issues that said `Depends on #182`. Running it is your approval for that
+    commit, push and merge.
     `Closes #N` closes the issue, and `agent-labels.yml` clears the labels.
 - A PR that changes a path listed in `.github/CODEOWNERS` (case data, the
   case indices, `tests/fixtures/expected_hashes.yaml`, `.github/`, `.claude/`)

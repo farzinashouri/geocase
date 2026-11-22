@@ -56,3 +56,29 @@ def test_does_the_housekeeping_after_the_merge() -> None:
     assert "git/refs/heads/" in text  # remote branch deleted, local one kept
     assert "Depends on #<N>" in text
     assert "blocked" in text
+
+
+def test_finds_a_local_branch_when_there_is_no_pr_yet() -> None:
+    # The owner's own work (operator/<N>-*) may not be committed or pushed yet.
+    text = _text()
+    assert "*/<N>-*" in text
+    assert "git branch --show-current" in text
+
+
+def test_commits_and_pushes_local_work_first() -> None:
+    # Running /merge-issue N is the owner's approval to commit, push, open the
+    # PR and merge that issue's branch; nothing else.
+    text = _text()
+    assert "git status --porcelain" in text
+    assert "never commit on `main`" in text
+    assert "settings.local.json" in text and ".env" in text
+    assert "ruff format --check" in text and "ruff check" in text
+    assert "git push -u origin" in text
+    assert "Co-Authored-By" in text
+
+
+def test_opens_the_pr_and_waits_for_ci() -> None:
+    text = _text()
+    assert "gh pr create" in text
+    assert "Closes #<N>" in text
+    assert "gh pr checks <PR> --watch" in text

@@ -52,6 +52,8 @@ python scripts/generate_raster_coverage_matrix.py --output docs/_generated/raste
 
 Releasing (Plan 50): `gh workflow run prepare-release.yml -f version=X.Y.Z` opens the release PR (bumps `pyproject.toml`, dates `[Unreleased]` in `CHANGELOG.md`); merging it makes `release.yml` tag, build, upload to TestPyPI, smoke-test it (`scripts/smoke_release.py`), then wait for the owner's approval on the `pypi` environment. **Never approve the `pypi` deployment yourself** — that approval is the owner's one irreversible step. See [docs/contributing/pypi-release-steps.md](docs/contributing/pypi-release-steps.md).
 
+Development agent (`.github/workflows/agent.yml`, see [docs/contributing/nightly-agent.md](docs/contributing/nightly-agent.md)): no schedule and no auto-merge. In Claude Code, `/run-issue N` starts it on one `agent:ready` issue, and `/merge-issue N` finishes issue N: it commits and pushes the issue's branch if needed (running it is the owner's approval for that), opens the PR, waits for CI, merges, and does the post-merge housekeeping. `/next [time]` lists the open tasks per phase milestone; work no phase needs sits in the `Later` milestone, which `/next` and the queue issue (#45) leave out.
+
 Benchmark runner: `python -m geocase.benchmark grade ...` (see `src/geocase/benchmark/cli.py`). `python -m geocase.benchmark report --runs results/runs --domain geo` compares runs (task x model matrix, per-`trap_category` rates with Wilson intervals, reproducible-silent at k>=3, seconds per trial from each call's `usage.duration_s`; `--coverage` lists catalog risk families no task exercises).
 
 ## Architecture
@@ -104,5 +106,10 @@ Core data flow — keep this mental model:
   6. the 📋 Development queue issue (#45) no longer lists the PR under "In review" and shows what is next.
 
   Report anything you could not do. Branches whose remote is `gone` (`git branch -vv`) and PRs or branches untouched for over 30 days go into one housekeeping issue, never deleted silently.
-- **Docs follow code, same change.** Any code change updates the affected docs in the same pass — `docs/`, docstrings, `CLAUDE.md`, and the generated artifacts (regenerate, don't hand-edit `docs/_generated/*`).
+- **Docs follow every change, same pass.** Any change — code, a workflow, a `.claude/` command, or a change made only on GitHub (labels, milestones, a workflow enabled or disabled) — updates every doc it makes wrong, before the task is reported done:
+  1. **Repo docs:** `docs/` (search it for the changed name, command or behaviour), docstrings, `CLAUDE.md`, `CHANGELOG.md`, and the generated artifacts (regenerate, don't hand-edit `docs/_generated/*`).
+  2. **The GeoCase Playbook** (a claude.ai doc, not in the repo; its link is in Claude's memory) whenever the change touches how the owner works: phases, milestones, agents, commands, rules, tracking. Search it for the changed term. A fact that became wrong is fixed directly; new wording or a changed decision goes in as a suggestion.
+  3. **Open issues** whose design the change contradicts get a comment saying what changed.
+
+  The final report lists each doc updated, and each one found wrong but left for the owner to decide.
 - **Be concise.** Answers roughly half your usual length: state the result and what it means, skip the recap and the option survey.
